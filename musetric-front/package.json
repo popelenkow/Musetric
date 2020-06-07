@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.8",
     "electron": "^9.0.2",
     "html-webpack-plugin": "^4.3.0",
+    "immer": "^6.0.9",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "ts-loader": "^7.0.5",
