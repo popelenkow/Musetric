@@ -1,7 +1,6 @@
 import { app, BrowserWindow, Menu, MenuItemConstructorOptions, MenuItem } from 'electron'
  
 app.on('ready', () => {
-  // Create the browser window.
   let win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -10,7 +9,6 @@ app.on('ready', () => {
     }
   });
  
-  // and load the index.html of the app.
   win.loadFile('dist/index.html');
   win.on('closed', () => { app.quit() })
   Menu.setApplicationMenu(Menu.buildFromTemplate(mainMenuTemplate))
