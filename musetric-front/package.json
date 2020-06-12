@@ -4,15 +4,18 @@
   "license": "MIT",
   "description": "Musetric app description",
   "author": "Musetric <musetric@musetric.musetric>",
-  "main": "./electron.js",
+  "main": "./dist/electron.js",
   "scripts": {
     "build": "webpack --config ./webpack.config.js && webpack --config ./webpack.config.electron.js",
     "dev": "yarn build && electron ./dist/electron.js",
-    "dist": "yarn build && electron-builder"
+    "win": "yarn build && electron-builder ./dist/electron.js"
   },
   "build": {
     "appId": "musetric.app",
     "productName": "Musetric",
+    "files": [
+      "./dist/**/*"
+    ],
     "directories": {
       "output": "build"
     },
