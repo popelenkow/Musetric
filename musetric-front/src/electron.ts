@@ -9,7 +9,9 @@ app.on('ready', () => {
     }
   });
  
-  win.loadFile('dist/index.html');
+  process.env.NODE_ENV === 'development'
+    ? win.loadURL('http://localhost:8080')
+    : win.loadFile('dist/index.html');
   win.on('closed', () => { app.quit() })
   Menu.setApplicationMenu(Menu.buildFromTemplate(mainMenuTemplate))
 });
@@ -35,7 +37,7 @@ const mainMenuTemplate: Array<(MenuItemConstructorOptions) | (MenuItem)> = [
   }
 ]
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'development') {
   mainMenuTemplate.push({
     label: 'Developer Tools',
     submenu: [

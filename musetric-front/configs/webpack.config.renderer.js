@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: './src/react.tsx',
   target: 'electron-renderer',
-  devtool: 'source-map',
   resolve: {
     extensions: ['.js', '.ts', '.tsx']
   },
