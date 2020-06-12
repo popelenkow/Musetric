@@ -1,6 +1,6 @@
-const { app, BrowserWindow } = require('electron');
+import { app, BrowserWindow, Menu, MenuItemConstructorOptions, MenuItem } from 'electron'
  
-function createWindow () {
+app.on('ready', () => {
   // Create the browser window.
   let win = new BrowserWindow({
     width: 800,
@@ -12,6 +12,45 @@ function createWindow () {
  
   // and load the index.html of the app.
   win.loadFile('index.html');
+  win.on('closed', () => { app.quit() })
+  Menu.setApplicationMenu(Menu.buildFromTemplate(mainMenuTemplate))
+});
+
+const mainMenuTemplate: Array<(MenuItemConstructorOptions) | (MenuItem)> = [
+  {
+    label: 'File',
+    submenu: [
+      {
+        label: 'Add Item'
+      },
+      {
+        label: 'Clear Items'
+      },
+      {
+        label: 'Quit',
+        accelerator: 'Ctrl+Q',
+        click() {
+          app.quit();
+        }
+      }
+    ]
+  }
+]
+
+if (process.env.NODE_ENV !== 'production') {
+  mainMenuTemplate.push({
+    label: 'Developer Tools',
+    submenu: [
+      {
+        label: 'Toggle DevTools',
+        accelerator: 'Ctrl+I',
+        click(item, focusedWindow) {
+          focusedWindow.webContents.toggleDevTools();
+        }
+      },
+      {
+        role: 'reload'
+      }
+    ]
+  })
 }
- 
-app.on('ready', createWindow);
