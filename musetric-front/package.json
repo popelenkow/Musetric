@@ -1,16 +1,35 @@
 {
   "name": "musetric-front",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "Musetric app description",
+  "author": "Musetric <musetric@musetric.musetric>",
+  "main": "./electron.js",
   "scripts": {
     "build": "webpack --config ./webpack.config.js && webpack --config ./webpack.config.electron.js",
-    "dev": "yarn build && electron ./dist/electron.js"
+    "dev": "yarn build && electron ./dist/electron.js",
+    "dist": "yarn build && electron-builder"
+  },
+  "build": {
+    "appId": "musetric.app",
+    "productName": "Musetric",
+    "directories": {
+      "output": "build"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    }
   },
   "dependencies": {},
   "devDependencies": {
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "electron": "^9.0.2",
+    "electron-builder": "^22.7.0",
     "html-webpack-plugin": "^4.3.0",
     "immer": "^6.0.9",
     "react": "^16.13.1",
