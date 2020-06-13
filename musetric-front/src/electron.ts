@@ -1,5 +1,7 @@
 import { app, BrowserWindow, Menu, MenuItemConstructorOptions, MenuItem } from 'electron'
- 
+
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+
 app.on('ready', () => {
   let win = new BrowserWindow({
     width: 800,
