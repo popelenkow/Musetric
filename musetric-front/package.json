@@ -2,8 +2,6 @@
   "name": "musetric-front",
   "version": "0.0.1",
   "license": "MIT",
-  "description": "Musetric app description",
-  "author": "Musetric <musetric@musetric.musetric>",
   "main": "./dist/electron.js",
   "scripts": {
     "dev-renderer": "webpack-dev-server --progress --config ./configs/webpack.config.renderer.dev.js",
@@ -11,8 +9,17 @@
     "dev": "concurrently \"yarn dev-renderer\" \"yarn dev-main\" ",
     "build-renderer": "webpack --progress --config ./configs/webpack.config.renderer.prod.js",
     "build-main": "webpack --progress --config ./configs/webpack.config.main.prod.js",
-    "build": "rimraf dist && yarn build-renderer && yarn build-main && rimraf build && electron-builder",
+    "build": "yarn cln && yarn build-renderer && yarn build-main && electron-builder",
     "cln": "rimraf dist && rimraf build"
+  },
+  "author": {
+    "name": "Musetric",
+    "email": "musetric@musetric.musetric",
+    "url": "https://github.com/popelenkow/Musetric"
+  },
+  "description": "Musetric app description",
+  "bugs": {
+    "url": "https://github.com/popelenkow/Musetric/issues"
   },
   "build": {
     "appId": "musetric.app",
@@ -24,7 +31,9 @@
       "output": "build"
     },
     "win": {
-      "target": "nsis"
+      "target": [
+        "nsis"
+      ]
     },
     "nsis": {
       "allowToChangeInstallationDirectory": true,
