@@ -49,6 +49,7 @@
     "electron-builder": "^22.7.0",
     "html-webpack-plugin": "^4.3.0",
     "immer": "^6.0.9",
+    "python-shell": "^2.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "ts-loader": "^7.0.5",
