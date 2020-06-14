@@ -1,5 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import App from "./app";
+import GameOfLife from "./gameOfLife";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<GameOfLife />, document.getElementById("root"));
