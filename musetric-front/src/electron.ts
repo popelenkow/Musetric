@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, MenuItemConstructorOptions, MenuItem } from 'electron'
+import { app, BrowserWindow, Menu, MenuItemConstructorOptions } from 'electron'
 import { PythonShell } from 'python-shell'
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';

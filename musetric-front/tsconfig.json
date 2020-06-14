@@ -1,5 +1,25 @@
 {
-    "compilerOptions": {
-      "jsx": "react"
-    }
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "CommonJS",
+    "lib": ["DOM", "ESNext"],
+    "declaration": true,
+    "declarationMap": true,
+    "jsx": "react",
+    "strict": true,
+    "pretty": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    /* Additional Checks */
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noFallthroughCasesInSwitch": true,
+    /* Module Resolution Options */
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "allowJs": true
+  },
+  "include": ["./src/**/*"],
 }

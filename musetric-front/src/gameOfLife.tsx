@@ -1,103 +1,119 @@
-import * as React from "react"
+import React from "react"
 import produce from "immer";
 
-const numRows = 50;
-const numCols = 50;
+type Size = {
+  rows: number;
+  columns: number;
+}
+type Options = {
+  row: number;
+  column: number;
+}
+type Row = number[];
+type Grid = Row[];
+type GameOfLifeProps = {
+  size: Size;
+};
+type GameOfLifeState = {
+  grid: Grid;
+  generator?: NodeJS.Timeout;
+};
 
 const operations = [
   [0, 1],
   [0, -1],
+  [1, 0],
+  [-1, 0],
   [1, -1],
   [-1, 1],
   [1, 1],
-  [-1, -1],
-  [1, 0],
-  [-1, 0]
+  [-1, -1]
 ];
 
-const emptyGen = () => {
-  const grid: Grid = [];
-  for (let i = 0; i < numRows; i++) {
-    const row = Array.from(Array(numCols), () => 0);
-    grid.push(row);
-  }
-  return grid;
-}
-
-const randomGen = () => {
-  const grid: Grid = [];
-  for (let i = 0; i < numRows; i++) {
-    const row = Array.from(Array(numCols), () => Math.random() > 0.7 ? 1 : 0);
-    grid.push(row);
-  }
-  return grid;
-}
-
-const pickGen = (oldGrid: Grid, row: number, column: number) => {
-  const next = (newGrid) => {
-    newGrid[row][column] = oldGrid[row][column] ? 0 : 1;
-  };
-  return produce(oldGrid, next)
-}
-
-const nextGen = (oldGrid: Grid) => {
-  const next = (newGrid) => {
-    for (let i = 0; i < numRows; i++) {
-      for (let k = 0; k < numCols; k++) {
-        let neighbors = 0;
-        operations.forEach(([x, y]) => {
-          const newI = i + x;
-          const newK = k + y;
-          if (newI >= 0 && newI < numRows && newK >= 0 && newK < numCols) {
-            neighbors += oldGrid[newI][newK];
+type GenF = (size: Size, grid?: Grid, options?: Options) => Grid
+const Gen: Record<string, GenF> = {
+  empty: (size: Size) => {
+    const grid: Grid = [];
+    for (let i = 0; i < size.rows; i++) {
+      const row = [];
+      for (let j = 0; j < size.columns; j++) {
+        row.push(0);
+      }
+      grid.push(row);
+    }
+    return grid;
+  },
+  random: (size: Size) => {
+    const grid: Grid = [];
+    for (let i = 0; i < size.rows; i++) {
+      const row = [];
+      for (let j = 0; j < size.columns; j++) {
+        row.push(Math.random() > 0.7 ? 1 : 0);
+      }
+      grid.push(row);
+    }
+    return grid;
+  },
+  pick: (size: Size, grid?: Grid, options?: Options) => {
+    if (!grid) return Gen.empty(size);
+    if (!options) return grid;
+    const { row, column } = options;
+    const next = (nextGrid: Grid) => {
+      nextGrid[row][column] = grid[row][column] ? 0 : 1;
+    };
+    return produce(grid, next)
+  },
+  next: (size: Size, grid?: Grid) => {
+    if (!grid) return Gen.empty(size);
+    const next = (nextGrid: Grid) => {
+      for (let i = 0; i < size.rows; i++) {
+        for (let j = 0; j < size.columns; j++) {
+          let neighbors = 0;
+          operations.forEach(([x, y]) => {
+            const newI = x + i;
+            const newK = y + j;
+            if (newI >= 0 && newI < size.rows && newK >= 0 && newK < size.columns) {
+              neighbors += grid[newI][newK];
+            }
+          });
+  
+          if (neighbors < 2 || neighbors > 3) {
+            nextGrid[i][j] = 0;
+          } else if (grid[i][j] === 0 && neighbors === 3) {
+            nextGrid[i][j] = 1;
           }
-        });
-
-        if (neighbors < 2 || neighbors > 3) {
-          newGrid[i][k] = 0;
-        } else if (oldGrid[i][k] === 0 && neighbors === 3) {
-          newGrid[i][k] = 1;
         }
       }
-    }
-  };
-  return produce(oldGrid, next)
+    };
+    return produce(grid, next)
+  }
 }
-
-type Row = number[];
-type Grid = Row[];
-type GameOfLifeProps = {};
-type GameOfLifeState = {
-  grid: Grid;
-  process?: NodeJS.Timeout;
-};
 
 export default class GameOfLife extends React.Component<GameOfLifeProps, GameOfLifeState> {
 	constructor(props: GameOfLifeProps) {
     super(props);
-    this.state = { grid: emptyGen(), process: undefined };
-    //this.setState({ collapsed: true, hidden: this.state.hidden, report: this.state.report })
+    this.state = { grid: Gen.empty(this.props.size), generator: undefined };
   }
 
-  setProcess(isRun: boolean) {
-    if (this.state.process) {
-      clearInterval(this.state.process);
+  setGenerator(isRun: boolean) {
+    if (this.state.generator) {
+      clearInterval(this.state.generator);
     }
-    const process = isRun
-      ? setInterval(() => this.setGrid(nextGen), 100)
+    const generator: any = isRun // ToDo: Bug hot load
+      ? setInterval(() => this.setGrid(Gen.next), 100)
       : undefined;
-    this.setState({ ...this.state, process })
+    this.setState({ ...this.state, generator });
   }
 
-  setGrid(mutate: (old: Grid) => Grid) {
-    const grid = mutate(this.state.grid)
+  setGrid(gen: GenF, options?: Options) {
+    const grid = gen(this.props.size, this.state.grid, options)
     this.setState({ ...this.state, grid })
   }
  
 	render() {
     const gridStyle = {
       display: "grid",
-      gridTemplateColumns: `repeat(${numCols}, 20px)`
+      gridTemplateColumns: `repeat(${this.props.size.columns}, 20px)`
     }
     const pointStyle = (life: boolean) => ({
       width: 20,
@@ -108,19 +124,19 @@ export default class GameOfLife extends React.Component<GameOfLifeProps, GameOfL
     const grid = this.state.grid;
 		return ( 
     <>
-      <button onClick={() => this.setProcess(!this.state.process)}>
-        {this.state.process ? "stop" : "start"}
+      <button onClick={() => this.setGenerator(!this.state.generator)}>
+        {this.state.generator ? "stop" : "start"}
       </button>
-      <button onClick={() => this.setGrid(randomGen)}>
+      <button onClick={() => this.setGrid(Gen.random)}>
         random
       </button>
-      <button onClick={() => this.setGrid(emptyGen)}>
+      <button onClick={() => this.setGrid(Gen.empty)}>
         clear
       </button>
       <div style={gridStyle}>
-        {grid.map((rows, i) =>
-          rows.map((col, k) =>
-            <div key={`${i}-${k}`} onClick={() => this.setGrid((g) => pickGen(g, i, k))} style={pointStyle(!!grid[i][k])}/>
+        {grid.map((rows, row) =>
+          rows.map((_, column) =>
+            <div key={`${row}-${column}`} onClick={() => this.setGrid(Gen.pick, { row, column })} style={pointStyle(!!grid[row][column])}/>
           )
         )}
       </div>
