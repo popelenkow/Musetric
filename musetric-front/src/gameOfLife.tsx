@@ -1,6 +1,6 @@
-import React from "react"
-import produce from "immer";
-
+import React from 'react'
+import produce from 'immer';
+import { ipcRenderer } from 'electron';
 type Size = {
   rows: number;
   columns: number;
@@ -95,12 +95,20 @@ export default class GameOfLife extends React.Component<GameOfLifeProps, GameOfL
     this.state = { grid: Gen.empty(this.props.size), generator: undefined };
   }
 
+  componentDidMount() {
+    ipcRenderer.on('main-complete', (event, args) => {
+			console.log(args);
+		});
+
+		ipcRenderer.send('main-request', {});
+  }
+
   setGenerator(isRun: boolean) {
     if (this.state.generator) {
       clearInterval(this.state.generator);
     }
     const generator: any = isRun // ToDo: Bug hot load
-      ? setInterval(() => this.setGrid(Gen.next), 100)
+      ? setInterval(() => this.setGrid(Gen.next), 4000)
       : undefined;
     this.setState({ ...this.state, generator });
   }

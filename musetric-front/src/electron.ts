@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, MenuItemConstructorOptions } from 'electron'
+import { app, BrowserWindow, Menu, MenuItemConstructorOptions, ipcMain } from 'electron'
 import { PythonShell } from 'python-shell'
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
@@ -42,10 +42,12 @@ const mainMenuTemplate: Array<MenuItemConstructorOptions> = [
   }
 ]
 
-PythonShell.run('scripts/hello.py',  undefined, (err, results) =>  {
-  if (err) console.log(err)
-  console.log('python success', results);
-});
+ipcMain.on('main-request', (event, arg) => {
+  PythonShell.run('scripts/hello.py',  undefined, (err, results) =>  {
+    event.reply('main-complete', { message: 'python complete', results, err })
+  });
+})
+
 
 if (process.env.NODE_ENV === 'development') {
   mainMenuTemplate.push({
