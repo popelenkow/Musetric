@@ -108,7 +108,7 @@ export default class GameOfLife extends React.Component<GameOfLifeProps, GameOfL
       clearInterval(this.state.generator);
     }
     const generator: any = isRun // ToDo: Bug hot load
-      ? setInterval(() => this.setGrid(Gen.next), 4000)
+      ? setInterval(() => this.setGrid(Gen.next), 100)
       : undefined;
     this.setState({ ...this.state, generator });
   }

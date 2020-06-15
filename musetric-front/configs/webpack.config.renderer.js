@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
  
 module.exports = {
-  entry: './src/react.tsx',
+  entry: './src/renderer.tsx',
   target: 'electron-renderer',
   resolve: {
     extensions: ['.js', '.ts', '.tsx']
@@ -14,7 +14,7 @@ module.exports = {
   }] },
   output: {
     path: path.join(__dirname, '..', 'dist'),
-    filename: 'react.js'
+    filename: 'renderer.js'
   },
   plugins: [
     new HtmlWebpackPlugin({

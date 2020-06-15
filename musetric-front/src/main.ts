@@ -43,7 +43,7 @@ const mainMenuTemplate: Array<MenuItemConstructorOptions> = [
 ]
 
 ipcMain.on('main-request', (event, arg) => {
-  PythonShell.run('scripts/hello.py',  undefined, (err, results) =>  {
+  PythonShell.run('background/hello.py',  undefined, (err, results) =>  {
     event.reply('main-complete', { message: 'python complete', results, err })
   });
 })

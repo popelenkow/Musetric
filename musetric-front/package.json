@@ -2,7 +2,7 @@
   "name": "musetric-front",
   "version": "0.0.1",
   "license": "MIT",
-  "main": "./dist/electron.js",
+  "main": "./dist/main.js",
   "scripts": {
     "dev-renderer": "webpack-dev-server --progress --config ./configs/webpack.config.renderer.dev.js",
     "dev-main": "wait-on http://localhost:8080/ && webpack --progress --config ./configs/webpack.config.main.dev.js && electron .",

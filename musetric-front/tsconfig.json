@@ -3,8 +3,6 @@
     "target": "ES2018",
     "module": "CommonJS",
     "lib": ["DOM", "ESNext"],
-    "declaration": true,
-    "declarationMap": true,
     "jsx": "react",
     "strict": true,
     "pretty": true,

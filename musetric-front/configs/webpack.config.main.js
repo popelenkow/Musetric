@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/electron.ts',
+  entry: './src/main.ts',
   target: 'electron-main',
   module: {
     rules: [{
@@ -12,6 +12,6 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, '..', 'dist'),
-    filename: 'electron.js'
+    filename: 'main.js'
   }
 }
