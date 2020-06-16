@@ -31,9 +31,9 @@
 			"output": "build"
 		},
 		"win": {
-		"target": [
-			"nsis"
-		]
+			"target": [
+				"nsis"
+			]
 		},
 		"nsis": {
 			"allowToChangeInstallationDirectory": true,
@@ -42,13 +42,16 @@
 	},
 	"dependencies": {},
 	"devDependencies": {
+		"@types/classnames": "^2.2.10",
 		"@types/react": "^16.9.35",
 		"@types/react-dom": "^16.9.8",
 		"concurrently": "^5.2.0",
+		"css-loader": "^3.6.0",
 		"electron": "^9.0.2",
 		"electron-builder": "^22.7.0",
 		"html-webpack-plugin": "^4.3.0",
 		"immer": "^6.0.9",
+		"mini-css-extract-plugin": "^0.9.0",
 		"python-shell": "^2.0.1",
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",

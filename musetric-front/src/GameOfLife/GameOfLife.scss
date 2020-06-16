@@ -1,5 +1,20 @@
-.poi {
-	width: 20;
-	height: 20;
+@mixin cell {
+	width: 20px;
+	height: 20px;
 	border: solid 1px gray;
+}
+
+.game-cell-live {
+	@include cell;
+	background-color: black;
+}
+
+.game-cell-dead {
+	@include cell;
+	background-color: white;
+}
+
+.game-grid {
+	display: grid;
+	grid-template-columns: 20px;
 }

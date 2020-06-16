@@ -2,6 +2,7 @@ import React from 'react'
 import produce from 'immer';
 import { ipcRenderer } from 'electron';
 import { Size, Grid, Options, Row, GameOfLifeProps, GameOfLifeState, GenF, Gen } from './types';
+import './GameOfLife.scss'
 
 const operations = [
 	[0, 1],
@@ -91,7 +92,7 @@ export class GameOfLife extends React.Component<GameOfLifeProps, GameOfLifeState
 		if (this.state.generator) {
 			clearInterval(this.state.generator);
 		}
-		const generator: any = isRun // ToDo: Bug hot load
+		const generator: any = isRun // ToDo: Bug hot load withot any
 			? setInterval(() => this.setGrid(Gen.next), 100)
 			: undefined;
 		this.setState({ ...this.state, generator });
@@ -104,20 +105,13 @@ export class GameOfLife extends React.Component<GameOfLifeProps, GameOfLifeState
 	
 	render() {
 		const gridStyle = {
-			display: "grid",
 			gridTemplateColumns: `repeat(${this.props.size.columns}, 20px)`
 		}
-		const pointStyle = (life: boolean) => ({
-			width: 20,
-			height: 20,
-			backgroundColor: life ? "black" : "white",
-			border: "solid 1px gray"
-		})
 		const grid = this.state.grid;
 		return ( 
 		<>
 			<button onClick={() => this.setGenerator(!this.state.generator)}>
-				{this.state.generator ? "stop" : "start"}
+				{this.state.generator ? 'stop' : 'start'}
 			</button>
 			<button onClick={() => this.setGrid(Gen.random)}>
 				random
@@ -125,11 +119,15 @@ export class GameOfLife extends React.Component<GameOfLifeProps, GameOfLifeState
 			<button onClick={() => this.setGrid(Gen.empty)}>
 				clear
 			</button>
-			<div style={gridStyle}>
+			<div className='game-grid' style={gridStyle}>
 				{grid.map((rows, row) =>
-					rows.map((_, column) =>
-						<div className='poi' key={`${row}-${column}`} onClick={() => this.setGrid(Gen.pick, { row, column })} style={pointStyle(!!grid[row][column])}/>))
-				}
+					rows.map((_, column) => {
+						const cellClass = grid[row][column] ? 'game-cell-live' : 'game-cell-dead';
+						const key = `${row}-${column}`;
+						const pick = () => this.setGrid(Gen.pick, { row, column });
+						return <div className={cellClass} key={key} onClick={pick}/>
+					})
+				)}
 			</div>
 		</>
 		)
