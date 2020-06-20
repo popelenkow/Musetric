@@ -34,7 +34,7 @@ const mainMenuTemplate: Array<MenuItemConstructorOptions> = [{
 		label: 'Quit',
 		accelerator: 'Ctrl+Q',
 		click() {
-		app.quit();
+			app.quit();
 		}
 	}
 	]

@@ -1,8 +1,9 @@
+import './GameOfLife.scss'
 import React from 'react'
 import produce from 'immer';
 import { ipcRenderer } from 'electron';
 import { Size, Grid, Options, Row, GameOfLifeProps, GameOfLifeState, GenF, Gen } from './types';
-import './GameOfLife.scss'
+import i18n from 'i18next'
 
 const operations = [
 	[0, 1],
@@ -114,7 +115,7 @@ export class GameOfLife extends React.Component<GameOfLifeProps, GameOfLifeState
 				{this.state.generator ? 'stop' : 'start'}
 			</button>
 			<button onClick={() => this.setGrid(Gen.random)}>
-				random
+				{i18n.t('game:random')}
 			</button>
 			<button onClick={() => this.setGrid(Gen.empty)}>
 				clear
