@@ -112,13 +112,13 @@ export class GameOfLife extends React.Component<GameOfLifeProps, GameOfLifeState
 		return ( 
 		<>
 			<button onClick={() => this.setGenerator(!this.state.generator)}>
-				{this.state.generator ? 'stop' : 'start'}
+				{this.state.generator ? i18n.t('game:stop') : i18n.t('game:start')}
 			</button>
 			<button onClick={() => this.setGrid(Gen.random)}>
 				{i18n.t('game:random')}
 			</button>
 			<button onClick={() => this.setGrid(Gen.empty)}>
-				clear
+				{i18n.t('game:clear')}
 			</button>
 			<div className='game-grid' style={gridStyle}>
 				{grid.map((rows, row) =>

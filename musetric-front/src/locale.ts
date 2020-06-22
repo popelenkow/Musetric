@@ -1,5 +1,8 @@
 import i18n from 'i18next';
 
+const lngs = ['en', 'ru'];
+const nss = ['game'];
+
 export const initLocale = () => {
 	i18n.init({
 		fallbackLng: 'en',
@@ -11,7 +14,11 @@ export const initLocale = () => {
 		},
 		appendNamespaceToMissingKey: true,
 	});
-	
-	const localeData: Array<{ ns: string, lng: string, resources: any }> = require('./locale/en-locale.json')
-	localeData.forEach(({ ns, lng, resources }) => i18n.addResources(lng, ns, resources));
+
+	lngs.forEach(lng => {
+		nss.forEach(ns => {
+			const resources = require(`./locale/${lng}/${ns}.json`)
+			i18n.addResources(lng, ns, resources);
+		})
+	})
 }
