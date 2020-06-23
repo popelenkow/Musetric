@@ -110,7 +110,7 @@ export class GameOfLife extends React.Component<GameOfLifeProps, GameOfLifeState
 		}
 		const grid = this.state.grid;
 		return ( 
-		<>
+		<div className='game'>
 			<button onClick={() => this.setGenerator(!this.state.generator)}>
 				{this.state.generator ? i18n.t('game:stop') : i18n.t('game:start')}
 			</button>
@@ -130,6 +130,6 @@ export class GameOfLife extends React.Component<GameOfLifeProps, GameOfLifeState
 					})
 				)}
 			</div>
-		</>)
+		</div>)
 	}
 }

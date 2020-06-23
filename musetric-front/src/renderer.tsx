@@ -1,4 +1,5 @@
 import './theme/dark.scss'
+import './renderer.scss'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { initLocale } from './locale';
@@ -18,6 +19,9 @@ const props = {
 const root = (
 <>
 	<Titlebar />
-	<GameOfLife {...props}  />
+	<div className='main'>
+		<GameOfLife {...props}  />
+	</div>
+
 </>)
 ReactDOM.render(root, document.getElementById("root"));
