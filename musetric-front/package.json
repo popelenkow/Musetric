@@ -5,7 +5,7 @@
 	"main": "./dist/main.js",
 	"scripts": {
 		"dev-renderer": "webpack-dev-server --progress --config ./configs/webpack.config.renderer.dev.js",
-		"dev-main": "wait-on http://localhost:8080/ && webpack --progress --config ./configs/webpack.config.main.dev.js && electron .",
+		"dev-main": "webpack --progress --config ./configs/webpack.config.main.dev.js && electron .",
 		"dev": "cross-env WITH_MAIN=1 yarn dev-renderer",
 		"build-renderer": "webpack --progress --config ./configs/webpack.config.renderer.prod.js",
 		"build-main": "webpack --progress --config ./configs/webpack.config.main.prod.js",

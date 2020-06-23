@@ -8,8 +8,9 @@ app.on('ready', () => {
 		width: 800,
 		height: 600,
 		webPreferences: {
-		nodeIntegration: true
-		}
+			nodeIntegration: true
+		},
+		frame: false
 	});
 	
 	process.env.NODE_ENV === 'development'
@@ -53,7 +54,7 @@ if (process.env.NODE_ENV === 'development') {
 		submenu: [
 		{
 			label: 'Toggle DevTools',
-			accelerator: 'Ctrl+I',
+			accelerator: 'F12',
 			click(item, focusedWindow) {
 			focusedWindow.webContents.toggleDevTools();
 			}

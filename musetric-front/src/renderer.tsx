@@ -1,8 +1,9 @@
 import './theme/dark.scss'
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { GameOfLife } from "./GameOfLife";
 import { initLocale } from './locale';
+import { Titlebar } from './components/Titlebar';
+import { GameOfLife } from "./components/GameOfLife";
 
 
 initLocale();
@@ -14,4 +15,9 @@ const props = {
 	}
 }
 
-ReactDOM.render(<GameOfLife {...props}  />, document.getElementById("root"));
+const root = (
+<>
+	<Titlebar />
+	<GameOfLife {...props}  />
+</>)
+ReactDOM.render(root, document.getElementById("root"));

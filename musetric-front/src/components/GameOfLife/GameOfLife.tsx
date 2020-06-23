@@ -130,7 +130,6 @@ export class GameOfLife extends React.Component<GameOfLifeProps, GameOfLifeState
 					})
 				)}
 			</div>
-		</>
-		)
+		</>)
 	}
 }
