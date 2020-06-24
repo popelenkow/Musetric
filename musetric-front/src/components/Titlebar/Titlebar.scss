@@ -7,11 +7,13 @@
 	-webkit-app-region: drag;
 	-webkit-user-select: none;
 }
+
 .title-icon {
 	flex-grow: 1;
 	max-width: 32px;
 	max-height: 32px;
 }
+
 .title-text {
 	flex-grow: 2;
 	max-height: 32px;
@@ -20,11 +22,13 @@
 	color: #fff;
 	text-indent: 10px;
 }
+
 .title-controls {
 	max-width: 144px;
 	max-height: 32px;
 	flex-grow: 1;
 }
+
 .title-btn {
 	margin: 0;
 	width: 48px;
@@ -34,20 +38,22 @@
 	background: transparent;
 	-webkit-app-region: none;
 }
+
 .title-btn:hover {
 	background: rgba(255,255,255,.1);
 }
 
-
 .title-btn.close:hover {
 	background: #e81123;
 }
+
 .title-btn svg path, 
 .title-btn svg rect, 
 .title-btn svg polygon {
 	fill: #fff;
 }
+
 .title-btn svg {
-  width: 10px;
-  height: 10px;
+	width: 10px;
+	height: 10px;
 }

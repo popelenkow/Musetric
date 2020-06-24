@@ -10,15 +10,9 @@ module.exports = {
 	},
 	module: {
 		rules: [
-		{
-			test: /\.(ts|tsx)$/,
-			include: /src/,
-			use: ['ts-loader']
-		},
-		{
-			test: /\.(css|sass|scss)$/,
-			use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
-		}] 
+			{ test: /\.(ts|tsx)$/, include: /src/, use: ['ts-loader'] },
+			{ test: /\.(css|scss)$/, use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'] }
+		] 
 	},
 	output: {
 		path: path.join(__dirname, '..', 'dist'),

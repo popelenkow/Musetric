@@ -56,7 +56,9 @@ if (process.env.NODE_ENV === 'development') {
 			label: 'Toggle DevTools',
 			accelerator: 'F12',
 			click(item, focusedWindow) {
-			focusedWindow.webContents.toggleDevTools();
+				if (focusedWindow) {
+					focusedWindow.webContents.toggleDevTools();
+				}
 			}
 		},
 		{
