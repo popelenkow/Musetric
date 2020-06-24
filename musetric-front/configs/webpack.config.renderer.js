@@ -18,6 +18,7 @@ module.exports = {
 		path: path.join(__dirname, '..', 'dist'),
 		filename: 'renderer.js'
 	},
+	stats: { modules: false, children: false, entrypoints: false },
 	plugins: [
 		new HtmlWebpackPlugin({
 			template: './src/index.html',
