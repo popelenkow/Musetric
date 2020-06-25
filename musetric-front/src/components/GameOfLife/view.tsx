@@ -111,15 +111,17 @@ export class GameOfLifeView extends React.Component<GameOfLifeProps, GameOfLifeS
 		const grid = this.state.grid;
 		return ( 
 		<div className='game'>
-			<button onClick={() => this.setGenerator(!this.state.generator)}>
-				{this.state.generator ? i18n.t('game:stop') : i18n.t('game:start')}
-			</button>
-			<button onClick={() => this.setGrid(Gen.random)}>
-				{i18n.t('game:random')}
-			</button>
-			<button onClick={() => this.setGrid(Gen.empty)}>
-				{i18n.t('game:clear')}
-			</button>
+			<div className='game-header'>
+				<button onClick={() => this.setGenerator(!this.state.generator)}>
+					{this.state.generator ? i18n.t('game:stop') : i18n.t('game:start')}
+				</button>
+				<button onClick={() => this.setGrid(Gen.random)}>
+					{i18n.t('game:random')}
+				</button>
+				<button onClick={() => this.setGrid(Gen.empty)}>
+					{i18n.t('game:clear')}
+				</button>
+			</div>
 			<div className='game-grid' style={gridStyle}>
 				{grid.map((rows, row) =>
 					rows.map((_, column) => {

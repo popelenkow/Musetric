@@ -1,4 +1,4 @@
-import './Titlebar.scss'
+import './styles.scss'
 import React from 'react'
 import i18n from 'i18next'
 import { TitlebarProps, TitlebarState } from './types';
@@ -7,7 +7,7 @@ import { remote } from 'electron'
 const win = remote.getCurrentWindow();
 
 
-export class Titlebar extends React.Component<TitlebarProps, TitlebarState> {
+export class TitlebarView extends React.Component<TitlebarProps, TitlebarState> {
 	constructor(props: TitlebarProps) {
 		super(props);
 		this.state = { isMaximized: win.isMaximized() }

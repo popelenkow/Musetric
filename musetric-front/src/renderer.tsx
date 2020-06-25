@@ -1,9 +1,9 @@
 import './theme/dark.scss'
-import './renderer.scss'
+import './styles.scss'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { initLocale } from './locale';
-import { Titlebar } from './components/Titlebar';
+import { TitlebarView } from './components/Titlebar';
 import { GameOfLifeView } from "./components/GameOfLife";
 
 
@@ -18,7 +18,7 @@ const props = {
 
 const root = (
 <>
-	<Titlebar />
+	<TitlebarView />
 	<div className='main'>
 		<GameOfLifeView {...props}  />
 	</div>

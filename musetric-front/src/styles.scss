@@ -1,11 +1,12 @@
 body {
-	border: 1px solid #48545c;
+	border: 1px solid gray;
 	margin: 0;
 	overflow: hidden;
 }
 
 #root {
-	height: 100vh;
+	width: calc(100vw - 2px);
+	height: calc(100vh - 2px);
 	display: flex;
 	flex-direction: column;
 }
