@@ -62,7 +62,8 @@ if (process.env.NODE_ENV === 'development') {
 			}
 		},
 		{
-			role: 'reload'
+			role: 'reload',
+			accelerator: 'F5'
 		}
 		]
 	})

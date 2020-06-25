@@ -10,11 +10,15 @@ module.exports = merge(config, {
 		contentBase: path.join(__dirname, 'dist'),
 		port: 8080,
 		before: (app, server, compiler) => {
+			let done = false;
 			compiler.hooks.done.tap('main', () => {
+				if (done) return;
+				done = true;
 				console.log('Starting Main Process...');
 				spawn('yarn', ['dev-main'], { shell: true, env: process.env, stdio: 'inherit' })	
 					.on('close', code => process.exit(code))
 					.on('error', spawnError => console.error(spawnError));
+				compiler.hooks.done.rem
 			})
 			
 		}

@@ -1,9 +1,18 @@
 body {
 	border: 1px solid #48545c;
 	margin: 0;
+	overflow: hidden;
+}
+
+#root {
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
 }
 
 .main {
-	height: calc(100% - 32px);
-	margin: 5px;
+	display: flex;
+	flex: 1;
+	min-height: 0px;
+	overflow: auto;
 }
