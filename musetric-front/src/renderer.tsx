@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { initLocale } from './locale';
 import { Titlebar } from './components/Titlebar';
-import { GameOfLife } from "./components/GameOfLife";
+import { GameOfLifeView } from "./components/GameOfLife";
 
 
 initLocale();
@@ -20,7 +20,7 @@ const root = (
 <>
 	<Titlebar />
 	<div className='main'>
-		<GameOfLife {...props}  />
+		<GameOfLifeView {...props}  />
 	</div>
 
 </>)

@@ -1,4 +1,4 @@
-import './GameOfLife.scss'
+import './styles.scss'
 import React from 'react'
 import produce from 'immer';
 import { ipcRenderer } from 'electron';
@@ -75,7 +75,7 @@ const Gen: Gen = {
 	}
 }
 
-export class GameOfLife extends React.Component<GameOfLifeProps, GameOfLifeState> {
+export class GameOfLifeView extends React.Component<GameOfLifeProps, GameOfLifeState> {
 	constructor(props: GameOfLifeProps) {
 		super(props);
 		this.state = { grid: Gen.empty(this.props.size), generator: undefined };

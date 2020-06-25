@@ -1,2 +1,2 @@
-export * from './GameOfLife'
+export * from './view'
 export * from './types'
