@@ -17,16 +17,16 @@
 @mixin cell {
 	width: 20px;
 	height: 20px;
-	border: solid 1px gray;
+	border: solid 1px var(--content-splitter);
 }
 
 .game-cell-live {
 	@include cell;
-	background-color: black;
+	background-color: var(--cell-live);
 }
 
 .game-cell-dead {
 	@include cell;
-	background-color: white;
+	background-color: var(--cell-dead);
 }
 

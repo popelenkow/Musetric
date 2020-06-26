@@ -1,4 +1,3 @@
-import './theme/dark.scss'
 import './styles.scss'
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -19,9 +18,12 @@ const props = {
 const root = (
 <>
 	<TitlebarView />
-	<div className='main'>
+	<div className='main dark-theme'>
 		<GameOfLifeView {...props}  />
 	</div>
 
 </>)
-ReactDOM.render(root, document.getElementById("root"));
+
+const app = document.getElementById("app");
+app?.classList.add('dark-theme')
+ReactDOM.render(root, app);

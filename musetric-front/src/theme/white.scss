@@ -1,3 +1,8 @@
-$dark-theme: false !default;
-$cell-live: #000000;
-$cell-dead: #ffffff;
+.dark-theme {
+	--app-bg: white;
+	--window-border: gray;
+	--titlebar-bg: white;
+	--content-splitter: gray;
+	--cell-live: black;
+	--cell-dead: white;
+}

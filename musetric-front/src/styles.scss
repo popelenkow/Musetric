@@ -1,19 +1,27 @@
+@import './theme/styles.scss';
+@import './components/styles.scss';
+
 body {
-	border: 1px solid gray;
 	margin: 0;
 	overflow: hidden;
 }
 
-#root {
+#app {
 	width: calc(100vw - 2px);
 	height: calc(100vh - 2px);
+	border: 1px solid gray;
 	display: flex;
 	flex-direction: column;
+	background-color: var(--app-bg);
 }
+
 
 .main {
 	display: flex;
 	flex: 1;
 	min-height: 0px;
+	
+	margin: 25px;
 	overflow: auto;
 }
+
