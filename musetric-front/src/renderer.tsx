@@ -18,7 +18,7 @@ const props = {
 const root = (
 <>
 	<TitlebarView />
-	<div className='main dark-theme'>
+	<div className='main'>
 		<GameOfLifeView {...props}  />
 	</div>
 

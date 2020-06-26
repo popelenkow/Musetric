@@ -1,8 +1,9 @@
-.dark-theme {
+:root, .white-theme {
 	--app-bg: white;
 	--window-border: gray;
-	--titlebar-bg: white;
-	--content-splitter: gray;
+	--titlebar-bg: #e9e9e9;
+	--content-text: #000000;
+	--content-splitter: #bebebe;
 	--cell-live: black;
 	--cell-dead: white;
 }
