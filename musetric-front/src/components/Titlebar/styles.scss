@@ -36,6 +36,7 @@
 	height:32px;
 	border: 0;
 	outline: 0;
+	color: var(--content-text);
 	background: transparent;
 	-webkit-app-region: none;
 }
@@ -48,10 +49,10 @@
 	background: #e81123;
 }
 
-.title-btn svg path, 
-.title-btn svg rect, 
-.title-btn svg polygon {
-	fill: var(--content-text);
+.title-btn svg {
+	path, rect, polygon {
+		fill: var(--content-text);
+	}
 }
 
 .title-btn svg {
