@@ -7,19 +7,6 @@ import { icons } from '../../icons';
 
 const win = remote.getCurrentWindow();
 
-const app = document.getElementById("app");
-
-const changeTheme = () => {
-
-	let isWhite = true;
-	app?.classList.forEach(x => {
-		if (x == 'dark-theme') isWhite = false;
-		app.classList.remove(x);
-	})
-	app?.classList.add(isWhite ? 'dark-theme' : 'white-theme')
-}
-
-
 export class TitlebarView extends React.Component<TitlebarProps, TitlebarState> {
 	constructor(props: TitlebarProps) {
 		super(props);
