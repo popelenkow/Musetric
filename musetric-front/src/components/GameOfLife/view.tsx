@@ -1,4 +1,3 @@
-import './styles.scss'
 import React from 'react'
 import produce from 'immer';
 import { ipcRenderer } from 'electron';
