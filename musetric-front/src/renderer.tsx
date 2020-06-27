@@ -17,31 +17,28 @@ const extractTheme: () => Theme | undefined = () => {
 	app.classList.forEach(x => isTheme(x) && themes.push(x))
 	return themes.shift();
 }
-const themeSet: Theme[] = ['white', 'dark']
-const theme = {
-	value: extractTheme() || 'white',
-	set: (theme: Theme) => {
-		app.classList.forEach(x => isTheme(x) && app.classList.remove(x))
-		app.classList.add(theme)
-	},
-	next: (theme: Theme) => {
-		let index = themeSet.indexOf(theme);
-		index = (index + 1) % themeSet.length
-		return themeSet[index]
-	},
-	localize: (theme: Theme) => {
-		const map = (theme: Theme): string | undefined => {
+const titlebarProps: TitlebarProps = {
+	theme: {
+		value: extractTheme() || 'white',
+		set: (theme: Theme) => {
+			app.classList.forEach(x => isTheme(x) && app.classList.remove(x))
+			app.classList.add(theme)
+		},
+		next: (theme: Theme) => {
+			const themeSet: Theme[] = ['white', 'dark']
+			let index = themeSet.indexOf(theme);
+			index = (index + 1) % themeSet.length
+			return themeSet[index]
+		},
+		localize: (theme: Theme) => {
 			switch (theme) {
 				case 'white': return i18next.t('musetric:theme.white')
 				case 'dark': return i18next.t('musetric:theme.dark')
-				default: return;
+				default: return theme;
 			}
 		}
-		return map(theme) || theme
 	}
 }
-
-const titlebarProps: TitlebarProps = { theme }
 
 
 const gameOfLifeProps: GameOfLifeProps = {
