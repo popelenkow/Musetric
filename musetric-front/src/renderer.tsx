@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { initLocale } from './locale';
 import { TitlebarView } from './components/Titlebar';
 import { GameOfLifeView, GameOfLifeProps } from "./components/GameOfLife";
-import { Theme, isTheme, themeSet } from './types';
+import { Theme, isTheme, themeSet, localeSet, Locale } from './types';
 import i18next from 'i18next';
 import { SwitchView, SwitchProps } from './components/Switch';
 
@@ -36,6 +36,15 @@ const themeSwitchProps: SwitchProps<Theme> = {
 	}
 }
 
+const localeSwitchProps: SwitchProps<Locale> = {
+	currentId: localeSet[0],
+	ids: localeSet,
+	set: (locale: Locale) => {
+		i18next.changeLanguage(locale);
+	},
+	className: 'title-btn'
+}
+
 
 const gameOfLifeProps: GameOfLifeProps = {
 	size: {
@@ -48,6 +57,7 @@ const root = (
 <>
 	<TitlebarView>
 		<SwitchView {...themeSwitchProps} />
+		<SwitchView {...localeSwitchProps} />
 	</TitlebarView>
 	<div className='main'>
 		<GameOfLifeView {...gameOfLifeProps}  />
