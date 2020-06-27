@@ -2,9 +2,9 @@ import './styles.scss'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { initLocale } from './locale';
-import { TitlebarView, TitlebarProps } from './components/Titlebar';
+import { TitlebarView } from './components/Titlebar';
 import { GameOfLifeView, GameOfLifeProps } from "./components/GameOfLife";
-import { Theme, isTheme } from './types';
+import { Theme, isTheme, themeSet } from './types';
 import i18next from 'i18next';
 import { SwitchView, SwitchProps } from './components/Switch';
 
@@ -18,9 +18,10 @@ const extractTheme: () => Theme | undefined = () => {
 	app.classList.forEach(x => isTheme(x) && themes.push(x))
 	return themes.shift();
 }
+
 const themeSwitchProps: SwitchProps<Theme> = {
-	currentId: extractTheme() || 'white',
-	ids: ['white', 'dark'],
+	currentId: extractTheme() || themeSet[0],
+	ids: themeSet,
 	set: (theme: Theme) => {
 		app.classList.forEach(x => isTheme(x) && app.classList.remove(x))
 		app.classList.add(theme)

@@ -1,5 +1,5 @@
-export type Theme = 'dark' | 'white'
+export type Theme =  'white' | 'dark'
+export const themeSet: Theme[] = ['white', 'dark']
 export const isTheme = (value: any): value is Theme => {
-    const keys: Theme[] = ['dark', 'white'];
-    return keys.indexOf(value) !== -1;
+    return themeSet.indexOf(value) !== -1;
 }
