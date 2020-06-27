@@ -1,11 +1,15 @@
 import { Theme } from "../../types";
 
 export type TitlebarProps = {
-	theme: Theme;
-	setTheme: (theme: Theme) => void;
+	theme: {
+		value: Theme;
+		set: (theme: Theme) => void;
+		next: (theme: Theme) => Theme;
+		localize: (theme: Theme) => string
+	}
 };
 
 export type TitlebarState = {
-	isDark: boolean;
+	theme: Theme;
 	isMaximized: boolean;
 };

@@ -5,25 +5,44 @@ import { initLocale } from './locale';
 import { TitlebarView, TitlebarProps } from './components/Titlebar';
 import { GameOfLifeView, GameOfLifeProps } from "./components/GameOfLife";
 import { Theme, isTheme } from './types';
+import i18next from 'i18next';
 
 const app = document.getElementById("app");
 if (!app) throw new Error('App not found');
 
 initLocale();
 
-const parseTheme: () => Theme | undefined = () => {
+const extractTheme: () => Theme | undefined = () => {
 	const themes: Theme[] = [];
 	app.classList.forEach(x => isTheme(x) && themes.push(x))
 	return themes.shift();
 }
-
-const setTheme = (theme: Theme) => {
-	app.classList.forEach(x => isTheme(x) && app.classList.remove(x))
-	app.classList.add(theme)
+const themeSet: Theme[] = ['white', 'dark']
+const theme = {
+	value: extractTheme() || 'white',
+	set: (theme: Theme) => {
+		app.classList.forEach(x => isTheme(x) && app.classList.remove(x))
+		app.classList.add(theme)
+	},
+	next: (theme: Theme) => {
+		let index = themeSet.indexOf(theme);
+		index = (index + 1) % themeSet.length
+		return themeSet[index]
+	},
+	localize: (theme: Theme) => {
+		const t = (): string | undefined => {
+			switch (theme) {
+				case 'white': return i18next.t('musetric:theme.white')
+				case 'dark': return i18next.t('musetric:theme.dark')
+				default: return;
+			}
+		}
+		return t() || theme
+	}
 }
-const theme = parseTheme() || 'white'
 
-const titlebarProps: TitlebarProps = { theme, setTheme }
+const titlebarProps: TitlebarProps = { theme }
+
 
 const gameOfLifeProps: GameOfLifeProps = {
 	size: {

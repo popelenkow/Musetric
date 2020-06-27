@@ -1,10 +1,10 @@
-import i18n from 'i18next';
+import i18next from 'i18next';
 
 const lngs = ['en', 'ru'];
 const nss = ['game'];
 
 export const initLocale = () => {
-	i18n.init({
+	i18next.init({
 		fallbackLng: 'en',
 		defaultNS: 'musetric',
 		debug: false,
@@ -18,7 +18,7 @@ export const initLocale = () => {
 	lngs.forEach(lng => {
 		nss.forEach(ns => {
 			const resources = require(`./locale/${lng}/${ns}.json`)
-			i18n.addResources(lng, ns, resources);
+			i18next.addResources(lng, ns, resources);
 		})
 	})
 }
