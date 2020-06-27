@@ -30,14 +30,14 @@ const theme = {
 		return themeSet[index]
 	},
 	localize: (theme: Theme) => {
-		const t = (): string | undefined => {
+		const map = (theme: Theme): string | undefined => {
 			switch (theme) {
 				case 'white': return i18next.t('musetric:theme.white')
 				case 'dark': return i18next.t('musetric:theme.dark')
 				default: return;
 			}
 		}
-		return t() || theme
+		return map(theme) || theme
 	}
 }
 
