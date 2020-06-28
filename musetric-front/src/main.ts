@@ -4,7 +4,7 @@ import { PythonShell } from 'python-shell'
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 app.on('ready', () => {
-	let win = new BrowserWindow({
+	let window = new BrowserWindow({
 		width: 800,
 		height: 600,
 		minWidth: 300,
@@ -14,13 +14,15 @@ app.on('ready', () => {
 		},
 		frame: false
 	});
-	
-	process.env.NODE_ENV === 'development'
-		? win.loadURL('http://localhost:8080')
-		: win.loadFile('dist/index.html');
 
-	process.env.NODE_ENV === 'development' && win.webContents.toggleDevTools();  
-	win.on('closed', () => { app.quit() })
+	process.env.NODE_ENV === 'development'
+		? window.loadURL('http://localhost:8080')
+		: window.loadFile('dist/index.html');
+
+	process.env.NODE_ENV === 'development' && window.webContents.toggleDevTools();
+	window.on('maximize', () => window.webContents.send('on-maximize-window', true))
+	window.on('unmaximize', () => window.webContents.send('on-maximize-window', false))
+	window.on('closed', () => { app.quit() })
 	Menu.setApplicationMenu(Menu.buildFromTemplate(mainMenuTemplate))
 });
 
@@ -43,8 +45,16 @@ const mainMenuTemplate: Array<MenuItemConstructorOptions> = [{
 	]
 }]
 
-ipcMain.handle('main-invoke', async (event, arg) => {
-	return await new Promise((resolve, reject) => {
+ipcMain.handle('main-window', async (info, event) => {
+	const window = BrowserWindow.fromId(info.sender.id);
+	if (event == 'close') window.close();
+	else if (event == 'minimize') window.minimize();
+	else if (event == 'maximize') window.maximize();
+	else if (event == 'unmaximize') window.unmaximize();
+})
+
+ipcMain.handle('pytest', async () => {
+	return await new Promise((resolve) => {
 		PythonShell.run('background/hello.py', undefined, (err, results) =>  {
 			resolve({ message: 'python complete', results, err })
 		});

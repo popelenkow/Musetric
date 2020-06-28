@@ -1,35 +1,39 @@
 import React from 'react'
 import { TitlebarProps, TitlebarState } from './types';
-import { remote } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 import { icons } from '../../icons';
+import { WindowEvent, channels } from '../../channels';
 
 const win = remote.getCurrentWindow();
 
 export class TitlebarView extends React.Component<TitlebarProps, TitlebarState> {
 	constructor(props: TitlebarProps) {
 		super(props);
-		this.state = { isMaximized: win.isMaximized() }
+		this.state = { isMaximized: false }
+	}
+
+	componentDidMount() {
+		ipcRenderer.on(channels.onMaximizeWindow, (_, isMaximized) => {
+			this.setState({ isMaximized: isMaximized })
+		});	
 	}
 
 	render() {
 		const { isMaximized } = this.state;
-		const maximize = () => {
-			isMaximized ? win.unmaximize() : win.maximize();
-			this.setState({ isMaximized: !isMaximized })
-		}
+		const sendMain = (event: WindowEvent) => ipcRenderer.invoke(channels.mainWindow, event);
 
 		return (
 		<div className='titlebar'>
 			<div className="titlebar-text">Musetric</div>
 			{this.props.children}
 			<div className="titlebar-controls">
-				<button className="titlebar-btn win-btn" onClick={() => win.minimize()}>
+				<button className="titlebar-btn win-btn" onClick={() => sendMain('minimize')}>
 					{icons.titlebar.minimize}
 				</button>
-				<button className="titlebar-btn win-btn" onClick={maximize}>
+				<button className="titlebar-btn win-btn" onClick={() => isMaximized ? sendMain('unmaximize') : sendMain('maximize')}>
 					{isMaximized ? icons.titlebar.unmaximize : icons.titlebar.maximize}
 				</button>
-				<button className="titlebar-btn win-btn win-close" onClick={() => win.close()}>
+				<button className="titlebar-btn win-btn win-close" onClick={() => sendMain('close')}>
 					{icons.titlebar.close}
 				</button>
 			</div>

@@ -3,6 +3,7 @@ import produce from 'immer';
 import { ipcRenderer } from 'electron';
 import { Size, Grid, Options, Row, GameOfLifeProps, GameOfLifeState, GenF, Gen } from './types';
 import { withTranslation, WithTranslation } from 'react-i18next';
+import { channels } from '../../channels';
 
 const operations = [
 	[0, 1],
@@ -82,7 +83,7 @@ class GameOfLifeView extends React.Component<GameOfLifeProps & WithTranslation, 
 
 	componentDidMount() {
 		ipcRenderer
-			.invoke('main-invoke', '/path/to/file')
+			.invoke(channels.pytest)
 			.then(value => console.log(value))
 			.catch(err => console.log(err))
 	}

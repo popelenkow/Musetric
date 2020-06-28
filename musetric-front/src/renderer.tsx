@@ -28,11 +28,9 @@ const themeSwitchProps: SwitchProps<Theme> = {
 	},
 	className: 'titlebar-btn',
 	localize: (theme: Theme, t: TFunction) => {
-		switch (theme) {
-			case 'white': return t('musetric:theme.white')
-			case 'dark': return t('musetric:theme.dark')
-			default: return theme;
-		}
+		if (theme == 'white') return t('musetric:theme.white')
+		else if (theme == 'dark') return t('musetric:theme.dark')
+		else return theme;
 	}
 }
 
