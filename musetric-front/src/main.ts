@@ -22,7 +22,7 @@ app.on('ready', () => {
 	process.env.NODE_ENV === 'development' && window.webContents.toggleDevTools();
 	window.on('maximize', () => window.webContents.send('on-maximize-window', true))
 	window.on('unmaximize', () => window.webContents.send('on-maximize-window', false))
-	window.on('closed', () => { app.quit() })
+	window.on('closed', () => app.quit())
 	Menu.setApplicationMenu(Menu.buildFromTemplate(mainMenuTemplate))
 });
 

@@ -1,10 +1,9 @@
 import React from 'react'
 import { TitlebarProps, TitlebarState } from './types';
-import { remote, ipcRenderer } from 'electron'
+import { ipcRenderer } from 'electron'
 import { icons } from '../../icons';
 import { WindowEvent, channels } from '../../channels';
 
-const win = remote.getCurrentWindow();
 
 export class TitlebarView extends React.Component<TitlebarProps, TitlebarState> {
 	constructor(props: TitlebarProps) {
