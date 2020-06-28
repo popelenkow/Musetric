@@ -26,7 +26,7 @@ const themeSwitchProps: SwitchProps<Theme> = {
 		app.classList.forEach(x => isTheme(x) && app.classList.remove(x))
 		app.classList.add(theme)
 	},
-	className: 'title-btn',
+	className: 'titlebar-btn',
 	localize: (theme: Theme, t: TFunction) => {
 		switch (theme) {
 			case 'white': return t('musetric:theme.white')
@@ -42,7 +42,7 @@ const localeSwitchProps: SwitchProps<Locale> = {
 	set: (locale: Locale) => {
 		i18n.changeLanguage(locale);
 	},
-	className: 'title-btn',
+	className: 'titlebar-btn',
 	localize: (locale: Locale) => originalLocaleSet[locale] || locale
 }
 

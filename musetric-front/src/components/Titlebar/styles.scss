@@ -9,13 +9,13 @@
 	border-bottom: 1px solid var(--content-splitter);
 }
 
-.title-icon {
+.titlebar-icon {
 	flex-grow: 1;
 	max-width: 32px;
 	max-height: 32px;
 }
 
-.title-text {
+.titlebar-text {
 	flex-grow: 2;
 	max-height: 32px;
 	width: auto;
@@ -24,16 +24,15 @@
 	text-indent: 10px;
 }
 
-.title-controls {
+.titlebar-controls {
 	max-width: 144px;
 	max-height: 32px;
 	flex-grow: 1;
 }
 
-.title-btn {
+.titlebar-btn {
 	margin: 0;
-	width: 48px;
-	height:32px;
+	padding: 0 12px;
 	border: 0;
 	outline: 0;
 	color: var(--content-text);
@@ -41,21 +40,26 @@
 	-webkit-app-region: none;
 }
 
-.title-btn:hover {
+.titlebar-btn:hover {
 	background: rgba(128,128,128,.1);
 }
 
-.title-btn.close:hover {
+.win-btn {
+	width: 48px;
+	height:32px;
+}
+
+.win-close:hover {
 	background: #e81123;
 }
 
-.title-btn svg {
+.titlebar-btn svg {
 	path, rect, polygon {
 		fill: var(--content-text);
 	}
 }
 
-.title-btn svg {
+.titlebar-btn svg {
 	width: 10px;
 	height: 10px;
 }

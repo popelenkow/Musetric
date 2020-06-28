@@ -20,16 +20,16 @@ export class TitlebarView extends React.Component<TitlebarProps, TitlebarState> 
 
 		return (
 		<div className='titlebar'>
-			<div className="title-text">Musetric</div>
+			<div className="titlebar-text">Musetric</div>
 			{this.props.children}
-			<div className="title-controls">
-				<button className="title-btn" onClick={() => win.minimize()}>
+			<div className="titlebar-controls">
+				<button className="titlebar-btn win-btn" onClick={() => win.minimize()}>
 					{icons.titlebar.minimize}
 				</button>
-				<button className="title-btn" onClick={maximize}>
+				<button className="titlebar-btn win-btn" onClick={maximize}>
 					{isMaximized ? icons.titlebar.unmaximize : icons.titlebar.maximize}
 				</button>
-				<button className="title-btn close" onClick={() => win.close()}>
+				<button className="titlebar-btn win-btn win-close" onClick={() => win.close()}>
 					{icons.titlebar.close}
 				</button>
 			</div>
