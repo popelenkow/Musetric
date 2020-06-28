@@ -20,7 +20,6 @@ export class SwitchView<T> extends React.Component<SwitchProps<T>, SwitchState<T
 		return (
 		<button className={className} onClick={next}>
 			{localize ? localize(id) : id}
-		</button>
-		)
+		</button>)
 	}
 }

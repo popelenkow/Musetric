@@ -2,7 +2,7 @@ import React from 'react'
 import produce from 'immer';
 import { ipcRenderer } from 'electron';
 import { Size, Grid, Options, Row, GameOfLifeProps, GameOfLifeState, GenF, Gen } from './types';
-import i18next from 'i18next'
+import i18n from 'i18next'
 
 const operations = [
 	[0, 1],
@@ -112,13 +112,13 @@ export class GameOfLifeView extends React.Component<GameOfLifeProps, GameOfLifeS
 		<div className='game'>
 			<div className='game-header'>
 				<button onClick={() => this.setGenerator(!this.state.generator)}>
-					{this.state.generator ? i18next.t('game:stop') : i18next.t('game:start')}
+					{this.state.generator ? i18n.t('game:stop') : i18n.t('game:start')}
 				</button>
 				<button onClick={() => this.setGrid(Gen.random)}>
-					{i18next.t('game:random')}
+					{i18n.t('game:random')}
 				</button>
 				<button onClick={() => this.setGrid(Gen.empty)}>
-					{i18next.t('game:clear')}
+					{i18n.t('game:clear')}
 				</button>
 			</div>
 			<div className='game-grid' style={gridStyle}>

@@ -1,24 +1,27 @@
-import i18next from 'i18next';
+import i18n from 'i18next';
+import { initReactI18next } from "react-i18next";
+import { localeSet } from './types';
 
-const lngs = ['en', 'ru'];
 const nss = ['musetric', 'game'];
 
 export const initLocale = () => {
-	i18next.init({
-		fallbackLng: 'en',
-		defaultNS: 'musetric',
-		debug: false,
-		detection: {
-			order: ['querystring', 'navigator'],
-			lookupQuerystring: 'lng',
-		},
-		appendNamespaceToMissingKey: true,
-	});
+	i18n
+		.use(initReactI18next)
+		.init({
+			fallbackLng: 'en',
+			defaultNS: 'musetric',
+			debug: false,
+			detection: {
+				order: ['querystring', 'navigator'],
+				lookupQuerystring: 'lng',
+			},
+			appendNamespaceToMissingKey: true,
+		});
 
-	lngs.forEach(lng => {
+	localeSet.forEach(lng => {
 		nss.forEach(ns => {
 			const resources = require(`./locale/${lng}/${ns}.json`)
-			i18next.addResourceBundle(lng, ns, resources);
+			i18n.addResourceBundle(lng, ns, resources);
 		})
 	})
 }

@@ -5,7 +5,7 @@ import { initLocale } from './locale';
 import { TitlebarView } from './components/Titlebar';
 import { GameOfLifeView, GameOfLifeProps } from "./components/GameOfLife";
 import { Theme, isTheme, themeSet, localeSet, Locale } from './types';
-import i18next from 'i18next';
+import i18n from 'i18next';
 import { SwitchView, SwitchProps } from './components/Switch';
 
 const app = document.getElementById("app");
@@ -29,8 +29,8 @@ const themeSwitchProps: SwitchProps<Theme> = {
 	className: 'title-btn',
 	localize: (theme: Theme) => {
 		switch (theme) {
-			case 'white': return i18next.t('musetric:theme.white')
-			case 'dark': return i18next.t('musetric:theme.dark')
+			case 'white': return i18n.t('musetric:theme.white')
+			case 'dark': return i18n.t('musetric:theme.dark')
 			default: return theme;
 		}
 	}
@@ -40,7 +40,7 @@ const localeSwitchProps: SwitchProps<Locale> = {
 	currentId: localeSet[0],
 	ids: localeSet,
 	set: (locale: Locale) => {
-		i18next.changeLanguage(locale);
+		i18n.changeLanguage(locale);
 	},
 	className: 'title-btn'
 }
