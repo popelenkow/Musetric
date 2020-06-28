@@ -2,7 +2,7 @@ import React from 'react'
 import produce from 'immer';
 import { ipcRenderer } from 'electron';
 import { Size, Grid, Options, Row, GameOfLifeProps, GameOfLifeState, GenF, Gen } from './types';
-import i18n from 'i18next'
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 const operations = [
 	[0, 1],
@@ -74,8 +74,8 @@ const Gen: Gen = {
 	}
 }
 
-export class GameOfLifeView extends React.Component<GameOfLifeProps, GameOfLifeState> {
-	constructor(props: GameOfLifeProps) {
+class GameOfLifeView extends React.Component<GameOfLifeProps & WithTranslation, GameOfLifeState> {
+	constructor(props: GameOfLifeProps & WithTranslation) {
 		super(props);
 		this.state = { grid: Gen.empty(this.props.size), generator: undefined };
 	}
@@ -104,6 +104,7 @@ export class GameOfLifeView extends React.Component<GameOfLifeProps, GameOfLifeS
 	}
 	
 	render() {
+		const { t } = this.props;
 		const gridStyle = {
 			gridTemplateColumns: `repeat(${this.props.size.columns}, 20px)`
 		}
@@ -112,13 +113,13 @@ export class GameOfLifeView extends React.Component<GameOfLifeProps, GameOfLifeS
 		<div className='game'>
 			<div className='game-header'>
 				<button onClick={() => this.setGenerator(!this.state.generator)}>
-					{this.state.generator ? i18n.t('game:stop') : i18n.t('game:start')}
+					{this.state.generator ? t('game:stop') : t('game:start')}
 				</button>
 				<button onClick={() => this.setGrid(Gen.random)}>
-					{i18n.t('game:random')}
+					{t('game:random')}
 				</button>
 				<button onClick={() => this.setGrid(Gen.empty)}>
-					{i18n.t('game:clear')}
+					{t('game:clear')}
 				</button>
 			</div>
 			<div className='game-grid' style={gridStyle}>
@@ -134,3 +135,6 @@ export class GameOfLifeView extends React.Component<GameOfLifeProps, GameOfLifeS
 		</div>)
 	}
 }
+
+const view = withTranslation()(GameOfLifeView);
+export { view as GameOfLifeView }

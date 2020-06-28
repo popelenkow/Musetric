@@ -1,11 +1,11 @@
 import './styles.scss'
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import { initLocale } from './locale';
+import { initLocale, originalLocaleSet } from './locale';
 import { TitlebarView } from './components/Titlebar';
 import { GameOfLifeView, GameOfLifeProps } from "./components/GameOfLife";
 import { Theme, isTheme, themeSet, localeSet, Locale } from './types';
-import i18n from 'i18next';
+import i18n, { TFunction } from 'i18next';
 import { SwitchView, SwitchProps } from './components/Switch';
 
 const app = document.getElementById("app");
@@ -27,10 +27,10 @@ const themeSwitchProps: SwitchProps<Theme> = {
 		app.classList.add(theme)
 	},
 	className: 'title-btn',
-	localize: (theme: Theme) => {
+	localize: (theme: Theme, t: TFunction) => {
 		switch (theme) {
-			case 'white': return i18n.t('musetric:theme.white')
-			case 'dark': return i18n.t('musetric:theme.dark')
+			case 'white': return t('musetric:theme.white')
+			case 'dark': return t('musetric:theme.dark')
 			default: return theme;
 		}
 	}
@@ -42,7 +42,8 @@ const localeSwitchProps: SwitchProps<Locale> = {
 	set: (locale: Locale) => {
 		i18n.changeLanguage(locale);
 	},
-	className: 'title-btn'
+	className: 'title-btn',
+	localize: (locale: Locale) => originalLocaleSet[locale] || locale
 }
 
 
@@ -54,7 +55,7 @@ const gameOfLifeProps: GameOfLifeProps = {
 }
 
 const root = (
-<>
+<Suspense fallback='loading'>
 	<TitlebarView>
 		<SwitchView {...themeSwitchProps} />
 		<SwitchView {...localeSwitchProps} />
@@ -62,6 +63,5 @@ const root = (
 	<div className='main'>
 		<GameOfLifeView {...gameOfLifeProps}  />
 	</div>
-
-</>)
+</Suspense>)
 ReactDOM.render(root, app);

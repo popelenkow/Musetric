@@ -4,6 +4,9 @@ import { localeSet } from './types';
 
 const nss = ['musetric', 'game'];
 
+type OriginalLocaleSet = { [locale: string]: string };
+export const originalLocaleSet: OriginalLocaleSet = require('./locale/locale.json')
+
 export const initLocale = () => {
 	i18n
 		.use(initReactI18next)
@@ -16,7 +19,7 @@ export const initLocale = () => {
 				lookupQuerystring: 'lng',
 			},
 			appendNamespaceToMissingKey: true,
-		});
+		})
 
 	localeSet.forEach(lng => {
 		nss.forEach(ns => {
