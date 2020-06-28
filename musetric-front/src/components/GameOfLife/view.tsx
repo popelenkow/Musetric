@@ -81,11 +81,10 @@ class GameOfLifeView extends React.Component<GameOfLifeProps & WithTranslation, 
 	}
 
 	componentDidMount() {
-		ipcRenderer.on('main-complete', (event, args) => {
-			console.log(args);
-		});
-
-		ipcRenderer.send('main-request', {});
+		ipcRenderer
+			.invoke('main-invoke', '/path/to/file')
+			.then(value => console.log(value))
+			.catch(err => console.log(err))
 	}
 
 	setGenerator(isRun: boolean) {
