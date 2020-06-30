@@ -2,6 +2,7 @@ import { app, BrowserWindow, Menu, MenuItemConstructorOptions, ipcMain } from 'e
 import { PythonShell } from 'python-shell'
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+const isDev = process.env.NODE_ENV === 'development'
 
 app.on('ready', () => {
 	let window = new BrowserWindow({
@@ -47,10 +48,10 @@ const mainMenuTemplate: Array<MenuItemConstructorOptions> = [{
 
 ipcMain.handle('main-window', async (info, event) => {
 	const window = BrowserWindow.fromId(info.sender.id);
-	if (event == 'close') window.close();
-	else if (event == 'minimize') window.minimize();
-	else if (event == 'maximize') window.maximize();
-	else if (event == 'unmaximize') window.unmaximize();
+	if (event == 'close') isDev ? window.destroy() : window.close()
+	else if (event == 'minimize') window.minimize()
+	else if (event == 'maximize') window.maximize()
+	else if (event == 'unmaximize') window.unmaximize()
 })
 
 ipcMain.handle('pytest', async () => {
@@ -63,7 +64,7 @@ ipcMain.handle('pytest', async () => {
 })
 
 
-if (process.env.NODE_ENV === 'development') {
+if (isDev) {
 	mainMenuTemplate.push({
 		label: 'Developer Tools',
 		submenu: [
