@@ -2,10 +2,11 @@ import './styles.scss'
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { initLocale, originalLocaleSet } from './locale';
-import { TitlebarView } from './components/Titlebar';
-import { GameOfLifeView, GameOfLifeProps } from "./components/GameOfLife";
 import { Theme, isTheme, themeSet, localeSet, Locale } from './types';
 import i18n, { TFunction } from 'i18next';
+import { ResizeFrameView } from './components/ResizeFrame';
+import { TitlebarView } from './components/Titlebar';
+import { GameOfLifeView, GameOfLifeProps } from "./components/GameOfLife";
 import { SwitchView, SwitchProps } from './components/Switch';
 
 const app = document.getElementById("app");
@@ -61,5 +62,6 @@ const root = (
 	<div className='main'>
 		<GameOfLifeView {...gameOfLifeProps}  />
 	</div>
+	<ResizeFrameView />
 </Suspense>)
 ReactDOM.render(root, app);

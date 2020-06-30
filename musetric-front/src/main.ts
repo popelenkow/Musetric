@@ -7,7 +7,7 @@ const isDev = process.env.NODE_ENV === 'development'
 
 app.on('ready', () => {
 	let window = new BrowserWindow({
-		width: 800,
+		width: 1200,
 		height: 600,
 		minWidth: 300,
 		minHeight: 300,
