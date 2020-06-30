@@ -1,5 +1,6 @@
 import { app, BrowserWindow, Menu, MenuItemConstructorOptions, ipcMain } from 'electron'
 import { PythonShell } from 'python-shell'
+import { channels, WindowEvent } from './channels'
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 const isDev = process.env.NODE_ENV === 'development'
@@ -21,8 +22,8 @@ app.on('ready', () => {
 		: window.loadFile('dist/index.html');
 
 	process.env.NODE_ENV === 'development' && window.webContents.toggleDevTools();
-	window.on('maximize', () => window.webContents.send('on-maximize-window', true))
-	window.on('unmaximize', () => window.webContents.send('on-maximize-window', false))
+	window.on('maximize', () => window.webContents.send(channels.onMaximizeWindow, true))
+	window.on('unmaximize', () => window.webContents.send(channels.onMaximizeWindow, false))
 	window.on('closed', () => app.quit())
 	Menu.setApplicationMenu(Menu.buildFromTemplate(mainMenuTemplate))
 });
@@ -46,15 +47,15 @@ const mainMenuTemplate: Array<MenuItemConstructorOptions> = [{
 	]
 }]
 
-ipcMain.handle('main-window', async (info, event) => {
-	const window = BrowserWindow.fromId(info.sender.id);
+ipcMain.handle(channels.mainWindow, async (electronEvent, event: WindowEvent) => {
+	const window = BrowserWindow.fromId(electronEvent.sender.id);
 	if (event == 'close') isDev ? window.destroy() : window.close()
 	else if (event == 'minimize') window.minimize()
 	else if (event == 'maximize') window.maximize()
 	else if (event == 'unmaximize') window.unmaximize()
 })
 
-ipcMain.handle('pytest', async () => {
+ipcMain.handle(channels.pytest, async () => {
 	return await new Promise((resolve) => {
 		PythonShell.run('background/hello.py', undefined, (err, results) =>  {
 			resolve({ message: 'python complete', results, err })
