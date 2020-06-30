@@ -8,23 +8,23 @@ type OriginalLocaleSet = { [locale: string]: string };
 export const originalLocaleSet: OriginalLocaleSet = require('./locale/locale.json')
 
 export const initLocale = () => {
+	const resources: any = {};
+	localeSet.forEach(lng => {
+		resources[lng] = {};
+		nss.forEach(ns => {
+			const bundle = require(`./locale/${lng}/${ns}.json`)
+			resources[lng][ns] = bundle;
+		})
+	})
+
 	i18n
 		.use(initReactI18next)
 		.init({
+			lng: 'en',
 			fallbackLng: 'en',
 			defaultNS: 'musetric',
-			debug: false,
-			detection: {
-				order: ['querystring', 'navigator'],
-				lookupQuerystring: 'lng',
-			},
-			appendNamespaceToMissingKey: true,
+			supportedLngs: localeSet,
+			resources: resources,
+			debug: false
 		})
-
-	localeSet.forEach(lng => {
-		nss.forEach(ns => {
-			const resources = require(`./locale/${lng}/${ns}.json`)
-			i18n.addResourceBundle(lng, ns, resources);
-		})
-	})
 }
