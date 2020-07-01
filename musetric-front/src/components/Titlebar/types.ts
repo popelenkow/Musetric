@@ -1,5 +1,3 @@
-import { Theme } from "../../types";
-
 export type TitlebarProps = {
 };
 
