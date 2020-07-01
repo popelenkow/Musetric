@@ -1,9 +1,26 @@
 .game {
 	display: flex;
 	flex-direction: column;
+	overflow: hidden;
 	width: 100%;
 	height: 100%;
-	overflow: auto;
+
+	
+	::-webkit-scrollbar {
+		width: 15px;
+	}
+	  
+	::-webkit-scrollbar-track {
+		background: var(--sidebar-bg);
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: gray;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--content-text);
+	}
 }
 
 .game-header {
@@ -12,10 +29,11 @@
 }
 
 .game-grid {
+	display: grid;
+	overflow: auto;
 	width: 100%;
 	height: 100%;
-	display: grid;
-	grid-template-columns: 20px;
+	
 }
 
 @mixin cell {

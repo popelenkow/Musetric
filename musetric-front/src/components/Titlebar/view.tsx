@@ -12,6 +12,10 @@ export class TitlebarView extends React.Component<TitlebarProps, TitlebarState> 
 	}
 
 	componentDidMount() {
+		ipcRenderer
+			.invoke(channels.pytest)
+			.then(value => console.log(value))
+			.catch(err => console.log(err))
 		ipcRenderer.on(channels.onMaximizeWindow, (_, isMaximized) => {
 			this.setState({ isMaximized: isMaximized })
 		});	
