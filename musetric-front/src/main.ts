@@ -11,6 +11,7 @@ app.on('ready', () => {
 		height: 600,
 		minWidth: 300,
 		minHeight: 300,
+		icon: 'icon.ico',
 		webPreferences: {
 			nodeIntegration: true
 		},
