@@ -11,18 +11,17 @@ app.on('ready', () => {
 		height: 600,
 		minWidth: 300,
 		minHeight: 300,
-		icon: 'icon.ico',
 		webPreferences: {
 			nodeIntegration: true
 		},
 		frame: false
 	});
 
-	process.env.NODE_ENV === 'development'
-		? window.loadURL('http://localhost:8080')
-		: window.loadFile('dist/index.html');
+	isDev ? window.loadURL('http://localhost:8080') : window.loadFile('dist/index.html');
 
-	process.env.NODE_ENV === 'development' && window.webContents.toggleDevTools();
+	isDev && window.setIcon('icon.ico')
+	isDev && window.webContents.toggleDevTools();
+	
 	window.on('maximize', () => window.webContents.send(channels.onMaximizeWindow, true))
 	window.on('unmaximize', () => window.webContents.send(channels.onMaximizeWindow, false))
 	window.on('closed', () => app.quit())
