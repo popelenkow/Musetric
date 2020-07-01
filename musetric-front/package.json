@@ -38,7 +38,10 @@
 		"nsis": {
 			"allowToChangeInstallationDirectory": true,
 			"oneClick": false
-		}
+		},
+		"extraFiles": [
+			"background"
+		]
 	},
 	"dependencies": {},
 	"devDependencies": {
