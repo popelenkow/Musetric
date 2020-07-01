@@ -21,6 +21,10 @@
 	::-webkit-scrollbar-thumb:hover {
 		background: var(--content-text);
 	}
+
+	::-webkit-scrollbar-corner {
+		background: var(--app-bg);
+	  }
 }
 
 .game-header {
