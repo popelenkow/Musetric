@@ -13,6 +13,9 @@
 	flex-grow: 1;
 	max-width: 32px;
 	max-height: 32px;
+	path {
+		fill: var(--icon);
+	}
 }
 
 .titlebar-text {
@@ -53,7 +56,7 @@
 	background: #e81123;
 }
 
-.titlebar-btn svg {
+.titlebar-btn {
 	path, rect, polygon {
 		fill: var(--content-text);
 	}

@@ -23,7 +23,7 @@ export class TitlebarView extends React.Component<TitlebarProps, TitlebarState> 
 
 		return (
 		<div className='titlebar'>
-			{icons.app}
+			<div className="titlebar-icon">{icons.app}</div>
 			<div className="titlebar-text">Musetric</div>
 			{this.props.children}
 			<div className="titlebar-controls">
