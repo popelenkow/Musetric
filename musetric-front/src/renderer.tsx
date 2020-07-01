@@ -61,6 +61,7 @@ const root = (
 	</TitlebarView>
 	<div className='main'>
 		<GameOfLifeView {...gameOfLifeProps}  />
+		<GameOfLifeView {...gameOfLifeProps}  />
 	</div>
 	<ResizeFrameView />
 </Suspense>)
