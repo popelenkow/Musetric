@@ -9,10 +9,10 @@ body {
 #app {
 	width: calc(100vw - 2px);
 	height: calc(100vh - 2px);
-	border: 1px solid var(--content-splitter);
+	border: 1px solid var(--color-splitter);
 	display: flex;
 	flex-direction: column;
-	background-color: var(--app-bg);
+	background-color: var(--color-app);
 }
 
 

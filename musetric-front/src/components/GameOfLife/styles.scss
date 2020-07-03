@@ -11,7 +11,7 @@
 	}
 	  
 	::-webkit-scrollbar-track {
-		background: var(--sidebar-bg);
+		background: var(--color-sidebar);
 	}
 
 	::-webkit-scrollbar-thumb {
@@ -19,11 +19,11 @@
 	}
 
 	::-webkit-scrollbar-thumb:hover {
-		background: var(--content-text);
+		background: var(--color-content);
 	}
 
 	::-webkit-scrollbar-corner {
-		background: var(--app-bg);
+		background: var(--color-app);
 	  }
 }
 
@@ -43,16 +43,16 @@
 @mixin cell {
 	width: 20px;
 	height: 20px;
-	border: solid 1px var(--content-splitter);
+	border: solid 1px var(--color-splitter);
 }
 
 .game-cell-live {
 	@include cell;
-	background-color: var(--cell-live);
+	background-color: var(--color-cell-live);
 }
 
 .game-cell-dead {
 	@include cell;
-	background-color: var(--cell-dead);
+	background-color: var(--color-cell-dead);
 }
 
