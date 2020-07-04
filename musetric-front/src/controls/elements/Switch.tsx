@@ -1,6 +1,18 @@
 import React from 'react'
-import { SwitchProps, SwitchState } from './types';
 import { withTranslation, WithTranslation } from 'react-i18next';
+import { TFunction } from "i18next";
+
+export type SwitchProps<T = any> = {
+	currentId: T;
+	ids: T[];
+	set: (id: T) => void;
+	className?: string;
+	localize?: (id: T, t: TFunction) => string;
+};
+
+export type SwitchState<T = any> = {
+	id: T;
+};
 
 class SwitchView extends React.Component<SwitchProps & WithTranslation, SwitchState> {
 	constructor(props: SwitchProps & WithTranslation) {

@@ -7,7 +7,7 @@ import { Theme, isTheme, themeSet, localeSet, Locale } from './types';
 import { ResizeFrameView } from './components/ResizeFrame';
 import { TitlebarView } from './components/Titlebar';
 import { GameOfLifeView, GameOfLifeProps } from "./components/GameOfLife";
-import { SwitchView, SwitchProps } from './components/Switch';
+import { SwitchView, SwitchProps } from './controls';
 
 const app = document.getElementById("app");
 if (!app) throw new Error('App not found');
