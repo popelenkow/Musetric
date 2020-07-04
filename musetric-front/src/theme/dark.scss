@@ -1,10 +1,11 @@
 .dark {
-	--color-app: #2b2b2b;
-	--color-sidebar: #3d3d3d;
-	--color-icon: #e7e7e7;
-	--color-content: #ffffff;
-	--color-splitter: #808080;
+	--color-bg: hsl(0, 0%, 13%);
+	--color-content-bg: hsl(0, 0%, 24%);
+	--color-sidebar-bg: hsl(0, 0%, 24%);
+	--color-content: hsl(0, 0%, 100%);
+	--color-splitter: hsl(0, 0%, 50%);
+	--color-icon: hsl(0, 0%, 91%);
 
-	--color-cell-live: white;
-	--color-cell-dead: black;
+	--color-cell-live: hsl(0, 0%, 100%);
+	--color-cell-dead: hsl(0, 0%, 0%);
 }

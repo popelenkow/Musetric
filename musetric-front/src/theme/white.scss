@@ -1,10 +1,11 @@
 :root, .white {
-	--color-app: white;
-	--color-sidebar: #e9e9e9;
-	--color-icon: #adadad;
-	--color-content: #000000;
-	--color-splitter: #bebebe;
+	--color-bg: hsl(0, 0%, 100%);
+	--color-sidebar-bg: hsl(0, 0%, 91%);
+	--color-content-bg: hsl(0, 0%, 91%);
+	--color-content: hsl(0, 0%, 0%);
+	--color-splitter: hsl(0, 0%, 75%);
+	--color-icon: hsl(0, 0%, 68%);
 
-	--color-cell-live: black;
-	--color-cell-dead: white;
+	--color-cell-live: hsl(0, 0%, 0%);
+	--color-cell-dead: hsl(0, 0%, 100%);
 }

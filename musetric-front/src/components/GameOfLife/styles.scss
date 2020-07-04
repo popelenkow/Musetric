@@ -5,13 +5,12 @@
 	width: 100%;
 	height: 100%;
 
-	
 	::-webkit-scrollbar {
 		width: 15px;
 	}
 	  
 	::-webkit-scrollbar-track {
-		background: var(--color-sidebar);
+		background: var(--color-sidebar-bg);
 	}
 
 	::-webkit-scrollbar-thumb {
@@ -23,8 +22,8 @@
 	}
 
 	::-webkit-scrollbar-corner {
-		background: var(--color-app);
-	  }
+		background: var(--color-bg);
+	}
 }
 
 .game-header {
