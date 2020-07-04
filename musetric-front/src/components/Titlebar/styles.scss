@@ -41,28 +41,23 @@
 	color: var(--color-content);
 	background: transparent;
 	-webkit-app-region: none;
-}
-
-.titlebar-btn:hover {
-	background: rgba(128,128,128,.1);
+	&:hover {
+		background: rgba(128,128,128,.1);
+	};
+	path, rect, polygon {
+		fill: var(--color-content);
+	};
 }
 
 .win-btn {
 	width: 48px;
 	height:32px;
+	svg {
+		width: 10px;
+		height: 10px;
+	}
 }
 
 .win-close:hover {
 	background: #e81123;
-}
-
-.titlebar-btn {
-	path, rect, polygon {
-		fill: var(--color-content);
-	}
-}
-
-.titlebar-btn svg {
-	width: 10px;
-	height: 10px;
 }
