@@ -7,7 +7,7 @@ import { Theme, isTheme, themeSet, localeSet, Locale } from './types';
 import { ResizeFrameView } from './components/ResizeFrame';
 import { TitlebarView } from './components/Titlebar';
 import { GameOfLifeView, GameOfLifeProps } from "./components/GameOfLife";
-import { SwitchView, SwitchProps } from './controls';
+import { Switch, SwitchProps } from './controls';
 
 const app = document.getElementById("app");
 if (!app) throw new Error('App not found');
@@ -56,8 +56,8 @@ const gameOfLifeProps: GameOfLifeProps = {
 const root = (
 <Suspense fallback='loading'>
 	<TitlebarView>
-		<SwitchView {...themeSwitchProps} />
-		<SwitchView {...localeSwitchProps} />
+		<Switch {...themeSwitchProps} />
+		<Switch {...localeSwitchProps} />
 	</TitlebarView>
 	<div className='main'>
 		<GameOfLifeView {...gameOfLifeProps}  />

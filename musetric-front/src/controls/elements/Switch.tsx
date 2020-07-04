@@ -14,7 +14,7 @@ export type SwitchState<T = any> = {
 	id: T;
 };
 
-class SwitchView extends React.Component<SwitchProps & WithTranslation, SwitchState> {
+class Switch extends React.Component<SwitchProps & WithTranslation, SwitchState> {
 	constructor(props: SwitchProps & WithTranslation) {
 		super(props);
 		this.state = { id: this.props.currentId }
@@ -37,5 +37,5 @@ class SwitchView extends React.Component<SwitchProps & WithTranslation, SwitchSt
 	}
 }
 
-const view = withTranslation()(SwitchView)
-export { view as SwitchView }
+const view = withTranslation()(Switch)
+export { view as Switch }
