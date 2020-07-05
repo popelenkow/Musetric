@@ -11,6 +11,7 @@
 	display: flex;
 	flex-direction: row;
 	height: 24px;
+	border-bottom: 1px solid var(--color-splitter);
 }
 
 .game-grid {
