@@ -9,13 +9,12 @@
 
 	::-webkit-scrollbar-thumb {
 		background: gray;
-	}
-
-	::-webkit-scrollbar-thumb:hover {
-		background: var(--color-content);
+		&:hover {
+			background: var(--color-content);
+		}
 	}
 
 	::-webkit-scrollbar-corner {
-		background: transparent;
+		background: var(--color-sidebar-bg);
 	}
 }
