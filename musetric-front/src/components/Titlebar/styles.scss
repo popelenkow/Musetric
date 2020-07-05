@@ -34,22 +34,13 @@
 }
 
 .titlebar-btn {
-	margin: 0;
-	padding: 0 12px;
-	border: 0;
-	outline: 0;
-	color: var(--color-content);
-	background: transparent;
+	@extend .btn;
 	-webkit-app-region: none;
-	&:hover {
-		background: rgba(128,128,128,.1);
-	};
-	path, rect, polygon {
-		fill: var(--color-content);
-	};
 }
 
-.win-btn {
+.windows-btn {
+	@extend .btn;
+	-webkit-app-region: none;
 	width: 48px;
 	height:32px;
 	svg {
@@ -58,6 +49,9 @@
 	}
 }
 
-.win-close:hover {
-	background: #e81123;
+.windows-close-btn {
+	@extend .windows-btn;
+	&:hover {
+		background: #e81123;
+	}
 }

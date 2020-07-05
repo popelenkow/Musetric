@@ -1,19 +1,14 @@
-@mixin btn {
+.btn {
 	margin: 0;
 	padding: 0 12px;
 	border: 0;
 	outline: 0;
 	color: var(--color-content);
 	background: transparent;
-	-webkit-app-region: none;
 	&:hover {
 		background: rgba(128,128,128,.1);
-	}
+	};
 	path, rect, polygon {
 		fill: var(--color-content);
-	}
-}
-
-.btn {
-	@include btn;
+	};
 }

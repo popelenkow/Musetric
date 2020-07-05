@@ -31,13 +31,13 @@ export class TitlebarView extends React.Component<TitlebarProps, TitlebarState> 
 			<div className="titlebar-text">Musetric</div>
 			{this.props.children}
 			<div className="titlebar-controls">
-				<button className="titlebar-btn win-btn" onClick={() => sendMain('minimize')}>
+				<button className="windows-btn" onClick={() => sendMain('minimize')}>
 					{icons.titlebar.minimize}
 				</button>
-				<button className="titlebar-btn win-btn" onClick={() => isMaximized ? sendMain('unmaximize') : sendMain('maximize')}>
+				<button className="windows-btn" onClick={() => isMaximized ? sendMain('unmaximize') : sendMain('maximize')}>
 					{isMaximized ? icons.titlebar.unmaximize : icons.titlebar.maximize}
 				</button>
-				<button className="titlebar-btn win-btn win-close" onClick={() => sendMain('close')}>
+				<button className="windows-close-btn" onClick={() => sendMain('close')}>
 					{icons.titlebar.close}
 				</button>
 			</div>
