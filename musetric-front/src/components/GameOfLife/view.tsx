@@ -103,13 +103,13 @@ class GameOfLifeView extends React.Component<GameOfLifeProps & WithTranslation, 
 		return ( 
 		<div className='game'>
 			<div className='game-header'>
-				<button onClick={() => this.setGenerator(!this.state.generator)}>
+				<button className='btn' onClick={() => this.setGenerator(!this.state.generator)}>
 					{this.state.generator ? t('game:stop') : t('game:start')}
 				</button>
-				<button onClick={() => this.setGrid(Gen.random)}>
+				<button className='btn' onClick={() => this.setGrid(Gen.random)}>
 					{t('game:random')}
 				</button>
-				<button onClick={() => this.setGrid(Gen.empty)}>
+				<button className='btn' onClick={() => this.setGrid(Gen.empty)}>
 					{t('game:clear')}
 				</button>
 			</div>

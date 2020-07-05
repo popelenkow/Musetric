@@ -8,6 +8,7 @@ import { ResizeFrameView } from './components/ResizeFrame';
 import { TitlebarView } from './components/Titlebar';
 import { GameOfLifeView, GameOfLifeProps } from "./components/GameOfLife";
 import { Switch, SwitchProps } from './controls';
+import { ContainerView } from './components/Container';
 
 const app = document.getElementById("app");
 if (!app) throw new Error('App not found');
@@ -60,8 +61,8 @@ const root = (
 		<Switch {...localeSwitchProps} />
 	</TitlebarView>
 	<div className='main'>
-		<GameOfLifeView {...gameOfLifeProps}  />
-		<GameOfLifeView {...gameOfLifeProps}  />
+		<ContainerView><GameOfLifeView {...gameOfLifeProps}  /></ContainerView>
+		<ContainerView><GameOfLifeView {...gameOfLifeProps}  /></ContainerView>
 	</div>
 	<ResizeFrameView />
 </Suspense>)
