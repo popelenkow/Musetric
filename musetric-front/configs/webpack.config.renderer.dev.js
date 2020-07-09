@@ -1,6 +1,6 @@
 const path = require('path');
 const { spawn } = require('child_process');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const config = require('./webpack.config.renderer');
 
 const runOnDoneOnce = (compiler, run) => {
