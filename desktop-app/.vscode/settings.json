@@ -1,10 +1,11 @@
 {
-    "files.exclude": {
-        "**/node_modules": true
+	"files.exclude": {
+		"**/node_modules": true
 	},
 	
-    "editor.tabCompletion": "on",
+	"editor.tabCompletion": "on",
 	"editor.tabSize": 4,
 	"editor.insertSpaces": false,
 	"editor.detectIndentation": false,
+	"editor.renderWhitespace": "all"
 }
