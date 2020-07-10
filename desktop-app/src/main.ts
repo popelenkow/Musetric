@@ -19,7 +19,7 @@ app.on('ready', () => {
 
 	isDev ? window.loadURL('http://localhost:8080') : window.loadFile('dist/index.html');
 
-	isDev && window.setIcon('icon.ico')
+	isDev && window.setIcon('resources/icon.ico')
 	isDev && window.webContents.toggleDevTools();
 	
 	window.on('maximize', () => window.webContents.send(channels.onMaximizeWindow, true))
