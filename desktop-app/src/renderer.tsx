@@ -2,7 +2,7 @@ import './styles.scss'
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import i18n, { TFunction } from 'i18next';
-import { initLocale, originalLocaleSet } from './locale';
+import { initLocale, naturalLocale } from './locale';
 import { Theme, isTheme, themeSet, localeSet, Locale } from './types';
 import { ResizeFrameView } from './components/ResizeFrame';
 import { TitlebarView } from './components/Titlebar';
@@ -13,7 +13,9 @@ import { ContainerView } from './components/Container';
 const app = document.getElementById("app");
 if (!app) throw new Error('App not found');
 
-initLocale();
+const params = new URLSearchParams(window.location.search)
+const initLng = initLocale(params.get('lng'));
+
 
 const extractTheme: () => Theme | undefined = () => {
 	const themes: Theme[] = [];
@@ -37,13 +39,13 @@ const themeSwitchProps: SwitchProps<Theme> = {
 }
 
 const localeSwitchProps: SwitchProps<Locale> = {
-	currentId: localeSet[0],
+	currentId: initLng,
 	ids: localeSet,
 	set: (locale: Locale) => {
 		i18n.changeLanguage(locale);
 	},
 	className: 'titlebar-btn',
-	localize: (locale: Locale) => originalLocaleSet[locale] || locale
+	localize: (locale: Locale) => naturalLocale(locale) || locale
 }
 
 

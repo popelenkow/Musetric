@@ -11,7 +11,7 @@ export class ResizeFrameView extends React.Component<ResizeFrameProps, ResizeFra
 	}
 
 	componentDidMount() {
-		ipcRenderer.on(channels.onMaximizeWindow, (_, isMaximized) => {
+		ipcRenderer.on(channels.onWindow, (_, isMaximized) => {
 			this.setState({ isMaximized: isMaximized })
 		});	
 	}

@@ -1,13 +1,13 @@
 import { app, BrowserWindow, ipcMain, globalShortcut, Menu } from 'electron'
 import { PythonShell } from 'python-shell'
-import { channels, WindowEvent } from './channels'
+import { channels, TitlebarEvent } from './channels'
 import url from 'url'
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 const isDev = process.env.NODE_ENV === 'development'
 
 app.whenReady().then(() => {
-	ipcMain.handle(channels.mainWindow, async (electronEvent, event: WindowEvent) => {
+	ipcMain.handle(channels.titlebar, async (electronEvent, event: TitlebarEvent) => {
 		const window = BrowserWindow.fromId(electronEvent.sender.id);
 		if (event == 'close') isDev ? window.destroy() : window.close()
 		else if (event == 'minimize') window.minimize()
@@ -35,9 +35,7 @@ app.whenReady().then(() => {
 		frame: false
 	});
 
-	const query = {
-		"theme": "dark"
-	}
+	const query = require('../app-config.json')
 	isDev
 		? window.loadURL(url.format({ pathname: 'http://localhost:8080', query }))
 		: window.loadFile('dist/index.html', { query })
@@ -48,8 +46,8 @@ app.whenReady().then(() => {
 	isDev && Menu.setApplicationMenu(Menu.buildFromTemplate([{ label: 'File', submenu:[{ label: 'devTools', accelerator: 'F12', click: () => window.webContents.toggleDevTools() }]} ])) // ToDo https://github.com/electron/electron/issues/5066
 	isDev && window.webContents.toggleDevTools();
 	
-	window.on('maximize', () => window.webContents.send(channels.onMaximizeWindow, true))
-	window.on('unmaximize', () => window.webContents.send(channels.onMaximizeWindow, false))
+	window.on('maximize', () => window.webContents.send(channels.onWindow, true))
+	window.on('unmaximize', () => window.webContents.send(channels.onWindow, false))
 	window.on('closed', () => app.quit())
 })
 

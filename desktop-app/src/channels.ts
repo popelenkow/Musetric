@@ -1,7 +1,13 @@
+import { Theme, Locale } from "./types"
+
 export const channels = {
-	pytest: 'pytest',
-	mainWindow: 'main-window',
-	onMaximizeWindow: 'on-maximize-window'
+	app: 'app',
+	titlebar: 'titlebar',
+	onWindow: 'on-window',
+	pytest: 'pytest'
 }
 
-export type WindowEvent = 'close' | 'minimize' | 'unmaximize' | 'maximize'
+export type AppEvent =
+	| { type: 'theme', theme: Theme }
+	| { type: 'lng', lng: Locale }
+export type TitlebarEvent = 'close' | 'minimize' | 'unmaximize' | 'maximize'

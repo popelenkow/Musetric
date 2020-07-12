@@ -2,7 +2,7 @@ import React from 'react'
 import { TitlebarProps, TitlebarState } from './types';
 import { ipcRenderer } from 'electron'
 import { icons } from '../../icons';
-import { WindowEvent, channels } from '../../channels';
+import { TitlebarEvent, channels } from '../../channels';
 
 
 export class TitlebarView extends React.Component<TitlebarProps, TitlebarState> {
@@ -16,14 +16,14 @@ export class TitlebarView extends React.Component<TitlebarProps, TitlebarState> 
 			.invoke(channels.pytest)
 			.then(value => console.log(value))
 			.catch(err => console.log(err))
-		ipcRenderer.on(channels.onMaximizeWindow, (_, isMaximized) => {
+		ipcRenderer.on(channels.onWindow, (_, isMaximized) => {
 			this.setState({ isMaximized: isMaximized })
 		});	
 	}
 
 	render() {
 		const { isMaximized } = this.state;
-		const sendMain = (event: WindowEvent) => ipcRenderer.invoke(channels.mainWindow, event);
+		const sendMain = (event: TitlebarEvent) => ipcRenderer.invoke(channels.titlebar, event);
 
 		return (
 		<div className='titlebar'>

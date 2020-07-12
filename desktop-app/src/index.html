@@ -3,10 +3,59 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Hello World!</title>
+		<style type="text/css">
+			.app-loader, .app-loader:after {
+				border-radius: 50%;
+				width: 10em;
+				height: 10em;
+			}
+			.app-loader {
+				margin: auto;
+				font-size: 10px;
+				position: relative;
+				text-indent: -9999em;
+				border-top: 1.1em solid var(--color-loader-track);
+				border-right: 1.1em solid var(--color-loader-track);
+				border-bottom: 1.1em solid var(--color-loader-track);
+				border-left: 1.1em solid var(--color-content);
+				-webkit-transform: translateZ(0);
+				-ms-transform: translateZ(0);
+				transform: translateZ(0);
+				-webkit-animation: load8 1.1s infinite linear;
+				animation: load8 1.1s infinite linear;
+			}
+			@-webkit-keyframes load8 {
+				0% {
+					-webkit-transform: rotate(0deg);
+					transform: rotate(0deg);
+				}
+				100% {
+					-webkit-transform: rotate(360deg);
+					transform: rotate(360deg);
+				}
+			}
+			@keyframes load8 {
+				0% {
+					-webkit-transform: rotate(0deg);
+					transform: rotate(0deg);
+				}
+				100% {
+					-webkit-transform: rotate(360deg);
+					transform: rotate(360deg);
+				}
+			}
+
+		</style>
 	</head>
 	<body>
 		<div id="app">
-			<h1>Hello World!</h1>
+			<div class="app-loader">Loading...</div>
 		</div>
+		<script>
+			const params = new URLSearchParams(window.location.search)
+			const app = document.getElementById("app");
+			const theme = params.get('theme')
+			theme && app.classList.add(theme)
+		</script>
 	</body>
 </html>
