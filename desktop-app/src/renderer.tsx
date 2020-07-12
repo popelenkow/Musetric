@@ -9,12 +9,14 @@ import { TitlebarView } from './components/Titlebar';
 import { GameOfLifeView, GameOfLifeProps } from "./components/GameOfLife";
 import { Switch, SwitchProps } from './controls';
 import { ContainerView } from './components/Container';
+import { ipcRenderer } from 'electron';
+import { channels } from './channels';
 
 const app = document.getElementById("app");
 if (!app) throw new Error('App not found');
 
 const params = new URLSearchParams(window.location.search)
-const initLng = initLocale(params.get('lng'));
+const locale = initLocale(params.get('locale'));
 
 
 const extractTheme: () => Theme | undefined = () => {
@@ -29,6 +31,7 @@ const themeSwitchProps: SwitchProps<Theme> = {
 	set: (theme: Theme) => {
 		app.classList.forEach(x => isTheme(x) && app.classList.remove(x))
 		app.classList.add(theme)
+		ipcRenderer.invoke(channels.app, { type: 'theme', theme })
 	},
 	className: 'titlebar-btn',
 	localize: (theme: Theme, t: TFunction) => {
@@ -39,10 +42,11 @@ const themeSwitchProps: SwitchProps<Theme> = {
 }
 
 const localeSwitchProps: SwitchProps<Locale> = {
-	currentId: initLng,
+	currentId: locale,
 	ids: localeSet,
 	set: (locale: Locale) => {
 		i18n.changeLanguage(locale);
+		ipcRenderer.invoke(channels.app, { type: 'locale', locale })
 	},
 	className: 'titlebar-btn',
 	localize: (locale: Locale) => naturalLocale(locale) || locale

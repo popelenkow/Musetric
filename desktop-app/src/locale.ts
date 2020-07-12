@@ -8,27 +8,27 @@ export const naturalLocale = (key: string): string | undefined => {
 }
 
 const nss = ['musetric', 'game'];
-export const initLocale = (initLng?: string | null): Locale => {
+export const initLocale = (initLocale?: string | null): Locale => {
 	const resources: any = {};
-	localeSet.forEach(lng => {
-		resources[lng] = {};
+	localeSet.forEach(locale => {
+		resources[locale] = {};
 		nss.forEach(ns => {
-			const bundle = require(`../locale/${lng}/${ns}.json`)
-			resources[lng][ns] = bundle;
+			const bundle = require(`../locale/${locale}/${ns}.json`)
+			resources[locale][ns] = bundle;
 		})
 	})
 
-	const lng = isLocale(initLng) ? initLng : 'en'; 
+	const locale = isLocale(initLocale) ? initLocale : 'en'; 
 	i18n
 		.use(initReactI18next)
 		.init({
-			lng,
-			fallbackLng: 'en',
+			lng: locale,
+			fallbackLng: locale,
 			defaultNS: 'musetric',
 			supportedLngs: localeSet,
 			resources: resources,
 			debug: false
 		})
 	
-	return lng;
+	return locale;
 }

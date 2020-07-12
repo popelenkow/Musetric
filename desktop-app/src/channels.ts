@@ -9,5 +9,5 @@ export const channels = {
 
 export type AppEvent =
 	| { type: 'theme', theme: Theme }
-	| { type: 'lng', lng: Locale }
+	| { type: 'locale', locale: Locale }
 export type TitlebarEvent = 'close' | 'minimize' | 'unmaximize' | 'maximize'

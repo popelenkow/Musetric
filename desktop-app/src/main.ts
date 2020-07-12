@@ -1,12 +1,21 @@
 import { app, BrowserWindow, ipcMain, globalShortcut, Menu } from 'electron'
 import { PythonShell } from 'python-shell'
-import { channels, TitlebarEvent } from './channels'
+import { channels, TitlebarEvent, AppEvent } from './channels'
 import url from 'url'
+import fs from 'fs'
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 const isDev = process.env.NODE_ENV === 'development'
 
 app.whenReady().then(() => {
+	ipcMain.handle(channels.app, async (_electronEvent, event: AppEvent) => {
+		const appConfig = JSON.parse(fs.readFileSync('app-config.json', 'utf8'));
+		if (event.type == 'locale') appConfig[event.type] = event.locale
+		else if (event.type == 'theme') appConfig[event.type] = event.theme
+		const jsonString = JSON.stringify(appConfig, null, '\t')
+		fs.writeFileSync('app-config.json', jsonString, { encoding: 'utf8' })
+	})
+
 	ipcMain.handle(channels.titlebar, async (electronEvent, event: TitlebarEvent) => {
 		const window = BrowserWindow.fromId(electronEvent.sender.id);
 		if (event == 'close') isDev ? window.destroy() : window.close()
@@ -35,7 +44,7 @@ app.whenReady().then(() => {
 		frame: false
 	});
 
-	const query = require('../app-config.json')
+	const query = JSON.parse(fs.readFileSync('app-config.json', 'utf8'));
 	isDev
 		? window.loadURL(url.format({ pathname: 'http://localhost:8080', query }))
 		: window.loadFile('dist/index.html', { query })
