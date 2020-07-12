@@ -42,6 +42,8 @@
 			"oneClick": false
 		},
 		"extraFiles": [
+			"icon.ico",
+			"app-config.json",
 			"background"
 		]
 	},

@@ -1,6 +1,7 @@
-import { app, BrowserWindow, ipcMain, globalShortcut } from 'electron'
+import { app, BrowserWindow, ipcMain, globalShortcut, Menu } from 'electron'
 import { PythonShell } from 'python-shell'
 import { channels, WindowEvent } from './channels'
+import url from 'url'
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 const isDev = process.env.NODE_ENV === 'development'
@@ -14,13 +15,12 @@ app.whenReady().then(() => {
 		else if (event == 'unmaximize') window.unmaximize()
 	})
 	
-	ipcMain.handle(channels.pytest, async () => {
+	isDev && ipcMain.handle(channels.pytest, async () => {
 		return await new Promise((resolve) => {
 			PythonShell.run('background/hello.py', undefined, (err, results) =>  {
 				resolve({ message: 'python complete', results, err })
 			});
 		})
-		
 	})
 
 	const window = new BrowserWindow({
@@ -28,19 +28,25 @@ app.whenReady().then(() => {
 		height: 600,
 		minWidth: 300,
 		minHeight: 300,
+		icon: 'icon.ico',
 		webPreferences: {
 			nodeIntegration: true
 		},
 		frame: false
 	});
 
-	isDev ? window.loadURL('http://localhost:8080') : window.loadFile('dist/index.html');
+	const query = {
+		"theme": "dark"
+	}
+	isDev
+		? window.loadURL(url.format({ pathname: 'http://localhost:8080', query }))
+		: window.loadFile('dist/index.html', { query })
+
 
 	globalShortcut.register('Ctrl+Q', () => isDev ? window.destroy() : window.close())
-	isDev && globalShortcut.register('F12', () => window.webContents.toggleDevTools())
+	isDev && globalShortcut.register('F5', () => window.reload())
+	isDev && Menu.setApplicationMenu(Menu.buildFromTemplate([{ label: 'File', submenu:[{ label: 'devTools', accelerator: 'F12', click: () => window.webContents.toggleDevTools() }]} ])) // ToDo https://github.com/electron/electron/issues/5066
 	isDev && window.webContents.toggleDevTools();
-	isDev && window.setIcon('resources/icon.ico')
-	
 	
 	window.on('maximize', () => window.webContents.send(channels.onMaximizeWindow, true))
 	window.on('unmaximize', () => window.webContents.send(channels.onMaximizeWindow, false))
