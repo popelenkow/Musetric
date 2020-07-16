@@ -1,4 +1,5 @@
-import { Theme, Locale } from "../../types"
+import { Locale } from "../../locale"
+import { Theme } from "../../theme"
 import { Handle, Invoke } from "../types";
 import { ipcMain, ipcRenderer } from "electron";
 

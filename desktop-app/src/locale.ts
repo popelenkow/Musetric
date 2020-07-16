@@ -1,9 +1,13 @@
 import i18n from 'i18next';
+import fs from 'fs'
 import { initReactI18next } from "react-i18next";
-import { localeSet, isLocale, Locale } from './types';
+
+export type Locale = 'en' | 'ru'
+export const localeSet: Locale[] = Object.keys(JSON.parse(fs.readFileSync('./locale/natural-locale.json', 'utf8'))) as Locale[];
+export const isLocale = (value: any): value is Locale => localeSet.indexOf(value) !== -1;
 
 export const naturalLocale = (key: string): string | undefined => {
-	const locales = require('../locale/natural-locale.json')
+	const locales = JSON.parse(fs.readFileSync('./locale/natural-locale.json', 'utf8'))
 	return locales[key];
 }
 
@@ -13,7 +17,7 @@ export const initLocale = (initLocale?: string | null): Locale => {
 	localeSet.forEach(locale => {
 		resources[locale] = {};
 		nss.forEach(ns => {
-			const bundle = require(`../locale/${locale}/${ns}.json`)
+			const bundle = JSON.parse(fs.readFileSync(`./locale/${locale}/${ns}.json`, 'utf8'))
 			resources[locale][ns] = bundle;
 		})
 	})

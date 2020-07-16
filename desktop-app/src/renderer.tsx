@@ -2,8 +2,8 @@ import './styles.scss'
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import i18n, { TFunction } from 'i18next';
-import { initLocale, naturalLocale } from './locale';
-import { Theme, isTheme, themeSet, localeSet, Locale } from './types';
+import { initLocale, naturalLocale, localeSet, Locale } from './locale';
+import { Theme, isTheme, themeSet } from './theme';
 import { Container, GameOfLife, Titlebar, ResizeFrame } from './components';
 import { Switch } from './controls';
 import { ipc } from './ipc';
