@@ -1,18 +1,16 @@
 import React from 'react'
-import { ResizeFrameProps, ResizeFrameState } from './types';
-import { ipcRenderer } from 'electron';
-import { channels } from '../../channels';
+import { Props, State } from './types';
+import { ipc } from '../../ipc';
 
-
-export class ResizeFrameView extends React.Component<ResizeFrameProps, ResizeFrameState> {
-	constructor(props: ResizeFrameProps) {
+export class View extends React.Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = { isMaximized: false }
 	}
 
 	componentDidMount() {
-		ipcRenderer.on(channels.onWindow, (_, isMaximized) => {
-			this.setState({ isMaximized: isMaximized })
+		ipc.onWindow.on((_event, arg) => {
+			this.setState(arg)
 		});	
 	}
 

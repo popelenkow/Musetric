@@ -1,6 +1,6 @@
-import { app, BrowserWindow, ipcMain, globalShortcut, Menu } from 'electron'
+import { app, BrowserWindow, globalShortcut, Menu } from 'electron'
 import { PythonShell } from 'python-shell'
-import { channels, TitlebarEvent, AppEvent } from './channels'
+import { ipc } from './ipc'
 import url from 'url'
 import fs from 'fs'
 
@@ -8,23 +8,23 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 const isDev = process.env.NODE_ENV === 'development'
 
 app.whenReady().then(() => {
-	ipcMain.handle(channels.app, async (_electronEvent, event: AppEvent) => {
+	ipc.app.handle(async (_event, arg) => {
 		const appConfig = JSON.parse(fs.readFileSync('app-config.json', 'utf8'));
-		if (event.type == 'locale') appConfig[event.type] = event.locale
-		else if (event.type == 'theme') appConfig[event.type] = event.theme
+		if (arg.type == 'locale') appConfig[arg.type] = arg.locale
+		else if (arg.type == 'theme') appConfig[arg.type] = arg.theme
 		const jsonString = JSON.stringify(appConfig, null, '\t')
 		fs.writeFileSync('app-config.json', jsonString, { encoding: 'utf8' })
 	})
 
-	ipcMain.handle(channels.titlebar, async (electronEvent, event: TitlebarEvent) => {
-		const window = BrowserWindow.fromId(electronEvent.sender.id);
-		if (event == 'close') isDev ? window.destroy() : window.close()
-		else if (event == 'minimize') window.minimize()
-		else if (event == 'maximize') window.maximize()
-		else if (event == 'unmaximize') window.unmaximize()
+	ipc.titlebar.handle(async (event, arg) => {
+		const window = BrowserWindow.fromId(event.sender.id);
+		if (arg == 'close') isDev ? window.destroy() : window.close()
+		else if (arg == 'minimize') window.minimize()
+		else if (arg == 'maximize') window.maximize()
+		else if (arg == 'unmaximize') window.unmaximize()
 	})
 	
-	isDev && ipcMain.handle(channels.pytest, async () => {
+	isDev && ipc.pytest.handle(async () => {
 		return await new Promise((resolve) => {
 			PythonShell.run('background/hello.py', undefined, (err, results) =>  {
 				resolve({ message: 'python complete', results, err })
@@ -55,8 +55,8 @@ app.whenReady().then(() => {
 	isDev && Menu.setApplicationMenu(Menu.buildFromTemplate([{ label: 'File', submenu:[{ label: 'devTools', accelerator: 'F12', click: () => window.webContents.toggleDevTools() }]} ])) // ToDo https://github.com/electron/electron/issues/5066
 	isDev && window.webContents.toggleDevTools();
 	
-	window.on('maximize', () => window.webContents.send(channels.onWindow, true))
-	window.on('unmaximize', () => window.webContents.send(channels.onWindow, false))
+	window.on('maximize', () => ipc.onWindow.send(window, { isMaximized: true }))
+	window.on('unmaximize', () => ipc.onWindow.send(window, { isMaximized: false }))
 	window.on('closed', () => app.quit())
 })
 

@@ -1,9 +1,8 @@
 import React from 'react'
-import { ContainerProps, ContainerState } from './types';
+import { Props, State } from './types';
 
-
-export class ContainerView extends React.Component<ContainerProps, ContainerState> {
-	constructor(props: ContainerProps) {
+export class View extends React.Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 	}
 

@@ -1,6 +1,6 @@
-export type TitlebarProps = {
+export type Props = {
 };
 
-export type TitlebarState = {
+export type State = {
 	isMaximized: boolean;
 };

@@ -1,6 +1,6 @@
 import React from 'react'
 import produce from 'immer';
-import { Size, Grid, Options, Row, GameOfLifeProps, GameOfLifeState, GenF, Gen } from './types';
+import { Size, Grid, Options, Row, Props, State, GenF, Gen } from './types';
 import { withTranslation, WithTranslation } from 'react-i18next';
 
 const operations = [
@@ -13,7 +13,6 @@ const operations = [
 	[1, 1],
 	[-1, -1]
 ];
-
 
 const Gen: Gen = {
 	empty: (size: Size) => {
@@ -73,8 +72,8 @@ const Gen: Gen = {
 	}
 }
 
-class GameOfLifeView extends React.Component<GameOfLifeProps & WithTranslation, GameOfLifeState> {
-	constructor(props: GameOfLifeProps & WithTranslation) {
+class View extends React.Component<Props & WithTranslation, State> {
+	constructor(props: Props & WithTranslation) {
 		super(props);
 		this.state = { grid: Gen.empty(this.props.size), generator: undefined };
 	}
@@ -127,5 +126,5 @@ class GameOfLifeView extends React.Component<GameOfLifeProps & WithTranslation, 
 	}
 }
 
-const view = withTranslation()(GameOfLifeView);
-export { view as GameOfLifeView }
+const view = withTranslation()(View);
+export { view as View }

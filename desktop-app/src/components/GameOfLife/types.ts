@@ -15,11 +15,11 @@ export type Options = {
 export type GenF = (size: Size, grid?: Grid, options?: Options) => Grid;
 export type Gen = Record<string, GenF>;
 
-export type GameOfLifeProps = {
+export type Props = {
 	size: Size;
 };
 
-export type GameOfLifeState = {
+export type State = {
 	grid: Grid;
 	generator?: NodeJS.Timeout;
 };

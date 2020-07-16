@@ -4,13 +4,9 @@ import ReactDOM from 'react-dom';
 import i18n, { TFunction } from 'i18next';
 import { initLocale, naturalLocale } from './locale';
 import { Theme, isTheme, themeSet, localeSet, Locale } from './types';
-import { ResizeFrameView } from './components/ResizeFrame';
-import { TitlebarView } from './components/Titlebar';
-import { GameOfLifeView, GameOfLifeProps } from "./components/GameOfLife";
-import { Switch, SwitchProps } from './controls';
-import { ContainerView } from './components/Container';
-import { ipcRenderer } from 'electron';
-import { channels } from './channels';
+import { Container, GameOfLife, Titlebar, ResizeFrame } from './components';
+import { Switch } from './controls';
+import { ipc } from './ipc';
 
 const app = document.getElementById("app");
 if (!app) throw new Error('App not found');
@@ -25,13 +21,13 @@ const extractTheme: () => Theme | undefined = () => {
 	return themes.shift();
 }
 
-const themeSwitchProps: SwitchProps<Theme> = {
+const themeSwitchProps: Switch.Props<Theme> = {
 	currentId: extractTheme() || themeSet[0],
 	ids: themeSet,
 	set: (theme: Theme) => {
 		app.classList.forEach(x => isTheme(x) && app.classList.remove(x))
 		app.classList.add(theme)
-		ipcRenderer.invoke(channels.app, { type: 'theme', theme })
+		ipc.app.invoke({ type: 'theme', theme })
 	},
 	className: 'titlebar-btn',
 	localize: (theme: Theme, t: TFunction) => {
@@ -41,19 +37,19 @@ const themeSwitchProps: SwitchProps<Theme> = {
 	}
 }
 
-const localeSwitchProps: SwitchProps<Locale> = {
+const localeSwitchProps: Switch.Props<Locale> = {
 	currentId: locale,
 	ids: localeSet,
 	set: (locale: Locale) => {
 		i18n.changeLanguage(locale);
-		ipcRenderer.invoke(channels.app, { type: 'locale', locale })
+		ipc.app.invoke({ type: 'locale', locale })
 	},
 	className: 'titlebar-btn',
 	localize: (locale: Locale) => naturalLocale(locale) || locale
 }
 
 
-const gameOfLifeProps: GameOfLifeProps = {
+const gameOfLifeProps: GameOfLife.Props = {
 	size: {
 		rows: 50,
 		columns: 50
@@ -62,14 +58,14 @@ const gameOfLifeProps: GameOfLifeProps = {
 
 const root = (
 <Suspense fallback='loading'>
-	<TitlebarView>
-		<Switch {...themeSwitchProps} />
-		<Switch {...localeSwitchProps} />
-	</TitlebarView>
+	<Titlebar.View>
+		<Switch.View {...themeSwitchProps} />
+		<Switch.View {...localeSwitchProps} />
+	</Titlebar.View>
 	<div className='main'>
-		<ContainerView><GameOfLifeView {...gameOfLifeProps}  /></ContainerView>
-		<ContainerView><GameOfLifeView {...gameOfLifeProps}  /></ContainerView>
+		<Container.View><GameOfLife.View {...gameOfLifeProps}  /></Container.View>
+		<Container.View><GameOfLife.View {...gameOfLifeProps}  /></Container.View>
 	</div>
-	<ResizeFrameView />
+	<ResizeFrame.View />
 </Suspense>)
 ReactDOM.render(root, app);

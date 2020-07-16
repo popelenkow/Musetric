@@ -9,6 +9,7 @@
     "outDir": "dist",
 	/* Additional Checks */
 	"strict": true,
+	"noUnusedLocals": true,
     /* Module Resolution Options */
     "moduleResolution": "Node",
     "esModuleInterop": true,

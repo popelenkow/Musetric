@@ -2,7 +2,7 @@ import React from 'react'
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { TFunction } from "i18next";
 
-export type SwitchProps<T = any> = {
+export type Props<T = any> = {
 	currentId: T;
 	ids: T[];
 	set: (id: T) => void;
@@ -10,12 +10,12 @@ export type SwitchProps<T = any> = {
 	localize?: (id: T, t: TFunction) => string;
 };
 
-export type SwitchState<T = any> = {
+export type State<T = any> = {
 	id: T;
 };
 
-class Switch extends React.Component<SwitchProps & WithTranslation, SwitchState> {
-	constructor(props: SwitchProps & WithTranslation) {
+class View extends React.Component<Props & WithTranslation, State> {
+	constructor(props: Props & WithTranslation) {
 		super(props);
 		this.state = { id: this.props.currentId }
 	}
@@ -37,5 +37,5 @@ class Switch extends React.Component<SwitchProps & WithTranslation, SwitchState>
 	}
 }
 
-const view = withTranslation()(Switch)
-export { view as Switch }
+const view = withTranslation()(View)
+export { view as View }

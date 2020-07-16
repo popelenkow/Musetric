@@ -1,5 +1,5 @@
-export type ContainerProps = {
+export type Props = {
 };
 
-export type ContainerState = {
+export type State = {
 };

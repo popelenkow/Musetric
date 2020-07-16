@@ -1,6 +1,6 @@
-export type ResizeFrameProps = {
+export type Props = {
 };
 
-export type ResizeFrameState = {
+export type State = {
 	isMaximized: boolean;
 };

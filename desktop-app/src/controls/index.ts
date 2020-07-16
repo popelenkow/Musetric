@@ -1,1 +1,2 @@
-export * from './elements/Switch'
+import * as Switch from './elements/Switch'
+export { Switch }

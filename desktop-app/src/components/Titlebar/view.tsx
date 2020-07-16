@@ -1,29 +1,26 @@
 import React from 'react'
-import { TitlebarProps, TitlebarState } from './types';
-import { ipcRenderer } from 'electron'
+import { Props, State } from './types';
 import { icons } from '../../icons';
-import { TitlebarEvent, channels } from '../../channels';
+import { ipc } from '../../ipc';
 
-
-export class TitlebarView extends React.Component<TitlebarProps, TitlebarState> {
-	constructor(props: TitlebarProps) {
+export class View extends React.Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = { isMaximized: false }
 	}
 
 	componentDidMount() {
-		ipcRenderer
-			.invoke(channels.pytest)
+		ipc.pytest
+			.invoke()
 			.then(value => console.log(value))
 			.catch(err => console.log(err))
-		ipcRenderer.on(channels.onWindow, (_, isMaximized) => {
-			this.setState({ isMaximized: isMaximized })
+		ipc.onWindow.on((_event, arg) => {
+			this.setState(arg)
 		});	
 	}
 
 	render() {
 		const { isMaximized } = this.state;
-		const sendMain = (event: TitlebarEvent) => ipcRenderer.invoke(channels.titlebar, event);
 
 		return (
 		<div className='titlebar'>
@@ -31,13 +28,13 @@ export class TitlebarView extends React.Component<TitlebarProps, TitlebarState> 
 			<div className="titlebar-text">Musetric</div>
 			{this.props.children}
 			<div className="titlebar-controls">
-				<button className="windows-btn" onClick={() => sendMain('minimize')}>
+				<button className="windows-btn" onClick={() => ipc.titlebar.invoke('minimize')}>
 					{icons.titlebar.minimize}
 				</button>
-				<button className="windows-btn" onClick={() => isMaximized ? sendMain('unmaximize') : sendMain('maximize')}>
+				<button className="windows-btn" onClick={() => isMaximized ? ipc.titlebar.invoke('unmaximize') : ipc.titlebar.invoke('maximize')}>
 					{isMaximized ? icons.titlebar.unmaximize : icons.titlebar.maximize}
 				</button>
-				<button className="windows-close-btn" onClick={() => sendMain('close')}>
+				<button className="windows-close-btn" onClick={() => ipc.titlebar.invoke('close')}>
 					{icons.titlebar.close}
 				</button>
 			</div>
