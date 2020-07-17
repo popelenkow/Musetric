@@ -3,5 +3,6 @@ module.exports = {
 	locales: ['en', 'ru'],
 	defaultNamespace: 'musetric',
 	output: 'locale/$LOCALE/$NAMESPACE.json',
+	indentation: '\t',
 	sort: true
 };
