@@ -45,6 +45,7 @@
 		"extraFiles": [
 			"icon.ico",
 			"app-config.json",
+			"locale",
 			"background"
 		]
 	},
