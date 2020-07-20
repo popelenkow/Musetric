@@ -1,4 +1,4 @@
-# <img src="https://user-images.githubusercontent.com/7475599/87945559-1c49ec80-cacb-11ea-8f24-42c0738d1dcd.png" width="24" height="24"> Musetric
+# <img src="https://user-images.githubusercontent.com/7475599/87945559-1c49ec80-cacb-11ea-8f24-42c0738d1dcd.png" width="32" height="32"> Musetric
 
 Musetric is a desktop application for exploration of sounds. The application supports Windows. There is support for localization and themes. 
 
