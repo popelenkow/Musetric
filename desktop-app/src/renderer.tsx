@@ -8,6 +8,13 @@ import { Container, GameOfLife, Titlebar, ResizeFrame } from './components';
 import { Switch } from './controls';
 import { ipc } from './ipc';
 
+const isDev = process.env.NODE_ENV === 'development'
+
+isDev && ipc.pytest
+	.invoke()
+	.then(value => console.log(value))
+	.catch(err => console.log(err))
+
 const app = document.getElementById("app");
 if (!app) throw new Error('App not found');
 

@@ -10,10 +10,6 @@ export class View extends React.Component<Props, State> {
 	}
 
 	componentDidMount() {
-		ipc.pytest
-			.invoke()
-			.then(value => console.log(value))
-			.catch(err => console.log(err))
 		ipc.onWindow.on((_event, arg) => {
 			this.setState(arg)
 		});	

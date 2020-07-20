@@ -24,7 +24,7 @@ app.whenReady().then(() => {
 		else if (arg == 'unmaximize') window.unmaximize()
 	})
 	
-	isDev && ipc.pytest.handle(async () => {
+	ipc.pytest.handle(async () => {
 		return await new Promise((resolve) => {
 			PythonShell.run('background/hello.py', undefined, (err, results) =>  {
 				resolve({ message: 'python complete', results, err })
