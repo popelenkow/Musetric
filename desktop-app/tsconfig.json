@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "jsx": "react",
+    "pretty": true,
+    "sourceMap": true,
+    "outDir": "dist",
+	/* Additional Checks */
+	"strict": true,
+	"noUnusedLocals": true,
+    /* Module Resolution Options */
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
+  },
+  "include": ["./src/**/*"],
+}

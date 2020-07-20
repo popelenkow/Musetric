@@ -1,0 +1,19 @@
+.dark {
+	--color-bg: hsl(0, 0%, 13%);
+	--color-content-bg: hsl(0, 0%, 13%);
+	--color-sidebar-bg: hsl(0, 0%, 24%);
+	--color-content: hsl(0, 0%, 100%);
+	--color-splitter: hsl(0, 0%, 50%);
+	--color-icon: hsl(0, 0%, 91%);
+
+	--color-loader-track: hsla(0, 0%, 24%);
+	--color-loader-thumb: hsl(0, 0%, 80%);
+
+	--color-scrollbar-track: hsl(0, 0%, 15%);
+	--color-scrollbar-thumb: hsl(0, 0%, 30%);
+	--color-scrollbar-thumb-hover: hsl(0, 0%, 40%);
+	--color-scrollbar-thumb-active: hsl(0, 0%, 50%);
+
+	--color-cell-live: hsl(0, 0%, 100%);
+	--color-cell-dead: hsl(0, 0%, 0%);
+}

@@ -1,0 +1,27 @@
+@import './theme/styles.css';
+@import './controls/styles.scss';
+@import './components/styles.scss';
+
+body {
+	margin: 0;
+	overflow: hidden;
+}
+
+#app {
+	width: calc(100vw - 2px);
+	height: calc(100vh - 2px);
+	border: 1px solid var(--color-splitter);
+	display: flex;
+	flex-direction: column;
+	background-color: var(--color-bg);
+}
+
+
+.main {
+	display: flex;
+	flex-direction: row;
+	flex: 1;
+	min-height: 0px;
+	padding: var(--content-margin);
+}
+

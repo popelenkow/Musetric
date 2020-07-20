@@ -1,0 +1,23 @@
+.scrollbar {
+	::-webkit-scrollbar {
+		width: 15px;
+	}
+	  
+	::-webkit-scrollbar-track {
+		background: var(--color-scrollbar-track);
+	}
+	
+	::-webkit-scrollbar-corner {
+		background: var(--color-scrollbar-track);
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: var(--color-scrollbar-thumb);
+		&:hover {
+			background: var(--color-scrollbar-thumb-hover);
+		}
+		&:active {
+			background: var(--color-scrollbar-thumb-active);
+		}
+	}
+}
