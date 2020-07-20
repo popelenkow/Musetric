@@ -11,6 +11,22 @@ At the moment, the application is at the initial stage of development, so can pl
 - Sound spectrum visualization
 - Playing and recording the staff (tab)
 
+## Development
+
+Electron application with react & typescript & sass & webpack. Node >= v12. Python will be used in the future.
+
+Dev
+```
+yarn
+yarn dev
+```
+
+Windows Installer
+```
+yarn
+yarn build
+```
+
 ## Licence
 
 Musetric is licenced under the [MIT licence](licence.txt).
