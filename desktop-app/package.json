@@ -9,8 +9,7 @@
 		"dev": "cross-env WITH_MAIN=1 yarn dev-renderer",
 		"build-renderer": "webpack --progress --config ./configs/webpack.config.renderer.prod.js",
 		"build-main": "webpack --progress --config ./configs/webpack.config.main.prod.js",
-		"prebuild": "rimraf dist && rimraf build",
-		"build": "yarn build-renderer && yarn build-main && electron-builder",
+		"build": "rimraf {dist, build} && yarn build-renderer && yarn build-main && electron-builder",
 		"dist": "rimraf dist && yarn build-renderer && yarn build-main",
 		"parse-locale": "i18next -c ./configs/i18next-parser.config.js"
 	},
