@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import i18n, { TFunction } from 'i18next';
 import { initLocale, naturalLocale, localeSet, Locale } from './locale';
 import { Theme, isTheme, themeSet } from './theme';
-import { Container, GameOfLife, Titlebar, ResizeFrame } from './components';
+import { Container, GameOfLife, Titlebar, ResizeFrame, Recorder } from './components';
 import { Switch } from './controls';
 import { ipc } from './ipc';
 
@@ -70,7 +70,7 @@ const root = (
 		<Switch.View {...localeSwitchProps} />
 	</Titlebar.View>
 	<div className='main'>
-		<Container.View><GameOfLife.View {...gameOfLifeProps}  /></Container.View>
+		<Container.View><Recorder.View /></Container.View>
 		<Container.View><GameOfLife.View {...gameOfLifeProps}  /></Container.View>
 	</div>
 	<ResizeFrame.View />
