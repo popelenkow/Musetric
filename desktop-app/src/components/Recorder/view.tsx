@@ -10,19 +10,19 @@ export class View extends React.Component<Props, State> {
 	render() {
 		const { recorder, list } = this.state;
 		const record = () => {
-			navigator.mediaDevices.getUserMedia({
-				audio: true
-			}).then((stream) => {
-				const recorder = new MediaRecorder(stream);
-				recorder.ondataavailable = (e) => {
-					var url = URL.createObjectURL(e.data);
-					const list = this.state.list;
-					const g = [ ...list, url ];
-					this.setState({ list: g })
-				};
-				recorder.start();
-				this.setState({ recorder })
-			});
+			navigator.mediaDevices
+				.getUserMedia({audio: true})
+				.then(stream => new MediaRecorder(stream))
+				.then(recorder => {
+					recorder.ondataavailable = (event) => {
+						var url = URL.createObjectURL(event.data);
+						const list = this.state.list;
+						const g = [ ...list, url ];
+						this.setState({ list: g })
+					};
+					recorder.start();
+					this.setState({ recorder })
+				});
 		}
 
 		const stop = () => {
@@ -33,11 +33,16 @@ export class View extends React.Component<Props, State> {
 			}
 		}
 
+		const isRecording = recorder && recorder.state == 'recording';
 		return (
-		<div>
-			{ (recorder && recorder.state == 'recording') && <button onClick={stop}>stop</button> }
-			{ (!recorder || recorder.state != 'recording') && <button onClick={record}>record</button>}
-			{ list.map(x => <audio key={x} controls={true} src={x}></audio>) }
+		<div className='recorder'>
+			<div className='recorder-header'>
+				{ isRecording && <button className='btn' onClick={stop}>stop</button> }
+				{ !isRecording && <button className='btn' onClick={record}>record</button>}
+			</div>
+			<div>
+				{ list.map(x => <audio key={x} controls={true} src={x}></audio>) }
+			</div>
 		</div>
 		)
 	}
