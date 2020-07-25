@@ -9,20 +9,17 @@ export class View extends React.Component<Props, State> {
 
 	render() {
 		const { recorder, list } = this.state;
-		const record = () => {
-			navigator.mediaDevices
-				.getUserMedia({audio: true})
-				.then(stream => new MediaRecorder(stream))
-				.then(recorder => {
-					recorder.ondataavailable = (event) => {
-						var url = URL.createObjectURL(event.data);
-						const list = this.state.list;
-						const g = [ ...list, url ];
-						this.setState({ list: g })
-					};
-					recorder.start();
-					this.setState({ recorder })
-				});
+		const record = async () => {
+			const stream = await navigator.mediaDevices.getUserMedia({audio: true})
+			const recorder = new MediaRecorder(stream);
+			recorder.ondataavailable = (event) => {
+				var url = URL.createObjectURL(event.data);
+				const list = this.state.list;
+				const g = [ ...list, url ];
+				this.setState({ list: g })
+			};
+			recorder.start();
+			this.setState({ recorder })
 		}
 
 		const stop = () => {
@@ -38,7 +35,7 @@ export class View extends React.Component<Props, State> {
 		<div className='recorder'>
 			<div className='recorder-header'>
 				{ isRecording && <button className='btn' onClick={stop}>stop</button> }
-				{ !isRecording && <button className='btn' onClick={record}>record</button>}
+				{ !isRecording && <button className='btn' onClick={record}>record</button> }
 			</div>
 			<div className='recorder-board'>
 				{ list.map(x => <audio className='recorder-item' key={x} controls={true} src={x}></audio>) }
