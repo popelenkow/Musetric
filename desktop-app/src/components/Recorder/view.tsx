@@ -40,8 +40,8 @@ export class View extends React.Component<Props, State> {
 				{ isRecording && <button className='btn' onClick={stop}>stop</button> }
 				{ !isRecording && <button className='btn' onClick={record}>record</button>}
 			</div>
-			<div>
-				{ list.map(x => <audio key={x} controls={true} src={x}></audio>) }
+			<div className='recorder-board'>
+				{ list.map(x => <audio className='recorder-item' key={x} controls={true} src={x}></audio>) }
 			</div>
 		</div>
 		)
