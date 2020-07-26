@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import i18n, { TFunction } from 'i18next';
 import { initLocale, naturalLocale, localeSet, Locale } from './locale';
 import { Theme, isTheme, themeSet } from './theme';
-import { Container, GameOfLife, Titlebar, ResizeFrame, Recorder } from './components';
+import { Container, Titlebar, ResizeFrame, Recorder } from './components';
 import { Switch } from './controls';
 import { ipc } from './ipc';
 
@@ -55,14 +55,6 @@ const localeSwitchProps: Switch.Props<Locale> = {
 	localize: (locale: Locale) => naturalLocale(locale) || locale
 }
 
-
-const gameOfLifeProps: GameOfLife.Props = {
-	size: {
-		rows: 50,
-		columns: 50
-	}
-}
-
 const root = (
 <Suspense fallback='loading'>
 	<Titlebar.View>
@@ -71,7 +63,6 @@ const root = (
 	</Titlebar.View>
 	<div className='main'>
 		<Container.View><Recorder.View /></Container.View>
-		<Container.View><GameOfLife.View {...gameOfLifeProps}  /></Container.View>
 	</div>
 	<ResizeFrame.View />
 </Suspense>)

@@ -8,8 +8,7 @@ export class View extends React.Component<Props, State> {
 		this.state = { list: [] }
 	}
 	componentDidMount() {
-		
-		window.addEventListener('load', initAudio );
+		window.addEventListener('load', initAudio);
 	}
 	
 	render() {

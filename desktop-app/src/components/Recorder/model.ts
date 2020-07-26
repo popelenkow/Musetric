@@ -1,8 +1,5 @@
 import { Recorder } from './recorder'
 
-window.AudioContext = window.AudioContext;
-
-
 let audioContext = new AudioContext();
 let analyserNode: any;
 
