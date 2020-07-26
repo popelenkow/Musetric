@@ -1,28 +1,38 @@
-.recorder {
-	display: flex;
-	flex-direction: column;
-	overflow: hidden;
-	width: 100%;
-	height: 100%;
-	@extend .scrollbar;
+canvas { 
+	display: inline-block; 
+	background: #202020; 
+	width: 95%;
+	height: 45%;
+	box-shadow: 0px 0px 10px blue;
 }
-
-.recorder-header {
+#controls {
 	display: flex;
 	flex-direction: row;
-	height: 28px;
-	background-color: var(--color-sidebar-bg);
-	border-bottom: 1px solid var(--color-splitter);
+	align-items: center;
+	justify-content: space-around;
+	height: 20%;
+	width: 100%;
 }
-
-.recorder-board {
+#record { height: 15vh; }
+#record.recording { 
+	background: red;
+	background: -webkit-radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
+	background: -moz-radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
+	background: radial-gradient(center, ellipse cover, #ff0000 0%,lightgrey 75%,lightgrey 100%,#7db9e8 100%); 
+}
+#save, #save img { height: 10vh; }
+#save { opacity: 0.25;}
+#save[download] { opacity: 1;}
+#viz {
+	height: 80%;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
-	overflow: auto;
-	width: 100%;
-	height: 100%;
+	justify-content: space-around;
+	align-items: center;
 }
-
-.recorder-item {
-	display: block;
+@media (orientation: landscape) {
+	body { flex-direction: row;}
+	#controls { flex-direction: column; height: 100%; width: 10%;}
+	#viz { height: 100%; width: 90%;}
 }

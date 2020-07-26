@@ -10,7 +10,7 @@ module.exports = {
 	},
 	module: {
 		rules: [
-			{ test: /\.(ts|tsx)$/, include: /src/, use: ['ts-loader'] },
+			{ test: /\.(js|ts|tsx)$/, include: /src/, use: ['ts-loader'] },
 			{ test: /\.(css|scss)$/, use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'] }
 		] 
 	},
