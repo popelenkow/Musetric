@@ -6,8 +6,8 @@ let audioContext = new AudioContext();
 let analyserNode: AnalyserNode;
 let inputPoint: GainNode;
 let audioRecorder: Recorder;
-let audioInput: MediaStreamAudioSourceNode | ChannelMergerNode,
-	realAudioInput: MediaStreamAudioSourceNode;
+let audioInput: MediaStreamAudioSourceNode | ChannelMergerNode;
+let realAudioInput: MediaStreamAudioSourceNode;
 let rafID: number | null = null;
 let analyserContext: any = null;
 let canvasWidth: any, canvasHeight: any;
@@ -18,7 +18,7 @@ export const saveAudio = () => {
 	audioRecorder.exportWAV(doneEncoding, undefined);
 }
 
-const drawBuffer = (width: number, height: number, context: CanvasRenderingContext2D, data: any) => {
+const drawBuffer = (width: number, height: number, context: CanvasRenderingContext2D, data: Float32Array) => {
 	let step = Math.ceil(data.length / width);
 	let amp = height / 2;
 	context.fillStyle = "silver";
@@ -37,12 +37,12 @@ const drawBuffer = (width: number, height: number, context: CanvasRenderingConte
 	}
 }
 
-const doneEncoding = (blob: any) => {
+const doneEncoding = (blob: Blob) => {
 	Recorder.forceDownload(blob, "myRecording" + ((recIndex < 10) ? "0" : "") + recIndex + ".wav");
 	recIndex++;
 }
 
-const convertToMono = (input: any) => {
+const convertToMono = (input: MediaStreamAudioSourceNode) => {
 	let splitter = audioContext.createChannelSplitter(2);
 	let merger = audioContext.createChannelMerger(2);
 
@@ -115,9 +115,10 @@ export class View extends React.Component<Props, State> {
 
 	toggleRecording = () => {
 		if (this.state.isRecording) {
-			const gotBuffers = (buffers: any) => {
+			const gotBuffers = (buffers: Float32Array[]) => {
+				const buf = buffers[0];
 				let canvas = document.getElementById("wavedisplay")  as HTMLCanvasElement;
-				drawBuffer(canvas.width, canvas.height, canvas.getContext('2d') as CanvasRenderingContext2D, buffers[0]);
+				drawBuffer(canvas.width, canvas.height, canvas.getContext('2d') as CanvasRenderingContext2D, buf);
 				audioRecorder.exportWAV(doneEncoding, undefined);
 			}
 			audioRecorder.stop();
