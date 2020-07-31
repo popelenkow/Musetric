@@ -19,18 +19,18 @@ export class View extends React.Component<Props, State> {
 		const { isMaximized } = this.state;
 
 		return (
-		<div className='titlebar'>
-			<div className="titlebar-icon">{icons.app}</div>
-			<div className="titlebar-text">Musetric</div>
+		<div className='Titlebar'>
+			<div className="Titlebar__Icon">{icons.app}</div>
+			<div className="Titlebar__Text">Musetric</div>
 			{this.props.children}
-			<div className="titlebar-controls">
-				<button className="windows-btn" onClick={() => ipc.titlebar.invoke('minimize')}>
+			<div className="WindowsTitlebar">
+				<button className="WindowsTitlebar__Button" onClick={() => ipc.titlebar.invoke('minimize')}>
 					{icons.titlebar.minimize}
 				</button>
-				<button className="windows-btn" onClick={() => isMaximized ? ipc.titlebar.invoke('unmaximize') : ipc.titlebar.invoke('maximize')}>
+				<button className="WindowsTitlebar__Button" onClick={() => isMaximized ? ipc.titlebar.invoke('unmaximize') : ipc.titlebar.invoke('maximize')}>
 					{isMaximized ? icons.titlebar.unmaximize : icons.titlebar.maximize}
 				</button>
-				<button className="windows-close-btn" onClick={() => ipc.titlebar.invoke('close')}>
+				<button className="WindowsTitlebar__CloseButton" onClick={() => ipc.titlebar.invoke('close')}>
 					{icons.titlebar.close}
 				</button>
 			</div>

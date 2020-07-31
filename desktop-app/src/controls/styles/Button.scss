@@ -1,4 +1,4 @@
-.btn {
+@mixin Button {
 	margin: 0;
 	padding: 0 12px;
 	border: 0;
@@ -12,4 +12,8 @@
 	path, rect, polygon {
 		fill: var(--color-content);
 	};
+}
+
+.Button {
+	@include Button;
 }

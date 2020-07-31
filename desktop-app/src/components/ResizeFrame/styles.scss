@@ -1,9 +1,9 @@
-.resize-frame {
+.ResizeFrame {
     width: auto;
     height: auto;
 }
 
-.resize-band-top {
+.ResizeFrame__Top {
 	-webkit-app-region: no-drag;
 	position: absolute;
 	top: 0;
@@ -12,7 +12,7 @@
 	height: 5px;
 }
 
-.resize-band-bottom {
+.ResizeFrame__Bottom {
 	-webkit-app-region: no-drag;
 	position: absolute;
 	bottom: 0;
@@ -21,7 +21,7 @@
 	height: 5px;
 }
 
-.resize-band-left {
+.ResizeFrame__Left {
 	-webkit-app-region: no-drag;
 	position: absolute;
 	top: 0;
@@ -30,7 +30,7 @@
 	width: 5px;
 }
 
-.resize-band-right {
+.ResizeFrame__Right {
 	-webkit-app-region: no-drag;
 	position: absolute;
 	top: 0;

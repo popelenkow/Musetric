@@ -8,7 +8,7 @@ export class View extends React.Component<Props, State> {
 
 	render() {
 		return (
-		<div className='container'>
+		<div className='Container'>
 			{this.props.children}
 		</div>)
 	}

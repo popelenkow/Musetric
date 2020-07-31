@@ -100,22 +100,22 @@ class View extends React.Component<Props & WithTranslation, State> {
 		}
 		const grid = this.state.grid;
 		return ( 
-		<div className='game'>
-			<div className='game-header'>
-				<button className='btn' onClick={() => this.setGenerator(!this.state.generator)}>
-					{this.state.generator ? t('game:stop') : t('game:start')}
+		<div className='GameOfLife'>
+			<div className='GameOfLife__Header'>
+				<button className='Button' onClick={() => this.setGenerator(!this.state.generator)}>
+					{this.state.generator ? t('GameOfLife:stop') : t('GameOfLife:start')}
 				</button>
-				<button className='btn' onClick={() => this.setGrid(Gen.random)}>
-					{t('game:random')}
+				<button className='Button' onClick={() => this.setGrid(Gen.random)}>
+					{t('GameOfLife:random')}
 				</button>
-				<button className='btn' onClick={() => this.setGrid(Gen.empty)}>
-					{t('game:clear')}
+				<button className='Button' onClick={() => this.setGrid(Gen.empty)}>
+					{t('GameOfLife:clear')}
 				</button>
 			</div>
-			<div className='game-grid' style={gridStyle}>
+			<div className='GameOfLife__Grid' style={gridStyle}>
 				{grid.map((rows, row) =>
 					rows.map((_, column) => {
-						const cellClass = grid[row][column] ? 'game-cell-live' : 'game-cell-dead';
+						const cellClass = grid[row][column] ? 'GameOfLife__CellLive' : 'GameOfLife__CellDead';
 						const key = `${row}-${column}`;
 						const pick = () => this.setGrid(Gen.pick, { row, column });
 						return <div className={cellClass} key={key} onClick={pick}/>

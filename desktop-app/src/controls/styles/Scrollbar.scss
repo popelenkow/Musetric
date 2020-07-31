@@ -1,4 +1,4 @@
-.scrollbar {
+@mixin Scrollbar {
 	::-webkit-scrollbar {
 		width: 15px;
 	}
@@ -20,4 +20,8 @@
 			background: var(--color-scrollbar-thumb-active);
 		}
 	}
+}
+
+.Scrollbar {
+	@include Scrollbar;
 }

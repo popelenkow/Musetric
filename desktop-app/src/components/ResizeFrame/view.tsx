@@ -16,11 +16,11 @@ export class View extends React.Component<Props, State> {
 
 	render() {
 		return !this.state.isMaximized && (
-		<div className='resize-frame'>
-			<div className='resize-band-top' />
-			<div className='resize-band-bottom' />
-			<div className='resize-band-left' />
-			<div className='resize-band-right' />
+		<div className='ResizeFrame'>
+			<div className='ResizeFrame__Top' />
+			<div className='ResizeFrame__Bottom' />
+			<div className='ResizeFrame__Left' />
+			<div className='ResizeFrame__Right' />
 		</div>)
 	}
 }

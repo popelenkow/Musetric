@@ -34,8 +34,8 @@ export class View extends React.Component<Props, State> {
 		return (
 		<div className='recorder'>
 			<div className='recorder-header'>
-				{ isRecording && <button className='btn' onClick={stop}>stop</button> }
-				{ !isRecording && <button className='btn' onClick={record}>record</button> }
+				{ isRecording && <button className='Button' onClick={stop}>stop</button> }
+				{ !isRecording && <button className='Button' onClick={record}>record</button> }
 			</div>
 			<div className='recorder-board'>
 				{ list.map(x => <audio className='recorder-item' key={x} controls={true} src={x}></audio>) }

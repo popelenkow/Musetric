@@ -9,11 +9,11 @@ const isDev = process.env.NODE_ENV === 'development'
 
 app.whenReady().then(() => {
 	ipc.app.handle(async (_event, arg) => {
-		const appConfig = JSON.parse(fs.readFileSync('app-config.json', 'utf8'));
+		const appConfig = JSON.parse(fs.readFileSync('app.config.json', 'utf8'));
 		if (arg.type == 'locale') appConfig[arg.type] = arg.locale
 		else if (arg.type == 'theme') appConfig[arg.type] = arg.theme
 		const jsonString = JSON.stringify(appConfig, null, '\t')
-		fs.writeFileSync('app-config.json', jsonString, { encoding: 'utf8' })
+		fs.writeFileSync('app.config.json', jsonString, { encoding: 'utf8' })
 	})
 
 	ipc.titlebar.handle(async (event, arg) => {
@@ -44,7 +44,7 @@ app.whenReady().then(() => {
 		frame: false
 	});
 
-	const query = JSON.parse(fs.readFileSync('app-config.json', 'utf8'));
+	const query = JSON.parse(fs.readFileSync('app.config.json', 'utf8'));
 	isDev
 		? window.loadURL(url.format({ pathname: 'http://localhost:8080', query }))
 		: window.loadFile('dist/index.html', { query })

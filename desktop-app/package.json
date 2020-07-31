@@ -11,7 +11,7 @@
 		"build-main": "webpack --progress --config ./configs/webpack.config.main.prod.js",
 		"build": "rimraf {dist, build} && yarn build-renderer && yarn build-main && electron-builder",
 		"dist": "rimraf dist && yarn build-renderer && yarn build-main",
-		"parse-locale": "i18next -c ./configs/i18next-parser.config.js"
+		"parse-locale": "i18next -c ./configs/i18next.parser.config.js"
 	},
 	"author": {
 		"name": "Musetric",
@@ -43,7 +43,7 @@
 		},
 		"extraFiles": [
 			"icon.ico",
-			"app-config.json",
+			"app.config.json",
 			"locale",
 			"background"
 		]

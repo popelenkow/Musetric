@@ -36,7 +36,7 @@ const themeSwitchProps: Switch.Props<Theme> = {
 		app.classList.add(theme)
 		ipc.app.invoke({ type: 'theme', theme })
 	},
-	className: 'titlebar-btn',
+	className: 'Titlebar__Button',
 	localize: (theme: Theme, t: TFunction) => {
 		if (theme == 'white') return t('musetric:theme.white')
 		else if (theme == 'dark') return t('musetric:theme.dark')
@@ -51,7 +51,7 @@ const localeSwitchProps: Switch.Props<Locale> = {
 		i18n.changeLanguage(locale);
 		ipc.app.invoke({ type: 'locale', locale })
 	},
-	className: 'titlebar-btn',
+	className: 'Titlebar__Button',
 	localize: (locale: Locale) => naturalLocale(locale) || locale
 }
 
