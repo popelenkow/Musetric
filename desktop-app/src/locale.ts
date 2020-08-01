@@ -11,7 +11,7 @@ export const naturalLocale = (key: string): string | undefined => {
 	return locales[key];
 }
 
-const nss = ['musetric', 'GameOfLife'];
+const nss = ['Musetric', 'GameOfLife'];
 export const initLocale = (initLocale?: string | null): Locale => {
 	const resources: any = {};
 	localeSet.forEach(locale => {
