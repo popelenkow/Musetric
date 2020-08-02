@@ -3,15 +3,11 @@ import { Props, State } from './types';
 import { Recorder } from './recorder'
 
 let audioContext = new AudioContext();
-let analyserNode: AnalyserNode;
+
 let inputPoint: GainNode;
 let audioRecorder: Recorder;
 let audioInput: MediaStreamAudioSourceNode | ChannelMergerNode;
 let realAudioInput: MediaStreamAudioSourceNode;
-let rafID: number | null = null;
-let analyserContext: any = null;
-let canvasWidth: any, canvasHeight: any;
-let recIndex = 0;
 
 
 export const saveAudio = () => {
@@ -38,8 +34,7 @@ const drawBuffer = (width: number, height: number, context: CanvasRenderingConte
 }
 
 const doneEncoding = (blob: Blob) => {
-	Recorder.forceDownload(blob, "myRecording" + ((recIndex < 10) ? "0" : "") + recIndex + ".wav");
-	recIndex++;
+	Recorder.forceDownload(blob, "myRecording.wav");
 }
 
 const convertToMono = (input: MediaStreamAudioSourceNode) => {
@@ -52,44 +47,40 @@ const convertToMono = (input: MediaStreamAudioSourceNode) => {
 	return merger;
 }
 
-export const cancelAnalyserUpdates = () => {
-	rafID && cancelAnimationFrame(rafID);
-	rafID = null;
-}
+const updateAnalysers = (analyserNode: AnalyserNode) => {
+	const canvas = document.getElementById("analyser") as HTMLCanvasElement;
+	const analyserContext = canvas.getContext('2d') as CanvasRenderingContext2D;
+	
+	const SPACING = 3;
+	const BAR_WIDTH = 1;
+	const numBars = Math.round(canvas.width / SPACING);
+	const freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
 
-const updateAnalysers = () => {
-	if (!analyserContext) {
-		let canvas = document.getElementById("analyser") as HTMLCanvasElement;
-		canvasWidth = canvas.width;
-		canvasHeight = canvas.height;
-		analyserContext = canvas.getContext('2d');
+	analyserNode.getByteFrequencyData(freqByteData);
+
+	analyserContext.fillStyle = 'black';
+	analyserContext.lineCap = 'round';
+	analyserContext.fillRect(0, 0, canvas.width, canvas.height);
+
+	const multiplier = analyserNode.frequencyBinCount / numBars;
+
+	for (let i = 0; i < numBars; i++) {
+		let magnitude = 0;
+		const offset = Math.floor(i * multiplier);
+		for (let j = 0; j < multiplier; j++)
+			magnitude += freqByteData[offset + j];
+		magnitude = magnitude / multiplier;
+		analyserContext.fillStyle = "hsl( " + Math.round((i * 360) / numBars) + ", 100%, 50%)";
+		analyserContext.fillRect(i * SPACING, canvas.height, BAR_WIDTH, -magnitude);
 	}
 
-	{
-		let SPACING = 3;
-		let BAR_WIDTH = 1;
-		let numBars = Math.round(canvasWidth / SPACING);
-		let freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
-
-		analyserNode.getByteFrequencyData(freqByteData);
-
-		analyserContext.clearRect(0, 0, canvasWidth, canvasHeight);
-		analyserContext.fillStyle = '#F6D565';
-		analyserContext.lineCap = 'round';
-		let multiplier = analyserNode.frequencyBinCount / numBars;
-
-		for (let i = 0; i < numBars; ++i) {
-			let magnitude = 0;
-			let offset = Math.floor(i * multiplier);
-			for (let j = 0; j < multiplier; j++)
-				magnitude += freqByteData[offset + j];
-			magnitude = magnitude / multiplier;
-			analyserContext.fillStyle = "hsl( " + Math.round((i * 360) / numBars) + ", 100%, 50%)";
-			analyserContext.fillRect(i * SPACING, canvasHeight, BAR_WIDTH, -magnitude);
-		}
+	const rafID = requestAnimationFrame((_time) => {
+		updateAnalysers(analyserNode)
+	});
+	const cancelAnalyserUpdates = () => {
+		cancelAnimationFrame(rafID);
 	}
-
-	rafID = requestAnimationFrame(updateAnalysers);
+	cancelAnalyserUpdates;
 }
 
 export const toggleMono = () => {
@@ -139,7 +130,7 @@ export class View extends React.Component<Props, State> {
 		audioInput = realAudioInput;
 		audioInput.connect(inputPoint);
 	
-		analyserNode = audioContext.createAnalyser();
+		const analyserNode = audioContext.createAnalyser();
 		analyserNode.fftSize = 2048;
 		inputPoint.connect(analyserNode);
 	
@@ -149,7 +140,7 @@ export class View extends React.Component<Props, State> {
 		zeroGain.gain.value = 0.0;
 		inputPoint.connect(zeroGain);
 		zeroGain.connect(audioContext.destination);
-		updateAnalysers();
+		updateAnalysers(analyserNode);
 	}
 
 	componentDidMount() {
