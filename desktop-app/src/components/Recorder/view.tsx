@@ -117,16 +117,17 @@ export class View extends React.Component<Props, State> {
 		const { isRecording } = this.state;
 
 		return (
-		<>
+		<div className='Recorder'>
+			<div id="controls" className='Recorder__Header'>
+				{ !isRecording && <button className='Button' onClick={this.toggleRecording} >start</button> }
+				{ isRecording && <button className='Button' onClick={this.toggleRecording} >stop</button> }
+				<button className='Button' onClick={saveAudio}>save</button>
+			</div>
 			<div id="viz">
 				<canvas id="analyser" width="1024" height="500"></canvas>
 				<canvas id="wavedisplay" width="1024" height="500"></canvas>
 			</div>
-			<div id="controls">
-				{ !isRecording && <button className='record' onClick={this.toggleRecording} >start</button> }
-				{ isRecording && <button className='record-recording' onClick={this.toggleRecording} >stop</button> }
-				<button className='record' onClick={saveAudio}>save</button>
-			</div>
-		</>)
+			
+		</div>)
 	}
 }
