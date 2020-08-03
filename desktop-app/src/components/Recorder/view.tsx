@@ -2,15 +2,11 @@ import React from 'react'
 import { Props, State } from './types';
 import { Recorder } from './recorder'
 
-let audioContext = new AudioContext();
 
-let inputPoint: GainNode;
 let audioRecorder: Recorder;
-let audioInput: MediaStreamAudioSourceNode | ChannelMergerNode;
-let realAudioInput: MediaStreamAudioSourceNode;
 
-
-export const saveAudio = () => {
+const saveAudio = () => {
+	const doneEncoding = (blob: Blob) => Recorder.forceDownload(blob, "myRecording.wav");
 	audioRecorder.exportWAV(doneEncoding, undefined);
 }
 
@@ -31,20 +27,6 @@ const drawBuffer = (width: number, height: number, context: CanvasRenderingConte
 		}
 		context.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
 	}
-}
-
-const doneEncoding = (blob: Blob) => {
-	Recorder.forceDownload(blob, "myRecording.wav");
-}
-
-const convertToMono = (input: MediaStreamAudioSourceNode) => {
-	let splitter = audioContext.createChannelSplitter(2);
-	let merger = audioContext.createChannelMerger(2);
-
-	input.connect(splitter);
-	splitter.connect(merger, 0, 0);
-	splitter.connect(merger, 0, 1);
-	return merger;
 }
 
 const updateAnalysers = (analyserNode: AnalyserNode) => {
@@ -83,21 +65,6 @@ const updateAnalysers = (analyserNode: AnalyserNode) => {
 	cancelAnalyserUpdates;
 }
 
-export const toggleMono = () => {
-	if (audioInput != realAudioInput) {
-		audioInput.disconnect();
-		realAudioInput.disconnect();
-		audioInput = realAudioInput;
-	} else {
-		realAudioInput.disconnect();
-		audioInput = convertToMono(realAudioInput);
-	}
-
-	audioInput.connect(inputPoint);
-}
-
-
-
 export class View extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
@@ -110,7 +77,6 @@ export class View extends React.Component<Props, State> {
 				const buf = buffers[0];
 				let canvas = document.getElementById("wavedisplay")  as HTMLCanvasElement;
 				drawBuffer(canvas.width, canvas.height, canvas.getContext('2d') as CanvasRenderingContext2D, buf);
-				audioRecorder.exportWAV(doneEncoding, undefined);
 			}
 			audioRecorder.stop();
 			audioRecorder.getBuffer(gotBuffers);
@@ -123,12 +89,12 @@ export class View extends React.Component<Props, State> {
 	}
 
 	initAudio = async () => {
+		const audioContext = new AudioContext();
 		const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-		inputPoint = audioContext.createGain();
+		const inputPoint = audioContext.createGain();
 	
-		realAudioInput = audioContext.createMediaStreamSource(stream);
-		audioInput = realAudioInput;
-		audioInput.connect(inputPoint);
+		const realAudioInput = audioContext.createMediaStreamSource(stream);
+		realAudioInput.connect(inputPoint);
 	
 		const analyserNode = audioContext.createAnalyser();
 		analyserNode.fftSize = 2048;
