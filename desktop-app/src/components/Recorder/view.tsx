@@ -123,11 +123,14 @@ export class View extends React.Component<Props, State> {
 				{ isRecording && <button className='Button' onClick={this.toggleRecording} >stop</button> }
 				<button className='Button' onClick={saveAudio}>save</button>
 			</div>
-			<div id="viz">
-				<canvas id="analyser" width="1024" height="500"></canvas>
-				<canvas id="wavedisplay" width="1024" height="500"></canvas>
+			<div className='Recorder__Container'>
+				<div className='Recorder__Element'>
+					<canvas id="analyser" width="1024" height="500"></canvas>
+				</div>
+				<div className='Recorder__Element'>
+					<canvas id="wavedisplay" width="1024" height="500"></canvas>
+				</div>
 			</div>
-			
 		</div>)
 	}
 }
