@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import i18n, { TFunction } from 'i18next';
 import { initLocale, naturalLocale, localeSet, Locale } from './locale';
 import { Theme, isTheme, themeSet } from './theme';
-import { Container, Titlebar, ResizeFrame, Recorder, GameOfLife } from './components';
+import { Container, Titlebar, ResizeFrame, Recorder } from './components';
 import { Switch } from './controls';
 import { ipc } from './ipc';
 
@@ -63,7 +63,6 @@ const root = (
 	</Titlebar.View>
 	<div className='main'>
 		<Container.View><Recorder.View /></Container.View>
-		<Container.View><GameOfLife.View size={{ columns: 50, rows: 50 }} /></Container.View>
 	</div>
 	<ResizeFrame.View />
 </Suspense>)

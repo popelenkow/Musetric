@@ -33,8 +33,8 @@ const updateAnalysers = (analyserNode: AnalyserNode) => {
 	const canvas = document.getElementById("analyser") as HTMLCanvasElement;
 	const analyserContext = canvas.getContext('2d') as CanvasRenderingContext2D;
 	
-	const SPACING = 3;
-	const BAR_WIDTH = 1;
+	const SPACING = 10;
+	const BAR_WIDTH = 10;
 	const numBars = Math.round(canvas.width / SPACING);
 	const freqByteData = new Uint8Array(analyserNode.frequencyBinCount);
 
@@ -42,16 +42,16 @@ const updateAnalysers = (analyserNode: AnalyserNode) => {
 
 	analyserContext.fillStyle = 'black';
 	analyserContext.lineCap = 'round';
-	analyserContext.fillRect(0, 0, canvas.width, canvas.height);
+	analyserContext.clearRect(0, 0, canvas.width, canvas.height);
 
-	const multiplier = analyserNode.frequencyBinCount / numBars;
+	const multiplier = Math.floor(analyserNode.frequencyBinCount / numBars)
 
 	for (let i = 0; i < numBars; i++) {
 		let magnitude = 0;
 		const offset = Math.floor(i * multiplier);
 		for (let j = 0; j < multiplier; j++)
 			magnitude += freqByteData[offset + j];
-		magnitude = magnitude / multiplier;
+		magnitude = magnitude / multiplier / 255 * canvas.height;
 		analyserContext.fillStyle = "hsl( " + Math.round((i * 360) / numBars) + ", 100%, 50%)";
 		analyserContext.fillRect(i * SPACING, canvas.height, BAR_WIDTH, -magnitude);
 	}
@@ -81,7 +81,7 @@ export class View extends React.Component<Props, State> {
 			audioRecorder.stop();
 			audioRecorder.getBuffer(gotBuffers);
 		} else {
-			audioRecorder.clear();
+			//audioRecorder.clear();
 			audioRecorder.record();
 		}
 		const isRecording = !this.state.isRecording;
@@ -124,11 +124,11 @@ export class View extends React.Component<Props, State> {
 				<button className='Button' onClick={saveAudio}>save</button>
 			</div>
 			<div className='Recorder__Container'>
-				<div className='Recorder__Element'>
-					<canvas id="analyser" width="1024" height="500"></canvas>
+				<div className='Recorder__Wavedisplay'>
+					<canvas id="wavedisplay" width="1024" height="100"></canvas>
 				</div>
-				<div className='Recorder__Element'>
-					<canvas id="wavedisplay" width="1024" height="500"></canvas>
+				<div className='Recorder__Analyser'>
+					<canvas id="analyser" width="1024" height="100"></canvas>
 				</div>
 			</div>
 		</div>)
