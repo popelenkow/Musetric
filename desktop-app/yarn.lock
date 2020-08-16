@@ -3759,10 +3759,10 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
-musetric@^0.1.0-dev.2:
-  version "0.1.0-dev.2"
-  resolved "http://localhost:4873/musetric/-/musetric-0.1.0-dev.2.tgz#c38a32f3d83bf7c13d52c18ee792796965a80e58"
-  integrity sha512-hTmM0lErv5INy6Aa+bPPuZ4NIn1wRfrsvQwo9TlPGzmsNPgXSifzYAE18xQmHuUCqGhh3CiogIJIhGrX6M6Lsw==
+musetric@0.0.1-dev.3:
+  version "0.0.1-dev.3"
+  resolved "http://localhost:4873/musetric/-/musetric-0.0.1-dev.3.tgz#c947a91d7867a805e2680e9cad50f1c6ae55c51d"
+  integrity sha512-k3BJ3jV5TpTXt45Ud0bCb2c2JFFP9Aago9/2wxkrtAHOt6nel5cmk7m3Lqb457jsNy2x713rYKF6Mfujq5m8LQ==
 
 nan@^2.12.1:
   version "2.14.1"

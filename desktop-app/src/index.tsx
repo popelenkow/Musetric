@@ -5,7 +5,7 @@ import i18n, { TFunction } from 'i18next';
 import { initLocale, naturalLocale, localeSet, Locale } from './locale';
 import { Theme, isTheme, themeSet } from './theme';
 import { Container, Titlebar, ResizeFrame, Recorder } from './components';
-import { Switch } from './controls';
+import { Switch } from 'musetric/dist/controls';
 import { ipc } from './ipc';
 
 const isDev = process.env.NODE_ENV === 'development'

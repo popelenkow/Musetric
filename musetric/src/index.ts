@@ -1,2 +1,1 @@
-export const a = 1;
-export const g = () => {}
+export * from './controls'
