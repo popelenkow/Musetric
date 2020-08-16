@@ -50,7 +50,7 @@ const localeSwitchProps: Switch.Props<Locale> = {
 		ipc.app.invoke({ type: 'locale', locale })
 	},
 	className: 'Titlebar__Button',
-	localize: (locale: Locale) => localizeLng(locale) || locale
+	localize: (locale, t) => localizeLng(locale, t) || locale
 }
 
 const root = (

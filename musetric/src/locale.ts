@@ -1,7 +1,7 @@
-import i18n, { TFunction } from "i18next";
+import { TFunction } from "i18next";
 
-export const localizeLng = (lng: string): string | undefined => {
-	return i18n.t('Musetric:locale', { lng });
+export const localizeLng = (lng: string, t: TFunction): string | undefined => {
+	return t('Musetric:locale', { lng });
 }
 
 export const localizeTheme = (theme: string, t: TFunction) => {
