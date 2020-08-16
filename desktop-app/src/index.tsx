@@ -6,7 +6,7 @@ import { initLocale, naturalLocale, localeSet, Locale } from './locale';
 import { Theme, isTheme, themeSet } from './theme';
 import { Switch } from 'musetric/controls';
 import { Container, Recorder } from 'musetric/components'
-import { Titlebar, ResizeFrame,  } from './components';
+import { Titlebar, ResizeFrame } from './components';
 import { ipc } from './ipc';
 
 const isDev = process.env.NODE_ENV === 'development'

@@ -23,5 +23,12 @@ module.exports = merge(config, {
 				.on('close', code => process.exit(code))
 				.on('error', spawnError => console.error(spawnError));
 		})
-	}
+	},
+	resolve: {
+		alias: {
+			'react': path.resolve(__dirname, '../node_modules/react'),
+			'react-i18next': path.resolve(__dirname, '../node_modules/react-i18next'),
+			'musetric': path.join(__dirname, '../../musetric/src')
+		}
+	},
 });
