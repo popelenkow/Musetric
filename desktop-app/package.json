@@ -14,6 +14,11 @@
 		"url": "https://github.com/popelenkow/Musetric",
 		"directory": "musetric"
 	},
+	"author": {
+		"name": "Musetric",
+		"email": "musetric@musetric.musetric",
+		"url": "https://github.com/popelenkow/Musetric"
+	},
 	"scripts": {
 		"dev-renderer": "webpack-dev-server --progress --config ./configs/webpack.config.renderer.dev.js",
 		"dev-main": "webpack --progress --config ./configs/webpack.config.main.dev.js && electron .",

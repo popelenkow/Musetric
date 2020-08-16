@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-	entry: './src/renderer.tsx',
+	entry: './src/index.tsx',
 	target: 'electron-renderer',
 	resolve: {
 		extensions: ['.js', '.ts', '.tsx']
@@ -16,7 +16,7 @@ module.exports = {
 	},
 	output: {
 		path: path.join(__dirname, '..', 'dist'),
-		filename: 'renderer.js'
+		filename: 'index.js'
 	},
 	stats: { modules: false, children: false, entrypoints: false },
 	plugins: [
@@ -25,7 +25,7 @@ module.exports = {
 			filename: 'index.html'
 		}),
 		new MiniCssExtractPlugin({
-			filename: 'renderer.css'
+			filename: 'index.css'
 		}),
 	]
 }

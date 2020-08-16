@@ -1,4 +1,4 @@
-import './styles.scss'
+import './index.scss'
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import i18n, { TFunction } from 'i18next';
