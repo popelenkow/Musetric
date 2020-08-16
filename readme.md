@@ -29,4 +29,4 @@ yarn build
 
 ## Licence
 
-Musetric is licenced under the [MIT licence](licence.txt).
+Musetric is [MIT licensed](licence.txt).
