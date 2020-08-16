@@ -9,6 +9,11 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@types/dom-mediacapture-record@1.0.7":
+  version "1.0.7"
+  resolved "http://localhost:4873/@types%2fdom-mediacapture-record/-/dom-mediacapture-record-1.0.7.tgz#08bacca4296ef521d59049f43e65cf971bbf6be1"
+  integrity sha512-ddDIRTO1ajtbxaNo2o7fPJggpN54PZf1ZUJKOjto2ENMJE/9GKUvaw3ZRuQzlS/p0E+PnIcssxfoqYJ4yiXSBw==
+
 "@types/node@*":
   version "14.0.27"
   resolved "http://localhost:4873/@types%2fnode/-/node-14.0.27.tgz#a151873af5a5e851b51b3b065c9e63390a9e0eb1"
