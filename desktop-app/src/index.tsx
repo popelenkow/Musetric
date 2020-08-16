@@ -4,8 +4,9 @@ import ReactDOM from 'react-dom';
 import i18n, { TFunction } from 'i18next';
 import { initLocale, naturalLocale, localeSet, Locale } from './locale';
 import { Theme, isTheme, themeSet } from './theme';
-import { Container, Titlebar, ResizeFrame, Recorder } from './components';
 import { Switch } from 'musetric/dist/controls';
+import { Container } from 'musetric/dist/components'
+import { Titlebar, ResizeFrame, Recorder } from './components';
 import { ipc } from './ipc';
 
 const isDev = process.env.NODE_ENV === 'development'

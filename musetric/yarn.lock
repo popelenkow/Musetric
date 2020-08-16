@@ -847,6 +847,11 @@ i18next@19.6.3, i18next@^19.0.1:
   dependencies:
     "@babel/runtime" "^7.10.1"
 
+immer@7.0.7:
+  version "7.0.7"
+  resolved "http://localhost:4873/immer/-/immer-7.0.7.tgz#9dfe713d49bf871cc59aedfce59b1992fa37a977"
+  integrity sha512-Q8yYwVADJXrNfp1ZUAh4XDHkcoE3wpdpb4mC5abDSajs2EbW8+cGdPyAnglMyLnm7EF6ojD2xBFX7L5i4TIytw==
+
 inflight@^1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"
