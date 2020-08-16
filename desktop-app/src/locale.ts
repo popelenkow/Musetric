@@ -6,9 +6,6 @@ export type Locale = 'en' | 'ru'
 export const localeSet: Locale[] = fs.readdirSync('./locale') as Locale[];
 export const isLocale = (value: any): value is Locale => localeSet.indexOf(value) !== -1;
 export const namespaceSet: string[] = fs.readdirSync('./locale/en').map(x => x.replace('.json', ''));
-export const naturalLocale = (key: string): string | undefined => {
-	return i18n.t('Musetric:locale', { lng: key });
-}
 
 export const initLocale = (initLocale?: string | null): Locale => {
 	const resources: any = {};

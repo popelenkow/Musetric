@@ -1,10 +1,11 @@
 import './index.scss'
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import i18n, { TFunction } from 'i18next';
-import { initLocale, naturalLocale, localeSet, Locale } from './locale';
+import i18n from 'i18next';
+import { initLocale, localeSet, Locale } from './locale';
 import { Theme, isTheme, themeSet } from './theme';
 import { Switch } from 'musetric/controls';
+import { localizeTheme, localizeLng } from 'musetric/locale'
 import { Container, Recorder } from 'musetric/components'
 import { Titlebar, ResizeFrame } from './components';
 import { ipc } from './ipc';
@@ -38,11 +39,7 @@ const themeSwitchProps: Switch.Props<Theme> = {
 		ipc.app.invoke({ type: 'theme', theme })
 	},
 	className: 'Titlebar__Button',
-	localize: (theme: Theme, t: TFunction) => {
-		if (theme == 'white') return t('Musetric:theme.white')
-		else if (theme == 'dark') return t('Musetric:theme.dark')
-		else return theme;
-	}
+	localize: (theme, t) => localizeTheme(theme, t) || theme 
 }
 
 const localeSwitchProps: Switch.Props<Locale> = {
@@ -53,7 +50,7 @@ const localeSwitchProps: Switch.Props<Locale> = {
 		ipc.app.invoke({ type: 'locale', locale })
 	},
 	className: 'Titlebar__Button',
-	localize: (locale: Locale) => naturalLocale(locale) || locale
+	localize: (locale: Locale) => localizeLng(locale) || locale
 }
 
 const root = (
