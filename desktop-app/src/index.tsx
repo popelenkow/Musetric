@@ -4,8 +4,8 @@ import ReactDOM from 'react-dom';
 import i18n, { TFunction } from 'i18next';
 import { initLocale, naturalLocale, localeSet, Locale } from './locale';
 import { Theme, isTheme, themeSet } from './theme';
-import { Switch } from 'musetric/dist/controls';
-import { Container, Recorder } from 'musetric/dist/components'
+import { Switch } from 'musetric/controls';
+import { Container, Recorder } from 'musetric/components'
 import { Titlebar, ResizeFrame,  } from './components';
 import { ipc } from './ipc';
 

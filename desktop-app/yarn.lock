@@ -2944,9 +2944,9 @@ ini@^1.3.4, ini@^1.3.5, ini@~1.3.0:
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
   integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
 
-inline-worker@^1.1.0:
+inline-worker@1.1.0:
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/inline-worker/-/inline-worker-1.1.0.tgz#55e96f54915a642b00872a2daa6fe832b424c98d"
+  resolved "http://localhost:4873/inline-worker/-/inline-worker-1.1.0.tgz#55e96f54915a642b00872a2daa6fe832b424c98d"
   integrity sha1-VelvVJFaZCsAhyotqm/oMrQkyY0=
 
 internal-ip@^4.3.0:
@@ -3759,10 +3759,10 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
-musetric@0.0.1-dev.6:
-  version "0.0.1-dev.6"
-  resolved "http://localhost:4873/musetric/-/musetric-0.0.1-dev.6.tgz#622078f53f07f0c509dcf4736e8694948c4e6223"
-  integrity sha512-eL7Zzba4Y53oix8cNuClF3LzlRM9u/X7Be/OC1Pyj3NOSt+5rM+R7tc17xbFBsT3AQgUps/sGrxbNyFwb6BjIw==
+musetric@0.0.1-dev.8:
+  version "0.0.1-dev.8"
+  resolved "http://localhost:4873/musetric/-/musetric-0.0.1-dev.8.tgz#69a2bcbeafcd98d482560d47815939b4793a1468"
+  integrity sha512-pgvY10efMDr2o0SitmGu9ivt7A8Tgi9RJ77Tg3Vq5titwDEitZ7xowt3X1K5DtgY84YFxfKxjQJWbdeD3S+gtA==
 
 nan@^2.12.1:
   version "2.14.1"
