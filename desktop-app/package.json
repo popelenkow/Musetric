@@ -2,7 +2,9 @@
 	"name": "musetric-desktop-app",
 	"description": "Musetric desktop application",
 	"keywords": [
-		"musetric"
+		"musetric",
+		"react",
+		"electron"
 	],
 	"version": "0.0.1",
 	"homepage": "https://github.com/popelenkow/Musetric",

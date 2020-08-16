@@ -2,7 +2,8 @@
 	"name": "musetric",
 	"description": "Musetric is a JavaScript library for building music applications.",
 	"keywords": [
-		"musetric"
+		"musetric",
+		"react"
 	],
 	"version": "0.0.1-dev.6",
 	"homepage": "https://github.com/popelenkow/Musetric",
