@@ -1,8 +1,19 @@
 {
 	"name": "musetric-desktop-app",
+	"description": "Musetric app description",
+	"keywords": [
+		"musetric"
+	],
 	"version": "0.0.1",
+	"homepage": "https://github.com/popelenkow/Musetric",
+	"bugs": "https://github.com/popelenkow/Musetric/issues",
 	"license": "MIT",
 	"main": "./dist/main.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/popelenkow/Musetric",
+		"directory": "musetric"
+	},
 	"scripts": {
 		"dev-renderer": "webpack-dev-server --progress --config ./configs/webpack.config.renderer.dev.js",
 		"dev-main": "webpack --progress --config ./configs/webpack.config.main.dev.js && electron .",
@@ -12,15 +23,6 @@
 		"build": "rimraf {dist, build} && yarn build-renderer && yarn build-main && electron-builder",
 		"dist": "rimraf dist && yarn build-renderer && yarn build-main",
 		"parse-locale": "i18next -c ./configs/i18next.parser.config.js"
-	},
-	"author": {
-		"name": "Musetric",
-		"email": "musetric@musetric.musetric",
-		"url": "https://github.com/popelenkow/Musetric"
-	},
-	"description": "Musetric app description",
-	"bugs": {
-		"url": "https://github.com/popelenkow/Musetric/issues"
 	},
 	"build": {
 		"appId": "musetric.app",
