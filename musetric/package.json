@@ -1,8 +1,26 @@
 {
 	"name": "musetric",
+	"description": "Musetric is a JavaScript library for building music applications.",
+	"keywords": [
+		"musetric",
+		"react"
+	],
 	"version": "0.0.1",
+	"homepage": "https://github.com/popelenkow/Musetric",
+	"bugs": "https://github.com/popelenkow/Musetric/issues",
+	"license": "MIT",
+	"main": "index.js",
+	"types": "index.d.ts",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/popelenkow/Musetric",
+		"directory": "musetric"
+	},
+	"engines": {
+		"node": ">=10.0.0"
+	},
 	"scripts": {
-		"copy": "cpx src/**/*.*css dist && cpx publish/**/*.* dist",
+		"copy": "cpx src/**/*.*css dist && cpx {package.json,licence.txt,readme.md,locale/**/*.*} dist",
 		"prebuild": "rimraf dist",
 		"build": "yarn copy && tsc",
 		"parse-locale": "i18next -c ./configs/i18next.parser.config.js"
