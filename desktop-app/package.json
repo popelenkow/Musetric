@@ -28,7 +28,8 @@
 		"dev": "cross-env WITH_MAIN=1 yarn dev-renderer",
 		"build-renderer": "webpack --progress --config ./configs/webpack.config.renderer.prod.js",
 		"build-main": "webpack --progress --config ./configs/webpack.config.main.prod.js",
-		"build": "rimraf {dist, build} && yarn build-renderer && yarn build-main && electron-builder"
+		"prebuild": "rimraf dist && yarn build-renderer && yarn build-main",
+		"build": "rimraf build && electron-builder"
 	},
 	"build": {
 		"appId": "musetric.app",
@@ -52,12 +53,12 @@
 		"extraFiles": [
 			"icon.ico",
 			"app.config.json",
-			"locale",
+			"locales",
 			"background"
 		]
 	},
 	"dependencies": {
-		"musetric": "0.0.1-dev.16"
+		"musetric": "0.0.1-dev.17"
 	},
 	"devDependencies": {
 		"@types/classnames": "2.2.10",

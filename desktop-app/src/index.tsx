@@ -2,7 +2,7 @@ import './index.scss'
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import i18n from 'i18next';
-import { initLocale, localeSet } from './locale';
+import { initLocale, localeSet } from './locales';
 import { Locales, Themes, Components, Controls } from 'musetric';
 import { Titlebar, ResizeFrame } from './components';
 import { ipc } from './ipc';
