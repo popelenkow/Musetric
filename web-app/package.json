@@ -16,12 +16,12 @@
 		"react"
 	],
 	"scripts": {
+		"postinstall": "cpx node_modules/musetric/locales/**/*.* locales",
 		"dev": "webpack-dev-server --progress --config ./configs/webpack.config.dev.js",
-		"build": "rimraf dist && webpack --progress --config ./configs/webpack.config.prod.js",
-		"parse-locale": "cpx node_modules/musetric/locale/**/*.* locale && i18next -c ./configs/i18next.parser.config.js"
+		"build": "rimraf dist && webpack --progress --config ./configs/webpack.config.prod.js"
 	},
 	"dependencies": {
-		"musetric": "0.0.1-dev.14"
+		"musetric": "0.0.1-dev.17"
 	},
 	"devDependencies": {
 		"@types/classnames": "2.2.10",

@@ -1,1 +1,24 @@
-@import './theme/index.css';
+@import '~musetric/index.scss';
+@import './components/index.scss';
+
+body {
+	margin: 0;
+	overflow: hidden;
+}
+
+#app {
+	width: calc(100vw - 2px);
+	height: calc(100vh - 2px);
+	border: 1px solid var(--color__splitter);
+	display: flex;
+	flex-direction: column;
+	background-color: var(--color__appBg);
+}
+
+.main {
+	display: flex;
+	flex-direction: row;
+	flex: 1;
+	min-height: 0px;
+	padding: 3px;
+}

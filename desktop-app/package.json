@@ -58,7 +58,7 @@
 		]
 	},
 	"dependencies": {
-		"musetric": "0.0.1-dev.17"
+		"musetric": "0.0.1-dev.18"
 	},
 	"devDependencies": {
 		"@types/classnames": "2.2.10",

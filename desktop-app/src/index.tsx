@@ -2,10 +2,10 @@ import './index.scss'
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import i18n from 'i18next';
-import { initLocale, localeSet } from './locales';
 import { Locales, Themes, Components, Controls } from 'musetric';
 import { Titlebar, ResizeFrame } from './components';
 import { ipc } from './ipc';
+import fs from 'fs'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -17,9 +17,17 @@ isDev && ipc.pytest
 const app = document.getElementById("app");
 if (!app) throw new Error('App not found');
 
-const params = new URLSearchParams(window.location.search)
-const locale = initLocale(params.get('locale'));
+const resources: any = {};
+Locales.localeSet.forEach(locale => {
+	resources[locale] = {};
+	Locales.namespaceSet.forEach(ns => {
+		const bundle = JSON.parse(fs.readFileSync(`./locale/${locale}/${ns}.json`, 'utf8'))
+		resources[locale][ns] = bundle;
+	})
+})
 
+const params = new URLSearchParams(window.location.search)
+const locale = Locales.initLocale(i18n, params.get('locale'), resources)
 
 const extractTheme: () => Themes.Theme | undefined = () => {
 	const themes: Themes.Theme[] = [];
@@ -41,7 +49,7 @@ const themeSwitchProps: Controls.Switch.Props<Themes.Theme> = {
 
 const localeSwitchProps: Controls.Switch.Props<Locales.Locale> = {
 	currentId: locale,
-	ids: localeSet,
+	ids: Locales.localeSet,
 	set: (locale: Locales.Locale) => {
 		i18n.changeLanguage(locale);
 		ipc.app.invoke({ type: 'locale', locale })
