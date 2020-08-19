@@ -2,11 +2,9 @@ import './index.scss'
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import i18n from 'i18next';
-import { initLocale, localeSet, Locale } from './locale';
+import { initLocale, localeSet } from './locale';
 import { Theme, isTheme, themeSet } from './theme';
-import { Switch } from 'musetric/controls';
-import { localizeTheme, localizeLng } from 'musetric/locale'
-import { Container, Recorder } from 'musetric/components'
+import { Locales, Components, Controls } from 'musetric'
 import { Titlebar, ResizeFrame } from './components';
 import { ipc } from './ipc';
 
@@ -30,7 +28,7 @@ const extractTheme: () => Theme | undefined = () => {
 	return themes.shift();
 }
 
-const themeSwitchProps: Switch.Props<Theme> = {
+const themeSwitchProps: Controls.Switch.Props<Theme> = {
 	currentId: extractTheme() || themeSet[0],
 	ids: themeSet,
 	set: (theme: Theme) => {
@@ -39,28 +37,28 @@ const themeSwitchProps: Switch.Props<Theme> = {
 		ipc.app.invoke({ type: 'theme', theme })
 	},
 	className: 'Titlebar__Button',
-	localize: (theme, t) => localizeTheme(theme, t) || theme 
+	localize: (theme, t) => Locales.localizeTheme(theme, t) || theme 
 }
 
-const localeSwitchProps: Switch.Props<Locale> = {
+const localeSwitchProps: Controls.Switch.Props<Locales.Locale> = {
 	currentId: locale,
 	ids: localeSet,
-	set: (locale: Locale) => {
+	set: (locale: Locales.Locale) => {
 		i18n.changeLanguage(locale);
 		ipc.app.invoke({ type: 'locale', locale })
 	},
 	className: 'Titlebar__Button',
-	localize: (locale, t) => localizeLng(locale, t) || locale
+	localize: (locale, t) => Locales.localizeLng(locale, t) || locale
 }
 
 const root = (
 <Suspense fallback='loading'>
 	<Titlebar.View>
-		<Switch.View {...themeSwitchProps} />
-		<Switch.View {...localeSwitchProps} />
+		<Controls.Switch.View {...themeSwitchProps} />
+		<Controls.Switch.View {...localeSwitchProps} />
 	</Titlebar.View>
 	<div className='main'>
-		<Container.View><Recorder.View /></Container.View>
+		<Components.Container.View><Components.Recorder.View /></Components.Container.View>
 	</div>
 	<ResizeFrame.View />
 </Suspense>)

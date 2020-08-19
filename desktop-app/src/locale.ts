@@ -1,8 +1,8 @@
 import i18n from 'i18next';
 import fs from 'fs'
 import { initReactI18next } from "react-i18next";
+import { Locale } from 'musetric/locales';
 
-export type Locale = 'en' | 'ru'
 export const localeSet: Locale[] = fs.readdirSync('./locale') as Locale[];
 export const isLocale = (value: any): value is Locale => localeSet.indexOf(value) !== -1;
 export const namespaceSet: string[] = fs.readdirSync('./locale/en').map(x => x.replace('.json', ''));
