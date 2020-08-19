@@ -20,7 +20,7 @@
 		"node": ">=10.0.0"
 	},
 	"scripts": {
-		"copy": "cpx src/**/*.*css dist && cpx {package.json,licence.txt,readme.md,locale/**/*.*} dist",
+		"copy": "cpx src/**/*.*css dist && cpx {package.json,licence.txt,readme.md,locales/**/*.json} dist",
 		"prebuild": "rimraf dist && yarn copy",
 		"build": "tsc",
 		"parse-locale": "i18next -c ./configs/i18next.parser.config.js"
