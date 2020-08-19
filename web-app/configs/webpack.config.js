@@ -4,7 +4,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
 	entry: './src/index.tsx',
-	target: 'electron-renderer',
 	resolve: {
 		extensions: ['.js', '.ts', '.tsx']
 	},

@@ -3,8 +3,7 @@ import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import i18n from 'i18next';
 import { initLocale, localeSet } from './locale';
-import { Theme, isTheme, themeSet } from './theme';
-import { Locales, Components, Controls } from 'musetric'
+import { Locales, Themes, Components, Controls } from 'musetric';
 import { Titlebar, ResizeFrame } from './components';
 import { ipc } from './ipc';
 
@@ -22,17 +21,17 @@ const params = new URLSearchParams(window.location.search)
 const locale = initLocale(params.get('locale'));
 
 
-const extractTheme: () => Theme | undefined = () => {
-	const themes: Theme[] = [];
-	app.classList.forEach(x => isTheme(x) && themes.push(x))
+const extractTheme: () => Themes.Theme | undefined = () => {
+	const themes: Themes.Theme[] = [];
+	app.classList.forEach(x => Themes.isTheme(x) && themes.push(x))
 	return themes.shift();
 }
 
-const themeSwitchProps: Controls.Switch.Props<Theme> = {
-	currentId: extractTheme() || themeSet[0],
-	ids: themeSet,
-	set: (theme: Theme) => {
-		app.classList.forEach(x => isTheme(x) && app.classList.remove(x))
+const themeSwitchProps: Controls.Switch.Props<Themes.Theme> = {
+	currentId: extractTheme() || Themes.themeSet[0],
+	ids: Themes.themeSet,
+	set: (theme: Themes.Theme) => {
+		app.classList.forEach(x => Themes.isTheme(x) && app.classList.remove(x))
 		app.classList.add(theme)
 		ipc.app.invoke({ type: 'theme', theme })
 	},

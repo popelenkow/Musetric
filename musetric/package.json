@@ -21,8 +21,8 @@
 	},
 	"scripts": {
 		"copy": "cpx src/**/*.*css dist && cpx {package.json,licence.txt,readme.md,locale/**/*.*} dist",
-		"prebuild": "rimraf dist",
-		"build": "yarn copy && tsc",
+		"prebuild": "rimraf dist && yarn copy",
+		"build": "tsc",
 		"parse-locale": "i18next -c ./configs/i18next.parser.config.js"
 	},
 	"dependencies": {},
