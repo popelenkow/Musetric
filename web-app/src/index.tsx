@@ -2,15 +2,23 @@ import './index.scss'
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import i18n from 'i18next';
-import { initLocale, localeSet } from './locales';
 import { Locales, Themes, Components, Controls } from 'musetric';
 import { Titlebar } from './components';
 
 const app = document.getElementById("app");
 if (!app) throw new Error('App not found');
 
+const resources: any = {};
+Locales.localeSet.forEach(locale => {
+	resources[locale] = {};
+	Locales.namespaceSet.forEach(ns => {
+		const bundle = require(`../locales/${locale}/${ns}.json`);
+		resources[locale][ns] = bundle;
+	})
+})
+
 const params = new URLSearchParams(window.location.search)
-const locale = initLocale(params.get('locale'));
+const locale = Locales.initLocale(i18n, params.get('locale'), resources)
 
 const extractTheme: () => Themes.Theme | undefined = () => {
 	const themes: Themes.Theme[] = [];
@@ -31,7 +39,7 @@ const themeSwitchProps: Controls.Switch.Props<Themes.Theme> = {
 
 const localeSwitchProps: Controls.Switch.Props<Locales.Locale> = {
 	currentId: locale,
-	ids: localeSet,
+	ids: Locales.localeSet,
 	set: (locale: Locales.Locale) => {
 		i18n.changeLanguage(locale);
 	},

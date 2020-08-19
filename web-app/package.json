@@ -21,7 +21,7 @@
 		"build": "rimraf dist && webpack --progress --config ./configs/webpack.config.prod.js"
 	},
 	"dependencies": {
-		"musetric": "0.0.1-dev.17"
+		"musetric": "0.0.1-dev.18"
 	},
 	"devDependencies": {
 		"@types/classnames": "2.2.10",

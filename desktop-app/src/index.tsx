@@ -21,7 +21,8 @@ const resources: any = {};
 Locales.localeSet.forEach(locale => {
 	resources[locale] = {};
 	Locales.namespaceSet.forEach(ns => {
-		const bundle = JSON.parse(fs.readFileSync(`./locale/${locale}/${ns}.json`, 'utf8'))
+		const file = fs.readFileSync(`./locale/${locale}/${ns}.json`, 'utf8');
+		const bundle = JSON.parse(file)
 		resources[locale][ns] = bundle;
 	})
 })
