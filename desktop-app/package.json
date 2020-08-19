@@ -22,7 +22,7 @@
 		"url": "https://github.com/popelenkow/Musetric"
 	},
 	"scripts": {
-		"postinstall": "cpx node_modules/musetric/locales/**/*.* locales",
+		"postinstall": "cpx node_modules/musetric/locales/**/*.* locale",
 		"dev-renderer": "webpack-dev-server --progress --config ./configs/webpack.config.renderer.dev.js",
 		"dev-main": "webpack --progress --config ./configs/webpack.config.main.dev.js && electron .",
 		"dev": "cross-env WITH_MAIN=1 yarn dev-renderer",
@@ -53,7 +53,7 @@
 		"extraFiles": [
 			"icon.ico",
 			"app.config.json",
-			"locales",
+			"locale",
 			"background"
 		]
 	},
