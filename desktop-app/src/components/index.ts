@@ -1,6 +1,2 @@
-import * as ResizeFrame from './ResizeFrame'
-import * as Titlebar from './Titlebar'
-export {
-	ResizeFrame,
-	Titlebar
-}
+export * as ResizeFrame from './ResizeFrame'
+export * as Titlebar from './Titlebar'

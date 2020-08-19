@@ -1,6 +1,6 @@
 import React from 'react'
 import { Props, State } from './types';
-import { icons } from '../../icons';
+import { icons } from './icons';
 import { ipc } from '../../ipc';
 
 export class View extends React.Component<Props, State> {

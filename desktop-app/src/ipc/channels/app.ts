@@ -1,4 +1,4 @@
-import { Locale } from "../../locale"
+import { Locale } from "musetric/locales"
 import { Theme } from "../../theme"
 import { Handle, Invoke } from "../types";
 import { ipcMain, ipcRenderer } from "electron";

@@ -1,8 +1,3 @@
-import * as Container from './Container'
-import * as GameOfLife from './GameOfLife'
-import * as Recorder from './Recorder'
-export {
-	Container,
-	GameOfLife,
-	Recorder,
-}
+export * as Container from './Container'
+export * as GameOfLife from './GameOfLife'
+export * as Recorder from './Recorder'
