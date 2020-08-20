@@ -4,8 +4,9 @@ import ReactDOM from 'react-dom';
 import i18n from 'i18next';
 import { Locales, Themes, Components, Controls } from 'musetric';
 import { Titlebar, ResizeFrame } from './components';
+import { initLocale } from './locales';
 import { ipc } from './ipc';
-import fs from 'fs'
+
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -17,18 +18,8 @@ isDev && ipc.pytest
 const app = document.getElementById("app");
 if (!app) throw new Error('App not found');
 
-const resources: any = {};
-Locales.localeSet.forEach(locale => {
-	resources[locale] = {};
-	Locales.namespaceSet.forEach(ns => {
-		const file = fs.readFileSync(`./locale/${locale}/${ns}.json`, 'utf8');
-		const bundle = JSON.parse(file)
-		resources[locale][ns] = bundle;
-	})
-})
-
 const params = new URLSearchParams(window.location.search)
-const locale = Locales.initLocale(i18n, params.get('locale'), resources)
+const locale = initLocale(params.get('locale'))
 
 const extractTheme: () => Themes.Theme | undefined = () => {
 	const themes: Themes.Theme[] = [];

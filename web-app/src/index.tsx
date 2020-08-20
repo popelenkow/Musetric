@@ -3,22 +3,14 @@ import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import i18n from 'i18next';
 import { Locales, Themes, Components, Controls } from 'musetric';
+import { initLocale } from './locales';
 import { Titlebar } from './components';
 
 const app = document.getElementById("app");
 if (!app) throw new Error('App not found');
 
-const resources: any = {};
-Locales.localeSet.forEach(locale => {
-	resources[locale] = {};
-	Locales.namespaceSet.forEach(ns => {
-		const bundle = require(`../locales/${locale}/${ns}.json`);
-		resources[locale][ns] = bundle;
-	})
-})
-
 const params = new URLSearchParams(window.location.search)
-const locale = Locales.initLocale(i18n, params.get('locale'), resources)
+const locale = initLocale(params.get('locale'))
 
 const extractTheme: () => Themes.Theme | undefined = () => {
 	const themes: Themes.Theme[] = [];
