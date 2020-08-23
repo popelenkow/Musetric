@@ -13,7 +13,7 @@ export type Options = {
 }
 
 export type GenF = (size: Size, grid?: Grid, options?: Options) => Grid;
-export type Gen = Record<string, GenF>;
+export type GenO = Record<string, GenF>;
 
 export type Props = {
 	size: Size;

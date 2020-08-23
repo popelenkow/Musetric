@@ -1,1 +1,1 @@
-export * as Switch from './elements/Switch'
+export * as Switch from './elements/Switch';

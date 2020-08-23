@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { TFunction } from "i18next";
+import { TFunction } from 'i18next';
 
 export type Props<T = any> = {
 	currentId: T;
@@ -17,25 +17,27 @@ export type State<T = any> = {
 class View extends React.Component<Props & WithTranslation, State> {
 	constructor(props: Props & WithTranslation) {
 		super(props);
-		this.state = { id: this.props.currentId }
+		const { currentId: id } = this.props;
+		this.state = { id };
 	}
 
 	render() {
 		const { id } = this.state;
 		const { t, ids, localize, set, className } = this.props;
 		const next = () => {
-			let index = ids.indexOf(id)
-			index = (index + 1) % this.props.ids.length
-			const newId = ids[index]
-			this.setState({ id: newId })
-			set(newId)
-		}
+			let index = ids.indexOf(id);
+			index = (index + 1) % ids.length;
+			const newId = ids[index];
+			this.setState({ id: newId });
+			set(newId);
+		};
 		return (
-		<button className={className} onClick={next}>
-			{localize ? localize(id, t) : id}
-		</button>)
+			<button type='button' className={className} onClick={next}>
+				{localize ? localize(id, t) : id}
+			</button>
+		);
 	}
 }
 
-const view = withTranslation()(View)
-export { view as View }
+const view = withTranslation()(View);
+export { view as View };
