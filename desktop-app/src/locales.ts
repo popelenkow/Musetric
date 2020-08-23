@@ -1,7 +1,9 @@
 import i18n, { Resource, ResourceLanguage } from 'i18next';
 import { initReactI18next } from "react-i18next";
-import { localeSet, namespaceSet, isLocale, Locale } from 'musetric/locales';
+import { namespaceSet, isLocale, Locale } from 'musetric/locales';
 import fs from 'fs'
+
+export const localeSet: Locale[] = fs.readdirSync('./locale') as Locale[];
 
 const resources = localeSet.reduce<Resource>((resources, locale) => {
     resources[locale] = namespaceSet.reduce<ResourceLanguage>((resource, ns) => {

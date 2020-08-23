@@ -71,7 +71,8 @@ export class View extends React.Component<Props, State> {
 		this.state = { isRecording: false, list: [] }
 	}
 
-	toggleRecording = () => {
+	toggleRecording = async () => {
+		!audioRecorder && await this.initAudio()
 		if (this.state.isRecording) {
 			const gotBuffers = (buffers: Float32Array[]) => {
 				const buf = buffers[0];
@@ -109,10 +110,6 @@ export class View extends React.Component<Props, State> {
 		updateAnalysers(analyserNode);
 	}
 
-	componentDidMount() {
-		this.initAudio()
-	}
-	
 	render() {
 		const { isRecording } = this.state;
 

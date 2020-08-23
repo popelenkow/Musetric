@@ -6,7 +6,7 @@ import { Locales, Themes, Components, Controls } from 'musetric';
 import { Titlebar, ResizeFrame } from './components';
 import { initLocale } from './locales';
 import { ipc } from './ipc';
-
+import { localeSet} from './locales';
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -41,7 +41,7 @@ const themeSwitchProps: Controls.Switch.Props<Themes.Theme> = {
 
 const localeSwitchProps: Controls.Switch.Props<Locales.Locale> = {
 	currentId: locale,
-	ids: Locales.localeSet,
+	ids: localeSet,
 	set: (locale: Locales.Locale) => {
 		i18n.changeLanguage(locale);
 		ipc.app.invoke({ type: 'locale', locale })
