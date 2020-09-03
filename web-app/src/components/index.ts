@@ -1,1 +1,1 @@
-export * as Titlebar from './Titlebar'
+export * as Titlebar from './Titlebar';

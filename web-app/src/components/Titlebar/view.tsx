@@ -1,18 +1,17 @@
-import React from 'react'
-import { Props, State } from './types';
+import React from 'react';
+import { Props } from './types';
 import { icons } from './icons';
 
-export class View extends React.Component<Props, State> {
-	constructor(props: Props) {
-		super(props);
+export const View: React.FunctionComponent<Props> = (props) => {
+	if (props.children) {
+		const { children } = props;
 	}
-
-	render() {
-		return (
+	
+	return (
 		<div className='Titlebar'>
-			<div className="Titlebar__Icon">{icons.app}</div>
-			<div className="Titlebar__Text">Musetric</div>
-			{this.props.children}
-		</div>)
-	}
-}
+			<div className='Titlebar__Icon'>{icons.app}</div>
+			<div className='Titlebar__Text'>Musetric</div>
+			{children}
+		</div>
+	);
+};
