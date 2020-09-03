@@ -1874,10 +1874,10 @@ eslint-module-utils@^2.6.0:
     debug "^2.6.9"
     pkg-dir "^2.0.0"
 
-eslint-musetric@0.0.1:
-  version "0.0.1"
-  resolved "http://localhost:4873/eslint-musetric/-/eslint-musetric-0.0.1.tgz#771451a21081d6b8856fc03bdb574b83d68890fd"
-  integrity sha512-eAHRUb49xiHhgZ/y2gXatLUXMN8KvpiRruPCjVzBeIa1Me6h06IZ7W2xUr4PGF7kQLYFULT6Fj4DUedYCqpisQ==
+eslint-musetric@0.0.4:
+  version "0.0.4"
+  resolved "http://localhost:4873/eslint-musetric/-/eslint-musetric-0.0.4.tgz#1b04f437598a9561b9ecb6db2c2dd6e2b110391d"
+  integrity sha512-sDcIpcMwL3kUlr5vfjMtC9Gl4A3oM76gglVJNnxi3shYCrVb0Cd+l/c+xbPTqgTPheCxbUVLSd3GxPocmepBng==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.0.1"
     "@typescript-eslint/parser" "^4.0.1"

@@ -120,7 +120,7 @@
     "@types/prop-types" "*"
     csstype "^3.0.2"
 
-"@typescript-eslint/eslint-plugin@4.0.1", "@typescript-eslint/eslint-plugin@^4.0.1":
+"@typescript-eslint/eslint-plugin@^4.0.1":
   version "4.0.1"
   resolved "http://localhost:4873/@typescript-eslint%2feslint-plugin/-/eslint-plugin-4.0.1.tgz#88bde9239e29d688315718552cf80a3490491017"
   integrity sha512-pQZtXupCn11O4AwpYVUX4PDFfmIJl90ZgrEBg0CEcqlwvPiG0uY81fimr1oMFblZnpKAq6prrT9a59pj1x58rw==
@@ -145,7 +145,7 @@
     eslint-scope "^5.0.0"
     eslint-utils "^2.0.0"
 
-"@typescript-eslint/parser@4.0.1", "@typescript-eslint/parser@^4.0.1":
+"@typescript-eslint/parser@^4.0.1":
   version "4.0.1"
   resolved "http://localhost:4873/@typescript-eslint%2fparser/-/parser-4.0.1.tgz#73772080db7a7a4534a35d719e006f503e664dc3"
   integrity sha512-1+qLmXHNAWSQ7RB6fdSQszAiA7JTwzakj5cNYjBTUmpH2cqilxMZEIV+DRKjVZs8NzP3ALmKexB0w/ExjcK9Iw==
@@ -1012,13 +1012,14 @@ eslint-module-utils@^2.6.0:
     debug "^2.6.9"
     pkg-dir "^2.0.0"
 
-eslint-musetric@0.0.2:
-  version "0.0.2"
-  resolved "http://localhost:4873/eslint-musetric/-/eslint-musetric-0.0.2.tgz#81364e59d396980fbc23c1319afecbe0c399ef38"
-  integrity sha512-HuJ5yWzxA41r49OjcJhZa2HIm1kgVweV33I4sRShXP59u6R5nZktSq8xmc5zLcjuGPghuN/hdWPuCkUVoMSjPA==
+eslint-musetric@0.0.4:
+  version "0.0.4"
+  resolved "http://localhost:4873/eslint-musetric/-/eslint-musetric-0.0.4.tgz#1b04f437598a9561b9ecb6db2c2dd6e2b110391d"
+  integrity sha512-sDcIpcMwL3kUlr5vfjMtC9Gl4A3oM76gglVJNnxi3shYCrVb0Cd+l/c+xbPTqgTPheCxbUVLSd3GxPocmepBng==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.0.1"
     "@typescript-eslint/parser" "^4.0.1"
+    eslint "^7.8.1"
     eslint-config-airbnb "^18.2.0"
     eslint-config-musetric "^0.0.4"
     eslint-plugin-import "^2.22.0"
@@ -1109,7 +1110,7 @@ eslint-visitor-keys@^2.0.0:
   resolved "http://localhost:4873/eslint-visitor-keys/-/eslint-visitor-keys-2.0.0.tgz#21fdc8fbcd9c795cc0321f0563702095751511a8"
   integrity sha512-QudtT6av5WXels9WjIM7qz1XD1cWGvX4gGXvp/zBn9nXG02D0utdU3Em2m/QjTnrsk6bBjmCygl3rmj118msQQ==
 
-eslint@7.8.1:
+eslint@^7.8.1:
   version "7.8.1"
   resolved "http://localhost:4873/eslint/-/eslint-7.8.1.tgz#e59de3573fb6a5be8ff526c791571646d124a8fa"
   integrity sha512-/2rX2pfhyUG0y+A123d0ccXtMm7DV7sH1m3lk9nk2DZ2LReq39FXHueR9xZwshE5MdfSf0xunSaMWRqyIA6M1w==
