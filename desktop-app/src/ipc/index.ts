@@ -1,1 +1,1 @@
-export * as ipc from './channels'
+export * as ipc from './channels';

@@ -522,10 +522,10 @@ eslint-config-airbnb@^18.2.0:
     object.assign "^4.1.0"
     object.entries "^1.1.2"
 
-eslint-config-musetric@^0.0.4:
-  version "0.0.4"
-  resolved "http://localhost:4873/eslint-config-musetric/-/eslint-config-musetric-0.0.4.tgz#abc8e11c5ca33cc7127295914986facb7b33c994"
-  integrity sha512-wuapSGMjnCAguLt8ONoTfZ22rQy8iHv+jcBe0/R3B3USMa1wnmAWQUKQGmw9TL3w98MKJsILrMsETfesPtUU8w==
+eslint-config-musetric@^0.0.5:
+  version "0.0.5"
+  resolved "http://localhost:4873/eslint-config-musetric/-/eslint-config-musetric-0.0.5.tgz#578ce9fb69b16de9b94b088dfe196331d7238bea"
+  integrity sha512-kjB2rDPATZvg74UQy2lltHa/bhbmRTPLKH8lxknWv1D9DmpHvOpiqN/7FTjzZYM9X7rKkJZnYOXeW5miLxWyFA==
 
 eslint-import-resolver-node@^0.3.3:
   version "0.3.4"

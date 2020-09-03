@@ -991,10 +991,10 @@ eslint-config-airbnb@^18.2.0:
     object.assign "^4.1.0"
     object.entries "^1.1.2"
 
-eslint-config-musetric@^0.0.4:
-  version "0.0.4"
-  resolved "http://localhost:4873/eslint-config-musetric/-/eslint-config-musetric-0.0.4.tgz#abc8e11c5ca33cc7127295914986facb7b33c994"
-  integrity sha512-wuapSGMjnCAguLt8ONoTfZ22rQy8iHv+jcBe0/R3B3USMa1wnmAWQUKQGmw9TL3w98MKJsILrMsETfesPtUU8w==
+eslint-config-musetric@^0.0.5:
+  version "0.0.5"
+  resolved "http://localhost:4873/eslint-config-musetric/-/eslint-config-musetric-0.0.5.tgz#578ce9fb69b16de9b94b088dfe196331d7238bea"
+  integrity sha512-kjB2rDPATZvg74UQy2lltHa/bhbmRTPLKH8lxknWv1D9DmpHvOpiqN/7FTjzZYM9X7rKkJZnYOXeW5miLxWyFA==
 
 eslint-import-resolver-node@^0.3.3:
   version "0.3.4"
@@ -1012,16 +1012,16 @@ eslint-module-utils@^2.6.0:
     debug "^2.6.9"
     pkg-dir "^2.0.0"
 
-eslint-musetric@0.0.4:
-  version "0.0.4"
-  resolved "http://localhost:4873/eslint-musetric/-/eslint-musetric-0.0.4.tgz#1b04f437598a9561b9ecb6db2c2dd6e2b110391d"
-  integrity sha512-sDcIpcMwL3kUlr5vfjMtC9Gl4A3oM76gglVJNnxi3shYCrVb0Cd+l/c+xbPTqgTPheCxbUVLSd3GxPocmepBng==
+eslint-musetric@0.0.5:
+  version "0.0.5"
+  resolved "http://localhost:4873/eslint-musetric/-/eslint-musetric-0.0.5.tgz#19435f33dec028a67a46ac5fde4437e057a67442"
+  integrity sha512-tyeghvV7fCRNh3mW4vaU1Ccvl6L/GhD5Hq6mK0Qn7KRqalKQnuo41tKR0eZf0XiXkZPgAoJit4j5v0j1PDPixg==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.0.1"
     "@typescript-eslint/parser" "^4.0.1"
     eslint "^7.8.1"
     eslint-config-airbnb "^18.2.0"
-    eslint-config-musetric "^0.0.4"
+    eslint-config-musetric "^0.0.5"
     eslint-plugin-import "^2.22.0"
     eslint-plugin-jsx-a11y "^6.3.1"
     eslint-plugin-react "^7.20.6"

@@ -1,26 +1,29 @@
-import React from 'react'
+/* eslint-disable react/no-unused-state */
+import React from 'react';
 import { Props, State } from './types';
 import { ipc } from '../../ipc';
 
 export class View extends React.Component<Props, State> {
 	constructor(props: Props) {
 		super(props);
-		this.state = { isMaximized: false }
+		this.state = { isMaximized: false };
 	}
 
 	componentDidMount() {
 		ipc.onWindow.on((_event, arg) => {
-			this.setState(arg)
-		});	
+			this.setState(arg);
+		});
 	}
 
 	render() {
-		return !this.state.isMaximized && (
-		<div className='ResizeFrame'>
-			<div className='ResizeFrame__Top' />
-			<div className='ResizeFrame__Bottom' />
-			<div className='ResizeFrame__Left' />
-			<div className='ResizeFrame__Right' />
-		</div>)
+		const isMaximized = this.state;
+		return !isMaximized && (
+			<div className='ResizeFrame'>
+				<div className='ResizeFrame__Top' />
+				<div className='ResizeFrame__Bottom' />
+				<div className='ResizeFrame__Left' />
+				<div className='ResizeFrame__Right' />
+			</div>
+		);
 	}
 }

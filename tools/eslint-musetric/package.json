@@ -1,7 +1,7 @@
 {
 	"name": "eslint-musetric",
 	"description": "Musetric's ESLint config, following our styleguide",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"license": "MIT",
 	"homepage": "https://github.com/popelenkow/Musetric",
 	"bugs": "https://github.com/popelenkow/Musetric/issues",
@@ -28,7 +28,7 @@
 		"@typescript-eslint/parser": "^4.0.1",
 		"eslint": "^7.8.1",
 		"eslint-config-airbnb": "^18.2.0",
-		"eslint-config-musetric": "^0.0.4",
+		"eslint-config-musetric": "^0.0.5",
 		"eslint-plugin-import": "^2.22.0",
 		"eslint-plugin-jsx-a11y": "^6.3.1",
 		"eslint-plugin-react": "^7.20.6",

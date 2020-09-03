@@ -1,9 +1,9 @@
 {
 	"name": "eslint-config-musetric",
 	"description": "Musetric's ESLint config, following our styleguide",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"license": "MIT",
-	"main": "index.js",
+	"main": ".eslintrc.js",
 	"homepage": "https://github.com/popelenkow/Musetric",
 	"bugs": "https://github.com/popelenkow/Musetric/issues",
 	"repository": {
@@ -23,7 +23,9 @@
 		"es2017",
 		"es2018"
 	],
-	"scripts": {},
+	"scripts": {
+		"lint": "eslint .eslintrc.js"
+	},
 	"peerDependencies": {
 		"@typescript-eslint/eslint-plugin": "^4.0.1",
 		"@typescript-eslint/parser": "^4.0.1",
@@ -31,11 +33,14 @@
 	},
 	"dependencies": {},
 	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^4.0.1",
+		"@typescript-eslint/parser": "^4.0.1",
 		"eslint": "^7.8.1",
 		"eslint-config-airbnb": "^18.2.0",
 		"eslint-plugin-import": "^2.22.0",
 		"eslint-plugin-jsx-a11y": "^6.3.1",
 		"eslint-plugin-react": "^7.20.6",
-		"eslint-plugin-react-hooks": "^4.1.0"
+		"eslint-plugin-react-hooks": "^4.1.0",
+		"typescript": "^4.0.2"
 	}
 }

@@ -1,7 +1,7 @@
-import { Locale } from "musetric/locales"
-import { Theme } from "musetric/themes"
-import { Handle, Invoke } from "../types";
-import { ipcMain, ipcRenderer } from "electron";
+import { ipcMain, ipcRenderer } from 'electron';
+import { Locale } from 'musetric/locales';
+import { Theme } from 'musetric/themes';
+import { Handle, Invoke } from '../types';
 
 export namespace app {
 	export type Arg =
