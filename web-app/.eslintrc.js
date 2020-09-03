@@ -36,5 +36,7 @@ module.exports = {
 		'object-curly-newline': 0,
 		'react/jsx-filename-extension': 0,
 		'react/jsx-indent': ['error', 'tab'],
+		'react/prop-types': 0,
+		'react/jsx-props-no-spreading': 0,
 	},
 };
