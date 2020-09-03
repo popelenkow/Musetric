@@ -1,0 +1,26 @@
+{
+	"appId": "musetric.app",
+	"productName": "Musetric",
+	"files": [
+		"./dist/**/*"
+	],
+	"directories": {
+		"output": "build"
+	},
+	"win": {
+		"target": [
+			"nsis"
+		],
+		"icon": "./resources/icon.ico"
+	},
+	"nsis": {
+		"allowToChangeInstallationDirectory": true,
+		"oneClick": false
+	},
+	"extraFiles": [
+		"icon.ico",
+		"app.config.json",
+		"locale",
+		"background"
+	]
+}
