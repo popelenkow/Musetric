@@ -1,10 +1,2 @@
-import * as Container from './Container'
-import * as GameOfLife from './GameOfLife'
-import * as ResizeFrame from './ResizeFrame'
-import * as Titlebar from './Titlebar'
-export {
-	Container,
-	GameOfLife,
-	ResizeFrame,
-	Titlebar
-}
+export * as ResizeFrame from './ResizeFrame';
+export * as Titlebar from './Titlebar';
