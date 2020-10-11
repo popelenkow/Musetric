@@ -1,0 +1,117 @@
+trigger:
+  branches:
+    include:
+    - develop
+    - release/v*
+  paths:
+    include:
+    - 'web-app/*'
+
+parameters:
+- name: isRelease
+  type: boolean
+  default: false
+- name: isDockerPublish
+  type: boolean
+  default: false
+- name: isGithubPublish
+  type: boolean
+  default: false
+
+variables:
+  - name: root
+    value: web-app
+  - group: AccessTokens
+
+pool:
+  vmImage: 'ubuntu-16.04'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '12.18.4'
+  displayName: 'node.js 12.18.4'
+
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.7'
+  displayName: 'python 3.7'
+
+- task: PythonScript@0
+  inputs:
+    scriptSource: inline
+    script: |
+      import json
+      with open('package.json') as json_file:
+        rawVersion = json.load(json_file)['version']
+
+      isReleaseBranch = '$(Build.SourceBranch)'.startswith('refs/heads/release')
+      isRelease = isReleaseBranch and ${{parameters.isRelease}}
+
+      print(f'##vso[task.setvariable variable=isRelease]{isRelease}')
+
+      print(f'isRelease {isRelease}')
+      print(f'isReleaseBranch {isReleaseBranch}')
+
+      if isRelease:
+        tag = 'latest'
+        version = rawVersion
+      elif isReleaseBranch:
+        tag = 'beta'
+        version = f'{rawVersion}-beta.$(Build.BuildID)'
+      else:
+        tag = 'next'
+        version = f'{rawVersion}-dev.$(Build.BuildID)'
+
+      print(f'##vso[task.setvariable variable=tag]{tag}')
+      print(f'##vso[task.setvariable variable=version]{version}')
+
+      print(f'tag {tag}')
+      print(f'version {version}')
+    workingDirectory: $(root)
+  displayName: 'init variables'
+
+- script: yarn version --new-version $(version) --no-git-tag-version
+  workingDirectory: $(root)
+  displayName: 'yarn version'
+
+- script: yarn
+  workingDirectory: $(root)
+  displayName: 'yarn'
+
+- script: yarn lint
+  workingDirectory: $(root)
+  displayName: 'yarn lint'
+
+- script: yarn build
+  workingDirectory: $(root)
+  displayName: 'yarn build'
+
+- script: docker build -t popelenkow/musetric:v$(version) .
+  workingDirectory: $(root)
+  displayName: 'docker build'
+
+- script: docker login --username popelenkow --password $(dockerToken)
+  condition: and(succeeded(), ${{parameters.isDockerPublish}})
+  displayName: 'docker login'
+
+- script: docker push popelenkow/musetric
+  condition: and(succeeded(), ${{parameters.isDockerPublish}})
+  displayName: 'docker push'
+
+- script: yarn pack
+  workingDirectory: $(root)/dist
+  condition: and(succeeded(), ${{parameters.isGithubPublish}})
+  displayName: 'yarn pack'
+
+- task: GitHubRelease@1
+  inputs:
+    title: musetric $(version)
+    gitHubConnection: githubToken
+    tagSource: userSpecifiedTag
+    tag: v$(version)
+    assets: '$(root)/dist/*.tgz'
+    isDraft: true
+    isPreRelease: $(isRelease)
+  condition: and(succeeded(), ${{parameters.isGithubPublish}})
+  displayName: 'github publish'

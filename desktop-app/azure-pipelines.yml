@@ -1,0 +1,94 @@
+trigger:
+  branches:
+    include:
+    - develop
+    - release/v*
+  paths:
+    include:
+    - 'desktop-app/*'
+
+parameters:
+- name: isRelease
+  type: boolean
+  default: false
+- name: isGithubPublish
+  type: boolean
+  default: false
+
+variables:
+  - name: root
+    value: desktop-app
+  - group: AccessTokens
+
+pool:
+  vmImage: 'windows-2019'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '12.18.4'
+  displayName: 'node.js 12.18.4'
+
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.7'
+  displayName: 'python 3.7'
+
+- task: PythonScript@0
+  inputs:
+    scriptSource: inline
+    script: |
+      import json
+      with open('package.json') as json_file:
+        rawVersion = json.load(json_file)['version']
+
+      isReleaseBranch = '$(Build.SourceBranch)'.startswith('refs/heads/release')
+      isRelease = isReleaseBranch and ${{parameters.isRelease}}
+
+      print(f'##vso[task.setvariable variable=isRelease]{isRelease}')
+
+      print(f'isRelease {isRelease}')
+      print(f'isReleaseBranch {isReleaseBranch}')
+
+      if isRelease:
+        version = rawVersion
+      elif isReleaseBranch:
+        version = f'{rawVersion}-beta.$(Build.BuildID)'
+      else:
+        version = f'{rawVersion}-dev.$(Build.BuildID)'
+
+      print(f'##vso[task.setvariable variable=version]{version}')
+
+      print(f'version {version}')
+    workingDirectory: $(root)
+  displayName: 'init variables'
+
+- script: yarn version --new-version $(version) --no-git-tag-version
+  workingDirectory: $(root)
+  displayName: 'yarn version'
+
+- script: yarn
+  workingDirectory: $(root)
+  displayName: 'yarn'
+
+- script: yarn lint
+  workingDirectory: $(root)
+  displayName: 'yarn lint'
+
+- script: yarn build
+  workingDirectory: $(root)
+  displayName: 'yarn build'
+
+- task: GitHubRelease@1
+  inputs:
+    title: desktop-app $(version)
+    gitHubConnection: githubToken
+    tagSource: userSpecifiedTag
+    tag: desktop-app-v$(version)
+    assets: |
+      $(root)/build/*.exe
+      $(root)/build/*.exe.blockmap
+    isDraft: true
+    isPreRelease: $(isRelease)
+  condition: and(succeeded(), ${{parameters.isGithubPublish}})
+  displayName: github publish

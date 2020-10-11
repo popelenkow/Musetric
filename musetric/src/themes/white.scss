@@ -1,0 +1,19 @@
+:root, .white {
+	--color__appBg: hsl(0, 0%, 91%);
+	--color__contentBg: hsl(0, 0%, 91%);
+	--color__sidebarBg: hsl(0, 0%, 100%);
+	--color__content: hsl(0, 0%, 0%);
+	--color__splitter: hsl(0, 0%, 75%);
+	--color__icon: hsl(0, 0%, 68%);
+
+	--color__loaderTrack: hsla(0, 0%, 80%);
+	--color__loaderThumb: hsl(0, 0%, 30%);
+
+	--color__scrollbarTrack: hsl(0, 0%, 95%);
+	--color__scrollbarThumb: hsl(0, 0%, 76%);
+	--color__scrollbarThumb--hover: hsl(0, 0%, 66%);
+	--color__scrollbarThumb--active: hsl(0, 0%, 47%);
+
+	--color__cellLive: hsl(0, 0%, 0%);
+	--color__cellDead: hsl(0, 0%, 100%);
+}

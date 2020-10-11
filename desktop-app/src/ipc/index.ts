@@ -1,2 +1,1 @@
-import * as ipc from './channels'
-export { ipc }
+export * as ipc from './channels';

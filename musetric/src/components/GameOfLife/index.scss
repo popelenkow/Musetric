@@ -1,0 +1,38 @@
+.GameOfLife {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	@extend .Scrollbar;
+}
+
+.GameOfLife__Header {
+	display: flex;
+	flex-direction: row;
+	height: 28px;
+	background-color: var(--color__sidebarBg);
+	border-bottom: 1px solid var(--color__splitter);
+}
+
+.GameOfLife__Grid {
+	display: grid;
+	overflow: auto;
+	width: 100%;
+	height: 100%;
+}
+
+.GameOfLife__CellLive {
+	width: 20px;
+	height: 20px;
+	border: solid 1px var(--color__splitter);
+	background-color: var(--color__cellLive);
+}
+
+.GameOfLife__CellDead {
+	width: 20px;
+	height: 20px;
+	border: solid 1px var(--color__splitter);
+	background-color: var(--color__cellDead);
+}
+

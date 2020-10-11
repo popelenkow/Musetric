@@ -1,5 +1,5 @@
-import { Handle, Invoke } from "../types";
-import { ipcMain, ipcRenderer } from "electron";
+import { ipcMain, ipcRenderer } from 'electron';
+import { Handle, Invoke } from '../types';
 
 export namespace pytest {
 	export const handle: Handle<void, any> = (listener) => ipcMain.handle('pytest', listener);
