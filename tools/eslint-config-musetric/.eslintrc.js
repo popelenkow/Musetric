@@ -47,6 +47,9 @@ module.exports = {
 		'no-empty-function': 0,
 		'@typescript-eslint/no-empty-function': ['error'],
 		'quote-props': ['error', 'consistent'],
+		'max-classes-per-file': 0,
+		'react/jsx-indent-props': ['error', 'tab'],
+		'arrow-body-style': 0,
 	},
 	ignorePatterns: ['dist/*'],
 };

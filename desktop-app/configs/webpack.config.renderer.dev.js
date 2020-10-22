@@ -18,6 +18,7 @@ module.exports = merge(config, {
 	devServer: {
 		contentBase: path.join(__dirname, 'dist'),
 		port: 8080,
+		stats: { modules: false, children: false, entrypoints: false },
 	},
 	plugins: [
 		{

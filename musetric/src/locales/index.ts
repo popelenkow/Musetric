@@ -1,9 +1,9 @@
 import { TFunction } from 'i18next';
-import { Locale } from './entry';
+import { Types } from '..';
 
 export * from './entry';
 
-export const localizeLocale = (lng: Locale, t: TFunction): string | undefined => {
+export const localizeLocale = (lng: Types.Locale, t: TFunction): string | undefined => {
 	const res = t('Musetric:locale', { lng });
 	return res;
 };

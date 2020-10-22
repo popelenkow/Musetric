@@ -21,7 +21,6 @@ Docker pull & run
 docker pull popelenkow/musetric:latest
 docker run -p 8080:3000 -d popelenkow/musetric:latest
 ```
-
 ## Development
 
 Electron application with react & typescript & sass & webpack. Node >= v12.

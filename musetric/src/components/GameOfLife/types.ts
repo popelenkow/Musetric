@@ -14,12 +14,3 @@ export type Options = {
 
 export type GenF = (size: Size, grid?: Grid, options?: Options) => Grid;
 export type GenO = Record<string, GenF>;
-
-export type Props = {
-	size: Size;
-};
-
-export type State = {
-	grid: Grid;
-	generator?: NodeJS.Timeout;
-};

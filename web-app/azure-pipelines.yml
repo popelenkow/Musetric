@@ -3,14 +3,20 @@ trigger:
     include:
     - develop
     - release/v*
+    - feature/*
   paths:
     include:
     - 'web-app/*'
 
 parameters:
-- name: isRelease
-  type: boolean
-  default: false
+- name: tag
+  displayName: tag
+  type: string
+  values:
+  - next
+  - beta
+  - latest
+  default: next
 - name: isDockerPublish
   type: boolean
   default: false
@@ -46,28 +52,31 @@ steps:
         rawVersion = json.load(json_file)['version']
 
       isReleaseBranch = '$(Build.SourceBranch)'.startswith('refs/heads/release')
-      isRelease = isReleaseBranch and ${{parameters.isRelease}}
-
-      print(f'##vso[task.setvariable variable=isRelease]{isRelease}')
-
-      print(f'isRelease {isRelease}')
       print(f'isReleaseBranch {isReleaseBranch}')
 
-      if isRelease:
-        tag = 'latest'
+      tag = f'${{parameters.tag}}'
+      print(f'##vso[task.setvariable variable=tag]{tag}')
+      print(f'tag {tag}')
+
+      if tag == 'latest':
         version = rawVersion
-      elif isReleaseBranch:
-        tag = 'beta'
+      elif tag == 'beta':
         version = f'{rawVersion}-beta.$(Build.BuildID)'
       else:
-        tag = 'next'
         version = f'{rawVersion}-dev.$(Build.BuildID)'
-
-      print(f'##vso[task.setvariable variable=tag]{tag}')
       print(f'##vso[task.setvariable variable=version]{version}')
-
-      print(f'tag {tag}')
       print(f'version {version}')
+
+      isDockerPublish = ${{parameters.isDockerPublish}}
+      print(f'##vso[task.setvariable variable=isDockerPublish]{isDockerPublish}')
+      print(f'isDockerPublish {isDockerPublish}')
+
+      if tag == 'latest':
+        isGithubRelease = True
+      else:
+        isGithubRelease = False
+      print(f'##vso[task.setvariable variable=isGithubRelease]{isGithubRelease}')
+      print(f'isGithubRelease {isGithubRelease}')
     workingDirectory: $(root)
   displayName: 'init variables'
 
@@ -92,16 +101,16 @@ steps:
   displayName: 'docker build'
 
 - script: docker login --username popelenkow --password $(dockerToken)
-  condition: and(succeeded(), ${{parameters.isDockerPublish}})
+  condition: and(succeeded(), eq(variables.isDockerPublish, true))
   displayName: 'docker login'
 
 - script: docker push popelenkow/musetric
-  condition: and(succeeded(), ${{parameters.isDockerPublish}})
+  condition: and(succeeded(), eq(variables.isDockerPublish, true))
   displayName: 'docker push'
 
 - script: yarn pack
   workingDirectory: $(root)/dist
-  condition: and(succeeded(), ${{parameters.isGithubPublish}})
+  condition: and(succeeded(), eq(variables.isGithubPublish, true))
   displayName: 'yarn pack'
 
 - task: GitHubRelease@1
@@ -113,5 +122,5 @@ steps:
     assets: '$(root)/dist/*.tgz'
     isDraft: true
     isPreRelease: $(isRelease)
-  condition: and(succeeded(), ${{parameters.isGithubPublish}})
+  condition: and(succeeded(), eq(variables.isGithubPublish, true))
   displayName: 'github publish'

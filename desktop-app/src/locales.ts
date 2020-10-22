@@ -1,16 +1,17 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { resources, localeSet, isLocale, Locale } from 'musetric/locales';
+import { Locales, Types } from 'musetric';
 
-export const initLocale = (_locale?: string | null): Locale => {
-	const locale = isLocale(_locale) ? _locale : 'en';
+export const initLocale = (_locale?: string | null): Types.Locale => {
+	const locale = Types.isLocale(_locale) ? _locale : 'en';
+	const { resources } = Locales;
 	i18n
 		.use(initReactI18next)
 		.init({
 			lng: locale,
 			fallbackLng: locale,
 			defaultNS: 'musetric',
-			supportedLngs: localeSet,
+			supportedLngs: Types.localeSet,
 			resources,
 			debug: false,
 		});

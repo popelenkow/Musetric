@@ -1,5 +1,5 @@
-import React from 'react';
-import { withTranslation, WithTranslation } from 'react-i18next';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 
 export type Props<T = any> = {
@@ -14,30 +14,22 @@ export type State<T = any> = {
 	id: T;
 };
 
-class View extends React.Component<Props & WithTranslation, State> {
-	constructor(props: Props & WithTranslation) {
-		super(props);
-		const { currentId: id } = this.props;
-		this.state = { id };
-	}
+export const View = <T, >(props: React.PropsWithChildren<Props<T>>): JSX.Element => {
+	const { currentId, ids, localize, set, className } = props;
+	const { t } = useTranslation();
 
-	render() {
-		const { id } = this.state;
-		const { t, ids, localize, set, className } = this.props;
-		const next = () => {
-			let index = ids.indexOf(id);
-			index = (index + 1) % ids.length;
-			const newId = ids[index];
-			this.setState({ id: newId });
-			set(newId);
-		};
-		return (
-			<button type='button' className={className} onClick={next}>
-				{localize ? localize(id, t) : id}
-			</button>
-		);
-	}
-}
+	const [id, setId] = useState(currentId);
 
-const view = withTranslation()(View);
-export { view as View };
+	const next = () => {
+		let index = ids.indexOf(id);
+		index = (index + 1) % ids.length;
+		const newId = ids[index];
+		setId(newId);
+		set(newId);
+	};
+	return (
+		<button type='button' className={className} onClick={next}>
+			{localize ? localize(id, t) : id}
+		</button>
+	);
+};

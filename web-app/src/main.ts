@@ -1,16 +1,18 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/module';
+import express from 'express';
 
-const isDev = process.env.NODE_ENV === 'development';
+const app = express();
+const port = 3000;
 
-async function bootstrap() {
-	const app = await NestFactory.create(AppModule);
-	app.setGlobalPrefix('api');
-	await app.listen(3000, () => isDev && console.log('http://localhost:3000'));
+app.get('/api', (_req, res) => {
+	res.send('Hello World!');
+});
 
-	if (module.hot) {
-		module.hot.accept();
-		module.hot.dispose(() => app.close());
-	}
-}
-bootstrap();
+app.get('/api/12', (_req, res) => {
+	res.send('121');
+});
+
+app.use(express.static('dist'));
+
+app.listen(port, () => {
+	console.log(`Example app listening at http://localhost:${port}`);
+});

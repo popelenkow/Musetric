@@ -3,14 +3,20 @@ trigger:
     include:
     - develop
     - release/v*
+    - feature/*
   paths:
     include:
     - 'musetric/*'
 
 parameters:
-- name: isRelease
-  type: boolean
-  default: false
+- name: tag
+  displayName: tag
+  type: string
+  values:
+  - next
+  - beta
+  - latest
+  default: next
 - name: isNpmPublish
   type: boolean
   default: false
@@ -46,28 +52,35 @@ steps:
         rawVersion = json.load(json_file)['version']
 
       isReleaseBranch = '$(Build.SourceBranch)'.startswith('refs/heads/release')
-      isRelease = isReleaseBranch and ${{parameters.isRelease}}
-
-      print(f'##vso[task.setvariable variable=isRelease]{isRelease}')
-
-      print(f'isRelease {isRelease}')
       print(f'isReleaseBranch {isReleaseBranch}')
 
-      if isRelease:
-        tag = 'latest'
+      tag = f'${{parameters.tag}}'
+      print(f'##vso[task.setvariable variable=tag]{tag}')
+      print(f'tag {tag}')
+
+      if tag == 'latest':
         version = rawVersion
-      elif isReleaseBranch:
-        tag = 'beta'
+      elif tag == 'beta':
         version = f'{rawVersion}-beta.$(Build.BuildID)'
       else:
-        tag = 'next'
         version = f'{rawVersion}-dev.$(Build.BuildID)'
-
-      print(f'##vso[task.setvariable variable=tag]{tag}')
       print(f'##vso[task.setvariable variable=version]{version}')
-
-      print(f'tag {tag}')
       print(f'version {version}')
+
+      isNpmPublish = ${{parameters.isNpmPublish}}
+      print(f'##vso[task.setvariable variable=isNpmPublish]{isNpmPublish}')
+      print(f'isNpmPublish {isNpmPublish}')
+
+      isGithubPublish = ${{parameters.isGithubPublish}}
+      print(f'##vso[task.setvariable variable=isGithubPublish]{isGithubPublish}')
+      print(f'isGithubPublish {isGithubPublish}')
+
+      if tag == 'latest':
+        isGithubRelease = True
+      else:
+        isGithubRelease = False
+      print(f'##vso[task.setvariable variable=isGithubRelease]{isGithubRelease}')
+      print(f'isGithubRelease {isGithubRelease}')
     workingDirectory: $(root)
   displayName: 'init variables'
 
@@ -92,12 +105,12 @@ steps:
     echo '//registry.npmjs.org/:_authToken=$(npmToken)' > .npmrc
     yarn publish --tag $(tag) --no-git-tag-version
   workingDirectory: $(root)/dist
-  condition: and(succeeded(), ${{parameters.isNpmPublish}})
+  condition: and(succeeded(), eq(variables.isNpmPublish, true))
   displayName: 'npm publish'
 
 - script: yarn pack
   workingDirectory: $(root)/dist
-  condition: and(succeeded(), ${{parameters.isGithubPublish}})
+  condition: and(succeeded(), eq(variables.isGithubPublish, true))
   displayName: 'yarn pack'
 
 - task: GitHubRelease@1
@@ -108,6 +121,6 @@ steps:
     tag: v$(version)
     assets: '$(root)/dist/*.tgz'
     isDraft: true
-    isPreRelease: $(isRelease)
-  condition: and(succeeded(), ${{parameters.isGithubPublish}})
+    isPreRelease: $(isGithubRelease)
+  condition: and(succeeded(), eq(variables.isGithubPublish, true))
   displayName: 'github publish'
