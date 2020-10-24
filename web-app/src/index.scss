@@ -1,5 +1,4 @@
 @import '~musetric/index.scss';
-@import './components/index.scss';
 
 body {
 	margin: 0;
@@ -22,3 +21,7 @@ body {
 	min-height: 0px;
 	padding: 3px;
 }
+
+* {
+	box-sizing: border-box;
+  }

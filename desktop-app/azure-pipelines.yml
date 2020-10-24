@@ -3,14 +3,20 @@ trigger:
     include:
     - develop
     - release/v*
+    - feature/*
   paths:
     include:
     - 'desktop-app/*'
 
 parameters:
-- name: isRelease
-  type: boolean
-  default: false
+- name: tag
+  displayName: tag
+  type: string
+  values:
+  - next
+  - beta
+  - latest
+  default: next
 - name: isGithubPublish
   type: boolean
   default: false
@@ -43,23 +49,31 @@ steps:
         rawVersion = json.load(json_file)['version']
 
       isReleaseBranch = '$(Build.SourceBranch)'.startswith('refs/heads/release')
-      isRelease = isReleaseBranch and ${{parameters.isRelease}}
-
-      print(f'##vso[task.setvariable variable=isRelease]{isRelease}')
-
-      print(f'isRelease {isRelease}')
       print(f'isReleaseBranch {isReleaseBranch}')
 
-      if isRelease:
+      tag = f'${{parameters.tag}}'
+      print(f'##vso[task.setvariable variable=tag]{tag}')
+      print(f'tag {tag}')
+
+      if tag == 'latest':
         version = rawVersion
-      elif isReleaseBranch:
+      elif tag == 'beta':
         version = f'{rawVersion}-beta.$(Build.BuildID)'
       else:
         version = f'{rawVersion}-dev.$(Build.BuildID)'
-
       print(f'##vso[task.setvariable variable=version]{version}')
-
       print(f'version {version}')
+
+      isGithubPublish = ${{parameters.isGithubPublish}}
+      print(f'##vso[task.setvariable variable=isGithubPublish]{isGithubPublish}')
+      print(f'isGithubPublish {isGithubPublish}')
+
+      if tag == 'latest':
+        isGithubRelease = True
+      else:
+        isGithubRelease = False
+      print(f'##vso[task.setvariable variable=isGithubRelease]{isGithubRelease}')
+      print(f'isGithubRelease {isGithubRelease}')
     workingDirectory: $(root)
   displayName: 'init variables'
 
@@ -89,6 +103,6 @@ steps:
       $(root)/build/*.exe
       $(root)/build/*.exe.blockmap
     isDraft: true
-    isPreRelease: $(isRelease)
-  condition: and(succeeded(), ${{parameters.isGithubPublish}})
+    isPreRelease: $(isGithubRelease)
+  condition: and(succeeded(), eq(variables.isGithubPublish, true))
   displayName: github publish

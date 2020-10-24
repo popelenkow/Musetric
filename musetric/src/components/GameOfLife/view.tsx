@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-param-reassign */
-import React from 'react';
+import React, { useState } from 'react';
 import produce from 'immer';
-import { withTranslation, WithTranslation } from 'react-i18next';
-import { Size, Grid, Options, Row, Props, State, GenF, GenO } from './types';
+import { useTranslation } from 'react-i18next';
+import { Size, Grid, Options, Row, GenO, GenF } from './types';
 
 const operations = [
 	[0, 1],
@@ -75,63 +75,56 @@ const Gen: GenO = {
 	},
 };
 
-class View extends React.Component<Props & WithTranslation, State> {
-	constructor(props: Props & WithTranslation) {
-		super(props);
-		const { size } = this.props;
-		this.state = { grid: Gen.empty(size), generator: undefined };
-	}
+export type Props = {
+	size: Size;
+};
 
-	setGenerator(isRun: boolean) {
-		const { generator } = this.state;
+export const View: React.FC<Props> = (props) => {
+	const { size } = props;
+	const { t } = useTranslation();
+
+	const gridStyle = {
+		gridTemplateColumns: `repeat(${size.columns}, 20px)`,
+	};
+
+	const [grid, setGrid] = useState<Grid>(Gen.empty(size));
+	const [generator, setGenerator] = useState<NodeJS.Timeout>();
+
+	const setGridQ = (gen: GenF, options?: Options) => {
+		setGrid(curGrid => gen(size, curGrid, options));
+	};
+
+	const setGeneratorQ = (isRun: boolean) => {
 		if (generator) {
 			clearInterval(generator);
 		}
 		const newGenerator: any = isRun
-			? setInterval(() => this.setGrid(Gen.next), 100)
+			? setInterval(() => setGridQ(Gen.next), 100)
 			: undefined;
-		this.setState({ generator: newGenerator });
-	}
+		setGenerator(newGenerator);
+	};
 
-	setGrid(gen: GenF, options?: Options) {
-		const { size } = this.props;
-		const { grid } = this.state;
-		const newGrid = gen(size, grid, options);
-		this.setState({ grid: newGrid });
-	}
-
-	render() {
-		const { t, size } = this.props;
-		const { grid, generator } = this.state;
-		const gridStyle = {
-			gridTemplateColumns: `repeat(${size.columns}, 20px)`,
-		};
-
-		return (
-			<div className='GameOfLife'>
-				<div className='GameOfLife__Header'>
-					<button type='button' className='Button' onClick={() => this.setGenerator(!generator)}>
-						{generator ? t('GameOfLife:stop') : t('GameOfLife:start')}
-					</button>
-					<button type='button' className='Button' onClick={() => this.setGrid(Gen.random)}>
-						{t('GameOfLife:random')}
-					</button>
-					<button type='button' className='Button' onClick={() => this.setGrid(Gen.empty)}>
-						{t('GameOfLife:clear')}
-					</button>
-				</div>
-				<div className='GameOfLife__Grid' style={gridStyle}>
-					{grid.map((rows, row) => rows.map((_, column) => {
-						const cellClass = grid[row][column] ? 'GameOfLife__CellLive' : 'GameOfLife__CellDead';
-						const key = `${row}-${column}`;
-						const pick = () => this.setGrid(Gen.pick, { row, column });
-						return <div className={cellClass} key={key} onClick={pick} />;
-					}))}
-				</div>
+	return (
+		<div className='GameOfLife'>
+			<div className='GameOfLife__Header'>
+				<button type='button' className='Button' onClick={() => setGeneratorQ(!generator)}>
+					{generator ? t('GameOfLife:stop') : t('GameOfLife:start')}
+				</button>
+				<button type='button' className='Button' onClick={() => setGridQ(Gen.random)}>
+					{t('GameOfLife:random')}
+				</button>
+				<button type='button' className='Button' onClick={() => setGridQ(Gen.empty)}>
+					{t('GameOfLife:clear')}
+				</button>
 			</div>
-		);
-	}
-}
-
-const view = withTranslation()(View);
-export { view as View };
+			<div className='GameOfLife__Grid' style={gridStyle}>
+				{grid.map((rows, row) => rows.map((_, column) => {
+					const cellClass = grid[row][column] ? 'GameOfLife__CellLive' : 'GameOfLife__CellDead';
+					const key = `${row}-${column}`;
+					const pick = () => setGridQ(Gen.pick, { row, column });
+					return <div className={cellClass} key={key} onClick={pick} />;
+				}))}
+			</div>
+		</div>
+	);
+};
