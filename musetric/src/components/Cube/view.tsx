@@ -1,12 +1,12 @@
 import React, { useRef, useState, useContext, useEffect } from 'react';
-import * as THREE from 'three';
+import { Color, Mesh } from 'three';
 import { Canvas, CanvasContext, useFrame } from 'react-three-fiber';
 import { Contexts } from '../..';
-import { getColor } from './getColor';
+import { getColor } from '../getColor';
 
 const Box: React.FC<any> = (props) => {
 	// This reference will give us direct access to the mesh
-	const mesh = useRef<THREE.Mesh>();
+	const mesh = useRef<Mesh>();
 
 	// Set up state for the hovered and active state
 	const [hovered, setHover] = useState(false);
@@ -47,9 +47,8 @@ export const View: React.FC<Props> = (props) => {
 	useEffect(() => {
 		if (!theme) return;
 		if (!canvas) return;
-		const rgb = getColor(app, '--color__contentBg');
-		const color = rgb ? new THREE.Color(rgb[0], rgb[1], rgb[2]) : new THREE.Color(0, 0, 0);
-		canvas.gl.setClearColor(color);
+		const c = getColor(app, '--color__contentBg');
+		canvas.gl.setClearColor(c || new Color(0, 0, 0));
 	}, [theme, canvas, app]);
 
 	return (

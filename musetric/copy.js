@@ -1,7 +1,10 @@
-const cpx = require('cpx');
+/* eslint-disable no-console */
+const copyfiles = require('copyfiles');
 
-cpx.copySync('package.json', 'dist');
-cpx.copySync('licence.txt', 'dist');
-cpx.copySync('readme.md', 'dist');
-cpx.copySync('src/**/*.*css', 'dist');
-cpx.copySync('src/**/*.json', 'dist');
+const err = (error) => error && console.error(error);
+
+copyfiles(['package.json', 'dist'], err);
+copyfiles(['licence.txt', 'dist'], err);
+copyfiles(['readme.md', 'dist'], err);
+copyfiles(['src/**/*.*css', 'dist'], 1, err);
+copyfiles(['src/**/*.json', 'dist'], 1, err);

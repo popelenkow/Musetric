@@ -1,3 +1,6 @@
-const cpx = require('cpx');
+/* eslint-disable no-console */
+const copyfiles = require('copyfiles');
 
-cpx.copySync('favicon.ico', 'dist');
+const err = (error) => error && console.error(error);
+
+copyfiles(['favicon.ico', 'dist'], err);

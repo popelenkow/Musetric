@@ -2,7 +2,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-// https://github.com/webpack/webpack-cli/issues/1918
 module.exports = {
 	entry: './src/index.tsx',
 	resolve: {

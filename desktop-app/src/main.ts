@@ -18,6 +18,8 @@ app.whenReady().then(() => {
 
 	ipc.titlebar.handle(async (event, arg) => {
 		const window = BrowserWindow.fromId(event.sender.id);
+		if (!window) return;
+
 		if (arg === 'close') isDev ? window.destroy() : window.close();
 		else if (arg === 'minimize') window.minimize();
 		else if (arg === 'maximize') window.maximize();
