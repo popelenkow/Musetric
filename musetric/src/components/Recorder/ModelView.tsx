@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Recorder } from './recorder';
-import { drawSpectrum, drawWave, startAnimation, Model } from './model';
+import { Model } from './model';
+import { FrequencyGraph, WaveGraph } from '..';
 
 export type RecorderProps = {
 	model: Model;
@@ -12,27 +13,7 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 	const { analyserNode, recorder } = model;
 
 	const [isRecording, setIsRecording] = useState<boolean>(false);
-
-	const spectrumCanvas = useRef<HTMLCanvasElement>(null);
-	const waveCanvas = useRef<HTMLCanvasElement>(null);
-
-	useEffect(() => {
-		const startSpectrum = () => {
-			const draw = () => {
-				const canvas = spectrumCanvas.current;
-				const data = new Uint8Array(analyserNode.frequencyBinCount);
-				analyserNode.getByteFrequencyData(data);
-				const info = { canvas, data };
-				drawSpectrum(info, analyserNode.frequencyBinCount);
-			};
-			return startAnimation(draw);
-		};
-
-		const subscription = startSpectrum();
-		return () => {
-			subscription.stop();
-		};
-	}, [analyserNode]);
+	const [audioData, setAudioData] = useState<Float32Array>();
 
 	const saveAudio = () => {
 		const doneEncoding = (blob: Blob) => Recorder.forceDownload(blob, 'myRecording.wav');
@@ -46,15 +27,15 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 
 	const stop = async () => {
 		const gotBuffers = (buffers: Float32Array[]) => {
-			const canvas = waveCanvas.current;
-			const data = buffers[0];
-			drawWave({ canvas, data });
+			setAudioData(buffers[0]);
 		};
 		recorder.stop();
 		recorder.getBuffer(gotBuffers);
 		// audioRecorder.clear();
 		setIsRecording(false);
 	};
+
+	const app = document.getElementById('app') as HTMLElement;
 
 	return (
 		<div className='Recorder'>
@@ -65,10 +46,10 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 				<button type='button' className='Button' onClick={drop}>drop</button>
 			</div>
 			<div className='Recorder__Wave'>
-				<canvas className='Recorder_Canvas' ref={waveCanvas} width={1024} height={1024} />
+				{audioData && <WaveGraph.View app={app} audioData={audioData} />}
 			</div>
 			<div className='Recorder__Spectrum'>
-				<canvas className='Recorder_Canvas' ref={spectrumCanvas} width={1024} height={1024} />
+				<FrequencyGraph.View app={app} analyserNode={analyserNode} />
 			</div>
 		</div>
 	);
