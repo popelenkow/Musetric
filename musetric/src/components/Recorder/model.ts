@@ -4,4 +4,4 @@ export type Model = {
 	recorder: Recorder;
 	audioContext: AudioContext;
 	analyserNode: AnalyserNode;
-}
+};

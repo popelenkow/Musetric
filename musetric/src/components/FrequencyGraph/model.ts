@@ -1,4 +1,3 @@
-/* eslint-disable no-mixed-operators */
 import { Color } from 'three';
 
 export type FrequencyInfo = {
@@ -8,8 +7,8 @@ export type FrequencyInfo = {
 	height: number;
 	backgroundColor: Color;
 	contentColor: Color;
-}
-export const drawFrequency = (info: FrequencyInfo) => {
+};
+export const drawFrequency = (info: FrequencyInfo): void => {
 	const { viewData, recorderData, width, height, backgroundColor, contentColor } = info;
 
 	const count = Math.floor(recorderData.length / width);
@@ -20,9 +19,11 @@ export const drawFrequency = (info: FrequencyInfo) => {
 			magnitude += recorderData[offset + i];
 		}
 		magnitude /= count;
+		magnitude *= 1.0;
+		magnitude /= 255;
 		for (let y = 0; y < height; y++) {
 			const point = (x + (y * width)) * 3;
-			const isDraw = (1.0 * magnitude / 255 * height) > y;
+			const isDraw = (magnitude * height) > y;
 			const color = isDraw ? contentColor : backgroundColor;
 			viewData[point + 0] = color.r * 255;
 			viewData[point + 1] = color.g * 255;

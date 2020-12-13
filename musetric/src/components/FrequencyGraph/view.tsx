@@ -7,14 +7,14 @@ import { getColor } from '../getColor';
 import { Camera } from '../Camera';
 
 type PlaneProps = {
-	app: HTMLElement;
+	appElement: HTMLElement;
 	zIndex: number;
 	analyserNode: AnalyserNode;
 	canvas: CanvasContext;
 };
 
 const Plane: React.FC<PlaneProps> = (props) => {
-	const { analyserNode, canvas, zIndex, app } = props;
+	const { analyserNode, canvas, zIndex, appElement } = props;
 
 	const mesh = useRef<Mesh>();
 
@@ -26,8 +26,8 @@ const Plane: React.FC<PlaneProps> = (props) => {
 
 	useFrame(() => {
 		analyserNode.getByteFrequencyData(recorderData);
-		const backgroundColor = getColor(app, '--color__contentBg') as Color;
-		const contentColor = getColor(app, '--color__content') as Color;
+		const backgroundColor = getColor(appElement, '--color__contentBg') as Color;
+		const contentColor = getColor(appElement, '--color__content') as Color;
 		drawFrequency({ recorderData, viewData, width, height, backgroundColor, contentColor });
 
 		texture.needsUpdate = true;
@@ -42,22 +42,22 @@ const Plane: React.FC<PlaneProps> = (props) => {
 };
 
 export type Props = {
-	app: HTMLElement;
 	analyserNode: AnalyserNode;
-}
+};
 
 export const View: React.FC<Props> = (props) => {
-	const { app, analyserNode } = props;
-	const { theme } = useContext(Contexts.AppContext.Context);
+	const { analyserNode } = props;
+	const { appElement, theme } = useContext(Contexts.App.Context);
 
 	const [color, setColor] = useState<Color>(new Color(0, 0, 0));
 	const [canvas, setCanvas] = useState<CanvasContext>();
 
 	useEffect(() => {
 		if (!theme) return;
-		const c = getColor(app, '--color__contentBg');
+		if (!appElement) return;
+		const c = getColor(appElement, '--color__contentBg');
 		setColor(c || new Color(0, 0, 0));
-	}, [theme, app]);
+	}, [theme, appElement]);
 
 	useEffect(() => {
 		if (!canvas) return;
@@ -67,7 +67,8 @@ export const View: React.FC<Props> = (props) => {
 	return (
 		<Canvas onCreated={setCanvas} colorManagement={false}>
 			<Camera position={[0, 0, 0.1]} />
-			{canvas && <Plane app={app} canvas={canvas} zIndex={0} analyserNode={analyserNode} />}
+			{canvas && appElement
+				&& <Plane appElement={appElement} canvas={canvas} zIndex={0} analyserNode={analyserNode} />}
 		</Canvas>
 	);
 };

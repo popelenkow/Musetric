@@ -4,6 +4,7 @@ import { Canvas, CanvasContext, useFrame } from 'react-three-fiber';
 import { Contexts } from '../..';
 import { getColor } from '../getColor';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Box: React.FC<any> = (props) => {
 	// This reference will give us direct access to the mesh
 	const mesh = useRef<Mesh>();
@@ -35,21 +36,20 @@ const Box: React.FC<any> = (props) => {
 };
 
 export type Props = {
-	app: HTMLElement;
-}
+};
 
-export const View: React.FC<Props> = (props) => {
-	const { app } = props;
-	const { theme } = useContext(Contexts.AppContext.Context);
+export const View: React.FC<Props> = () => {
+	const { appElement, theme } = useContext(Contexts.App.Context);
 
 	const [canvas, setCanvas] = useState<CanvasContext>();
 
 	useEffect(() => {
 		if (!theme) return;
 		if (!canvas) return;
-		const c = getColor(app, '--color__contentBg');
+		if (!appElement) return;
+		const c = getColor(appElement, '--color__contentBg');
 		canvas.gl.setClearColor(c || new Color(0, 0, 0));
-	}, [theme, canvas, app]);
+	}, [theme, canvas, appElement]);
 
 	return (
 		<Canvas onCreated={setCanvas}>

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const path = require('path');
 const { spawn } = require('child_process');
 const { merge } = require('webpack-merge');
