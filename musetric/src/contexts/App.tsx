@@ -2,30 +2,35 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Types } from '..';
 
 export type Store = {
-	appElement?: HTMLElement; setAppElement?: Dispatch<SetStateAction<HTMLElement>>;
-	contentId?: Types.ContentId; setContentId?: Dispatch<SetStateAction<Types.ContentId>>;
-	theme?: Types.Theme; setTheme?: Dispatch<SetStateAction<Types.Theme>>;
-	locale?: Types.Locale; setLocale?: Dispatch<SetStateAction<Types.Locale>>;
+	appElement?: HTMLElement; setAppElement: Dispatch<SetStateAction<HTMLElement | undefined>>;
+	contentId?: Types.ContentId; setContentId: Dispatch<SetStateAction<Types.ContentId | undefined>>;
+	theme?: Types.Theme; setTheme: Dispatch<SetStateAction<Types.Theme | undefined>>;
+	locale?: Types.Locale; setLocale: Dispatch<SetStateAction<Types.Locale | undefined>>;
 };
 
-export const Context = React.createContext<Store>({});
+export const Context = React.createContext<Store>({
+	setAppElement: () => { },
+	setContentId: () => { },
+	setTheme: () => { },
+	setLocale: () => { },
+});
 
 export const { Consumer } = Context;
 
 export type Props = {
-	initAppElement: HTMLElement;
-	initContentId: Types.ContentId;
-	initTheme: Types.Theme;
-	initLocale: Types.Locale;
+	initAppElement?: HTMLElement;
+	initContentId?: Types.ContentId;
+	initTheme?: Types.Theme;
+	initLocale?: Types.Locale;
 };
 
 export const Provider: React.FC<Props> = (props) => {
 	const { children, initAppElement, initTheme, initContentId, initLocale } = props;
 
-	const [appElement, setAppElement] = useState<HTMLElement>(initAppElement);
-	const [contentId, setContentId] = useState<Types.ContentId>(initContentId);
-	const [theme, setTheme] = useState<Types.Theme>(initTheme);
-	const [locale, setLocale] = useState<Types.Locale>(initLocale);
+	const [appElement, setAppElement] = useState<HTMLElement | undefined>(initAppElement);
+	const [contentId, setContentId] = useState<Types.ContentId | undefined>(initContentId);
+	const [theme, setTheme] = useState<Types.Theme | undefined>(initTheme);
+	const [locale, setLocale] = useState<Types.Locale | undefined>(initLocale);
 
 	const value: Store = {
 		appElement,

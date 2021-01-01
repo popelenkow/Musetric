@@ -2,10 +2,11 @@ import React, { useRef, useEffect } from 'react';
 import { OrthographicCamera } from 'three';
 import { useThree, Vector3 } from 'react-three-fiber';
 
-export type CameraProps = {
+export type Props = {
 	position: Vector3;
 };
-export const Camera: React.FC<CameraProps> = (props) => {
+
+export const View: React.FC<Props> = (props) => {
 	const ref = useRef<OrthographicCamera>();
 	const { setDefaultCamera } = useThree();
 
