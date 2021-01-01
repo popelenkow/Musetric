@@ -1,11 +1,9 @@
-/* eslint-disable no-shadow */
-/* eslint-disable max-len */
 import './index.scss';
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { Types, Components, Contexts } from 'musetric';
 import { ResizeFrame, WindowsTitlebar } from './components';
-import { initLocale } from './locales';
+import { initLocales } from './locales';
 import { ipc } from './ipc';
 
 /*
@@ -17,46 +15,56 @@ isDev && ipc.pytest
 	.catch(err => console.log(err));
 */
 
-const app = document.getElementById('app');
-if (!app) throw new Error('App not found');
+const appElement = document.getElementById('app');
+if (!appElement) throw new Error('App not found');
 
 const extractTheme: () => Types.Theme | undefined = () => {
 	const themes: Types.Theme[] = [];
-	app.classList.forEach(x => Types.isTheme(x) && themes.push(x));
+	appElement.classList.forEach(x => Types.isTheme(x) && themes.push(x));
 	return themes.shift();
 };
 
 const params = new URLSearchParams(window.location.search);
-const locale = initLocale(params.get('locale'));
+const initLocale = initLocales(params.get('locale'));
 
 const getIndex = (contentId?: Types.ContentId) => {
 	if (!contentId) return -1;
 	return Types.contentSet.indexOf(contentId);
 };
 
-const { AppContext } = Contexts;
+const { App } = Contexts;
 const { Container, Content, Recorder, Cube, GameOfLife, RecorderOld, Titlebar } = Components;
+
+const appProps: Contexts.App.Props = {
+	initAppElement: appElement,
+	initContentId: Types.contentSet[0],
+	initLocale,
+	initTheme: extractTheme() || Types.themeSet[0],
+};
+
 const root = (
 	<Suspense fallback='loading'>
-		<AppContext.Provider initContentId={Types.contentSet[0]} initLocale={locale} initTheme={extractTheme() || Types.themeSet[0]}>
-			<Titlebar.View app={app}>
+		<App.Provider {...appProps}>
+			<Titlebar.View>
 				<WindowsTitlebar.View />
 			</Titlebar.View>
-			<Content.View className='main' getIndex={getIndex}>
-				<Container.View><Recorder.View /></Container.View>
-				<Container.View><Cube.View app={app} /></Container.View>
-				<Container.View><GameOfLife.View size={{ columns: 50, rows: 50 }} /></Container.View>
-				<Container.View><RecorderOld.View /></Container.View>
-			</Content.View>
-			<AppContext.Consumer>
+			<Container.View>
+				<Content.View className='main' getIndex={getIndex}>
+					<Recorder.View />
+					<Cube.View />
+					<GameOfLife.View size={{ columns: 50, rows: 50 }} />
+					<RecorderOld.View />
+				</Content.View>
+			</Container.View>
+			<App.Consumer>
 				{({ theme, locale }) => {
 					theme && ipc.app.invoke({ type: 'theme', value: theme });
 					locale && ipc.app.invoke({ type: 'locale', value: locale });
 					return <div />;
 				}}
-			</AppContext.Consumer>
+			</App.Consumer>
 			<ResizeFrame.View />
-		</AppContext.Provider>
+		</App.Provider>
 	</Suspense>
 );
-ReactDOM.render(root, app);
+ReactDOM.render(root, appElement);

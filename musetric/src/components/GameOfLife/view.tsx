@@ -98,6 +98,8 @@ export const View: React.FC<Props> = (props) => {
 		if (generator) {
 			clearInterval(generator);
 		}
+
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const newGenerator: any = isRun
 			? setInterval(() => setGridQ(Gen.next), 100)
 			: undefined;

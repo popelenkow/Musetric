@@ -6,7 +6,7 @@ import { FrequencyGraph, WaveGraph } from '..';
 export type RecorderProps = {
 	model: Model;
 	drop: () => void;
-}
+};
 
 export const RecorderView: React.FC<RecorderProps> = (props) => {
 	const { model, drop } = props;
@@ -20,12 +20,12 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 		recorder.exportWAV(doneEncoding, undefined);
 	};
 
-	const start = async () => {
+	const start = () => {
 		recorder.record();
 		setIsRecording(true);
 	};
 
-	const stop = async () => {
+	const stop = () => {
 		const gotBuffers = (buffers: Float32Array[]) => {
 			setAudioData(buffers[0]);
 		};
@@ -34,8 +34,6 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 		// audioRecorder.clear();
 		setIsRecording(false);
 	};
-
-	const app = document.getElementById('app') as HTMLElement;
 
 	return (
 		<div className='Recorder'>
@@ -46,10 +44,10 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 				<button type='button' className='Button' onClick={drop}>drop</button>
 			</div>
 			<div className='Recorder__Wave'>
-				{audioData && <WaveGraph.View app={app} audioData={audioData} />}
+				{audioData && <WaveGraph.View audioData={audioData} />}
 			</div>
 			<div className='Recorder__Spectrum'>
-				<FrequencyGraph.View app={app} analyserNode={analyserNode} />
+				<FrequencyGraph.View analyserNode={analyserNode} />
 			</div>
 		</div>
 	);

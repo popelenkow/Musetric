@@ -1,31 +1,35 @@
-/* eslint-disable max-len */
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Controls, Types, Locales, Contexts } from '../..';
 import { icons } from './icons';
 
 export type Props = {
-	app: HTMLElement;
 };
 
 export const View: React.FC<Props> = (props) => {
-	const { children, app } = props;
+	const { children } = props;
 	const { i18n } = useTranslation();
 
-	const { contentId, setContentId, theme, setTheme, locale, setLocale } = useContext(Contexts.AppContext.Context);
+	const {
+		appElement,
+		contentId, setContentId,
+		theme, setTheme,
+		locale, setLocale,
+	} = useContext(Contexts.App.Context);
 
 	const contentSwitchProps: Controls.Switch.Props<Types.ContentId> = {
 		currentId: contentId || Types.contentSet[0],
 		ids: Types.contentSet,
 		set: (id) => setContentId && setContentId(id),
 		className: 'Titlebar__Button',
-		localize: (id, _t) => id,
+		localize: (id) => id,
 	};
 
 	const themeSwitchProps: Controls.Switch.Props<Types.Theme> = {
 		currentId: theme || Types.themeSet[0],
 		ids: Types.themeSet,
 		set: (id) => {
+			const app = appElement || document.body;
 			app.classList.forEach(x => Types.isTheme(x) && app.classList.remove(x));
 			app.classList.add(id);
 			setTheme && setTheme(id);
@@ -39,6 +43,7 @@ export const View: React.FC<Props> = (props) => {
 		ids: Types.localeSet,
 		set: (id) => {
 			setLocale && setLocale(id);
+			// eslint-disable-next-line @typescript-eslint/no-floating-promises
 			i18n.changeLanguage(id);
 		},
 		className: 'Titlebar__Button',

@@ -1,4 +1,3 @@
-/* eslint-disable no-mixed-operators */
 import { Color } from 'three';
 
 export type WaveInfo = {
@@ -8,9 +7,9 @@ export type WaveInfo = {
 	height: number;
 	backgroundColor: Color;
 	contentColor: Color;
-}
+};
 
-export const drawWave = (info: WaveInfo) => {
+export const drawWave = (info: WaveInfo): void => {
 	const { audioData, viewData, width, height, backgroundColor, contentColor } = info;
 
 	const step = audioData.length / width;

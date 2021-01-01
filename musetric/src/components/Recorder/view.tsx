@@ -3,7 +3,10 @@ import { Recorder } from './recorder';
 import { Model } from './model';
 import { RecorderView } from './ModelView';
 
-export const View: React.FC<{}> = () => {
+export type Props = {
+};
+
+export const View: React.FC<Props> = () => {
 	const [model, setModel] = useState<Model>();
 
 	const init = async () => {

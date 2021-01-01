@@ -1,9 +1,11 @@
-/* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
 import { icons } from './icons';
 import { ipc } from '../../ipc';
 
-export const View: React.FC<{}> = () => {
+export type Props = {
+};
+
+export const View: React.FC<Props> = () => {
 	const [isMaximized, setIsMaximized] = useState(false);
 
 	useEffect(() => {

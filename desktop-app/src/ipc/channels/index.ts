@@ -1,4 +1,4 @@
-export * from './app';
-export * from './onWindow';
-export * from './pytest';
-export * from './titlebar';
+export * as app from './app';
+export * as onWindow from './onWindow';
+export * as pytest from './pytest';
+export * as titlebar from './titlebar';

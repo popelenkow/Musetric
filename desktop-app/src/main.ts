@@ -1,22 +1,29 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import { app, BrowserWindow, globalShortcut, Menu } from 'electron';
+import { Types } from 'musetric';
 import { PythonShell } from 'python-shell';
 import url from 'url';
 import fs from 'fs';
 import { ipc } from './ipc';
 
-// eslint-disable-next-line dot-notation
-process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 const isDev = process.env.NODE_ENV === 'development';
 
+type Config = {
+	theme: Types.Theme,
+	locale: Types.Locale,
+};
+
 app.whenReady().then(() => {
-	ipc.app.handle(async (_event, arg) => {
-		const appConfig = JSON.parse(fs.readFileSync('app.config.json', 'utf8'));
-		appConfig[arg.type] = arg.value;
+	ipc.app.handle((_event, arg) => {
+		const appConfig = JSON.parse(fs.readFileSync('app.config.json', 'utf8')) as Config;
+		if (arg.type === 'locale') appConfig[arg.type] = arg.value;
+		if (arg.type === 'theme') appConfig[arg.type] = arg.value;
 		const jsonString = JSON.stringify(appConfig, null, '\t');
 		fs.writeFileSync('app.config.json', jsonString, { encoding: 'utf8' });
 	});
 
-	ipc.titlebar.handle(async (event, arg) => {
+	ipc.titlebar.handle((event, arg) => {
 		const window = BrowserWindow.fromId(event.sender.id);
 		if (!window) return;
 
@@ -47,7 +54,7 @@ app.whenReady().then(() => {
 		frame: false,
 	});
 
-	const query = JSON.parse(fs.readFileSync('app.config.json', 'utf8'));
+	const query = JSON.parse(fs.readFileSync('app.config.json', 'utf8')) as Config;
 	isDev
 		? window.loadURL(url.format({ pathname: 'http://localhost:8080', query }))
 		: window.loadFile('dist/index.html', { query });
