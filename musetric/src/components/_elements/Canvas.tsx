@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Color } from 'three';
 import { Canvas, CanvasContext } from 'react-three-fiber';
-import { Contexts } from '..';
-import { getColor } from './getColor';
+import { Contexts } from '../..';
+import { getColor } from '../getColor';
 
 type PureProps = {
 	canvas?: CanvasContext;

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Controls, Types, Locales, Contexts } from '../..';
+import { Components, Types, Locales, Contexts } from '../..';
 import { icons } from './icons';
 
 export type Props = {
@@ -17,7 +17,7 @@ export const View: React.FC<Props> = (props) => {
 		locale, setLocale,
 	} = useContext(Contexts.App.Context);
 
-	const contentSwitchProps: Controls.Switch.Props<Types.ContentId> = {
+	const contentSwitchProps: Components.Switch.Props<Types.ContentId> = {
 		currentId: contentId || Types.contentSet[0],
 		ids: Types.contentSet,
 		set: (id) => setContentId(id),
@@ -25,7 +25,7 @@ export const View: React.FC<Props> = (props) => {
 		localize: (id) => id,
 	};
 
-	const themeSwitchProps: Controls.Switch.Props<Types.Theme> = {
+	const themeSwitchProps: Components.Switch.Props<Types.Theme> = {
 		currentId: theme || Types.themeSet[0],
 		ids: Types.themeSet,
 		set: (id) => {
@@ -38,7 +38,7 @@ export const View: React.FC<Props> = (props) => {
 		localize: (id, t) => Locales.localizeTheme(id, t) || id,
 	};
 
-	const localeSwitchProps: Controls.Switch.Props<Types.Locale> = {
+	const localeSwitchProps: Components.Switch.Props<Types.Locale> = {
 		currentId: locale || Types.localeSet[0],
 		ids: Types.localeSet,
 		set: (id) => {
@@ -54,9 +54,9 @@ export const View: React.FC<Props> = (props) => {
 		<div className='Titlebar'>
 			<div className='Titlebar__Icon'>{icons.app}</div>
 			<div className='Titlebar__Text'>Musetric</div>
-			<Controls.Switch.View {...contentSwitchProps} />
-			<Controls.Switch.View {...themeSwitchProps} />
-			<Controls.Switch.View {...localeSwitchProps} />
+			<Components.Switch.View {...contentSwitchProps} />
+			<Components.Switch.View {...themeSwitchProps} />
+			<Components.Switch.View {...localeSwitchProps} />
 			{children}
 		</div>
 	);
