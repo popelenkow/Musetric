@@ -20,7 +20,7 @@ export const View: React.FC<Props> = (props) => {
 	const contentSwitchProps: Controls.Switch.Props<Types.ContentId> = {
 		currentId: contentId || Types.contentSet[0],
 		ids: Types.contentSet,
-		set: (id) => setContentId && setContentId(id),
+		set: (id) => setContentId(id),
 		className: 'Titlebar__Button',
 		localize: (id) => id,
 	};
@@ -32,7 +32,7 @@ export const View: React.FC<Props> = (props) => {
 			const app = appElement || document.body;
 			app.classList.forEach(x => Types.isTheme(x) && app.classList.remove(x));
 			app.classList.add(id);
-			setTheme && setTheme(id);
+			setTheme(id);
 		},
 		className: 'Titlebar__Button',
 		localize: (id, t) => Locales.localizeTheme(id, t) || id,
@@ -42,7 +42,7 @@ export const View: React.FC<Props> = (props) => {
 		currentId: locale || Types.localeSet[0],
 		ids: Types.localeSet,
 		set: (id) => {
-			setLocale && setLocale(id);
+			setLocale(id);
 			// eslint-disable-next-line @typescript-eslint/no-floating-promises
 			i18n.changeLanguage(id);
 		},

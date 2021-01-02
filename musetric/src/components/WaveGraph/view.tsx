@@ -1,20 +1,21 @@
-import React, { useRef, useState, useContext, useEffect, useMemo } from 'react';
+import React, { useRef, useContext, useMemo } from 'react';
 import { Color, RGBFormat, DataTexture, Mesh } from 'three';
-import { Canvas, CanvasContext, useFrame } from 'react-three-fiber';
+import { useFrame } from 'react-three-fiber';
 import { drawWave } from './model';
+import { Camera, Canvas } from '..';
 import { Contexts } from '../..';
 import { getColor } from '../getColor';
-import { Camera } from '../Camera';
 
-type PlaneProps = {
-	appElement: HTMLElement;
+type PureProps = {
 	zIndex: number;
 	audioData: Float32Array;
-	canvas: CanvasContext;
 };
 
-const Plane: React.FC<PlaneProps> = (props) => {
-	const { audioData, canvas, zIndex, appElement } = props;
+const PureView: React.FC<PureProps> = (props) => {
+	const { audioData, zIndex } = props;
+
+	const { appElement } = useContext(Contexts.App.Context);
+	const { canvas } = useContext(Contexts.Canvas.Context);
 
 	const mesh = useRef<Mesh>();
 
@@ -24,12 +25,15 @@ const Plane: React.FC<PlaneProps> = (props) => {
 	const texture = useMemo(() => new DataTexture(viewData, width, height, RGBFormat), [viewData]);
 
 	useFrame(() => {
+		if (!appElement) return;
 		const backgroundColor = getColor(appElement, '--color__contentBg') as Color;
 		const contentColor = getColor(appElement, '--color__content') as Color;
 		drawWave({ audioData, viewData, width, height, backgroundColor, contentColor });
 
 		texture.needsUpdate = true;
 	});
+
+	if (!canvas) return null;
 
 	return (
 		<mesh ref={mesh} position={[0, 0, zIndex]}>
@@ -45,28 +49,11 @@ export type Props = {
 
 export const View: React.FC<Props> = (props) => {
 	const { audioData } = props;
-	const { appElement, theme } = useContext(Contexts.App.Context);
-
-	const [color, setColor] = useState<Color>(new Color(0, 0, 0));
-	const [canvas, setCanvas] = useState<CanvasContext>();
-
-	useEffect(() => {
-		if (!theme) return;
-		if (!appElement) return;
-		const c = getColor(appElement, '--color__contentBg');
-		setColor(c || new Color(0, 0, 0));
-	}, [theme, appElement]);
-
-	useEffect(() => {
-		if (!canvas) return;
-		canvas.gl.setClearColor(color);
-	}, [color, canvas]);
 
 	return (
-		<Canvas onCreated={setCanvas} colorManagement={false}>
-			<Camera position={[0, 0, 0.1]} />
-			{canvas && appElement
-				&& <Plane appElement={appElement} canvas={canvas} zIndex={0} audioData={audioData} />}
-		</Canvas>
+		<Canvas.View>
+			<Camera.View position={[0, 0, 0.1]} />
+			<PureView zIndex={0} audioData={audioData} />
+		</Canvas.View>
 	);
 };

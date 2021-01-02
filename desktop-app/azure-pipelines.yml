@@ -3,7 +3,6 @@ trigger:
     include:
     - develop
     - release/v*
-    - feature/*
   paths:
     include:
     - 'desktop-app/*'
