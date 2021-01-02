@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef, useContext, useMemo } from 'react';
 import { Color, RGBFormat, DataTexture, Mesh } from 'three';
 import { useFrame } from 'react-three-fiber';
 import { drawFrequency } from './model';
@@ -8,11 +8,11 @@ import { getColor } from '../getColor';
 
 type PureProps = {
 	zIndex: number;
-	analyserNode: AnalyserNode;
+	mediaStream: MediaStream;
 };
 
 const PureView: React.FC<PureProps> = (props) => {
-	const { analyserNode, zIndex } = props;
+	const { mediaStream, zIndex } = props;
 
 	const { appElement } = useContext(Contexts.App.Context);
 	const { canvas } = useContext(Contexts.Canvas.Context);
@@ -22,11 +22,21 @@ const PureView: React.FC<PureProps> = (props) => {
 	const width = 100;
 	const height = 100;
 	const viewData = new Uint8Array(3 * width * height);
-	const recorderData = new Uint8Array(analyserNode.frequencyBinCount);
 	const texture = new DataTexture(viewData, width, height, RGBFormat);
+
+	const [analyserNode, recorderData] = useMemo(() => {
+		const audioContext = new AudioContext();
+		const source = audioContext.createMediaStreamSource(mediaStream);
+		const analyserNodeR = audioContext.createAnalyser();
+		analyserNodeR.fftSize = 2048;
+		source.connect(analyserNodeR);
+		const recorderDataR = new Uint8Array(analyserNodeR.frequencyBinCount);
+		return [analyserNodeR, recorderDataR];
+	}, [mediaStream]);
 
 	useFrame(() => {
 		if (!appElement) return;
+		if (!analyserNode) return;
 		analyserNode.getByteFrequencyData(recorderData);
 		const backgroundColor = getColor(appElement, '--color__contentBg') as Color;
 		const contentColor = getColor(appElement, '--color__content') as Color;
@@ -46,15 +56,16 @@ const PureView: React.FC<PureProps> = (props) => {
 };
 
 export type Props = {
-	analyserNode: AnalyserNode;
+	mediaStream: MediaStream;
 };
 
 export const View: React.FC<Props> = (props) => {
-	const { analyserNode } = props;
+	const { mediaStream } = props;
+
 	return (
 		<Canvas.View>
 			<Camera.View position={[0, 0, 0.1]} />
-			<PureView zIndex={0} analyserNode={analyserNode} />
+			<PureView zIndex={0} mediaStream={mediaStream} />
 		</Canvas.View>
 	);
 };

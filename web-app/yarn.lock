@@ -140,6 +140,11 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/file-saver@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/@types/file-saver/-/file-saver-2.0.1.tgz#e18eb8b069e442f7b956d313f4fadd3ef887354e"
+  integrity sha512-g1QUuhYVVAamfCifK7oB7G3aIl4BbOyzDOqVyUfEr4tfBKrXfeH+M+Tg7HKCXSrbzxYdhyCP7z9WbKo0R2hBCw==
+
 "@types/html-minifier-terser@^5.0.0":
   version "5.1.1"
   resolved "https://registry.npmjs.org/@types/html-minifier-terser/-/html-minifier-terser-5.1.1.tgz#3c9ee980f1a10d6021ae6632ca3e79ca2ec4fb50"
@@ -214,6 +219,11 @@
   dependencies:
     "@types/mime" "*"
     "@types/node" "*"
+
+"@types/uuid@^8.3.0":
+  version "8.3.0"
+  resolved "https://registry.npmjs.org/@types/uuid/-/uuid-8.3.0.tgz#215c231dff736d5ba92410e6d602050cce7e273f"
+  integrity sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
 
 "@typescript-eslint/eslint-plugin@^4.11.1":
   version "4.11.1"
@@ -1310,10 +1320,10 @@ eslint-config-airbnb@^18.2.1:
     object.assign "^4.1.2"
     object.entries "^1.1.2"
 
-eslint-config-musetric@0.0.22:
-  version "0.0.22"
-  resolved "https://registry.npmjs.org/eslint-config-musetric/-/eslint-config-musetric-0.0.22.tgz#e5ec4523122cb896a8fcec6983ecbc3ab94efbed"
-  integrity sha512-M4ft75aR+a9gOl8B+naf+4nCigCOxZ9Q8deQj3TOjYDNOmBAEOi9YHLXykxmCICGOqhFIQAy24AdIlmHoOwTZg==
+eslint-config-musetric@0.0.23:
+  version "0.0.23"
+  resolved "https://registry.npmjs.org/eslint-config-musetric/-/eslint-config-musetric-0.0.23.tgz#84febc8e3cd5440d3c125e024bb73891e7b90bbb"
+  integrity sha512-6EjzpHcybyZlqz9HWAPRd3f72Ck/zdpL6CviWvAydTjDUZFSJDU6N1EFgK0YJl7A4R7jiotkAppUg77Q8hwfXA==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.11.1"
     "@typescript-eslint/parser" "^4.11.1"
@@ -1616,6 +1626,11 @@ file-entry-cache@^6.0.0:
   integrity sha512-fqoO76jZ3ZnYrXLDRxBR1YvOvc0k844kcOg40bgsPrE25LAb/PDqTY+ho64Xh2c8ZXgIKldchCFHczG2UVRcWA==
   dependencies:
     flat-cache "^3.0.4"
+
+file-saver@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.npmjs.org/file-saver/-/file-saver-2.0.5.tgz#d61cfe2ce059f414d899e9dd6d4107ee25670c38"
+  integrity sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==
 
 fill-range@^7.0.1:
   version "7.0.1"
@@ -1950,11 +1965,6 @@ inherits@2.0.3:
   version "2.0.3"
   resolved "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
   integrity sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4=
-
-inline-worker@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/inline-worker/-/inline-worker-1.1.0.tgz#55e96f54915a642b00872a2daa6fe832b424c98d"
-  integrity sha1-VelvVJFaZCsAhyotqm/oMrQkyY0=
 
 internal-slot@^1.0.2:
   version "1.0.2"
@@ -2361,24 +2371,27 @@ ms@2.1.2:
   resolved "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-musetric@0.0.8:
-  version "0.0.8"
-  resolved "https://registry.npmjs.org/musetric/-/musetric-0.0.8.tgz#782d8417f81597902c1ce4fb60bbaeb337fbcf2c"
-  integrity sha512-cz0gaSWXoM5G5va/gU5MD2Q0aVwL6g63yAiwbhzCbAzm/16SCVUG2FSpnZDn3XpS0LR7G0v3TR+2ORGZDQjXAQ==
+musetric@0.0.9-dev.535:
+  version "0.0.9-dev.535"
+  resolved "https://registry.npmjs.org/musetric/-/musetric-0.0.9-dev.535.tgz#a9939a53cc9676dda59ae7f9330dd40d917a9a93"
+  integrity sha512-wQA/CmVUJp7gr8nNCyXQ4VVauEnFUE1n9gZKyOv1eOX4o7qAxG0Iv7d14D0XG538ByxXb40v62tnht6GIZhWXA==
   dependencies:
     "@types/dom-mediacapture-record" "1.0.7"
+    "@types/file-saver" "^2.0.1"
     "@types/react" "17.0.0"
     "@types/react-dom" "17.0.0"
     "@types/react-reconciler" "0.18.0"
+    "@types/uuid" "^8.3.0"
+    file-saver "^2.0.5"
     i18next "19.8.4"
     immer "8.0.0"
-    inline-worker "1.1.0"
     react "17.0.1"
     react-dom "17.0.1"
     react-i18next "11.8.5"
     react-three-fiber "5.3.10"
     three "0.124.0"
     typescript "4.1.3"
+    uuid "^8.3.2"
 
 nanoid@^3.1.20:
   version "3.1.20"
@@ -3568,6 +3581,11 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
+
+uuid@^8.3.2:
+  version "8.3.2"
+  resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 v8-compile-cache@^2.0.3, v8-compile-cache@^2.2.0:
   version "2.2.0"

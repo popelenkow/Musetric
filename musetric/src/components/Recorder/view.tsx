@@ -1,7 +1,64 @@
-import React, { useState } from 'react';
-import { Recorder } from './recorder';
-import { Model } from './model';
-import { RecorderView } from './ModelView';
+/* eslint-disable jsx-a11y/media-has-caption */
+import React, { useMemo, useState } from 'react';
+import { saveAs } from 'file-saver';
+import { Model, createModel } from './model';
+import { FrequencyGraph, WaveGraph } from '..';
+
+export type RecorderProps = {
+	model: Model;
+	drop: () => void;
+};
+
+export const RecorderView: React.FC<RecorderProps> = (props) => {
+	const { model, drop } = props;
+	const { mediaStream, recorder } = model;
+
+	const [isRecording, setIsRecording] = useState<boolean>(false);
+	const [audioData, setAudioData] = useState<Float32Array>();
+	const [blob, setBlob] = useState<Blob>();
+	const url = useMemo(() => (blob ? URL.createObjectURL(blob) : undefined), [blob]);
+
+	const saveAudio = () => {
+		if (!blob) return;
+		saveAs(blob, 'myRecording.wav');
+	};
+
+	const start = () => {
+		setBlob(undefined);
+		recorder.start();
+		setIsRecording(true);
+	};
+
+	const stop = async () => {
+		recorder.stop();
+		const buffers = await recorder.getBuffer();
+		setAudioData(buffers[0]);
+		const b = await recorder.exportWav(undefined);
+		setBlob(b);
+		// recorder.clear();
+		setIsRecording(false);
+	};
+
+	return (
+		<div className='Recorder'>
+			<div id='controls' className='Recorder__Header'>
+				{!isRecording && <button type='button' className='Button' onClick={start}>start</button>}
+				{isRecording && <button type='button' className='Button' onClick={stop}>stop</button>}
+				<button type='button' className='Button' onClick={saveAudio}>save</button>
+				<button type='button' className='Button' onClick={drop}>drop</button>
+			</div>
+			<div className='Recorder__Content'>
+				{url && <audio className='recorder-item' key={url} controls src={url} />}
+			</div>
+			<div className='Recorder__Content'>
+				{audioData && <WaveGraph.View audioData={audioData} />}
+			</div>
+			<div className='Recorder__Content'>
+				<FrequencyGraph.View mediaStream={mediaStream} />
+			</div>
+		</div>
+	);
+};
 
 export type Props = {
 };
@@ -10,24 +67,8 @@ export const View: React.FC<Props> = () => {
 	const [model, setModel] = useState<Model>();
 
 	const init = async () => {
-		const audioContext = new AudioContext();
-		const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-		const inputPoint = audioContext.createGain();
-
-		const realAudioInput = audioContext.createMediaStreamSource(stream);
-		realAudioInput.connect(inputPoint);
-
-		const analyserNode = audioContext.createAnalyser();
-		analyserNode.fftSize = 2048;
-		inputPoint.connect(analyserNode);
-
-		const recorder = new Recorder(inputPoint);
-
-		const zeroGain = audioContext.createGain();
-		zeroGain.gain.value = 0.0;
-		inputPoint.connect(zeroGain);
-		zeroGain.connect(audioContext.destination);
-		setModel({ recorder, analyserNode, audioContext });
+		const value = await createModel();
+		setModel(value);
 	};
 
 	return (

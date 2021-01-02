@@ -5,7 +5,4 @@ module.exports = {
 	parserOptions: {
 		tsconfigRootDir: __dirname,
 	},
-	rules: {
-		'no-console': 0,
-	},
 };
