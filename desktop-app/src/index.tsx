@@ -2,9 +2,9 @@ import './index.scss';
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { Types, Components, Contexts } from 'musetric';
-import { ResizeFrame, WindowsTitlebar } from './components';
-import { initLocales } from './locales';
-import { ipc } from './ipc';
+import { ResizeFrame, WindowsTitlebar } from './Components';
+import { initLocales } from './Locales';
+import { Ipc } from './Ipc';
 
 /*
 const isDev = process.env.NODE_ENV === 'development';
@@ -58,8 +58,8 @@ const root = (
 			</Container.View>
 			<App.Consumer>
 				{({ theme, locale }) => {
-					theme && ipc.app.invoke({ type: 'theme', value: theme });
-					locale && ipc.app.invoke({ type: 'locale', value: locale });
+					theme && Ipc.app.invoke({ type: 'theme', value: theme });
+					locale && Ipc.app.invoke({ type: 'locale', value: locale });
 					return <div />;
 				}}
 			</App.Consumer>
