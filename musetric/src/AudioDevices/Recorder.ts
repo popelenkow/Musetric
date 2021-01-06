@@ -1,52 +1,38 @@
 import { v4 as uuid } from 'uuid';
 import * as Types from './Recorder.Types';
-import { createRecorderWorker } from './Recorder.Worker';
+import { createWorklet } from './Recorder.Worklet';
 
 export type Recorder = {
 	start: () => void;
 	stop: () => void;
 	clear: () => void;
 	getBuffer: () => Promise<Types.GetBufferResult>;
-	exportWav: (mimeType?: string) => Promise<Types.ExportWavResult>;
 };
 
-export const createRecorder = (source: GainNode, cfg?: Types.Config): Recorder => {
-	const worker = createRecorderWorker();
-
+// eslint-disable-next-line max-len
+export const createRecorder = async (source: MediaStreamAudioSourceNode, cfg?: Types.Config): Promise<Recorder> => {
 	let config: Types.Config = {
-		bufferLen: 4096,
+		bufferLen: 128,
 		numChannels: 2,
 		mimeType: 'audio/wav',
 	};
 	config = { ...config, ...cfg };
 
-	let recording = false;
-
-	const callbacks: Record<string, Types.ResultCallback> = {};
-
 	const { context } = source;
 	const { bufferLen, numChannels } = config;
 
-	const node = context.createScriptProcessor(bufferLen, numChannels, numChannels);
+	// eslint-disable-next-line max-len
+	const worklet = await createWorklet(context, { channelCount: numChannels, bufferSize: bufferLen });
+	source.connect(worklet);
+	// worklet.connect(context.destination);
 
-	node.onaudioprocess = (e) => {
-		if (!recording) return;
-
-		const buffer = [];
-		for (let channel = 0; channel < config.numChannels; channel++) {
-			buffer.push(e.inputBuffer.getChannelData(channel));
-		}
-		worker.postMessage({
-			id: uuid(),
-			type: 'record',
-			options: { inputBuffer: buffer },
-		});
+	const postMessage: (message: Types.InMessage) => void = (message) => {
+		worklet.port.postMessage(message);
 	};
 
-	source.connect(node);
-	node.connect(context.destination);
+	const callbacks: Record<string, Types.ResultCallback> = {};
 
-	worker.postMessage({
+	postMessage({
 		id: uuid(),
 		type: 'init',
 		options: {
@@ -55,23 +41,23 @@ export const createRecorder = (source: GainNode, cfg?: Types.Config): Recorder =
 		},
 	});
 
-	worker.onmessage = (e) => {
+	worklet.port.onmessage = (e: MessageEvent<Types.OutMessage>) => {
 		const cb = callbacks[e.data.id];
 		delete callbacks[e.data.id];
 		cb(e.data.result);
 	};
 
 	const start: Recorder['start'] = () => {
-		recording = true;
+		postMessage({ id: uuid(), type: 'start' });
 	};
 
 	const stop: Recorder['stop'] = () => {
-		recording = false;
+		postMessage({ id: uuid(), type: 'stop' });
 	};
 
 	const clear: Recorder['clear'] = () => {
 		const id = uuid();
-		worker.postMessage({ id, type: 'clear' });
+		postMessage({ id, type: 'clear' });
 	};
 
 	const getBuffer: Recorder['getBuffer'] = () => {
@@ -81,24 +67,7 @@ export const createRecorder = (source: GainNode, cfg?: Types.Config): Recorder =
 				resolve(result);
 			};
 			callbacks[id] = cb;
-			worker.postMessage({ id, type: 'getBuffer' });
-		});
-	};
-
-	const exportWav: Recorder['exportWav'] = (mimeTypeRaw) => {
-		return new Promise((resolve) => {
-			const id = uuid();
-			const mimeType = mimeTypeRaw || config.mimeType;
-			const cb: Types.ResultCallback<Types.ExportWavResult> = (result) => {
-				resolve(result);
-			};
-			callbacks[id] = cb;
-
-			worker.postMessage({
-				id,
-				type: 'exportWav',
-				options: { mimeType },
-			});
+			postMessage({ id, type: 'getBuffer' });
 		});
 	};
 
@@ -107,7 +76,6 @@ export const createRecorder = (source: GainNode, cfg?: Types.Config): Recorder =
 		stop,
 		clear,
 		getBuffer,
-		exportWav,
 	};
 	return result;
 };
