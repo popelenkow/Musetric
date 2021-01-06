@@ -1,7 +1,7 @@
 {
 	"name": "eslint-config-musetric",
 	"description": "Musetric's ESLint config, following our styleguide",
-	"version": "0.0.22",
+	"version": "0.0.23",
 	"license": "MIT",
 	"main": ".eslintrc.js",
 	"homepage": "https://github.com/popelenkow/Musetric",
