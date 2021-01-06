@@ -2,7 +2,7 @@ import './index.scss';
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { Types, Components, Contexts } from 'musetric';
-import { initLocales } from './locales';
+import { initLocales } from './Locales';
 
 const appElement = document.getElementById('app');
 if (!appElement) throw new Error('App not found');
