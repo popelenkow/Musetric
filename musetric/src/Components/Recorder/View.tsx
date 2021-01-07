@@ -11,9 +11,10 @@ export type RecorderProps = {
 
 export const RecorderView: React.FC<RecorderProps> = (props) => {
 	const { model, drop } = props;
-	const { mediaStream, recorder } = model;
+	const { mediaStream, audioContext, recorder, wavCoder } = model;
 
 	const [isRecording, setIsRecording] = useState<boolean>(false);
+
 	const [audioData, setAudioData] = useState<Float32Array>();
 	const [blob, setBlob] = useState<Blob>();
 	const url = useMemo(() => (blob ? URL.createObjectURL(blob) : undefined), [blob]);
@@ -26,6 +27,7 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 	const start = () => {
 		setBlob(undefined);
 		recorder.start();
+
 		setIsRecording(true);
 	};
 
@@ -33,8 +35,10 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 		recorder.stop();
 		const buffers = await recorder.getBuffer();
 		setAudioData(buffers[0]);
-		const b = await recorder.exportWav(undefined);
+		const { sampleRate } = audioContext;
+		const b = await wavCoder.encode({ buffers, sampleRate });
 		setBlob(b);
+
 		// recorder.clear();
 		setIsRecording(false);
 	};

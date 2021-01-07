@@ -2371,10 +2371,10 @@ ms@2.1.2:
   resolved "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-musetric@0.0.9-dev.564:
-  version "0.0.9-dev.564"
-  resolved "https://registry.npmjs.org/musetric/-/musetric-0.0.9-dev.564.tgz#622880a7bc84e347255127b853f0377819307fd6"
-  integrity sha512-N9NTOnfQDjgGhwdu9tv/9aLWYZu6FIiEtlMAmRN2mlX9gpXjHEGjtw43QjOGZ4uLEJ/3hMP5AHqCba3MhVWvbw==
+musetric@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.npmjs.org/musetric/-/musetric-0.0.9.tgz#a6cf5b76c8945e42c7c55ddf54a6064c14e15617"
+  integrity sha512-8mmZWgMmHXBO96SfThAt3ABhkysUOOXsdIx555YiYqEG0vilZKaMjzhbzGmDgfSwwXdhQF1Z+wjYKJV0j1ndJg==
   dependencies:
     "@types/dom-mediacapture-record" "1.0.7"
     "@types/file-saver" "^2.0.1"

@@ -5,29 +5,17 @@ export type ResultCallback<T = any> = (result: T) => void;
 
 export type MessageId = { id: string };
 
-export type InitOptions = {
+export type EncodeOptions = {
 	sampleRate: number;
-	numChannels: number;
+	buffers: Float32Array[]
 };
-
 export type InMessage = MessageId & (
-	| { type: 'init', options: InitOptions }
-	| { type: 'start', options?: void }
-	| { type: 'stop', options?: void }
-	| { type: 'clear', options?: void }
-	| { type: 'getBuffer', options?: void }
+	| { type: 'encode', options: EncodeOptions }
 );
 export type InMessageType = InMessage['type'];
 
-export type GetBufferResult = Float32Array[];
-
+export type EncodeResult = Blob;
 export type OutMessage = MessageId & (
-	| { type: 'getBuffer', result: GetBufferResult }
+	| { type: 'encode', result: EncodeResult }
 );
 export type OutMessageType = OutMessage['type'];
-
-export type Config = {
-	bufferLen?: number;
-	numChannels: number;
-	mimeType?: string;
-};

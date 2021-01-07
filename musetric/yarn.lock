@@ -887,10 +887,10 @@ eslint-config-airbnb@^18.2.1:
     object.assign "^4.1.2"
     object.entries "^1.1.2"
 
-eslint-config-musetric@0.0.22:
-  version "0.0.22"
-  resolved "https://registry.npmjs.org/eslint-config-musetric/-/eslint-config-musetric-0.0.22.tgz#e5ec4523122cb896a8fcec6983ecbc3ab94efbed"
-  integrity sha512-M4ft75aR+a9gOl8B+naf+4nCigCOxZ9Q8deQj3TOjYDNOmBAEOi9YHLXykxmCICGOqhFIQAy24AdIlmHoOwTZg==
+eslint-config-musetric@0.0.23:
+  version "0.0.23"
+  resolved "https://registry.npmjs.org/eslint-config-musetric/-/eslint-config-musetric-0.0.23.tgz#84febc8e3cd5440d3c125e024bb73891e7b90bbb"
+  integrity sha512-6EjzpHcybyZlqz9HWAPRd3f72Ck/zdpL6CviWvAydTjDUZFSJDU6N1EFgK0YJl7A4R7jiotkAppUg77Q8hwfXA==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.11.1"
     "@typescript-eslint/parser" "^4.11.1"
