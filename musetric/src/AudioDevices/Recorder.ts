@@ -7,22 +7,22 @@ export type Recorder = {
 	stop: () => void;
 	clear: () => void;
 	getBuffer: () => Promise<Types.GetBufferResult>;
+	subscribe: (subscription: Types.ResultCallback<Types.SubscriptionResult>) => void;
+	unsubscribe: () => void;
 };
 
 // eslint-disable-next-line max-len
 export const createRecorder = async (source: MediaStreamAudioSourceNode, cfg?: Types.Config): Promise<Recorder> => {
 	let config: Types.Config = {
-		bufferLen: 128,
-		numChannels: 2,
-		mimeType: 'audio/wav',
+		channelCount: 1,
 	};
 	config = { ...config, ...cfg };
 
 	const { context } = source;
-	const { bufferLen, numChannels } = config;
+	const { channelCount } = config;
 
 	// eslint-disable-next-line max-len
-	const worklet = await createWorklet(context, { channelCount: numChannels, bufferSize: bufferLen });
+	const worklet = await createWorklet(context, { channelCount });
 	source.connect(worklet);
 	// worklet.connect(context.destination);
 
@@ -31,17 +31,26 @@ export const createRecorder = async (source: MediaStreamAudioSourceNode, cfg?: T
 	};
 
 	const callbacks: Record<string, Types.ResultCallback> = {};
+	let subscription: Types.ResultCallback<Types.SubscriptionResult> | undefined;
 
 	postMessage({
 		id: uuid(),
 		type: 'init',
 		options: {
-			sampleRate: context.sampleRate,
-			numChannels: config.numChannels,
+			channelCount,
 		},
 	});
 
 	worklet.port.onmessage = (e: MessageEvent<Types.OutMessage>) => {
+		if (e.data.type === 'subscription') {
+			if (!subscription) {
+				console.error('Recorder subscription is empty');
+				return;
+			}
+			subscription(e.data.result);
+			e.data.result;
+			return;
+		}
 		const cb = callbacks[e.data.id];
 		delete callbacks[e.data.id];
 		cb(e.data.result);
@@ -71,11 +80,23 @@ export const createRecorder = async (source: MediaStreamAudioSourceNode, cfg?: T
 		});
 	};
 
+	const subscribe = (sub: Types.ResultCallback<Types.SubscriptionResult>) => {
+		subscription = sub;
+		postMessage({ id: uuid(), type: 'subscribe' });
+	};
+
+	const unsubscribe = () => {
+		postMessage({ id: uuid(), type: 'unsubscribe' });
+		subscription = undefined;
+	};
+
 	const result: Recorder = {
 		start,
 		stop,
 		clear,
 		getBuffer,
+		subscribe,
+		unsubscribe,
 	};
 	return result;
 };

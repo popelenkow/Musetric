@@ -1,11 +1,9 @@
 import * as Types from './Recorder.Types';
 
 /*
+https://github.com/microsoft/TypeScript/issues/28308
 https://stackoverflow.com/questions/61089091/is-it-possible-to-get-raw-values-of-audio-data-using-mediarecorder
 https://www.html5rocks.com/en/tutorials/getusermedia/intro/#toc-webaudio-api
-https://github.com/microsoft/TypeScript/issues/28308
-https://bitbucket.org/alvaro_maceda/notoono/src/master/src/audio-meter.js
-https://gist.github.com/flpvsk/047140b31c968001dc563998f7440cc1
 */
 export interface AudioWorkletProcessorType {
 	readonly port: MessagePort;
@@ -25,19 +23,23 @@ declare function registerProcessor(name: string, processorCtor: ProcessorCtor): 
 
 type Api = Record<Types.InMessageType, Types.MessageHandler>;
 type State = {
-	numChannels: number;
-	sampleRate: number;
-	recLength: number;
-	recBuffers: Float32Array[][];
+	channelCount: number;
+	recordLength: number;
+	recordBuffers: Float32Array[][];
 	isRecording: boolean;
+	isSubscribed: boolean;
 };
 export function workletFunction(): void {
-	class NewRecorderProcessor extends AudioWorkletProcessor {
+	class RecorderProcessor extends AudioWorkletProcessor {
 		public static parameterDescriptors = [];
 
 		api: Api;
 
 		state: State;
+
+		postMessage = (message: Types.OutMessage) => {
+			this.port.postMessage(message);
+		};
 
 		constructor(options?: AudioWorkletNodeOptions) {
 			super(options);
@@ -51,23 +53,28 @@ export function workletFunction(): void {
 			};
 		}
 
-		process([input]: Float32Array[][]): boolean {
-			if (this.state.isRecording) {
-				for (let channel = 0; channel < this.state.numChannels; channel++) {
-					this.state.recBuffers[channel].push(input[channel].map(x => x));
+		process([inputRaw]: Float32Array[][]): boolean {
+			const { isRecording, isSubscribed } = this.state;
+			if (isRecording) {
+				const input = inputRaw.map(x => x.map(y => y));
+				for (let channel = 0; channel < this.state.channelCount; channel++) {
+					this.state.recordBuffers[channel].push(input[channel]);
 				}
-				this.state.recLength += input[0].length;
+				this.state.recordLength += input[0].length;
+				if (isSubscribed) {
+					this.postMessage({ id: '', type: 'subscription', result: input });
+				}
 			}
 			return true;
 		}
 
 		createApi = (): [Api, State] => {
-			const mergeBuffers = (recBuffers: Float32Array[], recLength: number) => {
-				const result = new Float32Array(recLength);
+			const mergeBuffers = (recordBuffers: Float32Array[], recordLength: number) => {
+				const result = new Float32Array(recordLength);
 				let offset = 0;
-				for (let i = 0; i < recBuffers.length; i++) {
-					result.set(recBuffers[i], offset);
-					offset += recBuffers[i].length;
+				for (let i = 0; i < recordBuffers.length; i++) {
+					result.set(recordBuffers[i], offset);
+					offset += recordBuffers[i].length;
 				}
 				return result;
 			};
@@ -82,19 +89,18 @@ export function workletFunction(): void {
 
 			{
 				const state: State = {
-					numChannels: 0,
-					sampleRate: 0,
-					recLength: 0,
-					recBuffers: [],
+					channelCount: 0,
+					recordLength: 0,
+					recordBuffers: [],
 					isRecording: false,
+					isSubscribed: false,
 				};
 
 				const init: Types.MessageHandler<Types.InitOptions> = (_id, options) => {
-					state.sampleRate = options.sampleRate;
-					state.numChannels = options.numChannels;
-					state.recLength = 0;
-					state.recBuffers = createArray(state.numChannels);
-					// state.recBuffers[0].push(new Float32Array([1, 2]));
+					state.channelCount = options.channelCount;
+					state.recordLength = 0;
+					state.recordBuffers = createArray(state.channelCount);
+					state.isRecording = false;
 				};
 
 				const start: Types.MessageHandler<void> = () => {
@@ -106,16 +112,24 @@ export function workletFunction(): void {
 				};
 
 				const clear: Types.MessageHandler<void> = () => {
-					state.recLength = 0;
-					state.recBuffers = createArray(state.numChannels);
+					state.recordLength = 0;
+					state.recordBuffers = createArray(state.channelCount);
 				};
 
 				const getBuffer: Types.MessageHandler<void> = (id) => {
 					const buffers = [];
-					for (let channel = 0; channel < state.numChannels; channel++) {
-						buffers.push(mergeBuffers(state.recBuffers[channel], state.recLength));
+					for (let channel = 0; channel < state.channelCount; channel++) {
+						buffers.push(mergeBuffers(state.recordBuffers[channel], state.recordLength));
 					}
-					this.port.postMessage({ id, type: 'getBuffer', result: buffers });
+					this.postMessage({ id, type: 'getBuffer', result: buffers });
+				};
+
+				const subscribe: Types.MessageHandler<void> = () => {
+					state.isSubscribed = true;
+				};
+
+				const unsubscribe: Types.MessageHandler<void> = () => {
+					state.isSubscribed = false;
 				};
 
 				const api: Api = {
@@ -124,25 +138,26 @@ export function workletFunction(): void {
 					start,
 					stop,
 					getBuffer,
+					subscribe,
+					unsubscribe,
 				};
 				return [api, state];
 			}
 		};
 	}
 
-	registerProcessor('recorder-worklet', NewRecorderProcessor);
+	registerProcessor('recorder-worklet', RecorderProcessor);
 }
 
 export type WorkletOptions = {
 	channelCount: number;
-	bufferSize?: number;
 };
 
 // eslint-disable-next-line max-len
 export const createWorklet = async (context: BaseAudioContext, options: WorkletOptions): Promise<AudioWorkletNode> => {
-	const { channelCount, bufferSize } = options;
+	const { channelCount } = options;
 	const workletUrl = URL.createObjectURL(new Blob(['(', workletFunction.toString(), ')()'], { type: 'application/javascript' }));
 	await context.audioWorklet.addModule(workletUrl);
-	const worklet = new AudioWorkletNode(context, 'recorder-worklet', { channelCount, numberOfOutputs: 0, numberOfInputs: 1, processorOptions: { bufferSize } });
+	const worklet = new AudioWorkletNode(context, 'recorder-worklet', { channelCount, numberOfOutputs: 0, numberOfInputs: 1 });
 	return worklet;
 };

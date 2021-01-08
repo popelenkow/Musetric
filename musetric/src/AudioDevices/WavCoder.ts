@@ -11,12 +11,11 @@ export const createWavCoder = (): WavCoder => {
 
 	const callbacks: Record<string, Types.ResultCallback> = {};
 
-	const onmessage: ((this: Worker, ev: MessageEvent<Types.OutMessage>) => void) | null = (e) => {
+	worker.onmessage = (e: MessageEvent<Types.OutMessage>) => {
 		const cb = callbacks[e.data.id];
 		delete callbacks[e.data.id];
 		cb(e.data.result);
 	};
-	worker.onmessage = onmessage;
 
 	const encode: WavCoder['encode'] = (options) => {
 		return new Promise((resolve) => {
