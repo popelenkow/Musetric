@@ -1,8 +1,18 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { saveAs } from 'file-saver';
 import { Model, createModel } from './Model';
 import { FrequencyGraph, WaveGraph } from '..';
+
+const mergeBuffers = (recordBuffers: Float32Array[], recordLength: number) => {
+	const result = new Float32Array(recordLength);
+	let offset = 0;
+	for (let i = 0; i < recordBuffers.length; i++) {
+		result.set(recordBuffers[i], offset);
+		offset += recordBuffers[i].length;
+	}
+	return result;
+};
 
 export type RecorderProps = {
 	model: Model;
@@ -19,6 +29,18 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 	const [blob, setBlob] = useState<Blob>();
 	const url = useMemo(() => (blob ? URL.createObjectURL(blob) : undefined), [blob]);
 
+	useEffect(() => {
+		const arr: Float32Array[] = [];
+		let len = 0;
+		recorder.subscribe(buffers => {
+			arr.push(buffers[0]);
+			len += buffers[0].length;
+			if (arr.length % 20 === 0) {
+				const result = mergeBuffers(arr, len);
+				setAudioData(result);
+			}
+		});
+	}, [recorder]);
 	const saveAudio = () => {
 		if (!blob) return;
 		saveAs(blob, 'myRecording.wav');

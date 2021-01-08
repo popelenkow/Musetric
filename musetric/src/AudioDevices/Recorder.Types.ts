@@ -6,8 +6,7 @@ export type ResultCallback<T = any> = (result: T) => void;
 export type MessageId = { id: string };
 
 export type InitOptions = {
-	sampleRate: number;
-	numChannels: number;
+	channelCount: number;
 };
 
 export type InMessage = MessageId & (
@@ -16,18 +15,20 @@ export type InMessage = MessageId & (
 	| { type: 'stop', options?: void }
 	| { type: 'clear', options?: void }
 	| { type: 'getBuffer', options?: void }
+	| { type: 'subscribe', options?: void }
+	| { type: 'unsubscribe', options?: void }
 );
 export type InMessageType = InMessage['type'];
 
 export type GetBufferResult = Float32Array[];
+export type SubscriptionResult = Float32Array[];
 
 export type OutMessage = MessageId & (
 	| { type: 'getBuffer', result: GetBufferResult }
+	| { type: 'subscription', result: SubscriptionResult }
 );
 export type OutMessageType = OutMessage['type'];
 
 export type Config = {
-	bufferLen?: number;
-	numChannels: number;
-	mimeType?: string;
+	channelCount: number;
 };

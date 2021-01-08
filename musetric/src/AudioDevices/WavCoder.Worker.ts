@@ -2,10 +2,13 @@ import * as Types from './WavCoder.Types';
 
 export function workerFunction(self: Worker): void {
 	const postMessage: (message: Types.OutMessage) => void = (message) => self.postMessage(message);
-	const floatTo16BitPCM = (view: DataView, offset: number, input: Float32Array) => {
-		for (let i = 0; i < input.length; i++) {
-			const s = Math.max(-1, Math.min(1, input[i]));
-			view.setInt16(offset + 2 * i, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+
+	const floatTo16BitPCM = (view: DataView, offset: number, buffer: Float32Array) => {
+		let arrayOffset = 0;
+		for (let i = 0; i < buffer.length; i++) {
+			const s = Math.max(-1, Math.min(1, buffer[i]));
+			view.setInt16(offset + arrayOffset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+			arrayOffset += 2;
 		}
 	};
 
@@ -51,16 +54,18 @@ export function workerFunction(self: Worker): void {
 		return view;
 	};
 
-	const interleave = (inputL: Float32Array, inputR: Float32Array): Float32Array => {
-		const length = inputL.length + inputR.length;
+	const interleave = (bufferL: Float32Array, bufferR: Float32Array): Float32Array => {
+		const length = bufferL.length + bufferR.length;
 		const result = new Float32Array(length);
 
 		let index = 0;
 		let inputIndex = 0;
 
 		while (index < length) {
-			result[index++] = inputL[inputIndex];
-			result[index++] = inputR[inputIndex];
+			result[index] = bufferL[inputIndex];
+			index++;
+			result[index] = bufferR[inputIndex];
+			index++;
 			inputIndex++;
 		}
 		return result;
@@ -68,11 +73,11 @@ export function workerFunction(self: Worker): void {
 
 	const encode: Types.MessageHandler<Types.EncodeOptions> = (id, options) => {
 		const { sampleRate, buffers } = options;
-		const numChannels = buffers.length;
-		const interleaved = numChannels === 2
+		const channelCount = buffers.length;
+		const interleaved = channelCount === 2
 			? interleave(buffers[0], buffers[1])
 			: buffers[0];
-		const dataView = createDataView(sampleRate, numChannels, interleaved);
+		const dataView = createDataView(sampleRate, channelCount, interleaved);
 		const audioBlob = new Blob([dataView], { type: 'audio/wav' });
 
 		postMessage({ id, type: 'encode', result: audioBlob });
@@ -82,11 +87,10 @@ export function workerFunction(self: Worker): void {
 		encode,
 	};
 
-	const onmessage: ((this: Worker, ev: MessageEvent<Types.InMessage>) => void) | null = (e) => {
+	// eslint-disable-next-line no-param-reassign
+	self.onmessage = (e: MessageEvent<Types.InMessage>) => {
 		api[e.data.type](e.data.id, e.data.options);
 	};
-	// eslint-disable-next-line no-param-reassign
-	self.onmessage = onmessage;
 }
 
 /*
