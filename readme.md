@@ -4,11 +4,13 @@
 
 # <img src="https://user-images.githubusercontent.com/7475599/87945559-1c49ec80-cacb-11ea-8f24-42c0738d1dcd.png" width="26" height="26"> Musetric
 
+<img src="https://user-images.githubusercontent.com/7475599/87945435-ec024e00-caca-11ea-8c82-0bc8920bcb0e.png">
+
+[Musetric demo](https://popelenkow.github.io/Musetric)
+
 Musetric is a desktop application for exploration of sounds. The application supports Windows. There is support for localization and themes. 
 
 At the moment, the application is at the initial stage of development, so can play the game of life and wait for updates :)
-
-<img src="https://user-images.githubusercontent.com/7475599/87945435-ec024e00-caca-11ea-8c82-0bc8920bcb0e.png">
 
 ## Vision
 
