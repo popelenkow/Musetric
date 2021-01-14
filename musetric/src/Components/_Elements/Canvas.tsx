@@ -1,8 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Color } from 'three';
 import { Canvas, CanvasContext } from 'react-three-fiber';
-import { Contexts } from '../..';
-import { getColor } from '../getColor';
+import { Contexts, CanvasHelpers } from '../..';
 
 type PureProps = {
 	canvas?: CanvasContext;
@@ -21,7 +20,7 @@ const PureView : React.FC<PureProps> = (props) => {
 	useEffect(() => {
 		if (!theme) return;
 		if (!appElement) return;
-		const c = getColor(appElement, '--color__contentBg');
+		const c = CanvasHelpers.getColor(appElement, '--color__contentBg');
 		setColor(c || new Color(0, 0, 0));
 	}, [theme, appElement]);
 

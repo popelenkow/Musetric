@@ -1,8 +1,7 @@
 import React, { useRef, useState, useContext, useEffect } from 'react';
 import { Color, Mesh } from 'three';
 import { Canvas, CanvasContext, useFrame } from 'react-three-fiber';
-import { Contexts } from '../..';
-import { getColor } from '../getColor';
+import { Contexts, CanvasHelpers } from '../..';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Box: React.FC<any> = (props) => {
@@ -47,7 +46,7 @@ export const View: React.FC<Props> = () => {
 		if (!theme) return;
 		if (!canvas) return;
 		if (!appElement) return;
-		const c = getColor(appElement, '--color__contentBg');
+		const c = CanvasHelpers.getColor(appElement, '--color__contentBg');
 		canvas.gl.setClearColor(c || new Color(0, 0, 0));
 	}, [theme, canvas, appElement]);
 

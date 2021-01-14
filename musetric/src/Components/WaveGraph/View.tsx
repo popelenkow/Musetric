@@ -1,59 +1,54 @@
-import React, { useRef, useContext, useMemo } from 'react';
-import { Color, RGBFormat, DataTexture, Mesh } from 'three';
-import { useFrame } from 'react-three-fiber';
+/* eslint-disable consistent-return */
+/* eslint-disable max-len */
+import React, { useContext, useMemo, useState, useEffect } from 'react';
+import * as THREE from 'three';
 import { drawWave } from './Model';
-import { Camera, Canvas } from '..';
-import { Contexts } from '../..';
-import { getColor } from '../getColor';
-
-type PureProps = {
-	zIndex: number;
-	audioData: Float32Array;
-};
-
-const PureView: React.FC<PureProps> = (props) => {
-	const { audioData, zIndex } = props;
-
-	const { appElement } = useContext(Contexts.App.Context);
-	const { canvas } = useContext(Contexts.Canvas.Context);
-
-	const mesh = useRef<Mesh>();
-
-	const width = 2000;
-	const height = 1000;
-	const viewData = useMemo(() => new Uint8Array(3 * width * height), []);
-	const texture = useMemo(() => new DataTexture(viewData, width, height, RGBFormat), [viewData]);
-
-	useFrame(() => {
-		if (!appElement) return;
-		const backgroundColor = getColor(appElement, '--color__contentBg') as Color;
-		const contentColor = getColor(appElement, '--color__content') as Color;
-		drawWave({ audioData, viewData, width, height, backgroundColor, contentColor });
-
-		texture.needsUpdate = true;
-	});
-
-	if (!canvas) return null;
-
-	return (
-		<mesh ref={mesh} position={[0, 0, zIndex]}>
-			<planeBufferGeometry args={[canvas.size.width, canvas.size.height]} />
-			<meshBasicMaterial map={texture} />
-		</mesh>
-	);
-};
+import { Contexts, CanvasHelpers } from '../..';
 
 export type Props = {
-	audioData: Float32Array;
+	state: { audioData?: Float32Array };
 };
 
 export const View: React.FC<Props> = (props) => {
-	const { audioData } = props;
+	const { state } = props;
+
+	const { appElement } = useContext(Contexts.App.Context);
+	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
+
+	const width = 2000;
+	const height = 1000;
+	const [ctx, image] = useMemo(() => {
+		if (!canvas) return [];
+		canvas.width = width;
+		canvas.height = height;
+		const tmpCtx = canvas.getContext('2d') as CanvasRenderingContext2D;
+		const tmpImage = tmpCtx.getImageData(0, 0, width, height);
+		return [tmpCtx, tmpImage];
+	}, [canvas]);
+	const fpsMonitor = useMemo(() => CanvasHelpers.createFpsMonitor(), []);
+
+	useEffect(() => {
+		if (!appElement) return;
+		if (!ctx) return;
+		if (!image) return;
+
+		const backgroundColor = CanvasHelpers.getColor(appElement, '--color__contentBg') as THREE.Color;
+		const contentColor = CanvasHelpers.getColor(appElement, '--color__content') as THREE.Color;
+
+		const sub = CanvasHelpers.startAnimation((delta) => {
+			const { audioData } = state;
+			if (!audioData) return;
+
+			fpsMonitor.setDelta(delta);
+			drawWave({ audioData, viewData: image.data, width, height, backgroundColor, contentColor });
+
+			ctx.putImageData(image, 0, 0);
+			fpsMonitor.draw(ctx);
+		});
+		return () => sub.stop();
+	}, [state, appElement, fpsMonitor, ctx, image]);
 
 	return (
-		<Canvas.View>
-			<Camera.View position={[0, 0, 0.1]} />
-			<PureView zIndex={0} audioData={audioData} />
-		</Canvas.View>
+		<canvas className='WaveGraph' ref={setCanvas} width={width} height={height} />
 	);
 };
