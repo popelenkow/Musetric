@@ -1,7 +1,7 @@
 import { Color } from 'three';
 
 export type FrequencyInfo = {
-	viewData: Uint8Array;
+	viewData: Uint8ClampedArray;
 	recorderData: Uint8Array;
 	width: number;
 	height: number;
@@ -22,12 +22,13 @@ export const drawFrequency = (info: FrequencyInfo): void => {
 		magnitude *= 1.0;
 		magnitude /= 255;
 		for (let y = 0; y < height; y++) {
-			const point = (x + (y * width)) * 3;
-			const isDraw = (magnitude * height) > y;
+			const point = (x + (y * width)) * 4;
+			const isDraw = (magnitude * height) > height - y - 1;
 			const color = isDraw ? contentColor : backgroundColor;
 			viewData[point + 0] = color.r * 255;
 			viewData[point + 1] = color.g * 255;
 			viewData[point + 2] = color.b * 255;
+			viewData[point + 3] = 255;
 		}
 	}
 };

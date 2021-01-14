@@ -1,28 +1,18 @@
-import React, { useRef, useContext, useMemo } from 'react';
-import { Color, RGBFormat, DataTexture, Mesh } from 'three';
-import { useFrame } from 'react-three-fiber';
+/* eslint-disable max-len */
+/* eslint-disable consistent-return */
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { drawFrequency } from './Model';
-import { Camera, Canvas } from '..';
-import { Contexts } from '../..';
-import { getColor } from '../getColor';
+import { Contexts, CanvasHelpers } from '../..';
 
-type PureProps = {
-	zIndex: number;
+export type Props = {
 	mediaStream: MediaStream;
 };
 
-const PureView: React.FC<PureProps> = (props) => {
-	const { mediaStream, zIndex } = props;
+export const View: React.FC<Props> = (props) => {
+	const { mediaStream } = props;
 
-	const { appElement } = useContext(Contexts.App.Context);
-	const { canvas } = useContext(Contexts.Canvas.Context);
-
-	const mesh = useRef<Mesh>();
-
-	const width = 100;
-	const height = 100;
-	const viewData = new Uint8Array(3 * width * height);
-	const texture = new DataTexture(viewData, width, height, RGBFormat);
+	const width = 400;
+	const height = 400;
 
 	const [analyserNode, recorderData] = useMemo(() => {
 		const audioContext = new AudioContext();
@@ -34,38 +24,39 @@ const PureView: React.FC<PureProps> = (props) => {
 		return [analyserNodeR, recorderDataR];
 	}, [mediaStream]);
 
-	useFrame(() => {
+	const { appElement } = useContext(Contexts.App.Context);
+	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
+
+	const [ctx, image] = useMemo(() => {
+		if (!canvas) return [];
+		canvas.width = width;
+		canvas.height = height;
+		const tmpCtx = canvas.getContext('2d') as CanvasRenderingContext2D;
+		const tmpImage = tmpCtx.getImageData(0, 0, width, height);
+		return [tmpCtx, tmpImage];
+	}, [canvas]);
+	const fpsMonitor = useMemo(() => CanvasHelpers.createFpsMonitor(), []);
+
+	useEffect(() => {
 		if (!appElement) return;
-		if (!analyserNode) return;
-		analyserNode.getByteFrequencyData(recorderData);
-		const backgroundColor = getColor(appElement, '--color__contentBg') as Color;
-		const contentColor = getColor(appElement, '--color__content') as Color;
-		drawFrequency({ recorderData, viewData, width, height, backgroundColor, contentColor });
+		if (!ctx) return;
+		if (!image) return;
 
-		texture.needsUpdate = true;
-	});
+		const backgroundColor = CanvasHelpers.getColor(appElement, '--color__contentBg') as THREE.Color;
+		const contentColor = CanvasHelpers.getColor(appElement, '--color__content') as THREE.Color;
 
-	if (!canvas) return null;
-
-	return (
-		<mesh ref={mesh} position={[0, 0, zIndex]}>
-			<planeBufferGeometry args={[canvas.size.width, canvas.size.height]} />
-			<meshBasicMaterial map={texture} />
-		</mesh>
-	);
-};
-
-export type Props = {
-	mediaStream: MediaStream;
-};
-
-export const View: React.FC<Props> = (props) => {
-	const { mediaStream } = props;
+		const sub = CanvasHelpers.startAnimation((delta) => {
+			if (!image.data) return;
+			analyserNode.getByteFrequencyData(recorderData);
+			drawFrequency({ recorderData, viewData: image.data, width, height, backgroundColor, contentColor });
+			ctx.putImageData(image, 0, 0);
+			fpsMonitor.setDelta(delta);
+			fpsMonitor.draw(ctx);
+		});
+		return () => sub.stop();
+	}, [mediaStream, analyserNode, appElement, ctx, fpsMonitor, image, recorderData]);
 
 	return (
-		<Canvas.View>
-			<Camera.View position={[0, 0, 0.1]} />
-			<PureView zIndex={0} mediaStream={mediaStream} />
-		</Canvas.View>
+		<canvas className='WaveGraph' ref={setCanvas} width={width} height={height} />
 	);
 };

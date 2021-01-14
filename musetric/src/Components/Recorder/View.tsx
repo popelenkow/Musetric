@@ -28,6 +28,7 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 	const [audioData, setAudioData] = useState<Float32Array>();
 	const [blob, setBlob] = useState<Blob>();
 	const url = useMemo(() => (blob ? URL.createObjectURL(blob) : undefined), [blob]);
+	const audioState = useMemo<{ audioData?: Float32Array }>(() => ({}), []);
 
 	useEffect(() => {
 		const arr: Float32Array[] = [];
@@ -35,12 +36,13 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 		recorder.subscribe(buffers => {
 			arr.push(buffers[0]);
 			len += buffers[0].length;
-			if (arr.length % 20 === 0) {
+			if (arr.length % 33 === 0) {
 				const result = mergeBuffers(arr, len);
 				setAudioData(result);
+				audioState.audioData = result;
 			}
 		});
-	}, [recorder]);
+	}, [recorder, audioState]);
 	const saveAudio = () => {
 		if (!blob) return;
 		saveAs(blob, 'myRecording.wav');
@@ -77,7 +79,7 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 				{url && <audio className='recorder-item' key={url} controls src={url} />}
 			</div>
 			<div className='Recorder__Content'>
-				{audioData && <WaveGraph.View audioData={audioData} />}
+				{audioData && <WaveGraph.View state={audioState} />}
 			</div>
 			<div className='Recorder__Content'>
 				<FrequencyGraph.View mediaStream={mediaStream} />
