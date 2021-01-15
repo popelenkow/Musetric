@@ -8,6 +8,6 @@ export type Theme = 'white' | 'dark';
 export const themeSet: Theme[] = ['white', 'dark'];
 export const isTheme = (value: any): value is Theme => themeSet.indexOf(value) !== -1;
 
-export type ContentId = 'recorder' | 'webGL' | 'gameOfLife' | 'recorderOld';
-export const contentSet: ContentId[] = ['recorder', 'webGL', 'gameOfLife', 'recorderOld'];
+export type ContentId = 'recorder' | 'gameOfLife';
+export const contentSet: ContentId[] = ['recorder', 'gameOfLife'];
 export const isContentId = (value: any): value is ContentId => contentSet.indexOf(value) !== -1;

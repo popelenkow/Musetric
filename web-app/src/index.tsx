@@ -23,7 +23,7 @@ const getIndex = (contentId?: Types.ContentId) => {
 };
 
 const { App } = Contexts;
-const { Container, Content, Recorder, Cube, GameOfLife, RecorderOld, Titlebar } = Components;
+const { Container, Content, Recorder, GameOfLife, Titlebar } = Components;
 
 const appProps: Contexts.App.Props = {
 	initAppElement: appElement,
@@ -39,9 +39,7 @@ const root = (
 			<Container.View>
 				<Content.View className='main' getIndex={getIndex}>
 					<Recorder.View />
-					<Cube.View />
 					<GameOfLife.View size={{ columns: 50, rows: 50 }} />
-					<RecorderOld.View />
 				</Content.View>
 			</Container.View>
 		</App.Provider>

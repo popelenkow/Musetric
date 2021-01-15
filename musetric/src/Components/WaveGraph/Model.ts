@@ -1,12 +1,12 @@
-import { Color } from 'three';
+import { CanvasHelpers } from '../..';
 
 export type WaveInfo = {
 	audioData: Float32Array;
 	viewData: Uint8ClampedArray;
 	width: number;
 	height: number;
-	backgroundColor: Color;
-	contentColor: Color;
+	backgroundColor: CanvasHelpers.Color;
+	contentColor: CanvasHelpers.Color;
 };
 
 export const drawWave = (info: WaveInfo): void => {
