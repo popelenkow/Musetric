@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { useEffect, useMemo, useState } from 'react';
 import { saveAs } from 'file-saver';
-import { Model, createModel } from './Model';
+import { AudioDevices } from '../..';
 import { Frequency, Waveform } from '..';
 
 const mergeBuffers = (recordBuffers: Float32Array[], recordLength: number) => {
@@ -15,13 +15,13 @@ const mergeBuffers = (recordBuffers: Float32Array[], recordLength: number) => {
 };
 
 export type RecorderProps = {
-	model: Model;
+	device: AudioDevices.RecorderDevice;
 	drop: () => void;
 };
 
 export const RecorderView: React.FC<RecorderProps> = (props) => {
-	const { model, drop } = props;
-	const { mediaStream, audioContext, recorder, wavCoder } = model;
+	const { device, drop } = props;
+	const { mediaStream, audioContext, recorder, wavCoder } = device;
 
 	const [isRecording, setIsRecording] = useState<boolean>(false);
 
@@ -43,6 +43,7 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 			}
 		});
 	}, [recorder, audioState]);
+
 	const saveAudio = () => {
 		if (!blob) return;
 		saveAs(blob, 'myRecording.wav');
@@ -70,19 +71,22 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 	return (
 		<div className='Recorder'>
 			<div id='controls' className='Recorder__Header'>
-				{!isRecording && <button type='button' className='Button' onClick={start}>start</button>}
-				{isRecording && <button type='button' className='Button' onClick={stop}>stop</button>}
+				{isRecording
+					? <button type='button' className='Button' onClick={stop}>stop</button>
+					: <button type='button' className='Button' onClick={start}>start</button>}
 				<button type='button' className='Button' onClick={saveAudio}>save</button>
 				<button type='button' className='Button' onClick={drop}>drop</button>
 			</div>
-			<div className='Recorder__Content'>
-				{url && <audio className='recorder-item' key={url} controls src={url} />}
-			</div>
-			<div className='Recorder__Content'>
-				{audioData && <Waveform.View state={audioState} />}
-			</div>
-			<div className='Recorder__Content'>
-				<Frequency.View mediaStream={mediaStream} />
+			<div className='RecorderContent'>
+				<div className='RecorderContent__View'>
+					{url && <audio className='recorder-item' key={url} controls src={url} />}
+				</div>
+				<div className='RecorderContent__View'>
+					{audioData && <Waveform.View state={audioState} />}
+				</div>
+				<div className='RecorderContent__View'>
+					<Frequency.View mediaStream={mediaStream} />
+				</div>
 			</div>
 		</div>
 	);
@@ -92,17 +96,15 @@ export type Props = {
 };
 
 export const View: React.FC<Props> = () => {
-	const [model, setModel] = useState<Model>();
+	const [device, setDevice] = useState<AudioDevices.RecorderDevice>();
 
 	const init = async () => {
-		const value = await createModel();
-		setModel(value);
+		const value = await AudioDevices.createRecorderDevice();
+		setDevice(value);
 	};
 
-	return (
-		<div className='RecorderView'>
-			{ !model && <button type='button' className='Button' style={{ height: '100%' }} onClick={init}>init</button> }
-			{ model && <RecorderView model={model} drop={() => setModel(undefined)} /> }
-		</div>
+	return (device
+		? <RecorderView device={device} drop={() => setDevice(undefined)} />
+		: <button type='button' className='Button' style={{ width: '100%', height: '100%' }} onClick={init}>init</button>
 	);
 };
