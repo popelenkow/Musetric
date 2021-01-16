@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { saveAs } from 'file-saver';
 import { Model, createModel } from './Model';
-import { FrequencyGraph, WaveGraph } from '..';
+import { Frequency, Waveform } from '..';
 
 const mergeBuffers = (recordBuffers: Float32Array[], recordLength: number) => {
 	const result = new Float32Array(recordLength);
@@ -79,10 +79,10 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 				{url && <audio className='recorder-item' key={url} controls src={url} />}
 			</div>
 			<div className='Recorder__Content'>
-				{audioData && <WaveGraph.View state={audioState} />}
+				{audioData && <Waveform.View state={audioState} />}
 			</div>
 			<div className='Recorder__Content'>
-				<FrequencyGraph.View mediaStream={mediaStream} />
+				<Frequency.View mediaStream={mediaStream} />
 			</div>
 		</div>
 	);
