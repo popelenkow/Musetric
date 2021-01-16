@@ -2,30 +2,34 @@
 import { Layout } from '.';
 
 export const drawFrequency = (
-	audioData: Uint8Array,
-	viewData: Uint8ClampedArray,
+	inputData: Uint8Array,
+	outputData: Uint8ClampedArray,
 	layout: Layout,
 ): void => {
-	const { frame, colors } = layout;
+	const { position, view, frame, colors } = layout;
 
-	const count = Math.floor(audioData.length / frame.width);
-	for (let x = 0; x < frame.width; x++) {
-		const offset = x * count;
+	const step = (1.0 * inputData.length) / view.width;
+	const count = Math.max(Math.floor(step), 1);
+
+	for (let x = 0; x < view.width; x++) {
+		const offset = Math.floor(x * step);
 		let magnitude = 0;
 		for (let i = 0; i < count; i++) {
-			magnitude += audioData[offset + i];
+			magnitude += inputData[offset + i];
 		}
-		magnitude /= count;
 		magnitude *= 1.0;
+		magnitude /= count;
 		magnitude /= 255;
-		for (let y = 0; y < frame.height; y++) {
-			const point = (x + (y * frame.width)) * 4;
-			const isDraw = (magnitude * frame.height) > frame.height - y - 1;
+
+		for (let y = 0; y < view.height; y++) {
+			const yIndex = 4 * (position.y + y) * frame.width;
+			const index = 4 * (position.x + x) + yIndex;
+			const isDraw = (magnitude * view.height) > view.height - y - 1;
 			const color = isDraw ? colors.content : colors.background;
-			viewData[point + 0] = color.r * 255;
-			viewData[point + 1] = color.g * 255;
-			viewData[point + 2] = color.b * 255;
-			viewData[point + 3] = 255;
+			outputData[index + 0] = color.r * 255;
+			outputData[index + 1] = color.g * 255;
+			outputData[index + 2] = color.b * 255;
+			outputData[index + 3] = 255;
 		}
 	}
 };

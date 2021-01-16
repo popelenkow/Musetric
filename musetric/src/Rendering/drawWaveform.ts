@@ -2,20 +2,21 @@
 import { Layout } from '.';
 
 export const drawWaveform = (
-	audioData: Float32Array,
-	viewData: Uint8ClampedArray,
+	inputData: Float32Array,
+	outputData: Uint8ClampedArray,
 	layout: Layout,
 ): void => {
-	const { frame, colors } = layout;
+	const { position, view, frame, colors } = layout;
 
-	const step = audioData.length / frame.width;
-	const amp = frame.height / 2;
-	for (let x = 0; x < frame.width; x++) {
+	const step = inputData.length / view.width;
+	const amp = view.height / 2;
+
+	for (let x = 0; x < view.width; x++) {
 		let min = 1.0;
 		let max = -1.0;
-		const index = Math.ceil(x * step);
-		for (let j = 0; j < step; j++) {
-			const datum = audioData[index + j];
+		const inputIndex = Math.ceil(x * step);
+		for (let i = 0; i < step; i++) {
+			const datum = inputData[inputIndex + i];
 			if (datum < min) {
 				min = datum;
 			}
@@ -23,14 +24,17 @@ export const drawWaveform = (
 				max = datum;
 			}
 		}
-		for (let y = 0; y < frame.height; y++) {
-			const point = (x + (y * frame.width)) * 4;
-			const isDraw = ((1 + min) * amp <= y) && ((1 + max) * amp >= y);
+		for (let y = 0; y < view.height; y++) {
+			const yIndex = 4 * (position.y + y) * frame.width;
+			const index = 4 * (position.x + x) + yIndex;
+			const minY = (1 + min) * amp;
+			const maxY = (1 + max) * amp;
+			const isDraw = (minY <= y) && (y <= maxY);
 			const color = isDraw ? colors.content : colors.background;
-			viewData[point + 0] = color.r * 255;
-			viewData[point + 1] = color.g * 255;
-			viewData[point + 2] = color.b * 255;
-			viewData[point + 3] = 255;
+			outputData[index + 0] = color.r * 255;
+			outputData[index + 1] = color.g * 255;
+			outputData[index + 2] = color.b * 255;
+			outputData[index + 3] = 255;
 		}
 	}
 };
