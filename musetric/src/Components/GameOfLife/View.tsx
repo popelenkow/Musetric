@@ -88,7 +88,7 @@ export const View: React.FC<Props> = (props) => {
 	};
 
 	const [grid, setGrid] = useState<Grid>(Gen.empty(size));
-	const [generator, setGenerator] = useState<NodeJS.Timeout>();
+	const [generator, setGenerator] = useState<number>();
 
 	const setGridQ = (gen: GenF, options?: Options) => {
 		setGrid(curGrid => gen(size, curGrid, options));
@@ -99,8 +99,7 @@ export const View: React.FC<Props> = (props) => {
 			clearInterval(generator);
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const newGenerator: any = isRun
+		const newGenerator = isRun
 			? setInterval(() => setGridQ(Gen.next), 100)
 			: undefined;
 		setGenerator(newGenerator);

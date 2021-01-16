@@ -1,3 +1,3 @@
-export * from './createFpsMonitor';
-export * from './getColor';
-export * from './startAnimation';
+export * from './AnimationSubscription';
+export * from './Color';
+export * from './FpsMonitor';

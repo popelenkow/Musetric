@@ -1,12 +1,12 @@
-import { Color } from 'three';
+import { CanvasHelpers } from '../..';
 
 export type FrequencyInfo = {
 	viewData: Uint8ClampedArray;
 	recorderData: Uint8Array;
 	width: number;
 	height: number;
-	backgroundColor: Color;
-	contentColor: Color;
+	backgroundColor: CanvasHelpers.Color;
+	contentColor: CanvasHelpers.Color;
 };
 export const drawFrequency = (info: FrequencyInfo): void => {
 	const { viewData, recorderData, width, height, backgroundColor, contentColor } = info;
