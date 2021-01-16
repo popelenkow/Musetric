@@ -12,7 +12,7 @@ export const View: React.FC<Props> = (props) => {
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
 	const frame: Rendering.Size = useMemo(() => ({
-		width: 400,
+		width: 800,
 		height: 400,
 	}), []);
 
@@ -51,14 +51,14 @@ export const View: React.FC<Props> = (props) => {
 
 		const contentLayout: Rendering.Layout = {
 			position: { x: 0, y: 0 },
-			view: frame,
+			view: { width: frame.width, height: frame.height },
 			frame,
 			colors,
 		};
 
 		const fpsLayout: Rendering.Layout = {
 			position: { x: 0, y: 0 },
-			view: { width: 0, height: 0 },
+			view: { width: frame.width / 20, height: frame.height / 12 },
 			frame,
 			colors,
 		};

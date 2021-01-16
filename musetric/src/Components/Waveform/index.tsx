@@ -12,18 +12,18 @@ export const View: React.FC<Props> = (props) => {
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
 
 	const frame: Rendering.Size = useMemo(() => ({
-		width: 2000,
-		height: 1000,
+		width: 1600,
+		height: 800,
 	}), []);
 
-	const [ctx, image] = useMemo(() => {
+	const [context, image] = useMemo(() => {
 		if (!canvas) return [];
 		canvas.width = frame.width;
 		canvas.height = frame.height;
-		const tmpCtx = canvas.getContext('2d');
-		if (!tmpCtx) return [];
-		const tmpImage = tmpCtx.getImageData(0, 0, frame.width, frame.height);
-		return [tmpCtx, tmpImage];
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return [];
+		const tmpImage = ctx.getImageData(0, 0, frame.width, frame.height);
+		return [ctx, tmpImage];
 	}, [canvas, frame]);
 
 	const fpsMonitor = useRef(Rendering.createFpsMonitor());
@@ -32,7 +32,7 @@ export const View: React.FC<Props> = (props) => {
 
 	useEffect(() => {
 		if (!appElement) return;
-		if (!ctx) return;
+		if (!context) return;
 		if (!image) return;
 		if (!theme) return;
 
@@ -41,14 +41,14 @@ export const View: React.FC<Props> = (props) => {
 
 		const contentLayout: Rendering.Layout = {
 			position: { x: 0, y: 0 },
-			view: frame,
+			view: { width: frame.width, height: frame.height },
 			frame,
 			colors,
 		};
 
 		const fpsLayout: Rendering.Layout = {
 			position: { x: 0, y: 0 },
-			view: { width: 0, height: 0 },
+			view: { width: frame.width / 20, height: frame.height / 12 },
 			frame,
 			colors,
 		};
@@ -58,12 +58,12 @@ export const View: React.FC<Props> = (props) => {
 			if (!audioData) return;
 
 			Rendering.drawWaveform(audioData, image.data, contentLayout);
-			ctx.putImageData(image, 0, 0);
+			context.putImageData(image, 0, 0);
 
 			fpsMonitor.current.setDelta(delta);
-			fpsMonitor.current.draw(ctx, fpsLayout);
+			fpsMonitor.current.draw(context, fpsLayout);
 		};
-	}, [state, appElement, theme, fpsMonitor, ctx, image, frame]);
+	}, [state, appElement, theme, fpsMonitor, context, image, frame]);
 
 	useEffect(() => {
 		const subscription = Rendering.startAnimation(draw);
