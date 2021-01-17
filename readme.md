@@ -1,38 +1,63 @@
+# <img src="https://user-images.githubusercontent.com/7475599/87945559-1c49ec80-cacb-11ea-8f24-42c0738d1dcd.png" width="26" height="26"> Musetric
+
 [![Build Status](https://dev.azure.com/popelenkow/musetric/_apis/build/status/musetric)](https://dev.azure.com/popelenkow/musetric/_build/latest?definitionId=1)
 [![npm version](https://img.shields.io/npm/v/musetric)](https://www.npmjs.com/package/musetric)
 ![License](https://img.shields.io/github/license/popelenkow/musetric)
 
-# <img src="https://user-images.githubusercontent.com/7475599/87945559-1c49ec80-cacb-11ea-8f24-42c0738d1dcd.png" width="26" height="26"> Musetric
+[**Live Demo**](https://popelenkow.github.io/Musetric)
 
-<img src="https://user-images.githubusercontent.com/7475599/87945435-ec024e00-caca-11ea-8c82-0bc8920bcb0e.png">
+Musetric is a application for exploration of sounds. The application supports Web and Windows. There is support for localization and themes.
 
-[Musetric demo](https://popelenkow.github.io/Musetric)
+<img src="https://user-images.githubusercontent.com/7475599/104832178-d75c1280-58c1-11eb-81a5-3164b90c48cf.png">
 
-Musetric is a desktop application for exploration of sounds. The application supports Windows. There is support for localization and themes. 
+# Features
 
-At the moment, the application is at the initial stage of development, so can play the game of life and wait for updates :)
+- Recorder
+- Audio Visualizer (Sonogram, Frequency, Waveform)
 
-## Vision
+## in future
 
-- Sound spectrum visualization
-- Playing and recording the staff (tab)
+- Player
+- Vocal Remover
+- Score and Tabs Generator
 
-## Development
+# Installing
 
-Electron application with react & typescript & sass & webpack. Node >= v12. Python will be used in the future.
+The sound analyzer module is also available as a [npm package](https://www.npmjs.com/package/musetric) you can use in your own JavaScript projects.
 
-Dev
+For the latest stable version:
+
+```bash
+npm install musetric
 ```
-yarn
-yarn dev
+
+For our nightly builds:
+
+```bash
+npm install musetric@next
 ```
 
-Windows Installer
+# Building
+
+In order to build the Musetric Web Application, ensure that you have [Node.js](https://nodejs.org/) installed.
+
+Build
 ```
+cd web-app
 yarn
 yarn build
 ```
 
-## Licence
+Dev
+```bash
+cd musetric
+yarn
+cd ..
+cd web-app
+yarn
+yarn dev
+```
+
+# Licence
 
 Musetric is [MIT licensed](licence.txt).

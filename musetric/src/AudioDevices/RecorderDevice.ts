@@ -1,19 +1,19 @@
-import { AudioDevices } from '../..';
+import { Recorder, WavCoder, createWavCoder, createRecorder } from '.';
 
-export type Model = {
+export type RecorderDevice = {
 	mediaStream: MediaStream;
 	audioContext: AudioContext;
-	recorder: AudioDevices.Recorder;
-	wavCoder: AudioDevices.WavCoder;
+	recorder: Recorder;
+	wavCoder: WavCoder;
 };
 
-export const createModel = async (): Promise<Model> => {
-	const wavCoder = AudioDevices.createWavCoder();
+export const createRecorderDevice = async (): Promise<RecorderDevice> => {
+	const wavCoder = createWavCoder();
 
 	const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
 	const audioContext = new AudioContext();
 	const source = audioContext.createMediaStreamSource(mediaStream);
-	const recorder = await AudioDevices.createRecorder(source);
+	const recorder = await createRecorder(source);
 	return { mediaStream, audioContext, recorder, wavCoder };
 };
