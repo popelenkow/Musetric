@@ -80,7 +80,7 @@ steps:
   workingDirectory: $(root)
   displayName: 'yarn version'
 
-- script: yarn
+- script: yarn --ignore-scripts
   workingDirectory: $(root)
   displayName: 'yarn'
 

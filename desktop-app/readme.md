@@ -9,18 +9,18 @@ Musetric is a application for exploration of sounds. The application supports We
 
 <img src="https://user-images.githubusercontent.com/7475599/104832178-d75c1280-58c1-11eb-81a5-3164b90c48cf.png">
 
-# Features
+## Features
 
 - Recorder
 - Audio Visualizer (Sonogram, Frequency, Waveform)
 
-## in future
+### in future
 
 - Player
 - Vocal Remover
 - Score and Tabs Generator
 
-# Building
+## Building
 
 Windows Installer
 ```bash
@@ -30,15 +30,10 @@ yarn build
 
 Dev
 ```bash
-cd ..
-cd musetric
-yarn
-cd ..
-cd desktop-app
 yarn
 yarn dev
 ```
 
-# Licence
+## Licence
 
 Musetric is [MIT licensed](licence.txt).

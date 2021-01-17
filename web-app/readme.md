@@ -39,11 +39,6 @@ yarn build
 
 Dev
 ```bash
-cd ..
-cd musetric
-yarn
-cd ..
-cd web-app
 yarn
 yarn dev
 ```
