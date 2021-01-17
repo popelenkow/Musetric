@@ -22,6 +22,7 @@
 		"url": "https://github.com/popelenkow/Musetric"
 	},
 	"scripts": {
+		"preinstall": "cd ../musetric & yarn",
 		"dev-renderer": "webpack serve --progress --config ./configs/webpack.config.renderer.dev.js",
 		"dev-main": "webpack --progress --config ./configs/webpack.config.main.dev.js && electron .",
 		"dev": "cross-env WITH_MAIN=1 yarn dev-renderer",

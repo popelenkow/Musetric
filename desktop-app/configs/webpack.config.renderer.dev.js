@@ -30,9 +30,8 @@ module.exports = merge(config, {
 		},
 	],
 	resolve: {
+		modules: [path.join(__dirname, '../node_modules')],
 		alias: {
-			'react': path.resolve(__dirname, '../node_modules/react'),
-			'react-i18next': path.resolve(__dirname, '../node_modules/react-i18next'),
 			'musetric': path.join(__dirname, '../../musetric/src'),
 		},
 	},

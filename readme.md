@@ -10,18 +10,18 @@ Musetric is a application for exploration of sounds. The application supports We
 
 <img src="https://user-images.githubusercontent.com/7475599/104832178-d75c1280-58c1-11eb-81a5-3164b90c48cf.png">
 
-# Features
+## Features
 
 - Recorder
 - Audio Visualizer (Sonogram, Frequency, Waveform)
 
-## in future
+### in future
 
 - Player
 - Vocal Remover
 - Score and Tabs Generator
 
-# Installing
+## Installing
 
 The sound analyzer module is also available as a [npm package](https://www.npmjs.com/package/musetric) you can use in your own JavaScript projects.
 
@@ -37,7 +37,7 @@ For our nightly builds:
 npm install musetric@next
 ```
 
-# Building
+## Building
 
 In order to build the Musetric Web Application, ensure that you have [Node.js](https://nodejs.org/) installed.
 
@@ -50,14 +50,11 @@ yarn build
 
 Dev
 ```bash
-cd musetric
-yarn
-cd ..
 cd web-app
 yarn
 yarn dev
 ```
 
-# Licence
+## Licence
 
 Musetric is [MIT licensed](licence.txt).

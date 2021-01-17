@@ -10,7 +10,7 @@ COPY --chown=node:node . .
 
 COPY . .
 
-RUN yarn
+RUN yarn --ignore-scripts
 RUN yarn build
 
 EXPOSE 3000

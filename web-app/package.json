@@ -16,6 +16,7 @@
 		"react"
 	],
 	"scripts": {
+		"preinstall": "cd ../musetric & yarn",
 		"dev-renderer": "webpack --watch --progress --config ./configs/webpack.config.renderer.dev.js",
 		"dev-main": "webpack --config ./configs/webpack.config.main.dev.js && node dist/main.js",
 		"predev": "rimraf dist && node copy.js",
