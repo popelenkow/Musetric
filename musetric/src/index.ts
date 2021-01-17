@@ -1,3 +1,5 @@
+export * as Controls from './Controls';
+
 export * as AudioDevices from './AudioDevices';
 export * as Components from './Components';
 export * as Contexts from './Contexts';

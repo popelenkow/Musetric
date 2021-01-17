@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
+import { JssProvider } from 'react-jss';
 import { Types } from '..';
 
 export type Store = {
@@ -45,7 +46,9 @@ export const Provider: React.FC<Props> = (props) => {
 
 	return (
 		<Context.Provider value={value}>
-			{children}
+			<JssProvider generateId={(rule, sheet) => (sheet?.options?.classNamePrefix || '') + rule.key}>
+				{children}
+			</JssProvider>
 		</Context.Provider>
 	);
 };

@@ -1,20 +1,43 @@
-import React, { useContext, useMemo, useState, useEffect, useRef } from 'react';
-import { Contexts, Rendering } from '../..';
+import React, { useState, useEffect, useContext, useMemo, useRef } from 'react';
+import { createUseStyles } from 'react-jss';
+import { Contexts, Rendering, AudioDevices } from '..';
+
+export const useStyles = createUseStyles({
+	root: {
+		display: 'block',
+		background: 'var(--color__contentBg)',
+		width: '100%',
+		height: '100%',
+	},
+}, { name: 'Frequency' });
 
 export type Props = {
-	state: { audioData?: Float32Array };
+	recorderDevice: AudioDevices.RecorderDevice;
 };
 
 export const View: React.FC<Props> = (props) => {
-	const { state } = props;
+	const { recorderDevice } = props;
+	const classes = useStyles();
+
+	const { mediaStream } = recorderDevice;
 
 	const { appElement, theme } = useContext(Contexts.App.Context);
-	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
+	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
 	const frame: Rendering.Size = useMemo(() => ({
-		width: 1600,
-		height: 800,
+		width: 800,
+		height: 400,
 	}), []);
+
+	const [analyserNode, audioData] = useMemo(() => {
+		const audioContext = new AudioContext();
+		const source = audioContext.createMediaStreamSource(mediaStream);
+		const analyserNodeR = audioContext.createAnalyser();
+		analyserNodeR.fftSize = 2048;
+		source.connect(analyserNodeR);
+		const audioDataR = new Uint8Array(analyserNodeR.frequencyBinCount);
+		return [analyserNodeR, audioDataR];
+	}, [mediaStream]);
 
 	const [context, image] = useMemo(() => {
 		if (!canvas) return [];
@@ -54,16 +77,15 @@ export const View: React.FC<Props> = (props) => {
 		};
 
 		draw.current = (delta) => {
-			const { audioData } = state;
-			if (!audioData) return;
+			analyserNode.getByteFrequencyData(audioData);
 
-			Rendering.drawWaveform(audioData, image.data, contentLayout);
+			Rendering.drawFrequency(audioData, image.data, contentLayout);
 			context.putImageData(image, 0, 0);
 
 			fpsMonitor.current.setDelta(delta);
 			fpsMonitor.current.draw(context, fpsLayout);
 		};
-	}, [state, appElement, theme, fpsMonitor, context, image, frame]);
+	}, [analyserNode, appElement, theme, context, image, audioData, frame]);
 
 	useEffect(() => {
 		const subscription = Rendering.startAnimation(draw);
@@ -71,6 +93,6 @@ export const View: React.FC<Props> = (props) => {
 	}, []);
 
 	return (
-		<canvas className='WaveGraph' ref={setCanvas} width={frame.width} height={frame.height} />
+		<canvas className={classes.root} ref={setCanvas} width={frame.width} height={frame.height} />
 	);
 };
