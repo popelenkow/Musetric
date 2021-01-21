@@ -1,16 +1,19 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
+import { theming, Theme } from '../Contexts/Theme';
 
-export const useStyles = createUseStyles({
+export const getStyles = (theme: Theme) => ({
 	root: {
 		display: 'flex',
 		flex: 1,
 		overflow: 'hidden',
 		margin: '6px',
-		border: '1px solid var(--color__splitter)',
-		backgroundColor: 'var(--color__contentBg)',
+		border: `1px solid ${theme.splitter}`,
+		backgroundColor: theme.contentBg,
 	},
-}, { name: 'Container' });
+});
+
+export const useStyles = createUseStyles(getStyles, { name: 'Container', theming });
 
 export type Props = {
 };

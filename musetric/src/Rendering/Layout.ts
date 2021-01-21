@@ -1,4 +1,4 @@
-import { Core } from '..';
+import { Core, Themes } from '..';
 
 export type Position = {
 	x: number;
@@ -22,9 +22,9 @@ export type Layout = {
 	colors: Colors;
 };
 
-export const getColors = (appElement: HTMLElement): Colors | undefined => {
-	const background = Core.getColor(appElement, '--color__contentBg');
-	const content = Core.getColor(appElement, '--color__content');
+export const parseHslColors = (theme: Themes.Theme): Colors | undefined => {
+	const background = Core.parseHsl(theme.contentBg);
+	const content = Core.parseHsl(theme.content);
 	if (!background) return undefined;
 	if (!content) return undefined;
 	const colors: Colors = {

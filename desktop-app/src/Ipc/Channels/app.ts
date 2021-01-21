@@ -1,9 +1,8 @@
 import { ipcMain, ipcRenderer } from 'electron';
-import { Types } from 'musetric';
 import { Handle, Invoke } from '../Types';
 
 export type Arg =
-	| { type: 'theme'; value: Types.Theme }
-	| { type: 'locale'; value: Types.Locale };
+	| { type: 'theme'; value: string }
+	| { type: 'locale'; value: string };
 export const handle: Handle<Arg> = (listener) => ipcMain.handle('app', listener);
 export const invoke: Invoke<Arg> = (arg) => ipcRenderer.invoke('app', arg);

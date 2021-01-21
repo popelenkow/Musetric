@@ -1,11 +1,7 @@
-import { ResourceLanguage } from 'i18next';
-
 import GameOfLife from './GameOfLife.json';
 import Musetric from './Musetric.json';
 
-const resourceLanguage: ResourceLanguage = {
+export default {
 	GameOfLife,
 	Musetric,
 };
-
-export default resourceLanguage;

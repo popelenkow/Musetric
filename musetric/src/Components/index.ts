@@ -1,3 +1,4 @@
+export * as App from './App';
 export * as Frequency from './Frequency';
 export * as GameOfLife from './GameOfLife';
 export * as Recorder from './Recorder';

@@ -1,17 +1,27 @@
 import React, { useContext, ReactNodeArray } from 'react';
-import { Contexts, Types } from '..';
+import { createUseStyles } from 'react-jss';
+import { Contexts, Contents } from '..';
+import { theming } from '../Contexts/Theme';
 
-export type Change = (index: number) => void;
+export const getStyles = () => ({
+	root: {
+		width: '100%',
+		height: '100%',
+	},
+});
+
+export const useStyles = createUseStyles(getStyles(), { name: 'Content', theming });
+
 export type Props = {
-	className: string;
-	getIndex: (contentId?: Types.ContentId) => number;
+	getIndex: (contentId?: Contents.ContentId) => number;
 	children: ReactNodeArray;
 };
 
 export const View: React.FC<Props> = (props) => {
-	const { className, getIndex, children } = props;
+	const { getIndex, children } = props;
+	const classes = useStyles();
 
-	const { contentId } = useContext(Contexts.App.Context);
+	const { contentId } = useContext(Contexts.Content.Context);
 
 	const index = getIndex(contentId);
 
@@ -20,7 +30,7 @@ export const View: React.FC<Props> = (props) => {
 	}
 
 	return (
-		<div className={className}>
+		<div className={classes.root}>
 			{children[index]}
 		</div>
 	);
