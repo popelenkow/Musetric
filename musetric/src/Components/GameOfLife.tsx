@@ -2,9 +2,63 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-param-reassign */
 import React, { useState } from 'react';
+import { createUseStyles } from 'react-jss';
 import produce from 'immer';
 import { useTranslation } from 'react-i18next';
-import { Size, Grid, Options, Row, GenO, GenF } from './Types';
+import { Controls } from '..';
+
+export const useStyles = createUseStyles({
+	root: {
+		display: 'flex',
+		flexDirection: 'column',
+		overflow: 'hidden',
+		width: '100%',
+		height: '100%',
+		...Controls.Scrollbar.styles.root,
+	},
+	header: {
+		display: 'flex',
+		flexDirection: 'row',
+		height: '28px',
+		backgroundColor: 'var(--color__sidebarBg)',
+		borderBottom: '1px solid var(--color__splitter)',
+	},
+	grid: {
+		display: 'grid',
+		overflow: 'auto',
+		width: '100%',
+		height: '100%',
+	},
+	cellLive: {
+		width: '20px',
+		height: '20px',
+		border: 'solid 1px var(--color__splitter)',
+		backgroundColor: 'var(--color__cellLive)',
+	},
+	cellDead: {
+		width: '20px',
+		height: '20px',
+		border: 'solid 1px var(--color__splitter)',
+		backgroundColor: 'var(--color__cellDead)',
+	},
+}, { name: 'GameOfLife' });
+
+export type CellState = 0 | 1;
+export type Row = CellState[];
+export type Grid = Row[];
+
+export type Size = {
+	rows: number;
+	columns: number;
+};
+
+export type Options = {
+	row: number;
+	column: number;
+};
+
+export type GenF = (size: Size, grid?: Grid, options?: Options) => Grid;
+export type GenO = Record<string, GenF>;
 
 const operations = [
 	[0, 1],
@@ -81,6 +135,8 @@ export type Props = {
 
 export const View: React.FC<Props> = (props) => {
 	const { size } = props;
+	const classes = useStyles();
+	const buttonClasses = Controls.Button.useStyles();
 	const { t } = useTranslation();
 
 	const gridStyle = {
@@ -106,21 +162,21 @@ export const View: React.FC<Props> = (props) => {
 	};
 
 	return (
-		<div className='GameOfLife'>
-			<div className='GameOfLife__Header'>
-				<button type='button' className='Button' onClick={() => setGeneratorQ(!generator)}>
+		<div className={classes.root}>
+			<div className={classes.header}>
+				<button type='button' className={buttonClasses.root} onClick={() => setGeneratorQ(!generator)}>
 					{generator ? t('GameOfLife:stop') : t('GameOfLife:start')}
 				</button>
-				<button type='button' className='Button' onClick={() => setGridQ(Gen.random)}>
+				<button type='button' className={buttonClasses.root} onClick={() => setGridQ(Gen.random)}>
 					{t('GameOfLife:random')}
 				</button>
-				<button type='button' className='Button' onClick={() => setGridQ(Gen.empty)}>
+				<button type='button' className={buttonClasses.root} onClick={() => setGridQ(Gen.empty)}>
 					{t('GameOfLife:clear')}
 				</button>
 			</div>
-			<div className='GameOfLife__Grid' style={gridStyle}>
+			<div className={classes.grid} style={gridStyle}>
 				{grid.map((rows, row) => rows.map((_, column) => {
-					const cellClass = grid[row][column] ? 'GameOfLife__CellLive' : 'GameOfLife__CellDead';
+					const cellClass = grid[row][column] ? classes.cellLive : classes.cellDead;
 					const key = `${row}-${column}`;
 					const pick = () => setGridQ(Gen.pick, { row, column });
 					return <div className={cellClass} key={key} onClick={pick} />;

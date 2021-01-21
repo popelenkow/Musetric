@@ -1,7 +1,7 @@
 import './index.scss';
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import { Types, Components, Contexts } from 'musetric';
+import { Types, Components, Contexts, Controls } from 'musetric';
 import { initLocales } from './Locales';
 
 const appElement = document.getElementById('app');
@@ -23,7 +23,8 @@ const getIndex = (contentId?: Types.ContentId) => {
 };
 
 const { App } = Contexts;
-const { Container, Content, Recorder, GameOfLife, Titlebar } = Components;
+const { Recorder, GameOfLife, Titlebar } = Components;
+const { Container, Content } = Controls;
 
 const appProps: Contexts.App.Props = {
 	initAppElement: appElement,
