@@ -1,30 +1,31 @@
-import React, { useState, useEffect, useContext, useMemo, useRef } from 'react';
-import { Contexts, Rendering } from '../..';
+import React, { useContext, useMemo, useState, useEffect, useRef } from 'react';
+import { createUseStyles } from 'react-jss';
+import { Contexts, Rendering } from '..';
+
+export const useStyles = createUseStyles({
+	root: {
+		display: 'block',
+		background: 'var(--color__contentBg)',
+		width: '100%',
+		height: '100%',
+	},
+}, { name: 'Sonogram' });
 
 export type Props = {
-	mediaStream: MediaStream;
+	state: { audioData?: Float32Array };
 };
 
 export const View: React.FC<Props> = (props) => {
-	const { mediaStream } = props;
+	const { state } = props;
+	const classes = useStyles();
 
 	const { appElement, theme } = useContext(Contexts.App.Context);
-	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
+	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
 
 	const frame: Rendering.Size = useMemo(() => ({
-		width: 800,
-		height: 400,
+		width: 1600,
+		height: 800,
 	}), []);
-
-	const [analyserNode, audioData] = useMemo(() => {
-		const audioContext = new AudioContext();
-		const source = audioContext.createMediaStreamSource(mediaStream);
-		const analyserNodeR = audioContext.createAnalyser();
-		analyserNodeR.fftSize = 2048;
-		source.connect(analyserNodeR);
-		const audioDataR = new Uint8Array(analyserNodeR.frequencyBinCount);
-		return [analyserNodeR, audioDataR];
-	}, [mediaStream]);
 
 	const [context, image] = useMemo(() => {
 		if (!canvas) return [];
@@ -64,15 +65,16 @@ export const View: React.FC<Props> = (props) => {
 		};
 
 		draw.current = (delta) => {
-			analyserNode.getByteFrequencyData(audioData);
+			const { audioData } = state;
+			if (!audioData) return;
 
-			Rendering.drawFrequency(audioData, image.data, contentLayout);
+			Rendering.drawSonogram(audioData, image.data, contentLayout);
 			context.putImageData(image, 0, 0);
 
 			fpsMonitor.current.setDelta(delta);
 			fpsMonitor.current.draw(context, fpsLayout);
 		};
-	}, [analyserNode, appElement, theme, context, image, audioData, frame]);
+	}, [state, appElement, theme, fpsMonitor, context, image, frame]);
 
 	useEffect(() => {
 		const subscription = Rendering.startAnimation(draw);
@@ -80,6 +82,6 @@ export const View: React.FC<Props> = (props) => {
 	}, []);
 
 	return (
-		<canvas className='FrequencyGraph' ref={setCanvas} width={frame.width} height={frame.height} />
+		<canvas className={classes.root} ref={setCanvas} width={frame.width} height={frame.height} />
 	);
 };

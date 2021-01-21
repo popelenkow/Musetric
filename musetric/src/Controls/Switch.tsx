@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/comma-dangle */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 
-export type Props<T = any> = {
+export type Props<T> = {
 	currentId: T;
 	ids: T[];
 	set: (id: T) => void;
@@ -12,7 +11,7 @@ export type Props<T = any> = {
 	localize?: (id: T, t: TFunction) => string;
 };
 
-export type State<T = any> = {
+export type State<T> = {
 	id: T;
 };
 

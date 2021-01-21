@@ -1,5 +1,5 @@
 import React, { useContext, ReactNodeArray } from 'react';
-import { Contexts, Types } from '../..';
+import { Contexts, Types } from '..';
 
 export type Change = (index: number) => void;
 export type Props = {
