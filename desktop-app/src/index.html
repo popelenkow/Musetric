@@ -4,6 +4,9 @@
 		<meta charset="UTF-8">
 		<title>Hello World!</title>
 		<style type="text/css">
+			:root {
+				--color__loaderTrack: hsla(0, 0%, 80%);
+			}
 			.app-loader, .app-loader:after {
 				border-radius: 50%;
 				width: 10em;
@@ -48,9 +51,7 @@
 		</style>
 	</head>
 	<body>
-		<div id="app">
-			<div class="app-loader">Loading...</div>
-		</div>
+		<div class="app-loader">Loading...</div>
 		<script>
 			const params = new URLSearchParams(window.location.search)
 			const app = document.getElementById("app");

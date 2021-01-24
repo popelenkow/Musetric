@@ -4,8 +4,9 @@ import { createUseStyles } from 'react-jss';
 import { saveAs } from 'file-saver';
 import { AudioDevices, Controls } from '..';
 import { Frequency, Sonogram } from '.';
+import { theming, Theme } from '../Contexts/Theme';
 
-export const useStyles = createUseStyles({
+export const getStyles = (theme: Theme) => ({
 	root: {
 		width: '100%',
 		height: '100%',
@@ -18,8 +19,8 @@ export const useStyles = createUseStyles({
 		height: '28px',
 		display: 'flex',
 		flexDirection: 'row',
-		backgroundColor: 'var(--color__sidebarBg)',
-		borderBottom: '1px solid var(--color__splitter)',
+		backgroundColor: theme.sidebarBg,
+		borderBottom: `1px solid ${theme.splitter}`,
 	},
 	content: {
 		display: 'grid',
@@ -33,9 +34,11 @@ export const useStyles = createUseStyles({
 		overflow: 'hidden',
 		width: '100%',
 		height: '100%',
-		border: '1px solid var(--color__splitter)',
+		border: `1px solid ${theme.splitter}`,
 	},
-}, { name: 'Recorder' });
+});
+
+export const useStyles = createUseStyles(getStyles, { name: 'Recorder', theming });
 
 const mergeBuffers = (recordBuffers: Float32Array[], recordLength: number) => {
 	const result = new Float32Array(recordLength);

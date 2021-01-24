@@ -1,26 +1,27 @@
 import { createUseStyles } from 'react-jss';
+import { theming, Theme } from '../Contexts/Theme';
 
-export const styles = {
+export const getStyles = (theme: Theme) => ({
 	root: {
 		'& ::-webkit-scrollbar': {
 			width: '15px',
 		},
 		'& ::-webkit-scrollbar-track': {
-			background: 'var(--color__scrollbarTrack)',
+			background: theme.scrollbarTrack,
 		},
 		'& ::-webkit-scrollbar-corner': {
-			background: 'var(--color__scrollbarTrack)',
+			background: theme.scrollbarTrack,
 		},
 		'& ::-webkit-scrollbar-thumb': {
-			'background': 'var(--color__scrollbarThumb)',
+			background: theme.scrollbarThumb,
 			'&:hover': {
-				background: 'var(--color__scrollbarThumb--hover)',
+				background: theme.scrollbarThumbHover,
 			},
 			'&:active': {
-				background: 'var(--color__scrollbarThumb--active)',
+				background: theme.scrollbarThumbActive,
 			},
 		},
 	},
-};
+});
 
-export const useStyles = createUseStyles(styles, { name: 'Scrollbar' });
+export const useStyles = createUseStyles(getStyles, { name: 'Scrollbar', theming });

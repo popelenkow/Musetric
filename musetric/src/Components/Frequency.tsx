@@ -1,15 +1,18 @@
-import React, { useState, useEffect, useContext, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Contexts, Rendering, AudioDevices } from '..';
+import { Rendering, AudioDevices } from '..';
+import { theming, Theme, useTheme } from '../Contexts/Theme';
 
-export const useStyles = createUseStyles({
+export const getStyles = (theme: Theme) => ({
 	root: {
 		display: 'block',
-		background: 'var(--color__contentBg)',
+		background: theme.contentBg,
 		width: '100%',
 		height: '100%',
 	},
-}, { name: 'Frequency' });
+});
+
+export const useStyles = createUseStyles(getStyles, { name: 'Frequency', theming });
 
 export type Props = {
 	recorderDevice: AudioDevices.RecorderDevice;
@@ -17,11 +20,11 @@ export type Props = {
 
 export const View: React.FC<Props> = (props) => {
 	const { recorderDevice } = props;
+	const theme = useTheme();
 	const classes = useStyles();
 
 	const { mediaStream } = recorderDevice;
 
-	const { appElement, theme } = useContext(Contexts.App.Context);
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
 	const frame: Rendering.Size = useMemo(() => ({
@@ -54,12 +57,10 @@ export const View: React.FC<Props> = (props) => {
 	const draw = useRef<Rendering.DrawFrame>();
 
 	useEffect(() => {
-		if (!appElement) return;
 		if (!context) return;
 		if (!image) return;
-		if (!theme) return;
 
-		const colors = Rendering.getColors(appElement);
+		const colors = Rendering.parseHslColors(theme);
 		if (!colors) return;
 
 		const contentLayout: Rendering.Layout = {
@@ -85,7 +86,7 @@ export const View: React.FC<Props> = (props) => {
 			fpsMonitor.current.setDelta(delta);
 			fpsMonitor.current.draw(context, fpsLayout);
 		};
-	}, [analyserNode, appElement, theme, context, image, audioData, frame]);
+	}, [analyserNode, theme, context, image, audioData, frame]);
 
 	useEffect(() => {
 		const subscription = Rendering.startAnimation(draw);

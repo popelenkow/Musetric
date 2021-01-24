@@ -6,22 +6,23 @@ import { createUseStyles } from 'react-jss';
 import produce from 'immer';
 import { useTranslation } from 'react-i18next';
 import { Controls } from '..';
+import { theming, Theme } from '../Contexts/Theme';
 
-export const useStyles = createUseStyles({
+const getStyles = (theme: Theme) => ({
 	root: {
 		display: 'flex',
 		flexDirection: 'column',
 		overflow: 'hidden',
 		width: '100%',
 		height: '100%',
-		...Controls.Scrollbar.styles.root,
+		...Controls.Scrollbar.getStyles(theme).root,
 	},
 	header: {
 		display: 'flex',
 		flexDirection: 'row',
 		height: '28px',
-		backgroundColor: 'var(--color__sidebarBg)',
-		borderBottom: '1px solid var(--color__splitter)',
+		backgroundColor: theme.sidebarBg,
+		borderBottom: `1px solid ${theme.splitter}`,
 	},
 	grid: {
 		display: 'grid',
@@ -32,16 +33,18 @@ export const useStyles = createUseStyles({
 	cellLive: {
 		width: '20px',
 		height: '20px',
-		border: 'solid 1px var(--color__splitter)',
-		backgroundColor: 'var(--color__cellLive)',
+		border: `solid 1px ${theme.splitter}`,
+		backgroundColor: theme.cellLive,
 	},
 	cellDead: {
 		width: '20px',
 		height: '20px',
-		border: 'solid 1px var(--color__splitter)',
-		backgroundColor: 'var(--color__cellDead)',
+		border: `solid 1px ${theme.splitter}`,
+		backgroundColor: theme.cellDead,
 	},
-}, { name: 'GameOfLife' });
+});
+
+const useStyles = createUseStyles(getStyles, { name: 'GameOfLife', theming });
 
 export type CellState = 0 | 1;
 export type Row = CellState[];

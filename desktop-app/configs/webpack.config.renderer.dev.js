@@ -32,7 +32,7 @@ module.exports = merge(config, {
 	resolve: {
 		modules: [path.join(__dirname, '../node_modules')],
 		alias: {
-			'musetric': path.join(__dirname, '../../musetric/src'),
+			musetric: path.join(__dirname, '../../musetric/src'),
 		},
 	},
 });

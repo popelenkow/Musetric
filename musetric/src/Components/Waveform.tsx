@@ -1,15 +1,18 @@
-import React, { useContext, useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Contexts, Rendering } from '..';
+import { Rendering } from '..';
+import { theming, Theme, useTheme } from '../Contexts/Theme';
 
-export const useStyles = createUseStyles({
+export const getStyles = (theme: Theme) => ({
 	root: {
 		display: 'block',
-		background: 'var(--color__contentBg)',
+		background: theme.contentBg,
 		width: '100%',
 		height: '100%',
 	},
-}, { name: 'Waveform' });
+});
+
+export const useStyles = createUseStyles(getStyles, { name: 'Waveform', theming });
 
 export type Props = {
 	state: { audioData?: Float32Array };
@@ -17,9 +20,9 @@ export type Props = {
 
 export const View: React.FC<Props> = (props) => {
 	const { state } = props;
+	const theme = useTheme();
 	const classes = useStyles();
 
-	const { appElement, theme } = useContext(Contexts.App.Context);
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
 
 	const frame: Rendering.Size = useMemo(() => ({
@@ -42,12 +45,10 @@ export const View: React.FC<Props> = (props) => {
 	const draw = useRef<Rendering.DrawFrame>();
 
 	useEffect(() => {
-		if (!appElement) return;
 		if (!context) return;
 		if (!image) return;
-		if (!theme) return;
 
-		const colors = Rendering.getColors(appElement);
+		const colors = Rendering.parseHslColors(theme);
 		if (!colors) return;
 
 		const contentLayout: Rendering.Layout = {
@@ -74,7 +75,7 @@ export const View: React.FC<Props> = (props) => {
 			fpsMonitor.current.setDelta(delta);
 			fpsMonitor.current.draw(context, fpsLayout);
 		};
-	}, [state, appElement, theme, fpsMonitor, context, image, frame]);
+	}, [state, theme, fpsMonitor, context, image, frame]);
 
 	useEffect(() => {
 		const subscription = Rendering.startAnimation(draw);

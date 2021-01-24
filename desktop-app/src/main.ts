@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { app, BrowserWindow, globalShortcut, Menu } from 'electron';
-import { Types } from 'musetric';
 import { PythonShell } from 'python-shell';
 import url from 'url';
 import fs from 'fs';
@@ -10,8 +9,8 @@ process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 const isDev = process.env.NODE_ENV === 'development';
 
 type Config = {
-	theme: Types.Theme,
-	locale: Types.Locale,
+	theme: string,
+	locale: string,
 };
 
 app.whenReady().then(() => {

@@ -1,49 +1,48 @@
 import './index.scss';
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import { Types, Components, Contexts, Controls } from 'musetric';
-import { initLocales } from './Locales';
+import { Container, Content } from 'musetric/Controls';
+import { App, Recorder, GameOfLife, Titlebar } from 'musetric/Components';
+import { ContentId, contentIdList } from 'musetric/Contents';
+import { allThemes, themeIdList } from 'musetric/Themes';
+import { localeIdList, createI18n } from 'musetric/Locales';
 
-const appElement = document.getElementById('app');
-if (!appElement) throw new Error('App not found');
+const init = async () => {
+	const params = new URLSearchParams(window.location.search);
 
-const params = new URLSearchParams(window.location.search);
-const initLocale = initLocales(params.get('locale'));
-appElement.classList.add('dark');
+	const initThemeId = params.get('theme') || 'dark';
 
-const extractTheme: () => Types.Theme | undefined = () => {
-	const themes: Types.Theme[] = [];
-	appElement.classList.forEach(x => Types.isTheme(x) && themes.push(x));
-	return themes.shift();
+	const initLocaleId = params.get('locale');
+	const i18n = await createI18n(initLocaleId);
+
+	const getIndex = (contentId?: ContentId) => {
+		if (!contentId) return -1;
+		return contentIdList.indexOf(contentId);
+	};
+
+	const appProps: App.Props = {
+		i18n,
+		localeIdList,
+		initThemeId,
+		themeIdList,
+		allThemes,
+	};
+
+	const root = (
+		<Suspense fallback='loading'>
+			<App.View {...appProps}>
+				<Titlebar.View />
+				<Container.View>
+					<Content.View getIndex={getIndex}>
+						<Recorder.View />
+						<GameOfLife.View size={{ columns: 50, rows: 50 }} />
+					</Content.View>
+				</Container.View>
+			</App.View>
+		</Suspense>
+	);
+	ReactDOM.render(root, document.body);
 };
 
-const getIndex = (contentId?: Types.ContentId) => {
-	if (!contentId) return -1;
-	return Types.contentSet.indexOf(contentId);
-};
-
-const { App } = Contexts;
-const { Recorder, GameOfLife, Titlebar } = Components;
-const { Container, Content } = Controls;
-
-const appProps: Contexts.App.Props = {
-	initAppElement: appElement,
-	initContentId: Types.contentSet[0],
-	initLocale,
-	initTheme: extractTheme() || Types.themeSet[0],
-};
-
-const root = (
-	<Suspense fallback='loading'>
-		<App.Provider {...appProps}>
-			<Titlebar.View />
-			<Container.View>
-				<Content.View className='main' getIndex={getIndex}>
-					<Recorder.View />
-					<GameOfLife.View size={{ columns: 50, rows: 50 }} />
-				</Content.View>
-			</Container.View>
-		</App.Provider>
-	</Suspense>
-);
-ReactDOM.render(root, appElement);
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
+init();
