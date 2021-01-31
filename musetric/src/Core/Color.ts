@@ -1,37 +1,10 @@
-/* eslint-disable no-param-reassign */
-export type Color = {
+export type Rgb = {
+	/** range 0 to 255 */
 	r: number;
+	/** range 0 to 255 */
 	g: number;
+	/** range 0 to 255 */
 	b: number;
-};
-
-export const hslToRgb = (h: number, s: number, l: number): Color => {
-	let r;
-	let g;
-	let b;
-
-	if (s === 0) {
-		r = l;
-		g = l;
-		b = l;
-	} else {
-		const hue2rgb = (p: number, q: number, t: number) => {
-			if (t < 0) t += 1;
-			if (t > 1) t -= 1;
-			if (t < 1 / 6) return p + (q - p) * 6 * t;
-			if (t < 1 / 2) return q;
-			if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-			return p;
-		};
-
-		const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-		const p = 2 * l - q;
-		r = hue2rgb(p, q, h + 1 / 3);
-		g = hue2rgb(p, q, h);
-		b = hue2rgb(p, q, h - 1 / 3);
-	}
-
-	return { r, g, b };
 };
 
 const componentToHex = (c: number): string => {
@@ -39,17 +12,17 @@ const componentToHex = (c: number): string => {
 	return hex.length === 1 ? `0${hex}` : hex;
 };
 
-export const rgbToHex = (color: Color): string => {
+export const rgbToHex = (color: Rgb): string => {
 	const { r, g, b } = color;
 	const arr = [r, g, b];
-	const result = arr.map(x => componentToHex(Math.round(x * 255))).reduce((acc, x) => acc + x, '#');
+	const result = arr.map(componentToHex).reduce((acc, x) => acc + x, '#');
 	return result;
 };
 
-export const parseHsl = (value: string): Color | undefined => {
-	const regex = /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/;
-	const hsl = regex.exec(value)?.slice(1)?.map(x => Number(x));
-	if (!hsl) return undefined;
-	const result = hslToRgb(hsl[0], hsl[1] / 100, hsl[2] / 100);
+export const parseRgb = (value: string): Rgb | undefined => {
+	const regex = /^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/;
+	const rgb = regex.exec(value)?.slice(1)?.map(x => Number(x));
+	if (!rgb) return undefined;
+	const result: Rgb = { r: rgb[0], g: rgb[1], b: rgb[2] };
 	return result;
 };

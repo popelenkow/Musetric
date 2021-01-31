@@ -1,9 +1,41 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Rendering } from '..';
-import { theming, Theme, useTheme } from '../Contexts/Theme';
+import { Layout2D, Size2D, createFpsMonitor, DrawFrame, parseHslColors, startAnimation, SoundBuffer, Theme } from '..';
+import { theming, useTheme } from '../Contexts';
 
-export const getStyles = (theme: Theme) => ({
+export const drawWaveform = (
+	input: Float32Array,
+	output: Uint8ClampedArray,
+	layout: Layout2D,
+): void => {
+	const { position, view, frame, colors } = layout;
+
+	const step = input.length / view.width;
+	for (let x = 0; x < view.width; x++) {
+		let min = 1.0;
+		let max = -1.0;
+		const offset = Math.floor(x * step);
+		for (let i = 0; i < step; i++) {
+			const value = input[offset + i];
+			min = Math.min(value, min);
+			max = Math.max(value, max);
+		}
+		for (let y = 0; y < view.height; y++) {
+			const yIndex = 4 * (position.y + y) * frame.width;
+			const index = 4 * (position.x + x) + yIndex;
+			const minY = (1 + min) * (view.height / 2);
+			const maxY = (1 + max) * (view.height / 2);
+			const isDraw = (minY <= y) && (y <= maxY);
+			const color = isDraw ? colors.content : colors.background;
+			output[index + 0] = color.r;
+			output[index + 1] = color.g;
+			output[index + 2] = color.b;
+			output[index + 3] = 255;
+		}
+	}
+};
+
+export const getWaveformStyles = (theme: Theme) => ({
 	root: {
 		display: 'block',
 		background: theme.contentBg,
@@ -12,20 +44,20 @@ export const getStyles = (theme: Theme) => ({
 	},
 });
 
-export const useStyles = createUseStyles(getStyles, { name: 'Waveform', theming });
+export const useWaveformStyles = createUseStyles(getWaveformStyles, { name: 'Waveform', theming });
 
-export type Props = {
-	state: { audioData?: Float32Array };
+export type WaveformProps = {
+	soundBuffer: SoundBuffer;
 };
 
-export const View: React.FC<Props> = (props) => {
-	const { state } = props;
+export const Waveform: React.FC<WaveformProps> = (props) => {
+	const { soundBuffer } = props;
 	const theme = useTheme();
-	const classes = useStyles();
+	const classes = useWaveformStyles();
 
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
 
-	const frame: Rendering.Size = useMemo(() => ({
+	const frame: Size2D = useMemo(() => ({
 		width: 1600,
 		height: 800,
 	}), []);
@@ -40,25 +72,25 @@ export const View: React.FC<Props> = (props) => {
 		return [ctx, tmpImage];
 	}, [canvas, frame]);
 
-	const fpsMonitor = useRef(Rendering.createFpsMonitor());
+	const fpsMonitor = useRef(createFpsMonitor());
 
-	const draw = useRef<Rendering.DrawFrame>();
+	const draw = useRef<DrawFrame>();
 
 	useEffect(() => {
 		if (!context) return;
 		if (!image) return;
 
-		const colors = Rendering.parseHslColors(theme);
+		const colors = parseHslColors(theme);
 		if (!colors) return;
 
-		const contentLayout: Rendering.Layout = {
+		const contentLayout: Layout2D = {
 			position: { x: 0, y: 0 },
 			view: { width: frame.width, height: frame.height },
 			frame,
 			colors,
 		};
 
-		const fpsLayout: Rendering.Layout = {
+		const fpsLayout: Layout2D = {
 			position: { x: 0, y: 0 },
 			view: { width: frame.width / 20, height: frame.height / 12 },
 			frame,
@@ -66,19 +98,16 @@ export const View: React.FC<Props> = (props) => {
 		};
 
 		draw.current = (delta) => {
-			const { audioData } = state;
-			if (!audioData) return;
-
-			Rendering.drawWaveform(audioData, image.data, contentLayout);
+			drawWaveform(soundBuffer.buffers[0], image.data, contentLayout);
 			context.putImageData(image, 0, 0);
 
 			fpsMonitor.current.setDelta(delta);
 			fpsMonitor.current.draw(context, fpsLayout);
 		};
-	}, [state, theme, fpsMonitor, context, image, frame]);
+	}, [soundBuffer, theme, fpsMonitor, context, image, frame]);
 
 	useEffect(() => {
-		const subscription = Rendering.startAnimation(draw);
+		const subscription = startAnimation(draw);
 		return () => subscription.stop();
 	}, []);
 

@@ -1,7 +1,7 @@
-export * as App from './App';
-export * as Frequency from './Frequency';
-export * as GameOfLife from './GameOfLife';
-export * as Recorder from './Recorder';
-export * as Sonogram from './Sonogram';
-export * as Titlebar from './Titlebar';
-export * as Waveform from './Waveform';
+export * from './App';
+export * from './Frequency';
+export * from './GameOfLife';
+export * from './SoundWorkshop';
+export * from './Spectrogram';
+export * from './Titlebar';
+export * from './Waveform';

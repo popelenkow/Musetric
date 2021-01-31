@@ -1,19 +1,19 @@
 export default {
-	appBg: 'hsl(0, 0%, 13%)',
-	contentBg: 'hsl(0, 0%, 13%)',
-	sidebarBg: 'hsl(0, 0%, 24%)',
-	content: 'hsl(0, 0%, 100%)',
-	splitter: 'hsl(0, 0%, 50%)',
-	icon: 'hsl(0, 0%, 91%)',
+	appBg: 'rgb(33, 33, 33)',
+	contentBg: 'rgb(33, 33, 33)',
+	sidebarBg: 'rgb(61, 61, 61)',
+	content: 'rgb(255, 255, 255)',
+	splitter: 'rgb(128, 128, 128)',
+	icon: 'rgb(232, 232, 232)',
 
-	loaderTrack: 'hsla(0, 0%, 24%)',
-	loaderThumb: 'hsl(0, 0%, 80%)',
+	loaderTrack: 'rgb(61, 61, 61)',
+	loaderThumb: 'rgb(204, 204, 204)',
 
-	scrollbarTrack: 'hsl(0, 0%, 15%)',
-	scrollbarThumb: 'hsl(0, 0%, 30%)',
-	scrollbarThumbHover: 'hsl(0, 0%, 40%)',
-	scrollbarThumbActive: 'hsl(0, 0%, 50%)',
+	scrollbarTrack: 'rgb(38, 38, 38)',
+	scrollbarThumb: 'rgb(77, 77, 77)',
+	scrollbarThumbHover: 'rgb(102, 102, 102)',
+	scrollbarThumbActive: 'rgb(128, 128, 128)',
 
-	cellLive: 'hsl(0, 0%, 100%)',
-	cellDead: 'hsl(0, 0%, 0%)',
+	cellLive: 'rgb(255, 255, 255)',
+	cellDead: 'rgb(0, 0, 0)',
 };

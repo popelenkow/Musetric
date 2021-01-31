@@ -1,28 +1,28 @@
 import React from 'react';
 
-export type Store = {
+export type AppElementStore = {
 	appElement: HTMLElement;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const Context = React.createContext<Store>({} as any);
+export const AppElementContext = React.createContext<AppElementStore>({} as any);
 
-export const { Consumer } = Context;
+export const AppElementConsumer = AppElementContext.Consumer;
 
-export type Props = {
+export type AppElementProviderProps = {
 	appElement?: HTMLElement | null;
 };
 
-export const Provider: React.FC<Props> = (props) => {
+export const AppElementProvider: React.FC<AppElementProviderProps> = (props) => {
 	const { children, appElement } = props;
 
-	const store: Store = {
+	const store: AppElementStore = {
 		appElement: appElement || document.body,
 	};
 
 	return (
-		<Context.Provider value={store}>
+		<AppElementContext.Provider value={store}>
 			{children}
-		</Context.Provider>
+		</AppElementContext.Provider>
 	);
 };

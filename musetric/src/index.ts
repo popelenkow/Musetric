@@ -1,10 +1,11 @@
-export * as Controls from './Controls';
-
-export * as AudioDevices from './AudioDevices';
-export * as Components from './Components';
-export * as Contexts from './Contexts';
-export * as Core from './Core';
-export * as Locales from './Locales';
-export * as Rendering from './Rendering';
-export * as Themes from './Themes';
-export * as Contents from './Contents';
+export * from './Components';
+export * from './Contexts';
+export * from './Controls';
+export * from './Core';
+export * from './Icons';
+export * from './Locales';
+export * from './Rendering';
+export * from './SoundAnalysis';
+export * from './SoundDevices';
+export * from './Themes';
+export * from './Contents';

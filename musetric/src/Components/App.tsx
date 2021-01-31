@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Contexts } from '..';
-import { theming, Theme } from '../Contexts/Theme';
+import { AppProvider, AppProviderProps, ContentProviderProps, LocaleProviderProps, ThemeProviderProps, Theme } from '..';
+import { theming } from '../Contexts';
 
-export const getStyles = (theme: Theme) => ({
+export const getAppStyles = (theme: Theme) => ({
 	root: {
 		width: '100%',
 		height: '100%',
@@ -14,7 +14,7 @@ export const getStyles = (theme: Theme) => ({
 	},
 });
 
-export const useStyles = createUseStyles(getStyles, { name: 'App', theming });
+export const useAppStyles = createUseStyles(getAppStyles, { name: 'App', theming });
 
 type PureProps = {
 	setAppElement: (x: HTMLElement | null) => void;
@@ -22,7 +22,7 @@ type PureProps = {
 
 const PureView: React.FC<PureProps> = (props) => {
 	const { children, setAppElement } = props;
-	const classes = useStyles();
+	const classes = useAppStyles();
 
 	return (
 		<div ref={setAppElement} className={classes.root}>
@@ -31,26 +31,26 @@ const PureView: React.FC<PureProps> = (props) => {
 	);
 };
 
-export type Props =
-	& Contexts.Content.Props
-	& Contexts.Locale.Props
-	& Contexts.Theme.Props;
+export type AppProps =
+	& ContentProviderProps
+	& LocaleProviderProps
+	& ThemeProviderProps;
 
-export const View: React.FC<Props> = (props) => {
+export const App: React.FC<AppProps> = (props) => {
 	const { children } = props;
 
 	const [appElement, setAppElement] = useState<HTMLElement>(document.body);
 
-	const contextProps: Contexts.App.Props = {
+	const contextProps: AppProviderProps = {
 		...props,
 		appElement,
 	};
 
 	return (
-		<Contexts.App.Provider {...contextProps}>
+		<AppProvider {...contextProps}>
 			<PureView setAppElement={(x) => x && setAppElement(x)}>
 				{children}
 			</PureView>
-		</Contexts.App.Provider>
+		</AppProvider>
 	);
 };

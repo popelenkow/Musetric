@@ -1,8 +1,8 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import { theming, Theme } from '../Contexts/Theme';
+import { Theme, theming } from '..';
 
-export const getStyles = (theme: Theme) => ({
+export const getContainerStyles = (theme: Theme) => ({
 	root: {
 		display: 'flex',
 		flex: 1,
@@ -13,14 +13,14 @@ export const getStyles = (theme: Theme) => ({
 	},
 });
 
-export const useStyles = createUseStyles(getStyles, { name: 'Container', theming });
+export const useContainerStyles = createUseStyles(getContainerStyles, { name: 'Container', theming });
 
-export type Props = {
+export type ContainerProps = {
 };
 
-export const View: React.FC<Props> = (props) => {
+export const Container: React.FC<ContainerProps> = (props) => {
 	const { children } = props;
-	const classes = useStyles();
+	const classes = useContainerStyles();
 
 	return (
 		<div className={classes.root}>

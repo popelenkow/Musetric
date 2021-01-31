@@ -1,11 +1,10 @@
-import { Core } from '..';
-import { Layout } from '.';
+import { rgbToHex, Layout2D } from '..';
 
 export type FpsMonitor = {
 	getDelta: () => number;
 	getFps: () => number;
 	setDelta: (delta: number) => void;
-	draw: (context: CanvasRenderingContext2D, layout: Layout) => void;
+	draw: (context: CanvasRenderingContext2D, layout: Layout2D) => void;
 };
 
 export const createFpsMonitor = (): FpsMonitor => {
@@ -23,9 +22,9 @@ export const createFpsMonitor = (): FpsMonitor => {
 
 		context.textBaseline = 'top';
 		context.font = `Bold ${view.height}px serif`;
-		context.fillStyle = Core.rgbToHex(colors.content);
+		context.fillStyle = rgbToHex(colors.content);
 		context.fillText(text, position.x, position.y, view.width);
-		context.strokeStyle = Core.rgbToHex(colors.background);
+		context.strokeStyle = rgbToHex(colors.background);
 		context.strokeText(text, position.x, position.y, view.width);
 	};
 	const result: FpsMonitor = {

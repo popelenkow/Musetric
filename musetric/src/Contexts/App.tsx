@@ -1,24 +1,24 @@
 import React from 'react';
-import { AppElement, Content, Locale, Theme } from '.';
+import { AppElementProvider, AppElementProviderProps, ContentProvider, ContentProviderProps, LocaleProvider, LocaleProviderProps, ThemeProvider, ThemeProviderProps } from '..';
 
-export type Props =
-	& AppElement.Props
-	& Content.Props
-	& Locale.Props
-	& Theme.Props;
+export type AppProviderProps =
+	& AppElementProviderProps
+	& ContentProviderProps
+	& LocaleProviderProps
+	& ThemeProviderProps;
 
-export const Provider: React.FC<Props> = (props) => {
+export const AppProvider: React.FC<AppProviderProps> = (props) => {
 	const { children } = props;
 
 	return (
-		<Locale.Provider {...props}>
-			<Theme.Provider {...props}>
-				<Content.Provider {...props}>
-					<AppElement.Provider {...props}>
+		<LocaleProvider {...props}>
+			<ThemeProvider {...props}>
+				<ContentProvider {...props}>
+					<AppElementProvider {...props}>
 						{children}
-					</AppElement.Provider>
-				</Content.Provider>
-			</Theme.Provider>
-		</Locale.Provider>
+					</AppElementProvider>
+				</ContentProvider>
+			</ThemeProvider>
+		</LocaleProvider>
 	);
 };
