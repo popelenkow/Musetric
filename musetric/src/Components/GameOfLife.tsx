@@ -1,21 +1,20 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable no-param-reassign */
 import React, { useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import produce from 'immer';
 import { useTranslation } from 'react-i18next';
-import { Controls } from '..';
-import { theming, Theme } from '../Contexts/Theme';
+import { getScrollbarStyles, Theme, Button } from '..';
+import { theming } from '../Contexts';
 
-const getStyles = (theme: Theme) => ({
+const getGameOfLifeStyles = (theme: Theme) => ({
 	root: {
 		display: 'flex',
 		flexDirection: 'column',
 		overflow: 'hidden',
 		width: '100%',
 		height: '100%',
-		...Controls.Scrollbar.getStyles(theme).root,
+		...getScrollbarStyles(theme).root,
 	},
 	header: {
 		display: 'flex',
@@ -44,24 +43,24 @@ const getStyles = (theme: Theme) => ({
 	},
 });
 
-const useStyles = createUseStyles(getStyles, { name: 'GameOfLife', theming });
+const useGameOfLifeStyles = createUseStyles(getGameOfLifeStyles, { name: 'GameOfLife', theming });
 
-export type CellState = 0 | 1;
-export type Row = CellState[];
-export type Grid = Row[];
+type CellState = 0 | 1;
+type Row = CellState[];
+type Grid = Row[];
 
-export type Size = {
+type Size = {
 	rows: number;
 	columns: number;
 };
 
-export type Options = {
+type Options = {
 	row: number;
 	column: number;
 };
 
-export type GenF = (size: Size, grid?: Grid, options?: Options) => Grid;
-export type GenO = Record<string, GenF>;
+type GenF = (size: Size, grid?: Grid, options?: Options) => Grid;
+type GenO = Record<string, GenF>;
 
 const operations = [
 	[0, 1],
@@ -132,14 +131,13 @@ const Gen: GenO = {
 	},
 };
 
-export type Props = {
+export type GameOfLifeProps = {
 	size: Size;
 };
 
-export const View: React.FC<Props> = (props) => {
+export const GameOfLife: React.FC<GameOfLifeProps> = (props) => {
 	const { size } = props;
-	const classes = useStyles();
-	const buttonClasses = Controls.Button.useStyles();
+	const classes = useGameOfLifeStyles();
 	const { t } = useTranslation();
 
 	const gridStyle = {
@@ -147,7 +145,7 @@ export const View: React.FC<Props> = (props) => {
 	};
 
 	const [grid, setGrid] = useState<Grid>(Gen.empty(size));
-	const [generator, setGenerator] = useState<number>();
+	const [generator, setGenerator] = useState<NodeJS.Timeout>();
 
 	const setGridQ = (gen: GenF, options?: Options) => {
 		setGrid(curGrid => gen(size, curGrid, options));
@@ -158,7 +156,8 @@ export const View: React.FC<Props> = (props) => {
 			clearInterval(generator);
 		}
 
-		const newGenerator = isRun
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const newGenerator: any = isRun
 			? setInterval(() => setGridQ(Gen.next), 100)
 			: undefined;
 		setGenerator(newGenerator);
@@ -167,15 +166,15 @@ export const View: React.FC<Props> = (props) => {
 	return (
 		<div className={classes.root}>
 			<div className={classes.header}>
-				<button type='button' className={buttonClasses.root} onClick={() => setGeneratorQ(!generator)}>
+				<Button onClick={() => setGeneratorQ(!generator)}>
 					{generator ? t('GameOfLife:stop') : t('GameOfLife:start')}
-				</button>
-				<button type='button' className={buttonClasses.root} onClick={() => setGridQ(Gen.random)}>
+				</Button>
+				<Button onClick={() => setGridQ(Gen.random)}>
 					{t('GameOfLife:random')}
-				</button>
-				<button type='button' className={buttonClasses.root} onClick={() => setGridQ(Gen.empty)}>
+				</Button>
+				<Button onClick={() => setGridQ(Gen.empty)}>
 					{t('GameOfLife:clear')}
-				</button>
+				</Button>
 			</div>
 			<div className={classes.grid} style={gridStyle}>
 				{grid.map((rows, row) => rows.map((_, column) => {

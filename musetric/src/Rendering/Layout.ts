@@ -1,30 +1,30 @@
-import { Core, Themes } from '..';
+import { Rgb, parseRgb, Theme } from '..';
 
-export type Position = {
+export type Position2D = {
 	x: number;
 	y: number;
 };
 
-export type Size = {
+export type Size2D = {
 	width: number;
 	height: number;
 };
 
 export type Colors = {
-	background: Core.Color;
-	content: Core.Color;
+	background: Rgb;
+	content: Rgb;
 };
 
-export type Layout = {
-	position: Position;
-	view: Size;
-	frame: Size;
+export type Layout2D = {
+	position: Position2D;
+	view: Size2D;
+	frame: Size2D;
 	colors: Colors;
 };
 
-export const parseHslColors = (theme: Themes.Theme): Colors | undefined => {
-	const background = Core.parseHsl(theme.contentBg);
-	const content = Core.parseHsl(theme.content);
+export const parseHslColors = (theme: Theme): Colors | undefined => {
+	const background = parseRgb(theme.contentBg);
+	const content = parseRgb(theme.content);
 	if (!background) return undefined;
 	if (!content) return undefined;
 	const colors: Colors = {

@@ -1,27 +1,26 @@
 import React, { useContext, ReactNodeArray } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Contexts, Contents } from '..';
-import { theming } from '../Contexts/Theme';
+import { ContentContext, ContentId, theming } from '..';
 
-export const getStyles = () => ({
+export const getContentStyles = () => ({
 	root: {
 		width: '100%',
 		height: '100%',
 	},
 });
 
-export const useStyles = createUseStyles(getStyles(), { name: 'Content', theming });
+export const useContentStyles = createUseStyles(getContentStyles(), { name: 'Content', theming });
 
-export type Props = {
-	getIndex: (contentId?: Contents.ContentId) => number;
+export type ContentProps = {
+	getIndex: (contentId?: ContentId) => number;
 	children: ReactNodeArray;
 };
 
-export const View: React.FC<Props> = (props) => {
+export const Content: React.FC<ContentProps> = (props) => {
 	const { getIndex, children } = props;
-	const classes = useStyles();
+	const classes = useContentStyles();
 
-	const { contentId } = useContext(Contexts.Content.Context);
+	const { contentId } = useContext(ContentContext);
 
 	const index = getIndex(contentId);
 

@@ -2,21 +2,34 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
+import { createUseStyles } from 'react-jss';
+import { theming } from '../Contexts';
+import { Theme } from '..';
+import { getButtonStyles } from './Button';
 
-export type Props<T> = {
+export const getSwitchStyles = (theme: Theme) => ({
+	root: {
+		...getButtonStyles(theme).root,
+	},
+});
+
+export const useSwitchStyles = createUseStyles(getButtonStyles, { name: 'Switch', theming });
+
+export type SwitchProps<T> = {
 	currentId: T;
 	ids: T[];
 	set: (id: T) => void;
+	view?: (id: T, t: TFunction) => JSX.Element | string;
 	className?: string;
-	localize?: (id: T, t: TFunction) => string;
 };
 
-export type State<T> = {
+export type SwitchState<T> = {
 	id: T;
 };
 
-export const View = <T, >(props: React.PropsWithChildren<Props<T>>): JSX.Element => {
-	const { currentId, ids, localize, set, className } = props;
+export const Switch = <T, >(props: React.PropsWithChildren<SwitchProps<T>>): JSX.Element => {
+	const { currentId, ids, view, set, className } = props;
+	const classes = useSwitchStyles();
 	const { t } = useTranslation();
 
 	const [id, setId] = useState(currentId);
@@ -28,9 +41,10 @@ export const View = <T, >(props: React.PropsWithChildren<Props<T>>): JSX.Element
 		setId(newId);
 		set(newId);
 	};
+
 	return (
-		<button type='button' className={className} onClick={next}>
-			{localize ? localize(id, t) : id}
+		<button type='button' className={className || classes.root} onClick={next}>
+			{view ? view(id, t) : id}
 		</button>
 	);
 };
