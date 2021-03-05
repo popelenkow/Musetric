@@ -3,7 +3,7 @@
 	"compilerOptions": {
 		"noUnusedLocals": false,
 		"esModuleInterop": true,
-		"types": ["node", "@types/jest"],
+		"types": ["node"],
 	},
 	"include": ["./**/*"]
 }

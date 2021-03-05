@@ -1,4 +1,4 @@
-import { ComplexArray, createComplexArray, forwardFft, inverseFft, forwardDft, inverseDft } from '../src';
+import { ComplexArray, createComplexArray, createFft, createDft } from '../src';
 
 const isArrayCloseTo = (arr1: ArrayLike<number>, arr2: ArrayLike<number>) => {
 	if (arr1.length !== arr2.length) return false;
@@ -10,8 +10,8 @@ const isArrayCloseTo = (arr1: ArrayLike<number>, arr2: ArrayLike<number>) => {
 	return true;
 };
 
-type Forward = typeof forwardFft;
-const testForward = (forward: Forward) => {
+type CreateFt = typeof createFft;
+const testForward = (createFt: CreateFt) => {
 	describe('forward', () => {
 		const windowSize = 4;
 		let input: ComplexArray;
@@ -26,36 +26,35 @@ const testForward = (forward: Forward) => {
 
 		it('[1, 1, 1, 1]', () => {
 			input.real.set([1, 1, 1, 1]);
-			forward(input, output, windowSize);
+			createFt(windowSize).forward(input, output);
 			expect(isArrayCloseTo(output.real, [4, 0, 0, 0])).toBeTruthy();
 			expect(isArrayCloseTo(output.imag, [0, 0, 0, 0])).toBeTruthy();
 		});
 
 		it('[1, 0, 0, 0]', () => {
 			input.real.set([1, 0, 0, 0]);
-			forward(input, output, windowSize);
+			createFt(windowSize).forward(input, output);
 			expect(isArrayCloseTo(output.real, [1, 1, 1, 1])).toBeTruthy();
 			expect(isArrayCloseTo(output.imag, [0, 0, 0, 0])).toBeTruthy();
 		});
 
 		it('[0, 1, 2, 3]', () => {
 			input.real.set([0, 1, 2, 3]);
-			forward(input, output, windowSize);
+			createFt(windowSize).forward(input, output);
 			expect(isArrayCloseTo(output.real, [6, -2, -2, -2])).toBeTruthy();
 			expect(isArrayCloseTo(output.imag, [0, 2, 0, -2])).toBeTruthy();
 		});
 
 		it('[0, 1, 0, 1]', () => {
 			input.real.set([0, 1, 0, 1]);
-			forward(input, output, windowSize);
+			createFt(windowSize).forward(input, output);
 			expect(isArrayCloseTo(output.real, [2, 0, -2, 0])).toBeTruthy();
 			expect(isArrayCloseTo(output.imag, [0, 0, 0, 0])).toBeTruthy();
 		});
 	});
 };
 
-type Inverse = typeof inverseFft;
-const testInverse = (inverse: Inverse) => {
+const testInverse = (createFt: CreateFt) => {
 	describe('inverse', () => {
 		const windowSize = 4;
 		let input: ComplexArray;
@@ -68,14 +67,14 @@ const testInverse = (inverse: Inverse) => {
 
 		it('[4, 0, 0, 0]', () => {
 			input.real.set([4, 0, 0, 0]);
-			inverse(input, output, windowSize);
+			createFt(windowSize).inverse(input, output);
 			expect(isArrayCloseTo(output.real, [1, 1, 1, 1])).toBeTruthy();
 			expect(isArrayCloseTo(output.imag, [0, 0, 0, 0])).toBeTruthy();
 		});
 
 		it('[1, 1, 1, 1]', () => {
 			input.real.set([1, 1, 1, 1]);
-			inverse(input, output, windowSize);
+			createFt(windowSize).inverse(input, output);
 			expect(isArrayCloseTo(output.real, [1, 0, 0, 0])).toBeTruthy();
 			expect(isArrayCloseTo(output.imag, [0, 0, 0, 0])).toBeTruthy();
 		});
@@ -83,14 +82,14 @@ const testInverse = (inverse: Inverse) => {
 		it('[6, -2, -2, -2],[0, 2, 0, -2]', () => {
 			input.real.set([6, -2, -2, -2]);
 			input.imag.set([0, 2, 0, -2]);
-			inverse(input, output, windowSize);
+			createFt(windowSize).inverse(input, output);
 			expect(isArrayCloseTo(output.real, [0, 1, 2, 3])).toBeTruthy();
 			expect(isArrayCloseTo(output.imag, [0, 0, 0, 0])).toBeTruthy();
 		});
 
 		it('[2, 0, -2, 0]', () => {
 			input.real.set([2, 0, -2, 0]);
-			inverse(input, output, windowSize);
+			createFt(windowSize).inverse(input, output);
 			expect(isArrayCloseTo(output.real, [0, 1, 0, 1])).toBeTruthy();
 			expect(isArrayCloseTo(output.imag, [0, 0, 0, 0])).toBeTruthy();
 		});
@@ -98,11 +97,11 @@ const testInverse = (inverse: Inverse) => {
 };
 
 describe('dft', () => {
-	testForward(forwardDft);
-	testInverse(inverseDft);
+	testForward(createDft);
+	testInverse(createDft);
 });
 
 describe('fft', () => {
-	testForward(forwardFft);
-	testInverse(inverseFft);
+	testForward(createFft);
+	testInverse(createFft);
 });

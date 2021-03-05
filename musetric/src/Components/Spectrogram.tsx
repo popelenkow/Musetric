@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { createUseStyles } from 'react-jss';
-import { getFftFrequencies, Layout2D, parseHslColors, Size2D, createFpsMonitor, DrawFrame, startAnimation, SoundBuffer, Theme } from '..';
+import { createFft, Layout2D, parseHslColors, Size2D, createFpsMonitor, DrawFrame, startAnimation, SoundBuffer, Theme } from '..';
 import { theming, useTheme } from '../Contexts';
 
 const createNext = (N: number) => {
@@ -102,6 +102,9 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 		const colors = parseHslColors(theme);
 		if (!colors) return;
 
+		const windowSize = frame.height * 2;
+		const fft = createFft(windowSize);
+
 		const next = createNext(10);
 		draw.current = (delta) => {
 			if (soundBuffer.soundSize === 0) return;
@@ -122,14 +125,14 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 			};
 
 			const audioData = soundBuffer.buffers[0];
-			const windowSize = frame.height * 2;
+
 			const frequencies: Float32Array[] = [];
 			const count = Math.floor(audioData.length / windowSize);
 			for (let i = 0; i < count; i++) {
 				const array = new Float32Array(windowSize / 2);
 				frequencies.push(array);
 			}
-			getFftFrequencies(audioData, frequencies, windowSize);
+			fft.getFrequencies(audioData, frequencies);
 			drawSpectrogram(frequencies, image.data, contentLayout);
 			context.putImageData(image, 0, 0);
 

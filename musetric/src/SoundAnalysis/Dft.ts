@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { ComplexArray, createComplexArray, createComplexArrayBy, normComplexArray, zeroWindowFilter, gaussWindowFilter } from '..';
 
-const calc = (input: ComplexArray, output: ComplexArray, windowSize: number, isInverse: boolean) => {
+const evalDft = (input: ComplexArray, output: ComplexArray, windowSize: number, isInverse: boolean) => {
 	for (let i = 0; i < windowSize; i++) {
 		output.real[i] = 0;
 		output.imag[i] = 0;
@@ -29,28 +29,31 @@ const calc = (input: ComplexArray, output: ComplexArray, windowSize: number, isI
 	}
 };
 
-export const forwardDft = (input: ComplexArray, output: ComplexArray, windowSize: number) => {
-	calc(input, output, windowSize, false);
-};
-
-export const inverseDft = (input: ComplexArray, output: ComplexArray, windowSize: number) => {
-	calc(input, output, windowSize, true);
-};
-
-export const getDftFrequencies = (input: Float32Array, output: Float32Array[], windowSize: number): void => {
-	const wave = createComplexArrayBy(input, zeroWindowFilter(input.length));
+export const createDft = (windowSize: number) => {
 	const window = createComplexArray(windowSize);
 	const frequency = createComplexArray(windowSize);
 	const filter = gaussWindowFilter(windowSize);
 
-	const count = Math.floor(input.length / windowSize);
-	for (let i = 0; i < count; i++) {
-		const offset = i * windowSize;
-		for (let j = 0; j < windowSize; j++) {
-			window.real[j] = wave.real[j + offset] * filter[j];
-			window.imag[j] = wave.imag[j + offset] * filter[j];
-		}
-		forwardDft(window, frequency, windowSize);
-		normComplexArray(frequency, output[i], windowSize / 2, 1 / windowSize);
-	}
+	const result = {
+		forward: (input: ComplexArray, output: ComplexArray) => {
+			evalDft(input, output, windowSize, false);
+		},
+		inverse: (input: ComplexArray, output: ComplexArray) => {
+			evalDft(input, output, windowSize, true);
+		},
+		getFrequencies: (input: Float32Array, output: Float32Array[]) => {
+			const wave = createComplexArrayBy(input, zeroWindowFilter(input.length));
+			const count = Math.floor(input.length / windowSize);
+			for (let i = 0; i < count; i++) {
+				const offset = i * windowSize;
+				for (let j = 0; j < windowSize; j++) {
+					window.real[j] = wave.real[j + offset] * filter[j];
+					window.imag[j] = wave.imag[j + offset] * filter[j];
+				}
+				result.forward(window, frequency);
+				normComplexArray(frequency, output[i], windowSize / 2, 1 / windowSize);
+			}
+		},
+	};
+	return result;
 };
