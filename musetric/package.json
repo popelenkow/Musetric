@@ -22,33 +22,36 @@
 	"scripts": {
 		"build": "rimraf dist && node copy.js && tsc",
 		"parse-locale": "i18next -c ./i18next.parser.config.js",
-		"lint": "eslint \"{src,test}/**/*.{js,ts,tsx}\" ",
-		"test": "jest"
+		"lint": "eslint \"{src,test,performance}/**/*.{js,ts,tsx}\" ",
+		"test": "jest",
+		"perf": "ts-node performance/index.ts"
 	},
 	"dependencies": {
 		"@types/file-saver": "^2.0.1",
-		"@types/react": "^17.0.0",
-		"@types/react-dom": "^17.0.0",
+		"@types/react": "^17.0.2",
+		"@types/react-dom": "^17.0.1",
 		"@types/uuid": "^8.3.0",
 		"file-saver": "^2.0.5",
-		"i18next": "^19.8.4",
+		"i18next": "^19.9.1",
 		"immer": "^8.0.1",
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1",
-		"react-i18next": "^11.8.5",
+		"react-i18next": "^11.8.8",
 		"react-icons": "^4.2.0",
 		"react-jss": "^10.5.1",
 		"uuid": "^8.3.2"
 	},
 	"devDependencies": {
+		"@types/benchmark": "2.1.0",
 		"@types/jest": "^26.0.20",
-		"benchmark": "^2.1.4",
+		"benchmark": "2.1.4",
 		"copyfiles": "2.4.1",
-		"eslint-config-musetric": "0.0.26",
-		"i18next-parser": "3.6.0",
-		"jest": "^26.6.3",
+		"eslint-config-musetric": "0.0.28",
+		"i18next-parser": "3.7.0",
+		"jest": "26.6.3",
 		"rimraf": "3.0.2",
-		"ts-jest": "^26.5.1",
-		"typescript": "^4.1.3"
+		"ts-jest": "26.5.3",
+		"ts-node": "9.1.1",
+		"typescript": "4.2.3"
 	}
 }

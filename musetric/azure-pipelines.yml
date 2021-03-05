@@ -103,6 +103,10 @@ steps:
   workingDirectory: $(root)
   displayName: 'yarn test'
 
+- script: yarn perf
+  workingDirectory: $(root)
+  displayName: 'yarn perf'
+
 - script: |
     echo "Add token to npmrc"
     echo '//registry.npmjs.org/:_authToken=$(npmToken)' > .npmrc

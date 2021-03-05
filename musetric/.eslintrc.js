@@ -20,5 +20,11 @@ module.exports = {
 				tsconfigRootDir: path.join(__dirname, 'test'),
 			},
 		},
+		{
+			files: ['performance/**/*.js', 'performance/**/*.ts', 'performance/**/*.tsx'],
+			parserOptions: {
+				tsconfigRootDir: path.join(__dirname, 'performance'),
+			},
+		},
 	],
 };
