@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { Container, Content, App, AppProps, SoundWorkshop, GameOfLife, Titlebar, ContentId, contentIdList, allThemes, themeIdList, localeIdList, createI18n } from 'musetric';
+import { main } from './shaders';
 
 const init = async () => {
 	const params = new URLSearchParams(window.location.search);
@@ -44,4 +45,10 @@ const init = async () => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
-init();
+init;
+
+const canvas = document.createElement('canvas');
+canvas.style.width = '100%';
+canvas.style.height = '100%';
+document.body.appendChild(canvas);
+main(canvas);

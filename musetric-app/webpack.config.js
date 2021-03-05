@@ -12,6 +12,7 @@ const common = {
 	module: {
 		rules: [
 			{ test: /\.(ts|tsx)$/, include: /src/, use: ['ts-loader'] },
+			{ test: /\.(glsl)$/, include: /src/, use: ['ts-shader-loader'] },
 		],
 	},
 	output: {
