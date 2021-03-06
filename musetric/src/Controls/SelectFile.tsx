@@ -22,7 +22,7 @@ export const getSelectFileStyles = () => ({
 	},
 });
 
-export const useSelectFileStyles = createUseStyles(getSelectFileStyles, { name: 'SelectFile', theming });
+export const useSelectFileStyles = createUseStyles(getSelectFileStyles(), { name: 'SelectFile', theming });
 
 export type SelectFileProps = {
 	onChange: React.FormEventHandler<HTMLInputElement>;

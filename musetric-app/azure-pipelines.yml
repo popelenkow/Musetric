@@ -16,6 +16,9 @@ parameters:
   - beta
   - latest
   default: next
+- name: isNpmPublish
+  type: boolean
+  default: false
 - name: isGithubPublish
   type: boolean
   default: false
@@ -63,6 +66,14 @@ steps:
       print(f'##vso[task.setvariable variable=version]{version}')
       print(f'version {version}')
 
+      isNpmPublish = ${{parameters.isNpmPublish}}
+      print(f'##vso[task.setvariable variable=isNpmPublish]{isNpmPublish}')
+      print(f'isNpmPublish {isNpmPublish}')
+
+      isGithubPublish = ${{parameters.isGithubPublish}}
+      print(f'##vso[task.setvariable variable=isGithubPublish]{isGithubPublish}')
+      print(f'isGithubPublish {isGithubPublish}')
+
       if tag == 'latest':
         isGithubRelease = True
       else:
@@ -76,7 +87,7 @@ steps:
   workingDirectory: $(root)
   displayName: 'yarn version'
 
-- script: yarn --ignore-scripts
+- script: yarn
   workingDirectory: $(root)
   displayName: 'yarn'
 
@@ -87,6 +98,14 @@ steps:
 - script: yarn build
   workingDirectory: $(root)
   displayName: 'yarn build'
+
+- script: |
+    echo "Add token to npmrc"
+    echo '//registry.npmjs.org/:_authToken=$(npmToken)' > .npmrc
+    yarn publish --tag $(tag) --no-git-tag-version
+  workingDirectory: $(root)/dist
+  condition: and(succeeded(), eq(variables.isNpmPublish, true))
+  displayName: 'npm publish'
 
 - script: yarn pack
   workingDirectory: $(root)/dist
@@ -101,6 +120,6 @@ steps:
     tag: v$(version)
     assets: '$(root)/dist/*.tgz'
     isDraft: true
-    isPreRelease: $(isRelease)
+    isPreRelease: $(isGithubRelease)
   condition: and(succeeded(), eq(variables.isGithubPublish, true))
   displayName: 'github publish'

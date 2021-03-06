@@ -1,3 +1,4 @@
+export * from './AboutInfo';
 export * from './App';
 export * from './Frequency';
 export * from './GameOfLife';

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { createUseStyles } from 'react-jss';
-import { AppProvider, AppProviderProps, ContentProviderProps, LocaleProviderProps, ThemeProviderProps, Theme } from '..';
+import { AppElementProvider, AppElementContext, ContentProvider, LocaleProvider, ThemeProvider, ContentProviderProps, LocaleProviderProps, ThemeProviderProps, Theme } from '..';
 import { theming } from '../Contexts';
 
 export const getAppStyles = (theme: Theme) => ({
@@ -16,16 +16,16 @@ export const getAppStyles = (theme: Theme) => ({
 
 export const useAppStyles = createUseStyles(getAppStyles, { name: 'App', theming });
 
-type PureProps = {
-	setAppElement: (x: HTMLElement | null) => void;
+type RootProps = {
 };
 
-const PureView: React.FC<PureProps> = (props) => {
-	const { children, setAppElement } = props;
+const Root: React.FC<RootProps> = (props) => {
+	const { children } = props;
 	const classes = useAppStyles();
 
+	const { setAppElement } = useContext(AppElementContext);
 	return (
-		<div ref={setAppElement} className={classes.root}>
+		<div ref={(elem) => elem && setAppElement(elem)} className={classes.root}>
 			{children}
 		</div>
 	);
@@ -39,18 +39,19 @@ export type AppProps =
 export const App: React.FC<AppProps> = (props) => {
 	const { children } = props;
 
-	const [appElement, setAppElement] = useState<HTMLElement>(document.body);
-
-	const contextProps: AppProviderProps = {
-		...props,
-		appElement,
-	};
-
+	const [modal, setModal] = useState<React.ReactNode>();
 	return (
-		<AppProvider {...contextProps}>
-			<PureView setAppElement={(x) => x && setAppElement(x)}>
-				{children}
-			</PureView>
-		</AppProvider>
+		<LocaleProvider {...props}>
+			<ThemeProvider {...props}>
+				<ContentProvider {...props}>
+					<AppElementProvider initAppElement={document.body} setModalDialog={setModal}>
+						<Root>
+							{children}
+							{modal}
+						</Root>
+					</AppElementProvider>
+				</ContentProvider>
+			</ThemeProvider>
+		</LocaleProvider>
 	);
 };
