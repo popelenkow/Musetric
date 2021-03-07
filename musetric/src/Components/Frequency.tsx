@@ -39,7 +39,7 @@ export const drawFrequency = (
 export const getFrequencyStyles = (theme: Theme) => ({
 	root: {
 		display: 'block',
-		background: theme.contentBg,
+		background: theme.color.contentBg,
 		width: '100%',
 		height: '100%',
 	},
@@ -93,7 +93,7 @@ export const Frequency: React.FC<FrequencyProps> = (props) => {
 		if (!context) return;
 		if (!image) return;
 
-		const colors = parseHslColors(theme);
+		const colors = parseHslColors(theme.color);
 		if (!colors) return;
 
 		const contentLayout: Layout2D = {

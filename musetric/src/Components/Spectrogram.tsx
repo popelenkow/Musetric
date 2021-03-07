@@ -57,7 +57,7 @@ export const drawSpectrogram = (
 export const getSpectrogramStyles = (theme: Theme) => ({
 	root: {
 		display: 'block',
-		background: theme.contentBg,
+		background: theme.color.contentBg,
 		width: '100%',
 		height: '100%',
 	},
@@ -99,7 +99,7 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 		if (!context) return;
 		if (!image) return;
 
-		const colors = parseHslColors(theme);
+		const colors = parseHslColors(theme.color);
 		if (!colors) return;
 
 		const windowSize = frame.height * 2;

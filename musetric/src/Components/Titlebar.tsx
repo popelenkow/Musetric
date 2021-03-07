@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { createUseStyles } from 'react-jss';
-import { ContentId, contentIdList, Theme, localizeLocaleId, AppElementContext, ContentContext, LocaleContext, ThemeContext, localizeThemeId, Switch, SwitchProps, AppIcon, InfoIcon, Button, ModalDialog, AboutInfo } from '..';
+import { ContentId, contentIdList, Theme, localizeLocaleId, AppElementContext, ContentContext, LocaleContext, ThemeContext, localizeColorThemeId, Switch, SwitchProps, AppIcon, InfoIcon, Button, ModalDialog, AboutInfo } from '..';
 import { theming } from '../Contexts';
 
 export const getTitlebarStyles = (theme: Theme) => ({
@@ -8,18 +8,18 @@ export const getTitlebarStyles = (theme: Theme) => ({
 		display: 'flex',
 		width: '100%',
 		height: '32px',
-		background: theme.sidebarBg,
+		background: theme.color.sidebarBg,
 		cursor: 'default',
 		'-webkit-app-region': 'drag',
 		'-webkit-user-select': 'none',
-		'border-bottom': `1px solid ${theme.splitter}`,
+		'border-bottom': `1px solid ${theme.color.splitter}`,
 	},
 	icon: {
 		flexGrow: '1',
 		maxWidth: '32px',
 		maxHeight: '32px',
 		'& path': {
-			fill: theme.icon,
+			fill: theme.color.icon,
 		},
 	},
 	text: {
@@ -27,7 +27,7 @@ export const getTitlebarStyles = (theme: Theme) => ({
 		maxHeight: '32px',
 		width: 'auto',
 		font: '12px/32px "Segoe UI", Arial, sans-serif',
-		color: theme.content,
+		color: theme.color.content,
 		textIndent: '10px',
 	},
 });
@@ -43,7 +43,7 @@ export const Titlebar: React.FC<TitlebarProps> = () => {
 	const { setModalDialog } = useContext(AppElementContext);
 	const { contentId, setContentId } = useContext(ContentContext);
 	const { localeId, setLocaleId, localeIdList } = useContext(LocaleContext);
-	const { themeId, setThemeId, themeIdList } = useContext(ThemeContext);
+	const { colorThemeId, setColorThemeId, allColorThemeIds } = useContext(ThemeContext);
 
 	const contentSwitchProps: SwitchProps<ContentId> = {
 		currentId: contentId,
@@ -53,12 +53,12 @@ export const Titlebar: React.FC<TitlebarProps> = () => {
 	};
 
 	const themeSwitchProps: SwitchProps<string> = {
-		currentId: themeId,
-		ids: themeIdList,
+		currentId: colorThemeId,
+		ids: allColorThemeIds,
 		set: (id) => {
-			setThemeId(id);
+			setColorThemeId(id);
 		},
-		view: (id, t) => localizeThemeId(id, t) || id,
+		view: (id, t) => localizeColorThemeId(id, t) || id,
 	};
 
 	const localeSwitchProps: SwitchProps<string> = {

@@ -30,7 +30,7 @@
 		"eslint-config-musetric": "0.0.28",
 		"express": "4.17.1",
 		"html-webpack-plugin": "5.2.0",
-		"musetric": "0.0.13",
+		"musetric": "0.0.14-dev.771",
 		"rimraf": "3.0.2",
 		"ts-loader": "8.0.17",
 		"ts-node": "9.1.1",

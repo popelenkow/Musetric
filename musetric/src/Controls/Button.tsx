@@ -9,7 +9,7 @@ export const getButtonStyles = (theme: Theme) => ({
 		border: '0',
 		outline: '0',
 		userSelect: 'none',
-		color: theme.content,
+		color: theme.color.content,
 		background: 'transparent',
 		position: 'relative',
 		display: 'flex',
@@ -19,7 +19,7 @@ export const getButtonStyles = (theme: Theme) => ({
 			background: 'rgba(128,128,128,.1)',
 		},
 		'& path, rect, polygon': {
-			fill: theme.content,
+			fill: theme.color.content,
 		},
 	},
 });

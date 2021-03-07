@@ -20,8 +20,8 @@ const getGameOfLifeStyles = (theme: Theme) => ({
 		display: 'flex',
 		flexDirection: 'row',
 		height: '28px',
-		backgroundColor: theme.sidebarBg,
-		borderBottom: `1px solid ${theme.splitter}`,
+		backgroundColor: theme.color.sidebarBg,
+		borderBottom: `1px solid ${theme.color.splitter}`,
 	},
 	grid: {
 		display: 'grid',
@@ -32,14 +32,14 @@ const getGameOfLifeStyles = (theme: Theme) => ({
 	cellLive: {
 		width: '20px',
 		height: '20px',
-		border: `solid 1px ${theme.splitter}`,
-		backgroundColor: theme.cellLive,
+		border: `solid 1px ${theme.color.splitter}`,
+		backgroundColor: theme.color.cellLive,
 	},
 	cellDead: {
 		width: '20px',
 		height: '20px',
-		border: `solid 1px ${theme.splitter}`,
-		backgroundColor: theme.cellDead,
+		border: `solid 1px ${theme.color.splitter}`,
+		backgroundColor: theme.color.cellDead,
 	},
 });
 

@@ -7,18 +7,18 @@ export const getScrollbarStyles = (theme: Theme) => ({
 			width: '15px',
 		},
 		'& ::-webkit-scrollbar-track': {
-			background: theme.scrollbarTrack,
+			background: theme.color.scrollbarTrack,
 		},
 		'& ::-webkit-scrollbar-corner': {
-			background: theme.scrollbarTrack,
+			background: theme.color.scrollbarTrack,
 		},
 		'& ::-webkit-scrollbar-thumb': {
-			background: theme.scrollbarThumb,
+			background: theme.color.scrollbarThumb,
 			'&:hover': {
-				background: theme.scrollbarThumbHover,
+				background: theme.color.scrollbarThumbHover,
 			},
 			'&:active': {
-				background: theme.scrollbarThumbActive,
+				background: theme.color.scrollbarThumbActive,
 			},
 		},
 	},

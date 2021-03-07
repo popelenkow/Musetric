@@ -5,12 +5,13 @@ import { theming } from '../Contexts';
 
 export const getAppStyles = (theme: Theme) => ({
 	root: {
-		width: '100%',
-		height: '100%',
-		border: `1px solid ${theme.splitter}`,
+		width: `calc(${theme.platform.width} - 2px)`,
+		height: `calc(${theme.platform.height} - 2px)`,
+		border: `1px solid ${theme.color.splitter}`,
 		display: 'flex',
 		flexDirection: 'column',
-		backgroundColor: theme.appBg,
+		color: theme.color.content,
+		backgroundColor: theme.color.appBg,
 	},
 });
 
@@ -40,6 +41,7 @@ export const App: React.FC<AppProps> = (props) => {
 	const { children } = props;
 
 	const [modal, setModal] = useState<React.ReactNode>();
+
 	return (
 		<LocaleProvider {...props}>
 			<ThemeProvider {...props}>

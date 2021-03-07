@@ -8,8 +8,8 @@ export const getContainerStyles = (theme: Theme) => ({
 		flex: 1,
 		overflow: 'hidden',
 		margin: '6px',
-		border: `1px solid ${theme.splitter}`,
-		backgroundColor: theme.contentBg,
+		border: `1px solid ${theme.color.splitter}`,
+		backgroundColor: theme.color.contentBg,
 	},
 });
 
