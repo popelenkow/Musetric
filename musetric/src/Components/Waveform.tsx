@@ -10,6 +10,9 @@ export const drawWaveform = (
 ): void => {
 	const { position, view, frame, colors } = layout;
 
+	const minArray = new Float32Array(view.width);
+	const maxArray = new Float32Array(view.width);
+
 	const step = input.length / view.width;
 	for (let x = 0; x < view.width; x++) {
 		let min = 1.0;
@@ -17,15 +20,25 @@ export const drawWaveform = (
 		const offset = Math.floor(x * step);
 		for (let i = 0; i < step; i++) {
 			const value = input[offset + i];
-			min = Math.min(value, min);
-			max = Math.max(value, max);
+			if (value < min) min = value;
+			if (value > max) max = value;
 		}
-		for (let y = 0; y < view.height; y++) {
-			const yIndex = 4 * (position.y + y) * frame.width;
+		minArray[x] = min;
+		maxArray[x] = max;
+	}
+
+	for (let x = 0; x < view.width; x++) {
+		minArray[x] = (1 + minArray[x]) * (view.height / 2);
+		maxArray[x] = (1 + maxArray[x]) * (view.height / 2);
+	}
+
+	for (let y = 0; y < view.height; y++) {
+		const yIndex = 4 * (position.y + y) * frame.width;
+		for (let x = 0; x < view.width; x++) {
 			const index = 4 * (position.x + x) + yIndex;
-			const minY = (1 + min) * (view.height / 2);
-			const maxY = (1 + max) * (view.height / 2);
-			const isDraw = (minY <= y) && (y <= maxY);
+			const max = maxArray[x];
+			const min = minArray[x];
+			const isDraw = (min <= y) && (y <= max);
 			const color = isDraw ? colors.content : colors.background;
 			output[index + 0] = color.r;
 			output[index + 1] = color.g;

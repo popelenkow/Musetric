@@ -18,7 +18,7 @@ export const performanceFft = () => {
 	const suite = new benchmark.Suite();
 	for (let i = 64; i <= windowSize; i*=2) {
 		const fft = createFft(i);
-		suite.add(`fft ${i}`, () => {
+		suite.add(`fft.forward ${i}`, () => {
 			fft.forward(input, output);
 		});
 	}
