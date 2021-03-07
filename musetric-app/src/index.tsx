@@ -1,11 +1,11 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import { Container, Content, App, AppProps, SoundWorkshop, GameOfLife, Titlebar, ContentId, contentIdList, allThemes, themeIdList, localeIdList, createI18n } from 'musetric';
+import { Container, Content, App, AppProps, SoundWorkshop, GameOfLife, Titlebar, ContentId, contentIdList, allColorThemes, allColorThemeIds, localeIdList, createI18n } from 'musetric';
 
 const init = async () => {
 	const params = new URLSearchParams(window.location.search);
 
-	const initThemeId = params.get('theme') || 'dark';
+	const initColorThemeId = params.get('theme') || 'dark';
 
 	const initLocaleId = params.get('locale');
 	const i18n = await createI18n(initLocaleId);
@@ -18,9 +18,9 @@ const init = async () => {
 	const appProps: AppProps = {
 		i18n,
 		localeIdList,
-		initThemeId,
-		themeIdList,
-		allThemes,
+		initColorThemeId,
+		allColorThemeIds,
+		allColorThemes,
 	};
 
 	const app = (

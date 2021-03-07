@@ -24,8 +24,8 @@ export const getSoundWorkshopStyles = (theme: Theme) => ({
 		height: '40px',
 		display: 'flex',
 		flexDirection: 'row',
-		backgroundColor: theme.sidebarBg,
-		borderBottom: `1px solid ${theme.splitter}`,
+		backgroundColor: theme.color.sidebarBg,
+		borderBottom: `1px solid ${theme.color.splitter}`,
 	},
 	toolbarButton: {
 		...getButtonStyles(theme).root,
@@ -45,7 +45,7 @@ export const getSoundWorkshopStyles = (theme: Theme) => ({
 		overflow: 'hidden',
 		width: '100%',
 		height: '100%',
-		border: `1px solid ${theme.splitter}`,
+		border: `1px solid ${theme.color.splitter}`,
 	},
 });
 

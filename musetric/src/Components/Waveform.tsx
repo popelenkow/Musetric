@@ -51,7 +51,7 @@ export const drawWaveform = (
 export const getWaveformStyles = (theme: Theme) => ({
 	root: {
 		display: 'block',
-		background: theme.contentBg,
+		background: theme.color.contentBg,
 		width: '100%',
 		height: '100%',
 	},
@@ -93,7 +93,7 @@ export const Waveform: React.FC<WaveformProps> = (props) => {
 		if (!context) return;
 		if (!image) return;
 
-		const colors = parseHslColors(theme);
+		const colors = parseHslColors(theme.color);
 		if (!colors) return;
 
 		const contentLayout: Layout2D = {

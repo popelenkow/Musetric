@@ -1,4 +1,4 @@
-import { Rgb, parseRgb, Theme } from '..';
+import { Rgb, parseRgb, ColorTheme } from '..';
 
 export type Position2D = {
 	x: number;
@@ -22,7 +22,7 @@ export type Layout2D = {
 	colors: Colors;
 };
 
-export const parseHslColors = (theme: Theme): Colors | undefined => {
+export const parseHslColors = (theme: ColorTheme): Colors | undefined => {
 	const background = parseRgb(theme.contentBg);
 	const content = parseRgb(theme.content);
 	if (!background) return undefined;

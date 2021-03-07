@@ -13,9 +13,9 @@ export const getModalDialogStyles = (theme: Theme) => ({
 		width: 'calc(100vw - 2px)',
 		height: 'calc(100vh - 2px)',
 		overflow: 'hidden',
-		color: theme.content,
-		border: `1px solid ${theme.splitter}`,
-		backgroundColor: theme.contentBg,
+		color: theme.color.content,
+		border: `1px solid ${theme.color.splitter}`,
+		backgroundColor: theme.color.contentBg,
 	},
 	toolbar: {
 		width: '100%',
@@ -23,8 +23,8 @@ export const getModalDialogStyles = (theme: Theme) => ({
 		display: 'flex',
 		flexDirection: 'row',
 		'justify-content': 'right',
-		backgroundColor: theme.sidebarBg,
-		borderBottom: `1px solid ${theme.splitter}`,
+		backgroundColor: theme.color.sidebarBg,
+		borderBottom: `1px solid ${theme.color.splitter}`,
 	},
 });
 
