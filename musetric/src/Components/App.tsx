@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { createUseStyles } from 'react-jss';
-import { AppElementProvider, AppElementContext, ContentProvider, LocaleProvider, ThemeProvider, ContentProviderProps, LocaleProviderProps, ThemeProviderProps, Theme } from '..';
+import { AppElementProvider, AppElementContext, LocaleProvider, ThemeProvider, LocaleProviderProps, ThemeProviderProps, Theme } from '..';
 import { theming } from '../Contexts';
 
 export const getAppStyles = (theme: Theme) => ({
@@ -8,8 +8,9 @@ export const getAppStyles = (theme: Theme) => ({
 		width: `calc(${theme.platform.width} - 2px)`,
 		height: `calc(${theme.platform.height} - 2px)`,
 		border: `1px solid ${theme.color.splitter}`,
-		display: 'flex',
-		flexDirection: 'column',
+		display: 'grid',
+		gridTemplateRows: '33px 1fr',
+		gridTemplateColumns: '1fr',
 		color: theme.color.content,
 		backgroundColor: theme.color.appBg,
 	},
@@ -33,7 +34,6 @@ const Root: React.FC<RootProps> = (props) => {
 };
 
 export type AppProps =
-	& ContentProviderProps
 	& LocaleProviderProps
 	& ThemeProviderProps;
 
@@ -45,14 +45,12 @@ export const App: React.FC<AppProps> = (props) => {
 	return (
 		<LocaleProvider {...props}>
 			<ThemeProvider {...props}>
-				<ContentProvider {...props}>
-					<AppElementProvider initAppElement={document.body} setModalDialog={setModal}>
-						<Root>
-							{children}
-							{modal}
-						</Root>
-					</AppElementProvider>
-				</ContentProvider>
+				<AppElementProvider initAppElement={document.body} setModalDialog={setModal}>
+					<Root>
+						{children}
+						{modal}
+					</Root>
+				</AppElementProvider>
 			</ThemeProvider>
 		</LocaleProvider>
 	);

@@ -8,4 +8,3 @@ export * from './Rendering';
 export * from './SoundAnalysis';
 export * from './SoundDevices';
 export * from './Themes';
-export * from './Contents';

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { createUseStyles } from 'react-jss';
-import { ContentId, contentIdList, Theme, localizeLocaleId, AppElementContext, ContentContext, LocaleContext, ThemeContext, localizeColorThemeId, Switch, SwitchProps, AppIcon, InfoIcon, Button, ModalDialog, AboutInfo } from '..';
+import { Theme, localizeLocaleId, AppElementContext, LocaleContext, ThemeContext, localizeColorThemeId, Switch, SwitchProps, AppIcon, InfoIcon, Button, ModalDialog, AboutInfo } from '..';
 import { theming } from '../Contexts';
 
 export const getTitlebarStyles = (theme: Theme) => ({
@@ -41,16 +41,8 @@ export const Titlebar: React.FC<TitlebarProps> = () => {
 	const classes = useTitlebarStyles();
 
 	const { setModalDialog } = useContext(AppElementContext);
-	const { contentId, setContentId } = useContext(ContentContext);
 	const { localeId, setLocaleId, localeIdList } = useContext(LocaleContext);
 	const { colorThemeId, setColorThemeId, allColorThemeIds } = useContext(ThemeContext);
-
-	const contentSwitchProps: SwitchProps<ContentId> = {
-		currentId: contentId,
-		ids: contentIdList,
-		set: setContentId,
-		view: (id) => id,
-	};
 
 	const themeSwitchProps: SwitchProps<string> = {
 		currentId: colorThemeId,
@@ -76,7 +68,6 @@ export const Titlebar: React.FC<TitlebarProps> = () => {
 		<div className={classes.root}>
 			<div className={classes.icon}><AppIcon /></div>
 			<div className={classes.text}>Musetric</div>
-			<Switch {...contentSwitchProps} />
 			<Switch {...themeSwitchProps} />
 			<Switch {...localeSwitchProps} />
 			<Button onClick={openAboutDialog}><InfoIcon /></Button>
