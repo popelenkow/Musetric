@@ -2392,10 +2392,10 @@ ms@2.1.2:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-musetric@0.0.14-dev.771:
-  version "0.0.14-dev.771"
-  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.14-dev.771.tgz#d36db1e009c7fa68c181f1e6dc7acee41921c838"
-  integrity sha512-jiGo/qXQthF/H3FwsvA6JehFc4ZRuIkTQnCoadtY916//kgZ1meBgDAMipIZbMziOw0J5Lpt33gdf1vO7zc2vg==
+musetric@0.0.14-dev.778:
+  version "0.0.14-dev.778"
+  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.14-dev.778.tgz#e3a16f7a31bf89a652d1b1065675fdd0dd3953d8"
+  integrity sha512-PUrl+jg1b6/Xtm1Hn1etAIbrVTTqmWAqtt50loWXyQswSLhO0uLkmYT28ZdBfv0XZRzW8z7J1xXYICBzDNFk3A==
   dependencies:
     "@types/file-saver" "^2.0.1"
     "@types/react" "^17.0.2"

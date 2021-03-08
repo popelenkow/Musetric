@@ -16,7 +16,7 @@ export const getSoundWorkshopStyles = (theme: Theme) => ({
 		width: '100%',
 		height: '100%',
 		display: 'grid',
-		gridTemplateRows: '40px 1fr',
+		gridTemplateRows: '40px 56px 1fr',
 		gridTemplateColumns: '1fr',
 	},
 	toolbar: {
@@ -33,19 +33,16 @@ export const getSoundWorkshopStyles = (theme: Theme) => ({
 		height: '40px',
 		padding: '0',
 	},
-	content: {
-		display: 'grid',
-		gridTemplateRows: '56px 1fr',
-		gridTemplateColumns: '1fr',
-		gap: '5px',
-		padding: '5px',
+	loadBar: {
 		overflow: 'hidden',
+		width: '100%',
+		height: 'calc(100% - 1px)',
+		'border-bottom': `1px solid ${theme.color.splitter}`,
 	},
-	contentView: {
+	view: {
 		overflow: 'hidden',
 		width: '100%',
 		height: '100%',
-		border: `1px solid ${theme.color.splitter}`,
 	},
 });
 
@@ -101,11 +98,14 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 		if (!file) return;
 		const arrayBuffer = await file.arrayBuffer();
 		const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-		const arr: Float32Array[] = [];
+		const buffers: Float32Array[] = [];
 		for (let i = 0; i < soundBuffer.channelCount; i++) {
-			arr[i] = audioBuffer.getChannelData(i);
+			buffers[i] = audioBuffer.getChannelData(i);
 		}
-		soundBuffer.push(arr);
+		soundBuffer.push(buffers);
+		const { sampleRate } = audioContext;
+		const b = await wavCoder.encode({ buffers, sampleRate });
+		setBlob(b);
 	};
 
 	const switchContentProps: SwitchProps<ContentId> = {
@@ -124,7 +124,7 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 
 	return (
 		<div className={classes.root}>
-			<div id='controls' className={classes.toolbar}>
+			<div className={classes.toolbar}>
 				{isRecording
 					? <Button className={classes.toolbarButton} onClick={stop}><StopIcon /></Button>
 					: <Button className={classes.toolbarButton} onClick={start}><RecordIcon /></Button>}
@@ -134,15 +134,13 @@ export const RecorderView: React.FC<RecorderProps> = (props) => {
 				</SelectFile>
 				<Button className={classes.toolbarButton} onClick={saveAudio}><SaveIcon /></Button>
 			</div>
-			<div className={classes.content}>
-				<div className={classes.contentView}>
-					{url && <audio className='recorder-item' key={url} controls src={url} />}
-				</div>
-				<div className={classes.contentView}>
-					{contentId === 'Waveform' && <Waveform soundBuffer={soundBuffer} />}
-					{contentId === 'Frequency' && <Frequency recorderDevice={recorderDevice} />}
-					{contentId === 'Spectrogram' && <Spectrogram soundBuffer={soundBuffer} />}
-				</div>
+			<div className={classes.loadBar}>
+				{url && <audio className='recorder-item' key={url} controls src={url} />}
+			</div>
+			<div className={classes.view}>
+				{contentId === 'Waveform' && <Waveform soundBuffer={soundBuffer} />}
+				{contentId === 'Frequency' && <Frequency recorderDevice={recorderDevice} />}
+				{contentId === 'Spectrogram' && <Spectrogram soundBuffer={soundBuffer} />}
 			</div>
 		</div>
 	);

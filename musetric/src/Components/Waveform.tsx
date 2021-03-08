@@ -71,7 +71,7 @@ export const Waveform: React.FC<WaveformProps> = (props) => {
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
 
 	const frame: Size2D = useMemo(() => ({
-		width: 1600,
+		width: 1200,
 		height: 800,
 	}), []);
 

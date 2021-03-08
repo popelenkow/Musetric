@@ -7,8 +7,6 @@ export const getContainerStyles = (theme: Theme) => ({
 		display: 'flex',
 		flex: 1,
 		overflow: 'hidden',
-		margin: '6px',
-		border: `1px solid ${theme.color.splitter}`,
 		backgroundColor: theme.color.contentBg,
 	},
 });
