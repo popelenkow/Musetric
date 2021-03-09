@@ -6,6 +6,6 @@ export type RecordIconProps = {
 
 export const RecordIcon: React.FC<RecordIconProps> = () => {
 	return (
-		<AiFillAudio size='18px' />
+		<AiFillAudio size='24px' />
 	);
 };

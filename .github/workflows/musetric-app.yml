@@ -37,6 +37,6 @@ jobs:
     - run: yarn build
     - run: yarn publish --tag ${{ github.event.inputs.npmPublishTag }} --no-git-tag-version
       working-directory: ./musetric-app/dist
-      if: github.event.inputs.npmPublishTag == 'dev' || github.event.inputs.npmPublishTag == 'beta' || github.event.inputs.npmPublishTag == 'latest'
+      if: github.event.inputs.npmPublishTag == 'next' || github.event.inputs.npmPublishTag == 'beta' || github.event.inputs.npmPublishTag == 'latest'
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

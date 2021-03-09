@@ -6,6 +6,6 @@ export type OpenFileIconProps = {
 
 export const OpenFileIcon: React.FC<OpenFileIconProps> = () => {
 	return (
-		<AiFillFolderOpen size='18px' />
+		<AiFillFolderOpen size='24px' />
 	);
 };

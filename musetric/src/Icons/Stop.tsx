@@ -6,6 +6,6 @@ export type StopIconProps = {
 
 export const StopIcon: React.FC<StopIconProps> = () => {
 	return (
-		<CgPlayStop size='28px' />
+		<CgPlayStop size='34px' />
 	);
 };

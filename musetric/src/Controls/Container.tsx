@@ -7,7 +7,7 @@ export const getContainerStyles = (theme: Theme) => ({
 		display: 'flex',
 		flex: 1,
 		overflow: 'hidden',
-		backgroundColor: theme.color.contentBg,
+		backgroundColor: theme.color.app,
 	},
 });
 

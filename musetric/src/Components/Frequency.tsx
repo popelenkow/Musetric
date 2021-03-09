@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Layout2D, Size2D, createFpsMonitor, DrawFrame, parseHslColors, startAnimation, RecorderDevice, Theme } from '..';
+import { Layout2D, Size2D, createFpsMonitor, DrawFrame, parseColorThemeRgb, startAnimation, Recorder, Theme } from '..';
 import { theming, useTheme } from '../Contexts';
 
 export const drawFrequency = (
@@ -8,7 +8,9 @@ export const drawFrequency = (
 	output: Uint8ClampedArray,
 	layout: Layout2D,
 ): void => {
-	const { position, view, frame, colors } = layout;
+	const { position, view, frame, colorTheme } = layout;
+
+	const { content, background } = parseColorThemeRgb(colorTheme);
 
 	const step = (1.0 * input.length) / view.width;
 	const count = Math.max(Math.floor(step), 1);
@@ -27,7 +29,7 @@ export const drawFrequency = (
 			const yIndex = 4 * (position.y + y) * frame.width;
 			const index = 4 * (position.x + x) + yIndex;
 			const isDraw = (magnitude * view.height) > view.height - y - 1;
-			const color = isDraw ? colors.content : colors.background;
+			const color = isDraw ? content : background;
 			output[index + 0] = color.r;
 			output[index + 1] = color.g;
 			output[index + 2] = color.b;
@@ -39,7 +41,7 @@ export const drawFrequency = (
 export const getFrequencyStyles = (theme: Theme) => ({
 	root: {
 		display: 'block',
-		background: theme.color.contentBg,
+		background: theme.color.app,
 		width: '100%',
 		height: '100%',
 	},
@@ -48,15 +50,15 @@ export const getFrequencyStyles = (theme: Theme) => ({
 export const useFrequencyStyles = createUseStyles(getFrequencyStyles, { name: 'Frequency', theming });
 
 export type FrequencyProps = {
-	recorderDevice: RecorderDevice;
+	recorder: Recorder;
 };
 
 export const Frequency: React.FC<FrequencyProps> = (props) => {
-	const { recorderDevice } = props;
+	const { recorder } = props;
 	const theme = useTheme();
 	const classes = useFrequencyStyles();
 
-	const { mediaStream } = recorderDevice.recorder;
+	const { mediaStream } = recorder;
 
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
@@ -93,21 +95,18 @@ export const Frequency: React.FC<FrequencyProps> = (props) => {
 		if (!context) return;
 		if (!image) return;
 
-		const colors = parseHslColors(theme.color);
-		if (!colors) return;
-
 		const contentLayout: Layout2D = {
 			position: { x: 0, y: 0 },
 			view: { width: frame.width, height: frame.height },
 			frame,
-			colors,
+			colorTheme: theme.color,
 		};
 
 		const fpsLayout: Layout2D = {
 			position: { x: 0, y: 0 },
 			view: { width: frame.width / 20, height: frame.height / 12 },
 			frame,
-			colors,
+			colorTheme: theme.color,
 		};
 
 		draw.current = (delta) => {

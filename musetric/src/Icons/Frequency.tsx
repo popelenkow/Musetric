@@ -6,6 +6,6 @@ export type FrequencyIconProps = {
 
 export const FrequencyIcon: React.FC<FrequencyIconProps> = () => {
 	return (
-		<CgLoadbarSound size='28px' />
+		<CgLoadbarSound size='34px' />
 	);
 };

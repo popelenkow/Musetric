@@ -1,4 +1,4 @@
-import { rgbToHex, Layout2D } from '..';
+import { Layout2D, parseColorThemeHex } from '..';
 
 export type FpsMonitor = {
 	getDelta: () => number;
@@ -15,16 +15,18 @@ export const createFpsMonitor = (): FpsMonitor => {
 		delta = delta * 0.95 + curDelta * 0.05;
 	};
 	const draw: FpsMonitor['draw'] = (context, layout) => {
-		const { position, view, colors } = layout;
+		const { position, view, colorTheme } = layout;
+
+		const { content, background } = parseColorThemeHex(colorTheme);
 
 		const value = Math.round(getFps());
 		const text = value.toString();
 
 		context.textBaseline = 'top';
 		context.font = `Bold ${view.height}px serif`;
-		context.fillStyle = rgbToHex(colors.content);
+		context.fillStyle = content;
 		context.fillText(text, position.x, position.y, view.width);
-		context.strokeStyle = rgbToHex(colors.background);
+		context.strokeStyle = background;
 		context.strokeText(text, position.x, position.y, view.width);
 	};
 	const result: FpsMonitor = {

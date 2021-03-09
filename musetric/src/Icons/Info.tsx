@@ -6,6 +6,6 @@ export type InfoIconProps = {
 
 export const InfoIcon: React.FC<InfoIconProps> = () => {
 	return (
-		<AiFillInfoCircle size='18px' />
+		<AiFillInfoCircle size='24px' />
 	);
 };

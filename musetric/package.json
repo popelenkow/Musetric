@@ -1,7 +1,7 @@
 {
 	"name": "musetric",
-	"description": "Musetric is a javascript library for building music applications.",
-	"version": "0.0.14",
+	"description": "Musetric is a javascript library for building music applications",
+	"version": "0.0.15",
 	"license": "MIT",
 	"main": "index.js",
 	"types": "index.d.ts",
@@ -27,10 +27,12 @@
 		"perf": "ts-node performance/index.ts"
 	},
 	"dependencies": {
+		"@types/color": "^3.0.1",
 		"@types/file-saver": "^2.0.1",
 		"@types/react": "^17.0.2",
 		"@types/react-dom": "^17.0.1",
 		"@types/uuid": "^8.3.0",
+		"color": "^3.1.3",
 		"file-saver": "^2.0.5",
 		"i18next": "^19.9.1",
 		"immer": "^8.0.1",

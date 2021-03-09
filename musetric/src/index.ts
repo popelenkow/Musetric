@@ -1,7 +1,6 @@
 export * from './Components';
 export * from './Contexts';
 export * from './Controls';
-export * from './Core';
 export * from './Icons';
 export * from './Locales';
 export * from './Rendering';

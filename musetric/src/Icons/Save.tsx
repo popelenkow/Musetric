@@ -6,6 +6,6 @@ export type SaveIconProps = {
 
 export const SaveIcon: React.FC<SaveIconProps> = () => {
 	return (
-		<AiFillSave size='18px' />
+		<AiFillSave size='24px' />
 	);
 };
