@@ -1,5 +1,7 @@
 # eslint-config-musetric
 
+[![example branch parameter](https://github.com/popelenkow/Musetric/actions/workflows/eslint-config-musetric.yml/badge.svg?branch=develop)](https://github.com/popelenkow/Musetric/actions/workflows/eslint-config-musetric.yml)
+
 This package provides musetric's .eslintrc as an extensible shared config.
 
 ## Usage

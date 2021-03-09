@@ -1,6 +1,6 @@
 # Musetric
 
-[![Build Status](https://dev.azure.com/popelenkow/musetric/_apis/build/status/musetric)](https://dev.azure.com/popelenkow/musetric/_build/latest?definitionId=1)
+[![example branch parameter](https://github.com/popelenkow/Musetric/actions/workflows/musetric.yml/badge.svg?branch=develop)](https://github.com/popelenkow/Musetric/actions/workflows/musetric.yml)
 [![npm version](https://img.shields.io/npm/v/musetric)](https://www.npmjs.com/package/musetric)
 ![License](https://img.shields.io/github/license/popelenkow/musetric)
 
