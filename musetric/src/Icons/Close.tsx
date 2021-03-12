@@ -1,11 +1,11 @@
 import React from 'react';
-import { AiFillCloseCircle } from 'react-icons/ai';
+import { CgClose } from 'react-icons/cg';
 
 export type CloseIconProps = {
 };
 
 export const CloseIcon: React.FC<CloseIconProps> = () => {
 	return (
-		<AiFillCloseCircle size='24px' />
+		<CgClose size='28px' />
 	);
 };

@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { getButtonStyles, Theme } from '..';
 import { theming } from '../Contexts';
 
-export const getRadioStyles = (theme: Theme) => ({
+export const getCheckboxStyles = (theme: Theme) => ({
 	root: {
 		...getButtonStyles(theme).root,
 	},
@@ -25,24 +25,21 @@ export const getRadioStyles = (theme: Theme) => ({
 	},
 });
 
-export const useRadioStyles = createUseStyles(getRadioStyles, { name: 'Radio', theming });
+export const useCheckboxStyles = createUseStyles(getCheckboxStyles, { name: 'Checkbox', theming });
 
-export type RadioProps<T extends string> = {
-	onSelected: (value: T) => void;
+export type CheckboxProps = {
+	onToggle: () => void;
+	checked?: boolean;
 	disabled?: boolean;
-	name: string;
-	value: T;
-	checkedValue: string;
 	className?: string;
 	classNameDisabled?: string;
 	classNameChecked?: string;
 };
 
-export const Radio = <T extends string, >(props: React.PropsWithChildren<RadioProps<T>>): JSX.Element => {
-	const { children, className, classNameDisabled, onSelected, disabled, name, value, checkedValue, classNameChecked } = props;
-	const classes = useRadioStyles();
+export const Checkbox: React.FC<CheckboxProps> = (props) => {
+	const { children, className, classNameDisabled, classNameChecked, onToggle, disabled, checked } = props;
+	const classes = useCheckboxStyles();
 
-	const checked = checkedValue === value;
 	const rootName = classNames(className || classes.root, {
 		[classNameDisabled || classes.disabled]: disabled,
 		[classNameChecked || classes.checked]: checked,
@@ -50,7 +47,7 @@ export const Radio = <T extends string, >(props: React.PropsWithChildren<RadioPr
 
 	return (
 		<label className={rootName}>
-			<input className={classes.input} type='radio' name={name} value={value} onChange={(e) => !disabled && onSelected(e.target.value as T)} checked={checked} />
+			<input className={classes.input} type='checkbox' onChange={() => !disabled && onToggle()} checked={checked} />
 			{children}
 		</label>
 	);
