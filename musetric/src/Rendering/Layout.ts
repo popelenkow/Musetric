@@ -1,4 +1,5 @@
-import { Rgb, parseRgb, ColorTheme } from '..';
+import Color from 'color';
+import { ColorTheme } from '..';
 
 export type Position2D = {
 	x: number;
@@ -10,24 +11,37 @@ export type Size2D = {
 	height: number;
 };
 
-export type Colors = {
-	background: Rgb;
-	content: Rgb;
+export type Rgb = {
+	r: number,
+	g: number,
+	b: number,
 };
 
 export type Layout2D = {
 	position: Position2D;
 	view: Size2D;
 	frame: Size2D;
-	colors: Colors;
+	colorTheme: ColorTheme;
 };
 
-export const parseHslColors = (theme: ColorTheme): Colors | undefined => {
-	const background = parseRgb(theme.contentBg);
-	const content = parseRgb(theme.content);
-	if (!background) return undefined;
-	if (!content) return undefined;
-	const colors: Colors = {
+export const getRgb = (color: Color): Rgb => {
+	return { r: color.red(), g: color.green(), b: color.blue() };
+};
+
+export const parseColorThemeRgb = (theme: ColorTheme) => {
+	const background = getRgb(new Color(theme.app));
+	const content = getRgb(new Color(theme.content));
+	const colors = {
+		background,
+		content,
+	};
+	return colors;
+};
+
+export const parseColorThemeHex = (theme: ColorTheme) => {
+	const background = new Color(theme.app).hex();
+	const content = new Color(theme.content).hex();
+	const colors = {
 		background,
 		content,
 	};

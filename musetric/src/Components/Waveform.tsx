@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Layout2D, Size2D, createFpsMonitor, DrawFrame, parseHslColors, startAnimation, SoundBuffer, Theme } from '..';
+import { Layout2D, Size2D, createFpsMonitor, DrawFrame, parseColorThemeRgb, startAnimation, SoundBuffer, Theme } from '..';
 import { theming, useTheme } from '../Contexts';
 
 export const drawWaveform = (
@@ -8,7 +8,9 @@ export const drawWaveform = (
 	output: Uint8ClampedArray,
 	layout: Layout2D,
 ): void => {
-	const { position, view, frame, colors } = layout;
+	const { position, view, frame, colorTheme } = layout;
+
+	const { content, background } = parseColorThemeRgb(colorTheme);
 
 	const minArray = new Float32Array(view.width);
 	const maxArray = new Float32Array(view.width);
@@ -39,7 +41,7 @@ export const drawWaveform = (
 			const max = maxArray[x];
 			const min = minArray[x];
 			const isDraw = (min <= y) && (y <= max);
-			const color = isDraw ? colors.content : colors.background;
+			const color = isDraw ? content : background;
 			output[index + 0] = color.r;
 			output[index + 1] = color.g;
 			output[index + 2] = color.b;
@@ -51,7 +53,7 @@ export const drawWaveform = (
 export const getWaveformStyles = (theme: Theme) => ({
 	root: {
 		display: 'block',
-		background: theme.color.contentBg,
+		background: theme.color.app,
 		width: '100%',
 		height: '100%',
 	},
@@ -93,21 +95,18 @@ export const Waveform: React.FC<WaveformProps> = (props) => {
 		if (!context) return;
 		if (!image) return;
 
-		const colors = parseHslColors(theme.color);
-		if (!colors) return;
-
 		const contentLayout: Layout2D = {
 			position: { x: 0, y: 0 },
 			view: { width: frame.width, height: frame.height },
 			frame,
-			colors,
+			colorTheme: theme.color,
 		};
 
 		const fpsLayout: Layout2D = {
 			position: { x: 0, y: 0 },
 			view: { width: frame.width / 20, height: frame.height / 12 },
 			frame,
-			colors,
+			colorTheme: theme.color,
 		};
 
 		draw.current = (delta) => {

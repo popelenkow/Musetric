@@ -6,6 +6,6 @@ export type SpectrogramIconProps = {
 
 export const SpectrogramIcon: React.FC<SpectrogramIconProps> = () => {
 	return (
-		<AiOutlineStock size='18px' />
+		<AiOutlineStock size='24px' />
 	);
 };

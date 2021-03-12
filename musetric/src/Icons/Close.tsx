@@ -6,6 +6,6 @@ export type CloseIconProps = {
 
 export const CloseIcon: React.FC<CloseIconProps> = () => {
 	return (
-		<AiFillCloseCircle size='18px' />
+		<AiFillCloseCircle size='24px' />
 	);
 };

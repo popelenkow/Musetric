@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { saveAs } from 'file-saver';
 import {
-	RecorderDevice, createRecorderDevice,
-	Theme, getButtonStyles,
-	Switch, SwitchProps, Button, SelectFile,
+	SoundDeviceProvider, RecorderProvider,
+	SoundDeviceContext, RecorderContext, Theme,
+	Button, SelectFile, RadioButton,
 	Frequency, Waveform, Spectrogram,
 	RecordIcon, SaveIcon, FrequencyIcon, OpenFileIcon, WaveformIcon, SpectrogramIcon, StopIcon,
 } from '..';
@@ -16,22 +16,17 @@ export const getSoundWorkshopStyles = (theme: Theme) => ({
 		width: '100%',
 		height: '100%',
 		display: 'grid',
-		gridTemplateRows: '40px 56px 1fr',
+		gridTemplateRows: '48px 56px 1fr',
 		gridTemplateColumns: '1fr',
 	},
 	toolbar: {
 		width: '100%',
-		height: '40px',
+		height: '48px',
 		display: 'flex',
 		flexDirection: 'row',
-		backgroundColor: theme.color.sidebarBg,
+		'align-items': 'center',
+		backgroundColor: theme.color.sidebar,
 		borderBottom: `1px solid ${theme.color.splitter}`,
-	},
-	toolbarButton: {
-		...getButtonStyles(theme).root,
-		width: '40px',
-		height: '40px',
-		padding: '0',
 	},
 	loadBar: {
 		overflow: 'hidden',
@@ -48,99 +43,54 @@ export const getSoundWorkshopStyles = (theme: Theme) => ({
 
 export const useSoundWorkshopStyles = createUseStyles(getSoundWorkshopStyles, { name: 'SoundWorkshop', theming });
 
-export type RecorderProps = {
-	recorderDevice: RecorderDevice;
-	drop: () => void;
+type RootProps = {
 };
 
-export const RecorderView: React.FC<RecorderProps> = (props) => {
-	const { recorderDevice } = props;
+const Root: React.FC<RootProps> = () => {
 	const classes = useSoundWorkshopStyles();
 
-	const { audioContext, recorder, wavCoder, soundBuffer } = recorderDevice;
+	const { setFile, soundBuffer } = useContext(SoundDeviceContext);
+	const { startRecord, stopRecord, isRecording, recorder } = useContext(RecorderContext);
 
-	const [isRecording, setIsRecording] = useState<boolean>(false);
-
-	type ContentId = 'Frequency' | 'Spectrogram' | 'Waveform';
-	const [contentId, setContentId] = useState<ContentId>('Waveform');
+	type SoundViewId = 'Frequency' | 'Spectrogram' | 'Waveform';
+	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
 	const [blob, setBlob] = useState<Blob>();
 	const url = useMemo(() => (blob ? URL.createObjectURL(blob) : undefined), [blob]);
-	const audioState = useMemo<{ audioData?: Float32Array }>(() => ({}), []);
-
-	useEffect(() => {
-		setInterval(() => {
-			const result = soundBuffer.buffers[0];
-			audioState.audioData = result;
-		}, 100);
-	}, [soundBuffer, audioState]);
 
 	const saveAudio = () => {
 		if (!blob) return;
 		saveAs(blob, 'myRecording.wav');
 	};
 
-	const start = async () => {
-		setBlob(undefined);
-		await recorder.start();
-		setIsRecording(true);
-	};
-
 	const stop = async () => {
-		await recorder.stop();
-		const { buffers, sampleRate } = soundBuffer;
-		const b = await wavCoder.encode({ buffers, sampleRate });
-		setBlob(b);
-		setIsRecording(false);
-	};
-
-	const openFile = async (input: React.ChangeEvent<HTMLInputElement>) => {
-		const file = input.target.files?.item(0);
-		if (!file) return;
-		const arrayBuffer = await file.arrayBuffer();
-		const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-		const buffers: Float32Array[] = [];
-		for (let i = 0; i < soundBuffer.channelCount; i++) {
-			buffers[i] = audioBuffer.getChannelData(i);
-		}
-		soundBuffer.push(buffers);
-		const { sampleRate } = audioContext;
-		const b = await wavCoder.encode({ buffers, sampleRate });
+		const b = await stopRecord();
 		setBlob(b);
 	};
 
-	const switchContentProps: SwitchProps<ContentId> = {
-		currentId: contentId,
-		ids: ['Waveform', 'Frequency', 'Spectrogram'],
-		set: (id) => setContentId(id),
-		view: (id) => {
-			switch (id) {
-				case 'Waveform': return <WaveformIcon />;
-				case 'Frequency': return <FrequencyIcon />;
-				case 'Spectrogram': return <SpectrogramIcon />;
-				default: return id;
-			}
-		},
+	const openFile = async (file: File) => {
+		const b = await setFile(file);
+		setBlob(b);
 	};
 
 	return (
 		<div className={classes.root}>
 			<div className={classes.toolbar}>
 				{isRecording
-					? <Button className={classes.toolbarButton} onClick={stop}><StopIcon /></Button>
-					: <Button className={classes.toolbarButton} onClick={start}><RecordIcon /></Button>}
-				<Switch className={classes.toolbarButton} {...switchContentProps} />
-				<SelectFile className={classes.toolbarButton} onChange={openFile}>
-					<OpenFileIcon />
-				</SelectFile>
-				<Button className={classes.toolbarButton} onClick={saveAudio}><SaveIcon /></Button>
+					? <Button onClick={stop}><StopIcon /></Button>
+					: <Button onClick={startRecord}><RecordIcon /></Button>}
+				<RadioButton name='soundView' value='Waveform' onSelected={setSoundViewId} checkedValue={soundViewId}><WaveformIcon /></RadioButton>
+				<RadioButton name='soundView' value='Frequency' onSelected={setSoundViewId} checkedValue={soundViewId}><FrequencyIcon /></RadioButton>
+				<RadioButton name='soundView' value='Spectrogram' onSelected={setSoundViewId} checkedValue={soundViewId}><SpectrogramIcon /></RadioButton>
+				<SelectFile onChangeFile={openFile}><OpenFileIcon /></SelectFile>
+				<Button onClick={saveAudio}><SaveIcon /></Button>
 			</div>
 			<div className={classes.loadBar}>
 				{url && <audio className='recorder-item' key={url} controls src={url} />}
 			</div>
 			<div className={classes.view}>
-				{contentId === 'Waveform' && <Waveform soundBuffer={soundBuffer} />}
-				{contentId === 'Frequency' && <Frequency recorderDevice={recorderDevice} />}
-				{contentId === 'Spectrogram' && <Spectrogram soundBuffer={soundBuffer} />}
+				{soundViewId === 'Waveform' && soundBuffer && <Waveform soundBuffer={soundBuffer} />}
+				{soundViewId === 'Frequency' && recorder && <Frequency recorder={recorder} />}
+				{soundViewId === 'Spectrogram' && soundBuffer && <Spectrogram soundBuffer={soundBuffer} />}
 			</div>
 		</div>
 	);
@@ -150,15 +100,11 @@ export type SoundWorkshopProps = {
 };
 
 export const SoundWorkshop: React.FC<SoundWorkshopProps> = () => {
-	const [recorderDevice, setRecorderDevice] = useState<RecorderDevice>();
-
-	const init = async () => {
-		const value = await createRecorderDevice();
-		setRecorderDevice(value);
-	};
-
-	return (recorderDevice
-		? <RecorderView recorderDevice={recorderDevice} drop={() => setRecorderDevice(undefined)} />
-		: <Button style={{ width: '100%', height: '100%' }} onClick={init}>init</Button>
+	return (
+		<SoundDeviceProvider>
+			<RecorderProvider>
+				<Root />
+			</RecorderProvider>
+		</SoundDeviceProvider>
 	);
 };

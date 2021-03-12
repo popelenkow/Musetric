@@ -5,19 +5,23 @@ import { Theme, theming } from '..';
 export const getButtonStyles = (theme: Theme) => ({
 	root: {
 		margin: '0',
-		padding: '0 12px',
+		padding: '0',
 		border: '0',
 		outline: '0',
+		width: '42px',
+		height: '42px',
 		userSelect: 'none',
-		color: theme.color.content,
-		background: 'transparent',
 		position: 'relative',
+		font: '18px/48px "Segoe UI", Arial, sans-serif',
+		'border-radius': '21px',
 		display: 'flex',
 		'justify-content': 'center',
 		'align-items': 'center',
+		background: 'transparent',
 		'&:hover': {
-			background: 'rgba(128,128,128,.1)',
+			background: theme.color.hover,
 		},
+		color: theme.color.content,
 		'& path, rect, polygon': {
 			fill: theme.color.content,
 		},

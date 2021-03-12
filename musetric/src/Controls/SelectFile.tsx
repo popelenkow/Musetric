@@ -1,37 +1,40 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React from 'react';
 import { createUseStyles } from 'react-jss';
+import { getButtonStyles, Theme } from '..';
 import { theming } from '../Contexts';
 
-export const getSelectFileStyles = () => ({
+export const getSelectFileStyles = (theme: Theme) => ({
 	root: {
-		position: 'relative',
-		border: '1px solid red',
-		'line-height': '30px',
-		'text-align': 'center',
+		...getButtonStyles(theme).root,
 	},
 	input: {
-		opacity: '0.0',
+		opacity: '0',
 		position: 'absolute',
 		top: '0',
 		left: '0',
-		bottom: '0',
-		right: '0',
 		width: '100%',
 		height: '100%',
 	},
 });
 
-export const useSelectFileStyles = createUseStyles(getSelectFileStyles(), { name: 'SelectFile', theming });
+export const useSelectFileStyles = createUseStyles(getSelectFileStyles, { name: 'SelectFile', theming });
 
 export type SelectFileProps = {
-	onChange: React.FormEventHandler<HTMLInputElement>;
+	onChangeFile: (file: File) => void;
 	className?: string;
 };
 
 export const SelectFile: React.FC<SelectFileProps> = (props) => {
-	const { children, onChange, className } = props;
+	const { children, onChangeFile, className } = props;
 	const classes = useSelectFileStyles();
+
+	const onChange = (input: React.ChangeEvent<HTMLInputElement>) => {
+		const file = input.target.files?.item(0);
+		if (file) {
+			onChangeFile(file);
+		}
+	};
 
 	return (
 		<div className={className || classes.root}>

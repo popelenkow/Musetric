@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import { Container, App, AppProps, SoundWorkshop, Titlebar, allColorThemes, allColorThemeIds, localeIdList, createI18n } from 'musetric';
+import { Container, App, AppProps, SoundWorkshop, AppTitlebar, allColorThemes, allColorThemeIds, localeIdList, createI18n } from 'musetric';
 
 const init = async () => {
 	const params = new URLSearchParams(window.location.search);
@@ -21,7 +21,7 @@ const init = async () => {
 	const app = (
 		<Suspense fallback='loading'>
 			<App {...appProps}>
-				<Titlebar />
+				<AppTitlebar />
 				<Container>
 					<SoundWorkshop />
 				</Container>

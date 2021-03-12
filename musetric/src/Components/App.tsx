@@ -9,10 +9,8 @@ export const getAppStyles = (theme: Theme) => ({
 		height: `calc(${theme.platform.height} - 2px)`,
 		border: `1px solid ${theme.color.splitter}`,
 		display: 'grid',
-		gridTemplateRows: '33px 1fr',
+		gridTemplateRows: '49px 1fr',
 		gridTemplateColumns: '1fr',
-		color: theme.color.content,
-		backgroundColor: theme.color.appBg,
 	},
 });
 

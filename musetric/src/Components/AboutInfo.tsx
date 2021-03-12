@@ -9,7 +9,7 @@ export const getAboutInfoStyles = (theme: Theme) => ({
 		height: '100%',
 		display: 'flex',
 		flexDirection: 'column',
-		backgroundColor: theme.color.appBg,
+		backgroundColor: theme.color.app,
 	},
 });
 

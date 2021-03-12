@@ -5,7 +5,6 @@ import { SoundBuffer } from '..';
 export const createRecorderApi = (mediaStream: MediaStream, messagePort: MessagePort, soundBuffer: SoundBuffer) => {
 	const onStartCbs: Record<string, () => void> = {};
 	const onStopCbs: Record<string, () => void> = {};
-	let onChunkCb: ((result: Float32Array[]) => void) | undefined;
 
 	const callbacks = {
 		onStart: (id: string): void => {
@@ -18,7 +17,6 @@ export const createRecorderApi = (mediaStream: MediaStream, messagePort: Message
 		},
 		onChunk: (chunk: Float32Array[]): void => {
 			soundBuffer.push(chunk);
-			onChunkCb && onChunkCb(chunk);
 		},
 	};
 
@@ -48,12 +46,6 @@ export const createRecorderApi = (mediaStream: MediaStream, messagePort: Message
 				onStopCbs[id] = () => resolve();
 				postMessage('stop', id);
 			});
-		},
-		subscribe: (onChunk: (result: Float32Array[]) => void) => {
-			onChunkCb = onChunk;
-		},
-		unsubscribe: () => {
-			onChunkCb = undefined;
 		},
 	};
 	return { callbacks, recorder };

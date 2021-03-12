@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { createUseStyles } from 'react-jss';
-import { createFft, Layout2D, parseHslColors, Size2D, createFpsMonitor, DrawFrame, startAnimation, SoundBuffer, Theme } from '..';
+import { createFft, Layout2D, parseColorThemeRgb, Size2D, createFpsMonitor, DrawFrame, startAnimation, SoundBuffer, Theme } from '..';
 import { theming, useTheme } from '../Contexts';
 
 const createNext = (N: number) => {
@@ -29,8 +29,9 @@ export const drawSpectrogram = (
 	output: Uint8ClampedArray,
 	layout: Layout2D,
 ): void => {
-	const { frame, view, position, colors } = layout;
-	const { background, content } = colors;
+	const { frame, view, position, colorTheme } = layout;
+
+	const { content, background } = parseColorThemeRgb(colorTheme);
 
 	const column = new Float32Array(view.height);
 	const step = input.length / view.width;
@@ -57,7 +58,7 @@ export const drawSpectrogram = (
 export const getSpectrogramStyles = (theme: Theme) => ({
 	root: {
 		display: 'block',
-		background: theme.color.contentBg,
+		background: theme.color.app,
 		width: '100%',
 		height: '100%',
 	},
@@ -99,9 +100,6 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 		if (!context) return;
 		if (!image) return;
 
-		const colors = parseHslColors(theme.color);
-		if (!colors) return;
-
 		const windowSize = frame.height * 2;
 		const fft = createFft(windowSize);
 
@@ -114,14 +112,14 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 				position: { x: 0, y: 0 },
 				view: { width: frame.width, height: frame.height },
 				frame,
-				colors,
+				colorTheme: theme.color,
 			};
 
 			const fpsLayout: Layout2D = {
 				position: { x: 0, y: 0 },
 				view: { width: frame.width / 20, height: frame.height / 12 },
 				frame,
-				colors,
+				colorTheme: theme.color,
 			};
 
 			const audioData = soundBuffer.buffers[0];

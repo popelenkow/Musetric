@@ -6,6 +6,6 @@ export type WaveformIconProps = {
 
 export const WaveformIcon: React.FC<WaveformIconProps> = () => {
 	return (
-		<AiFillSliders size='18px' />
+		<AiFillSliders size='24px' />
 	);
 };

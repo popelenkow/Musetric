@@ -1,44 +1,55 @@
 import React, { useContext } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Theme, localizeLocaleId, AppElementContext, LocaleContext, ThemeContext, localizeColorThemeId, Switch, SwitchProps, AppIcon, InfoIcon, Button, ModalDialog, AboutInfo } from '..';
+import { Theme, localizeLocaleId, AppElementContext, LocaleContext, ThemeContext, localizeColorThemeId, Switch, SwitchProps, AppIcon, InfoIcon, Button, ModalDialog, AboutInfo, getButtonStyles, useButtonStyles } from '..';
 import { theming } from '../Contexts';
 
-export const getTitlebarStyles = (theme: Theme) => ({
+export const getAppTitlebarStyles = (theme: Theme) => ({
 	root: {
 		display: 'flex',
 		width: '100%',
-		height: '32px',
-		background: theme.color.sidebarBg,
+		height: '48px',
+		background: theme.color.sidebar,
 		cursor: 'default',
+		'justify-content': 'center',
+		'align-items': 'center',
 		'-webkit-app-region': 'drag',
 		'-webkit-user-select': 'none',
 		'border-bottom': `1px solid ${theme.color.splitter}`,
 	},
 	icon: {
 		flexGrow: '1',
-		maxWidth: '32px',
-		maxHeight: '32px',
+		maxWidth: '48px',
+		maxHeight: '48px',
+		display: 'flex',
+		'justify-content': 'center',
+		'align-items': 'center',
 		'& path': {
-			fill: theme.color.icon,
+			fill: theme.color.content,
 		},
 	},
 	text: {
 		flexGrow: '2',
-		maxHeight: '32px',
+		maxHeight: '48px',
 		width: 'auto',
-		font: '12px/32px "Segoe UI", Arial, sans-serif',
+		font: '18px/48px "Segoe UI", Arial, sans-serif',
 		color: theme.color.content,
 		textIndent: '10px',
 	},
+	textButton: {
+		...getButtonStyles(theme).root,
+		width: 'auto',
+		padding: '0 12px',
+	},
 });
 
-export const useTitlebarStyles = createUseStyles(getTitlebarStyles, { name: 'Titlebar', theming });
+export const useAppTitlebarStyles = createUseStyles(getAppTitlebarStyles, { name: 'AppTitlebar', theming });
 
-export type TitlebarProps = {
+export type AppTitlebarProps = {
 };
 
-export const Titlebar: React.FC<TitlebarProps> = () => {
-	const classes = useTitlebarStyles();
+export const AppTitlebar: React.FC<AppTitlebarProps> = () => {
+	const classes = useAppTitlebarStyles();
+	const buttonClasses = useButtonStyles();
 
 	const { setModalDialog } = useContext(AppElementContext);
 	const { localeId, setLocaleId, localeIdList } = useContext(LocaleContext);
@@ -51,6 +62,7 @@ export const Titlebar: React.FC<TitlebarProps> = () => {
 			setColorThemeId(id);
 		},
 		view: (id, t) => localizeColorThemeId(id, t) || id,
+		className: classes.textButton,
 	};
 
 	const localeSwitchProps: SwitchProps<string> = {
@@ -58,6 +70,7 @@ export const Titlebar: React.FC<TitlebarProps> = () => {
 		ids: localeIdList,
 		set: setLocaleId,
 		view: (id, t) => localizeLocaleId(id, t) || id,
+		className: classes.textButton,
 	};
 
 	const openAboutDialog = () => {
@@ -70,7 +83,7 @@ export const Titlebar: React.FC<TitlebarProps> = () => {
 			<div className={classes.text}>Musetric</div>
 			<Switch {...themeSwitchProps} />
 			<Switch {...localeSwitchProps} />
-			<Button onClick={openAboutDialog}><InfoIcon /></Button>
+			<Button className={buttonClasses.root} onClick={openAboutDialog}><InfoIcon /></Button>
 		</div>
 	);
 };
