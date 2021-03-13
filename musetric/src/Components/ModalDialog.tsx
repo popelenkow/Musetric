@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Theme, theming, Button, CloseIcon, AppElementContext, AppIcon } from '..';
+import { Theme, Button, CloseIcon, AppElementContext, AppTitlebar } from '..';
+import { theming } from '../Contexts';
 
 export const getModalDialogStyles = (theme: Theme) => ({
 	root: {
@@ -16,26 +17,6 @@ export const getModalDialogStyles = (theme: Theme) => ({
 		color: theme.color.content,
 		border: `1px solid ${theme.color.splitter}`,
 		backgroundColor: theme.color.app,
-	},
-	toolbar: {
-		width: '100%',
-		height: '48px',
-		display: 'flex',
-		'justify-content': 'center',
-		'align-items': 'center',
-		backgroundColor: theme.color.sidebar,
-		borderBottom: `1px solid ${theme.color.splitter}`,
-	},
-	icon: {
-		flexGrow: '1',
-		maxWidth: '48px',
-		maxHeight: '48px',
-		display: 'flex',
-		'justify-content': 'center',
-		'align-items': 'center',
-		'& path': {
-			fill: theme.color.content,
-		},
 	},
 	text: {
 		flexGrow: '2',
@@ -59,11 +40,9 @@ export const ModalDialog: React.FC<ModalDialogProps> = (props) => {
 	const { setModalDialog } = useContext(AppElementContext);
 	return (
 		<div className={classes.root}>
-			<div className={classes.toolbar}>
-				<div className={classes.icon}><AppIcon /></div>
-				<div className={classes.text}>Musetric</div>
+			<AppTitlebar>
 				<Button onClick={() => setModalDialog()}><CloseIcon /></Button>
-			</div>
+			</AppTitlebar>
 			{children}
 		</div>
 	);
