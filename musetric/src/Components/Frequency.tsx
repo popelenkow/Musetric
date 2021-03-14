@@ -1,6 +1,7 @@
+/* eslint-disable max-len */
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Layout2D, Size2D, createFpsMonitor, DrawFrame, parseColorThemeRgb, startAnimation, Recorder, Theme } from '..';
+import { Layout2D, Size2D, PerformanceMonitorRef, DrawFrame, parseColorThemeRgb, startAnimation, Recorder, Theme } from '..';
 import { theming, useTheme } from '../Contexts';
 
 export const drawFrequency = (
@@ -51,10 +52,11 @@ export const useFrequencyStyles = createUseStyles(getFrequencyStyles, { name: 'F
 
 export type FrequencyProps = {
 	recorder: Recorder;
+	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const Frequency: React.FC<FrequencyProps> = (props) => {
-	const { recorder } = props;
+	const { recorder, performanceMonitor } = props;
 	const theme = useTheme();
 	const classes = useFrequencyStyles();
 
@@ -87,38 +89,29 @@ export const Frequency: React.FC<FrequencyProps> = (props) => {
 		return [ctx, tmpImage];
 	}, [canvas, frame]);
 
-	const fpsMonitor = useRef(createFpsMonitor());
-
 	const draw = useRef<DrawFrame>();
 
 	useEffect(() => {
 		if (!context) return;
 		if (!image) return;
 
-		const contentLayout: Layout2D = {
+		const layout: Layout2D = {
 			position: { x: 0, y: 0 },
 			view: { width: frame.width, height: frame.height },
 			frame,
 			colorTheme: theme.color,
 		};
 
-		const fpsLayout: Layout2D = {
-			position: { x: 0, y: 0 },
-			view: { width: frame.width / 20, height: frame.height / 12 },
-			frame,
-			colorTheme: theme.color,
-		};
-
-		draw.current = (delta) => {
+		draw.current = () => {
+			performanceMonitor?.begin();
 			analyserNode.getByteFrequencyData(audioData);
 
-			drawFrequency(audioData, image.data, contentLayout);
+			drawFrequency(audioData, image.data, layout);
 			context.putImageData(image, 0, 0);
 
-			fpsMonitor.current.setDelta(delta);
-			fpsMonitor.current.draw(context, fpsLayout);
+			performanceMonitor?.end();
 		};
-	}, [analyserNode, theme, context, image, audioData, frame]);
+	}, [analyserNode, theme, context, image, audioData, frame, performanceMonitor]);
 
 	useEffect(() => {
 		const subscription = startAnimation(draw);

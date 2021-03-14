@@ -1,28 +1,8 @@
+/* eslint-disable max-len */
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { createUseStyles } from 'react-jss';
-import { createFft, Layout2D, parseColorThemeRgb, Size2D, createFpsMonitor, DrawFrame, startAnimation, SoundBuffer, Theme } from '..';
+import { createFft, Layout2D, parseColorThemeRgb, Size2D, PerformanceMonitorRef, DrawFrame, startAnimation, SoundBuffer, Theme } from '..';
 import { theming, useTheme } from '../Contexts';
-
-const createNext = (N: number) => {
-	let q = 0;
-	let qq = 0;
-	return (delta: number): boolean => {
-		if (q === N + 1) return true;
-		if (q !== 0) console.log(q.toString(), delta.toFixed(2));
-
-		if (q === 1) qq = delta;
-		else if (q > 1) qq += delta;
-
-		if (q === N) {
-			q++;
-			qq /= N;
-			console.log('res', qq.toFixed(2));
-			return true;
-		}
-		q++;
-		return false;
-	};
-};
 
 export const drawSpectrogram = (
 	input: Float32Array[],
@@ -57,8 +37,12 @@ export const drawSpectrogram = (
 
 export const getSpectrogramStyles = (theme: Theme) => ({
 	root: {
-		display: 'block',
 		background: theme.color.app,
+		width: '100%',
+		height: '100%',
+	},
+	canvas: {
+		display: 'block',
 		width: '100%',
 		height: '100%',
 	},
@@ -68,17 +52,18 @@ export const useSpectrogramStyles = createUseStyles(getSpectrogramStyles, { name
 
 export type SpectrogramProps = {
 	soundBuffer: SoundBuffer;
+	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
-	const { soundBuffer } = props;
+	const { soundBuffer, performanceMonitor } = props;
 	const theme = useTheme();
 	const classes = useSpectrogramStyles();
 
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
 
 	const frame: Size2D = useMemo(() => ({
-		width: 800,
+		width: 600,
 		height: 1024,
 	}), []);
 
@@ -92,8 +77,6 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 		return [ctx, tmpImage];
 	}, [canvas, frame]);
 
-	const fpsMonitor = useRef(createFpsMonitor());
-
 	const draw = useRef<DrawFrame>();
 
 	useEffect(() => {
@@ -103,21 +86,13 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 		const windowSize = frame.height * 2;
 		const fft = createFft(windowSize);
 
-		const next = createNext(10);
-		draw.current = (delta) => {
+		draw.current = () => {
 			if (soundBuffer.soundSize === 0) return;
-			if (next(delta)) return;
+			performanceMonitor?.begin();
 
-			const contentLayout: Layout2D = {
+			const layout: Layout2D = {
 				position: { x: 0, y: 0 },
 				view: { width: frame.width, height: frame.height },
-				frame,
-				colorTheme: theme.color,
-			};
-
-			const fpsLayout: Layout2D = {
-				position: { x: 0, y: 0 },
-				view: { width: frame.width / 20, height: frame.height / 12 },
 				frame,
 				colorTheme: theme.color,
 			};
@@ -131,13 +106,12 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 				frequencies.push(array);
 			}
 			fft.getFrequencies(audioData, frequencies);
-			drawSpectrogram(frequencies, image.data, contentLayout);
+			drawSpectrogram(frequencies, image.data, layout);
 			context.putImageData(image, 0, 0);
 
-			fpsMonitor.current.setDelta(delta);
-			fpsMonitor.current.draw(context, fpsLayout);
+			performanceMonitor?.end();
 		};
-	}, [soundBuffer, theme, fpsMonitor, context, image, frame]);
+	}, [soundBuffer, theme, context, image, frame, performanceMonitor]);
 
 	useEffect(() => {
 		const subscription = startAnimation(draw);
@@ -145,6 +119,8 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 	}, []);
 
 	return (
-		<canvas className={classes.root} ref={setCanvas} width={frame.width} height={frame.height} />
+		<div className={classes.root}>
+			<canvas className={classes.canvas} ref={setCanvas} width={frame.width} height={frame.height} />
+		</div>
 	);
 };
