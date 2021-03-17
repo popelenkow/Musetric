@@ -1,8 +1,19 @@
 /* eslint-disable max-len */
-import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Layout2D, Size2D, DrawFrame, parseColorThemeRgb, startAnimation, SoundBuffer, Theme, PerformanceMonitorRef, getCanvasCursorPosition } from '..';
+import { Layout2D, Size2D, parseColorThemeRgb, SoundBuffer, Theme, PerformanceMonitorRef, getCanvasCursorPosition, useAnimation } from '..';
 import { theming, useTheme } from '../Contexts';
+
+export const getWaveformStyles = (theme: Theme) => ({
+	root: {
+		display: 'block',
+		background: theme.color.app,
+		width: '100%',
+		height: '100%',
+	},
+});
+
+export const useWaveformStyles = createUseStyles(getWaveformStyles, { name: 'Waveform', theming });
 
 export const drawWaveform = (
 	input: Float32Array,
@@ -51,7 +62,8 @@ export const drawWaveform = (
 		}
 	}
 
-	if (cursor < input.length) {
+	{
+		cursor = Math.max(0, Math.min(input.length - 1, cursor));
 		const x = Math.floor((view.width / input.length) * cursor);
 		const color = content;
 		for (let y = 0; y < view.height; y++) {
@@ -65,28 +77,17 @@ export const drawWaveform = (
 	}
 };
 
-export const getWaveformStyles = (theme: Theme) => ({
-	root: {
-		background: theme.color.app,
-		width: '100%',
-		height: '100%',
-	},
-	canvas: {
-		display: 'block',
-		width: '100%',
-		height: '100%',
-	},
-});
-
-export const useWaveformStyles = createUseStyles(getWaveformStyles, { name: 'Waveform', theming });
-
 export type WaveformProps = {
 	soundBuffer: SoundBuffer;
+	size?: Size2D;
 	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const Waveform: React.FC<WaveformProps> = (props) => {
-	const { soundBuffer, performanceMonitor } = props;
+	const {
+		soundBuffer, performanceMonitor,
+		size = { width: 600, height: 800 },
+	} = props;
 	const theme = useTheme();
 	const classes = useWaveformStyles();
 
@@ -94,48 +95,33 @@ export const Waveform: React.FC<WaveformProps> = (props) => {
 
 	const isEnabled = useCallback(() => soundBuffer.soundSize !== 0, [soundBuffer]);
 
-	const frame: Size2D = useMemo(() => ({
-		width: 600,
-		height: 800,
-	}), []);
-
-	const [context, image] = useMemo(() => {
-		if (!canvas) return [];
-		canvas.width = frame.width;
-		canvas.height = frame.height;
-		const ctx = canvas.getContext('2d');
-		if (!ctx) return [];
-		const tmpImage = ctx.getImageData(0, 0, frame.width, frame.height);
-		return [ctx, tmpImage];
-	}, [canvas, frame]);
-
-	const draw = useRef<DrawFrame>();
-
-	useEffect(() => {
-		if (!context) return;
-		if (!image) return;
-
+	const info = useMemo(() => {
+		if (!canvas) return null;
+		canvas.width = size.width;
+		canvas.height = size.height;
+		const context = canvas.getContext('2d');
+		if (!context) return null;
+		const image = context.getImageData(0, 0, size.width, size.height);
 		const layout: Layout2D = {
 			position: { x: 0, y: 0 },
-			view: { width: frame.width, height: frame.height },
-			frame,
+			view: size,
+			frame: size,
 			colorTheme: theme.color,
 		};
+		return { context, image, layout };
+	}, [canvas, size, theme]);
 
-		draw.current = () => {
-			if (!isEnabled()) return;
-			performanceMonitor?.begin();
-			drawWaveform(soundBuffer.buffers[0], image.data, soundBuffer.cursor, layout);
-			context.putImageData(image, 0, 0);
+	useAnimation(() => {
+		if (!info) return;
+		if (!isEnabled()) return;
+		performanceMonitor?.begin();
+		const { context, image, layout } = info;
 
-			performanceMonitor?.end();
-		};
-	}, [soundBuffer, theme, context, image, frame, performanceMonitor, isEnabled]);
+		drawWaveform(soundBuffer.buffers[0], image.data, soundBuffer.cursor, layout);
+		context.putImageData(image, 0, 0);
 
-	useEffect(() => {
-		const subscription = startAnimation(draw);
-		return () => subscription.stop();
-	}, []);
+		performanceMonitor?.end();
+	}, [soundBuffer, info, performanceMonitor, isEnabled]);
 
 	const click = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
 		if (!isEnabled()) return;
@@ -145,8 +131,6 @@ export const Waveform: React.FC<WaveformProps> = (props) => {
 	}, [isEnabled, soundBuffer]);
 
 	return (
-		<div className={classes.root}>
-			<canvas className={classes.canvas} ref={setCanvas} width={frame.width} height={frame.height} onClick={click} />
-		</div>
+		<canvas className={classes.root} ref={setCanvas} {...size} onClick={click} />
 	);
 };

@@ -1,12 +1,24 @@
 /* eslint-disable max-len */
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { createUseStyles } from 'react-jss';
-import { createFft, Layout2D, parseColorThemeRgb, Size2D, PerformanceMonitorRef, DrawFrame, startAnimation, SoundBuffer, Theme } from '..';
+import { createFft, Layout2D, parseColorThemeRgb, Size2D, PerformanceMonitorRef, SoundBuffer, Theme, getCanvasCursorPosition, useAnimation } from '..';
 import { theming, useTheme } from '../Contexts';
+
+export const getSpectrogramStyles = (theme: Theme) => ({
+	root: {
+		display: 'block',
+		background: theme.color.app,
+		width: '100%',
+		height: '100%',
+	},
+});
+
+export const useSpectrogramStyles = createUseStyles(getSpectrogramStyles, { name: 'Spectrogram', theming });
 
 export const drawSpectrogram = (
 	input: Float32Array[],
 	output: Uint8ClampedArray,
+	cursor: number,
 	layout: Layout2D,
 ): void => {
 	const { frame, view, position, colorTheme } = layout;
@@ -33,94 +45,88 @@ export const drawSpectrogram = (
 			output[index + 3] = 255;
 		}
 	}
+
+	{
+		cursor = Math.max(0, Math.min(input.length - 1, cursor));
+		const x = Math.floor((view.width / input.length) * cursor);
+		const color = content;
+		for (let y = 0; y < view.height; y++) {
+			const yIndex = 4 * (position.y + y) * frame.width;
+			const index = 4 * (position.x + x) + yIndex;
+			output[index + 0] = color.r;
+			output[index + 1] = color.g;
+			output[index + 2] = color.b;
+			output[index + 3] = 255;
+		}
+	}
 };
-
-export const getSpectrogramStyles = (theme: Theme) => ({
-	root: {
-		background: theme.color.app,
-		width: '100%',
-		height: '100%',
-	},
-	canvas: {
-		display: 'block',
-		width: '100%',
-		height: '100%',
-	},
-});
-
-export const useSpectrogramStyles = createUseStyles(getSpectrogramStyles, { name: 'Spectrogram', theming });
 
 export type SpectrogramProps = {
 	soundBuffer: SoundBuffer;
+	size?: Size2D;
 	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
-	const { soundBuffer, performanceMonitor } = props;
+	const {
+		soundBuffer, performanceMonitor,
+		size = { width: 600, height: 1024 },
+	} = props;
 	const theme = useTheme();
 	const classes = useSpectrogramStyles();
 
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
 
-	const frame: Size2D = useMemo(() => ({
-		width: 600,
-		height: 1024,
-	}), []);
+	const isEnabled = useCallback(() => soundBuffer.soundSize !== 0, [soundBuffer]);
 
-	const [context, image] = useMemo(() => {
-		if (!canvas) return [];
-		canvas.width = frame.width;
-		canvas.height = frame.height;
-		const ctx = canvas.getContext('2d');
-		if (!ctx) return [];
-		const tmpImage = ctx.getImageData(0, 0, frame.width, frame.height);
-		return [ctx, tmpImage];
-	}, [canvas, frame]);
-
-	const draw = useRef<DrawFrame>();
-
-	useEffect(() => {
-		if (!context) return;
-		if (!image) return;
-
-		const windowSize = frame.height * 2;
-		const fft = createFft(windowSize);
-
-		draw.current = () => {
-			if (soundBuffer.soundSize === 0) return;
-			performanceMonitor?.begin();
-
-			const layout: Layout2D = {
-				position: { x: 0, y: 0 },
-				view: { width: frame.width, height: frame.height },
-				frame,
-				colorTheme: theme.color,
-			};
-
-			const audioData = soundBuffer.buffers[0];
-
-			const frequencies: Float32Array[] = [];
-			const count = Math.floor(audioData.length / windowSize);
-			for (let i = 0; i < count; i++) {
-				const array = new Float32Array(windowSize / 2);
-				frequencies.push(array);
-			}
-			fft.getFrequencies(audioData, frequencies);
-			drawSpectrogram(frequencies, image.data, layout);
-			context.putImageData(image, 0, 0);
-
-			performanceMonitor?.end();
+	const info = useMemo(() => {
+		if (!canvas) return null;
+		canvas.width = size.width;
+		canvas.height = size.height;
+		const context = canvas.getContext('2d');
+		if (!context) return null;
+		const image = context.getImageData(0, 0, size.width, size.height);
+		const windowSize = size.height * 2;
+		const fft = createFft(size.height * 2);
+		const layout: Layout2D = {
+			position: { x: 0, y: 0 },
+			view: size,
+			frame: size,
+			colorTheme: theme.color,
 		};
-	}, [soundBuffer, theme, context, image, frame, performanceMonitor]);
+		return { context, image, windowSize, fft, layout };
+	}, [canvas, size, theme]);
 
-	useEffect(() => {
-		const subscription = startAnimation(draw);
-		return () => subscription.stop();
-	}, []);
+	useAnimation(() => {
+		if (!info) return;
+		if (!isEnabled()) return;
+		const { context, image, windowSize, fft, layout } = info;
+		performanceMonitor?.begin();
+
+		const buffer = soundBuffer.buffers[0];
+
+		const frequencies: Float32Array[] = [];
+		const count = Math.floor(buffer.length / windowSize);
+		for (let i = 0; i < count; i++) {
+			const array = new Float32Array(windowSize / 2);
+			frequencies.push(array);
+		}
+		fft.getFrequencies(buffer, frequencies);
+		const cursor = Math.floor(soundBuffer.cursor / windowSize);
+		drawSpectrogram(frequencies, image.data, cursor, layout);
+		context.putImageData(image, 0, 0);
+
+		performanceMonitor?.end();
+	}, [soundBuffer, info, performanceMonitor, isEnabled]);
+
+	const click = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+		if (!isEnabled()) return;
+		const pos = getCanvasCursorPosition(e.currentTarget, e.nativeEvent);
+		const val = Math.floor(pos.x * (soundBuffer.memorySize - 1));
+		soundBuffer.cursor = val;
+	}, [isEnabled, soundBuffer]);
 
 	return (
-		<div className={classes.root}>
-			<canvas className={classes.canvas} ref={setCanvas} width={frame.width} height={frame.height} />
-		</div>
+		<canvas className={classes.root} ref={setCanvas} {...size} onClick={click} />
 	);
 };

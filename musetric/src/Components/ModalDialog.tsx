@@ -21,9 +21,9 @@ export const getModalDialogStyles = (theme: Theme) => ({
 	},
 	text: {
 		flexGrow: '2',
-		maxHeight: '48px',
+		maxHeight: '42px',
 		width: 'auto',
-		font: '18px/48px "Segoe UI", Arial, sans-serif',
+		font: '18px/42px "Segoe UI", Arial, sans-serif',
 		color: theme.color.content,
 		textIndent: '10px',
 	},
