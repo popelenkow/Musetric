@@ -1,3 +1,3 @@
-export * from './AnimationSubscription';
-export * from './FpsMonitor';
+export * from './Animation';
 export * from './Layout';
+export * from './PerformanceMonitor';

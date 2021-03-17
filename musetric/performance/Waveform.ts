@@ -21,7 +21,7 @@ export const performanceWaveform = () => {
 	for (let i = 10; i <= 60; i+=10) {
 		const input = new Float32Array(44000 * i);
 		suite.add(`drawWaveform ${i}`, () => {
-			drawWaveform(input, output, layout)
+			drawWaveform(input, output, 0, layout)
 		});
 	}
 	suite.on('cycle', (event: any) => {

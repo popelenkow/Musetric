@@ -6,6 +6,7 @@ import { theming } from '../Contexts';
 export const getModalDialogStyles = (theme: Theme) => ({
 	root: {
 		position: 'absolute',
+		'z-index': '200',
 		top: '0',
 		left: '0',
 		display: 'grid',

@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { Recorder, createRecorder, SoundDeviceContext } from '..';
+import { Recorder, createRecorder, SoundBufferContext } from '..';
 
 export type RecorderStore = {
 	recorder?: Recorder;
 	startRecord: () => Promise<void>;
-	stopRecord: () => Promise<Blob>;
+	stopRecord: () => Promise<void>;
 	isRecording: boolean;
 };
 
@@ -19,28 +19,31 @@ export type RecorderProviderProps = {
 export const RecorderProvider: React.FC<RecorderProviderProps> = (props) => {
 	const { children } = props;
 
-	const { getSoundDevice } = useContext(SoundDeviceContext);
+	const { soundBuffer, refreshSoundBlob } = useContext(SoundBufferContext);
 	// eslint-disable-next-line prefer-const
 	let [recorder, setRecorder] = useState<Recorder>();
 	const [isRecording, setIsRecording] = useState<boolean>(false);
 
-	const startRecord = async () => {
+	const getRecorder = async () => {
 		if (!recorder) {
-			const { audioContext, soundBuffer } = getSoundDevice();
+			const audioContext = new AudioContext();
 			recorder = await createRecorder(audioContext, soundBuffer);
 			setRecorder(recorder);
 		}
+		return recorder;
+	};
+
+	const startRecord = async () => {
+		recorder = await getRecorder();
 		await recorder.start();
 		setIsRecording(true);
 	};
 
 	const stopRecord = async () => {
-		const { soundBuffer, wavCoder } = getSoundDevice();
-		recorder && await recorder.stop();
+		recorder = await getRecorder();
+		await recorder.stop();
+		await refreshSoundBlob();
 		setIsRecording(false);
-		const { buffers, sampleRate } = soundBuffer;
-		const b = await wavCoder.encode({ buffers, sampleRate });
-		return b;
 	};
 
 	const store: RecorderStore = {
