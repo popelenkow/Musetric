@@ -5,7 +5,7 @@ import { createUseStyles } from 'react-jss';
 import {
 	SoundBufferProvider, RecorderProvider,
 	SoundBufferContext, RecorderContext, Theme,
-	Button, SelectFile, Radio, Checkbox,
+	Button, SelectFile, Radio, Checkbox, SoundProgress,
 	Frequency, Waveform, Spectrogram,
 	RecordIcon, SaveIcon, FrequencyIcon, OpenFileIcon,
 	WaveformIcon, SpectrogramIcon, StopIcon, PlayIcon, LiveIcon,
@@ -62,7 +62,8 @@ export const getSoundWorkshopStyles = (theme: Theme) => ({
 		width: '48px',
 		height: '100%',
 		display: 'flex',
-		'flex-direction': 'column-reverse',
+		'flex-direction': 'column',
+		'justify-content': 'center',
 		'row-gap': '4px',
 		'align-items': 'center',
 		'background-color': theme.color.sidebar,
@@ -99,20 +100,21 @@ const Root: React.FC<RootProps> = () => {
 				{url && <audio className='recorder-item' key={url} controls src={url} />}
 			</div>
 			<div className={classes.toolbar}>
-				{!isRecording
-					? <Button disabled={isPlaying} onClick={() => startRecord()}><RecordIcon /></Button>
-					: <Button onClick={() => stopRecord()}><StopIcon /></Button>}
+				<Button onClick={() => saveFile('myRecording.wav')}><SaveIcon /></Button>
+				<SelectFile onChangeFile={setFile}><OpenFileIcon /></SelectFile>
+				<SoundProgress soundBuffer={soundBuffer} />
+			</div>
+			<div className={classes.sidebar}>
 				{!isPlaying
 					? <Button disabled={isRecording || true} onClick={() => setIsPlaying(true)}><PlayIcon /></Button>
 					: <Button onClick={() => setIsPlaying(false)}><StopIcon /></Button>}
-			</div>
-			<div className={classes.sidebar}>
+				{!isRecording
+					? <Button disabled={isPlaying} onClick={() => startRecord()}><RecordIcon /></Button>
+					: <Button onClick={() => stopRecord()}><StopIcon /></Button>}
 				<Checkbox disabled onToggle={() => {}}><LiveIcon /></Checkbox>
 				<Radio name='soundView' value='Waveform' onSelected={setSoundViewId} checkedValue={soundViewId}><WaveformIcon /></Radio>
 				<Radio name='soundView' value='Frequency' onSelected={setSoundViewId} checkedValue={soundViewId}><FrequencyIcon /></Radio>
 				<Radio name='soundView' value='Spectrogram' onSelected={setSoundViewId} checkedValue={soundViewId}><SpectrogramIcon /></Radio>
-				<SelectFile onChangeFile={setFile}><OpenFileIcon /></SelectFile>
-				<Button onClick={() => saveFile('myRecording.wav')}><SaveIcon /></Button>
 			</div>
 		</div>
 	);

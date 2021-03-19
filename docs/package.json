@@ -1,7 +1,7 @@
 {
 	"name": "musetric-app",
 	"description": "Musetric is javascript music application",
-	"version": "0.0.5-dev.14",
+	"version": "0.0.5-dev.17",
 	"license": "MIT",
 	"main": "index.js",
 	"homepage": "https://github.com/popelenkow/Musetric",
@@ -30,7 +30,7 @@
 		"eslint-config-musetric": "0.0.28",
 		"express": "4.17.1",
 		"html-webpack-plugin": "5.3.1",
-		"musetric": "0.0.16-dev.41",
+		"musetric": "0.0.16-dev.44",
 		"rimraf": "3.0.2",
 		"ts-loader": "8.0.18",
 		"ts-node": "9.1.1",

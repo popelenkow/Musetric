@@ -1,8 +1,19 @@
 /* eslint-disable max-len */
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useMemo } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Layout2D, Size2D, PerformanceMonitorRef, DrawFrame, parseColorThemeRgb, startAnimation, Recorder, Theme } from '..';
+import { Layout2D, Size2D, PerformanceMonitorRef, parseColorThemeRgb, Recorder, Theme, useAnimation } from '..';
 import { theming, useTheme } from '../Contexts';
+
+export const getFrequencyStyles = (theme: Theme) => ({
+	root: {
+		display: 'block',
+		background: theme.color.app,
+		width: '100%',
+		height: '100%',
+	},
+});
+
+export const useFrequencyStyles = createUseStyles(getFrequencyStyles, { name: 'Frequency', theming });
 
 export const drawFrequency = (
 	input: Uint8Array,
@@ -39,35 +50,23 @@ export const drawFrequency = (
 	}
 };
 
-export const getFrequencyStyles = (theme: Theme) => ({
-	root: {
-		display: 'block',
-		background: theme.color.app,
-		width: '100%',
-		height: '100%',
-	},
-});
-
-export const useFrequencyStyles = createUseStyles(getFrequencyStyles, { name: 'Frequency', theming });
-
 export type FrequencyProps = {
 	recorder: Recorder;
+	size?: Size2D;
 	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const Frequency: React.FC<FrequencyProps> = (props) => {
-	const { recorder, performanceMonitor } = props;
+	const {
+		recorder, performanceMonitor,
+		size = { width: 600, height: 400 },
+	} = props;
 	const theme = useTheme();
 	const classes = useFrequencyStyles();
 
 	const { mediaStream } = recorder;
 
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
-
-	const frame: Size2D = useMemo(() => ({
-		width: 800,
-		height: 400,
-	}), []);
 
 	const [analyserNode, audioData] = useMemo(() => {
 		const audioContext = new AudioContext();
@@ -79,46 +78,35 @@ export const Frequency: React.FC<FrequencyProps> = (props) => {
 		return [analyserNodeR, audioDataR];
 	}, [mediaStream]);
 
-	const [context, image] = useMemo(() => {
-		if (!canvas) return [];
-		canvas.width = frame.width;
-		canvas.height = frame.height;
-		const ctx = canvas.getContext('2d');
-		if (!ctx) return [];
-		const tmpImage = ctx.getImageData(0, 0, frame.width, frame.height);
-		return [ctx, tmpImage];
-	}, [canvas, frame]);
-
-	const draw = useRef<DrawFrame>();
-
-	useEffect(() => {
-		if (!context) return;
-		if (!image) return;
-
+	const info = useMemo(() => {
+		if (!canvas) return null;
+		canvas.width = size.width;
+		canvas.height = size.height;
+		const context = canvas.getContext('2d');
+		if (!context) return null;
+		const image = context.getImageData(0, 0, size.width, size.height);
 		const layout: Layout2D = {
 			position: { x: 0, y: 0 },
-			view: { width: frame.width, height: frame.height },
-			frame,
+			view: size,
+			frame: size,
 			colorTheme: theme.color,
 		};
+		return { context, image, layout };
+	}, [canvas, size, theme]);
 
-		draw.current = () => {
-			performanceMonitor?.begin();
-			analyserNode.getByteFrequencyData(audioData);
+	useAnimation(() => {
+		if (!info) return;
+		performanceMonitor?.begin();
+		const { context, image, layout } = info;
+		analyserNode.getByteFrequencyData(audioData);
 
-			drawFrequency(audioData, image.data, layout);
-			context.putImageData(image, 0, 0);
+		drawFrequency(audioData, image.data, layout);
+		context.putImageData(image, 0, 0);
 
-			performanceMonitor?.end();
-		};
-	}, [analyserNode, theme, context, image, audioData, frame, performanceMonitor]);
-
-	useEffect(() => {
-		const subscription = startAnimation(draw);
-		return () => subscription.stop();
-	}, []);
+		performanceMonitor?.end();
+	}, [analyserNode, info, audioData, performanceMonitor]);
 
 	return (
-		<canvas className={classes.root} ref={setCanvas} width={frame.width} height={frame.height} />
+		<canvas className={classes.root} ref={setCanvas} {...size} />
 	);
 };

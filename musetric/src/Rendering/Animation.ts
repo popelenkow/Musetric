@@ -1,4 +1,4 @@
-import { MutableRefObject } from 'react';
+import { useRef, useEffect, MutableRefObject, DependencyList } from 'react';
 
 export type DrawFrame = (delta: number) => void;
 export type DrawFrameRef = MutableRefObject<DrawFrame | undefined>;
@@ -14,4 +14,18 @@ export const startAnimation = (draw: DrawFrameRef): AnimationSubscription => {
 	};
 	requestAnimationFrame(loop);
 	return { stop: () => { next = false; } };
+};
+
+export const useAnimation = (draw: DrawFrame, deps: DependencyList) => {
+	const drawRef = useRef<DrawFrame>();
+
+	useEffect(() => {
+		drawRef.current = draw;
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, deps);
+
+	useEffect(() => {
+		const subscription = startAnimation(drawRef);
+		return () => subscription.stop();
+	}, []);
 };

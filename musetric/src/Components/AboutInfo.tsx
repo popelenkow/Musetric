@@ -28,15 +28,15 @@ export type AboutInfoProps = {
 };
 
 export const AboutInfo: React.FC<AboutInfoProps> = () => {
-	const appVersion = process.env.MUSETRIC_APP_VERSION;
-	const libVersion = process.env.MUSETRIC_VERSION;
+	const appVersion = process.env.MUSETRIC_APP_VERSION || '???';
+	const libVersion = process.env.MUSETRIC_VERSION || '???';
 	const classes = useAboutInfoStyles();
 
 	return (
 		<div className={classes.root}>
 			<div className={classes.container}>
-				<div>{`Musetric App version ${appVersion || '???'}`}</div>
-				<div>{`Musetric Library version ${libVersion || '???'}`}</div>
+				<div>{`Musetric App version ${appVersion}`}</div>
+				<div>{`Musetric Library version ${libVersion}`}</div>
 				<div>Musetric is MIT licensed</div>
 				<div>Copyright © 2021 Vladlen Popelenkov</div>
 			</div>
