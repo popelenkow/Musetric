@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { createUseStyles } from 'react-jss';
-import { Theme, Button, CloseIcon, AppElementContext, AppTitlebar } from '..';
+import { Theme, Button, CloseIcon, useAppElement, AppTitlebar } from '..';
 import { theming } from '../Contexts';
 
 export const getModalDialogStyles = (theme: Theme) => ({
@@ -38,7 +38,8 @@ export const ModalDialog: React.FC<ModalDialogProps> = (props) => {
 	const { children } = props;
 	const classes = useModalDialogStyles();
 
-	const { setModalDialog } = useContext(AppElementContext);
+	const { setModalDialog } = useAppElement();
+
 	return (
 		<div className={classes.root}>
 			<AppTitlebar>

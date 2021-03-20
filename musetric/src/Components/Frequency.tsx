@@ -61,7 +61,7 @@ export const Frequency: React.FC<FrequencyProps> = (props) => {
 		recorder, performanceMonitor,
 		size = { width: 600, height: 400 },
 	} = props;
-	const theme = useTheme();
+	const { theme } = useTheme();
 	const classes = useFrequencyStyles();
 
 	const { mediaStream } = recorder;

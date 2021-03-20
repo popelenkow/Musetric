@@ -88,12 +88,10 @@ export const Waveform: React.FC<WaveformProps> = (props) => {
 		soundBuffer, performanceMonitor,
 		size = { width: 600, height: 800 },
 	} = props;
-	const theme = useTheme();
+	const { theme } = useTheme();
 	const classes = useWaveformStyles();
 
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
-
-	const isEnabled = useCallback(() => soundBuffer.soundSize !== 0, [soundBuffer]);
 
 	const info = useMemo(() => {
 		if (!canvas) return null;
@@ -113,7 +111,6 @@ export const Waveform: React.FC<WaveformProps> = (props) => {
 
 	useAnimation(() => {
 		if (!info) return;
-		if (!isEnabled()) return;
 		performanceMonitor?.begin();
 		const { context, image, layout } = info;
 
@@ -121,14 +118,13 @@ export const Waveform: React.FC<WaveformProps> = (props) => {
 		context.putImageData(image, 0, 0);
 
 		performanceMonitor?.end();
-	}, [soundBuffer, info, performanceMonitor, isEnabled]);
+	}, [soundBuffer, info, performanceMonitor]);
 
 	const click = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-		if (!isEnabled()) return;
 		const pos = getCanvasCursorPosition(e.currentTarget, e.nativeEvent);
 		const val = Math.floor(pos.x * (soundBuffer.memorySize - 1));
 		soundBuffer.cursor = val;
-	}, [isEnabled, soundBuffer]);
+	}, [soundBuffer]);
 
 	return (
 		<canvas className={classes.root} ref={setCanvas} {...size} onClick={click} />

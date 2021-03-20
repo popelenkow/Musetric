@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/comma-dangle */
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { TFunction } from 'i18next';
 import { createUseStyles } from 'react-jss';
 import { theming } from '../Contexts';
-import { Theme } from '..';
+import { Theme, useLocale } from '..';
 import { getButtonStyles } from './Button';
 
 export const getSwitchStyles = (theme: Theme) => ({
@@ -30,7 +29,7 @@ export type SwitchState<T> = {
 export const Switch = <T, >(props: React.PropsWithChildren<SwitchProps<T>>): JSX.Element => {
 	const { currentId, ids, view, set, className } = props;
 	const classes = useSwitchStyles();
-	const { t } = useTranslation();
+	const { t } = useLocale();
 
 	const [id, setId] = useState(currentId);
 

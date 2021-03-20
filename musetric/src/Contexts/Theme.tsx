@@ -1,15 +1,15 @@
-import React, { Dispatch, SetStateAction, useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { JssProvider, createTheming } from 'react-jss';
 import { ColorTheme, PlatformTheme, Theme, getPlatformId } from '..';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ThemingContext = React.createContext<Theme>({} as any);
 export const theming = createTheming(ThemingContext);
-export const { useTheme } = theming;
 
 export type ThemeStore = {
+	theme: Theme;
 	colorThemeId: string;
-	setColorThemeId: Dispatch<SetStateAction<string>>;
+	setColorThemeId: (id: string) => void;
 	allColorThemeIds: string[];
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,6 +50,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = (props) => {
 	};
 
 	const value: ThemeStore = {
+		theme: { color, platform },
 		colorThemeId,
 		setColorThemeId,
 		allColorThemeIds,
@@ -65,3 +66,5 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = (props) => {
 		</ThemeContext.Provider>
 	);
 };
+
+export const useTheme = () => useContext(ThemeContext);

@@ -72,12 +72,10 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 		soundBuffer, performanceMonitor,
 		size = { width: 600, height: 1024 },
 	} = props;
-	const theme = useTheme();
+	const { theme } = useTheme();
 	const classes = useSpectrogramStyles();
 
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
-
-	const isEnabled = useCallback(() => soundBuffer.soundSize !== 0, [soundBuffer]);
 
 	const info = useMemo(() => {
 		if (!canvas) return null;
@@ -99,7 +97,6 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 
 	useAnimation(() => {
 		if (!info) return;
-		if (!isEnabled()) return;
 		const { context, image, windowSize, fft, layout } = info;
 		performanceMonitor?.begin();
 
@@ -117,14 +114,13 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 		context.putImageData(image, 0, 0);
 
 		performanceMonitor?.end();
-	}, [soundBuffer, info, performanceMonitor, isEnabled]);
+	}, [soundBuffer, info, performanceMonitor]);
 
 	const click = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-		if (!isEnabled()) return;
 		const pos = getCanvasCursorPosition(e.currentTarget, e.nativeEvent);
 		const val = Math.floor(pos.x * (soundBuffer.memorySize - 1));
 		soundBuffer.cursor = val;
-	}, [isEnabled, soundBuffer]);
+	}, [soundBuffer]);
 
 	return (
 		<canvas className={classes.root} ref={setCanvas} {...size} onClick={click} />

@@ -1,11 +1,9 @@
 export type SoundBuffer = {
 	readonly sampleRate: number;
 	readonly channelCount: number;
-	readonly soundSize: number;
 	readonly memorySize: number;
 	cursor: number;
 	readonly buffers: Float32Array[];
-	readonly getDuration: () => number;
 	readonly push: (chunk: Float32Array[]) => void;
 };
 
@@ -22,13 +20,10 @@ export const createSoundBuffer = (
 		sampleRate,
 		channelCount,
 		memorySize: initMemorySize,
-		soundSize: 0,
 		cursor: 0,
 		buffers,
-		getDuration: () => soundBuffer.soundSize / sampleRate,
 		push: (chunk: Float32Array[]) => {
 			let { cursor, memorySize } = soundBuffer;
-			const { soundSize } = soundBuffer;
 			const chunkSize = chunk[0].length;
 			const newSize = cursor + chunkSize;
 			if (newSize > memorySize) {
@@ -44,7 +39,6 @@ export const createSoundBuffer = (
 			}
 			cursor += chunkSize;
 			soundBuffer.cursor = cursor;
-			soundBuffer.soundSize = soundSize < cursor ? cursor : soundSize;
 			soundBuffer.memorySize = memorySize;
 		},
 	};
