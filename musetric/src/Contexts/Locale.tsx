@@ -1,10 +1,10 @@
-import React, { Dispatch, SetStateAction, useState, useEffect } from 'react';
-import { i18n as I18n } from 'i18next';
-import { I18nextProvider } from 'react-i18next';
+import React, { useState, useContext } from 'react';
+import { i18n as I18n, TFunction } from 'i18next';
 
 export type LocaleStore = {
+	t: TFunction;
 	localeId: string;
-	setLocaleId: Dispatch<SetStateAction<string>>;
+	setLocaleId: (id: string) => Promise<void>;
 	localeIdList: string[];
 };
 
@@ -23,22 +23,21 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
 
 	const [localeId, setLocaleId] = useState<string>(i18n.language);
 
-	useEffect(() => {
-		// eslint-disable-next-line @typescript-eslint/no-floating-promises
-		i18n.changeLanguage(localeId);
-	}, [localeId, i18n]);
-
 	const store: LocaleStore = {
+		t: (...args: Parameters<TFunction>) => i18n.t(...args),
 		localeId,
-		setLocaleId,
+		setLocaleId: async (id: string) => {
+			await i18n.changeLanguage(id);
+			setLocaleId(id);
+		},
 		localeIdList,
 	};
 
 	return (
 		<LocaleContext.Provider value={store}>
-			<I18nextProvider i18n={i18n}>
-				{children}
-			</I18nextProvider>
+			{children}
 		</LocaleContext.Provider>
 	);
 };
+
+export const useLocale = () => useContext(LocaleContext);

@@ -1,7 +1,7 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 export type AppElementStore = {
-	appElement: HTMLElement; setAppElement: Dispatch<SetStateAction<HTMLElement>>;
+	appElement: HTMLElement; setAppElement: (element: HTMLElement) => void;
 	setModalDialog: (modal?: React.ReactNode) => void;
 };
 
@@ -30,3 +30,5 @@ export const AppElementProvider: React.FC<AppElementProviderProps> = (props) => 
 		</AppElementContext.Provider>
 	);
 };
+
+export const useAppElement = () => useContext(AppElementContext);

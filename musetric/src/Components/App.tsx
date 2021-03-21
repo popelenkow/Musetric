@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { createUseStyles } from 'react-jss';
-import { AppElementProvider, AppElementContext, LocaleProvider,
+import { AppElementProvider, useAppElement, LocaleProvider,
 	ThemeProvider, LocaleProviderProps, ThemeProviderProps, Theme,
-	AppTitlebar, Switch, SwitchProps, Button, InfoIcon, LocaleContext, ThemeContext,
+	AppTitlebar, Switch, SwitchProps, Button, InfoIcon, useLocale, useTheme,
 	localizeColorThemeId, localizeLocaleId, getButtonStyles, AboutInfo, ModalDialog,
 } from '..';
 import { theming } from '../Contexts';
@@ -32,9 +32,9 @@ const Root: React.FC<RootProps> = (props) => {
 	const { children } = props;
 	const classes = useAppStyles();
 
-	const { setModalDialog } = useContext(AppElementContext);
-	const { localeId, setLocaleId, localeIdList } = useContext(LocaleContext);
-	const { colorThemeId, setColorThemeId, allColorThemeIds } = useContext(ThemeContext);
+	const { setModalDialog } = useAppElement();
+	const { localeId, setLocaleId, localeIdList } = useLocale();
+	const { colorThemeId, setColorThemeId, allColorThemeIds } = useTheme();
 
 	const themeSwitchProps: SwitchProps<string> = {
 		currentId: colorThemeId,
@@ -58,7 +58,7 @@ const Root: React.FC<RootProps> = (props) => {
 		setModalDialog(<ModalDialog><AboutInfo /></ModalDialog>);
 	};
 
-	const { setAppElement } = useContext(AppElementContext);
+	const { setAppElement } = useAppElement();
 	return (
 		<div ref={(elem) => elem && setAppElement(elem)} className={classes.root}>
 			<AppTitlebar>

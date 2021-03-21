@@ -1,12 +1,11 @@
 /* eslint-disable max-len */
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useContext, useMemo, useState, useRef } from 'react';
+import React, { useMemo, useState, useRef } from 'react';
 import { createUseStyles } from 'react-jss';
 import {
-	SoundBufferProvider, RecorderProvider,
-	SoundBufferContext, RecorderContext, Theme,
+	SoundBufferProvider, useSoundBuffer, Theme,
 	Button, SelectFile, Radio, Checkbox, SoundProgress,
-	Frequency, Waveform, Spectrogram,
+	Frequency, Waveform, Spectrogram, useAnimation,
 	RecordIcon, SaveIcon, FrequencyIcon, OpenFileIcon,
 	WaveformIcon, SpectrogramIcon, StopIcon, PlayIcon, LiveIcon,
 	PerformanceMonitor, PerformanceMonitorRef,
@@ -17,6 +16,7 @@ export const getSoundWorkshopStyles = (theme: Theme) => ({
 	root: {
 		width: '100%',
 		height: '100%',
+		overflow: 'hidden',
 		display: 'grid',
 		'grid-template-rows': '1fr 56px 48px',
 		'grid-template-columns': '1fr 48px',
@@ -26,19 +26,22 @@ export const getSoundWorkshopStyles = (theme: Theme) => ({
 		'grid-column-end': '2',
 		'grid-row-start': '1',
 		'grid-row-end': '2',
-		position: 'relative',
-		overflow: 'hidden',
 		width: '100%',
 		height: '100%',
+		overflow: 'hidden',
+		background: theme.color.app,
+		display: 'flex',
+		position: 'relative',
 	},
 	loadBar: {
 		'grid-column-start': '1',
 		'grid-column-end': '2',
 		'grid-row-start': '2',
 		'grid-row-end': '3',
-		overflow: 'hidden',
 		width: '100%',
 		height: 'calc(100% - 1px)',
+		overflow: 'hidden',
+		background: theme.color.app,
 		'border-top': `1px solid ${theme.color.splitter}`,
 	},
 	toolbar: {
@@ -81,12 +84,50 @@ const Root: React.FC<RootProps> = () => {
 
 	const performanceMonitor = useRef<PerformanceMonitorRef>(null);
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
-	const { setFile, soundBuffer, saveFile, soundBlob } = useContext(SoundBufferContext);
-	const { startRecord, stopRecord, isRecording, recorder } = useContext(RecorderContext);
+	const { setFile, soundBuffer, saveFile, soundBlob, recorder, startRecord, stopRecord, isRecording } = useSoundBuffer();
 
 	type SoundViewId = 'Frequency' | 'Spectrogram' | 'Waveform';
 	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
-	const url = useMemo(() => (soundBlob ? URL.createObjectURL(soundBlob) : undefined), [soundBlob]);
+
+	const player = useMemo(() => {
+		if (!soundBlob) return undefined;
+		const url = URL.createObjectURL(soundBlob);
+		const element = document.createElement('audio');
+		element.src = url;
+		element.onended = () => {
+			setIsPlaying(false);
+			soundBuffer.cursor = 0;
+		};
+		const { cursor, sampleRate } = soundBuffer;
+		element.currentTime = cursor / sampleRate;
+		return {
+			prevCursor: soundBuffer.cursor,
+			element,
+		};
+	}, [soundBlob, soundBuffer]);
+
+	useAnimation(() => {
+		if (!player) return;
+		if (!isPlaying) return;
+		const { sampleRate, cursor } = soundBuffer;
+		const { element, prevCursor } = player;
+		if (prevCursor !== cursor) {
+			element.currentTime = cursor / sampleRate;
+		} else {
+			soundBuffer.cursor = Math.floor(element.currentTime * sampleRate);
+		}
+		player.prevCursor = soundBuffer.cursor;
+	}, [player, soundBuffer, isPlaying]);
+
+	const startPlayer = async () => {
+		await player?.element?.play();
+		setIsPlaying(true);
+	};
+
+	const stopPlayer = () => {
+		player?.element?.pause();
+		setIsPlaying(false);
+	};
 
 	return (
 		<div className={classes.root}>
@@ -97,7 +138,7 @@ const Root: React.FC<RootProps> = () => {
 				{soundViewId === 'Spectrogram' && <Spectrogram soundBuffer={soundBuffer} performanceMonitor={performanceMonitor.current} />}
 			</div>
 			<div className={classes.loadBar}>
-				{url && <audio className='recorder-item' key={url} controls src={url} />}
+				<Waveform soundBuffer={soundBuffer} size={{ width: 600, height: 50 }} />
 			</div>
 			<div className={classes.toolbar}>
 				<Button onClick={() => saveFile('myRecording.wav')}><SaveIcon /></Button>
@@ -106,8 +147,8 @@ const Root: React.FC<RootProps> = () => {
 			</div>
 			<div className={classes.sidebar}>
 				{!isPlaying
-					? <Button disabled={isRecording || true} onClick={() => setIsPlaying(true)}><PlayIcon /></Button>
-					: <Button onClick={() => setIsPlaying(false)}><StopIcon /></Button>}
+					? <Button disabled={!player || isRecording} onClick={() => startPlayer()}><PlayIcon /></Button>
+					: <Button onClick={() => stopPlayer()}><StopIcon /></Button>}
 				{!isRecording
 					? <Button disabled={isPlaying} onClick={() => startRecord()}><RecordIcon /></Button>
 					: <Button onClick={() => stopRecord()}><StopIcon /></Button>}
@@ -126,9 +167,7 @@ export type SoundWorkshopProps = {
 export const SoundWorkshop: React.FC<SoundWorkshopProps> = () => {
 	return (
 		<SoundBufferProvider>
-			<RecorderProvider>
-				<Root />
-			</RecorderProvider>
+			<Root />
 		</SoundBufferProvider>
 	);
 };
