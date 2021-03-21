@@ -86,7 +86,7 @@ export type WaveformProps = {
 export const Waveform: React.FC<WaveformProps> = (props) => {
 	const {
 		soundBuffer, performanceMonitor,
-		size = { width: 600, height: 800 },
+		size = { width: 800, height: 800 },
 	} = props;
 	const { theme } = useTheme();
 	const classes = useWaveformStyles();

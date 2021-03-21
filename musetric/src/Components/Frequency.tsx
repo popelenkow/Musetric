@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import React, { useState, useMemo } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Layout2D, Size2D, PerformanceMonitorRef, parseColorThemeRgb, Recorder, Theme, useAnimation } from '..';
+import { Layout2D, Size2D, PerformanceMonitorRef, parseColorThemeRgb, SoundBuffer, Theme, useAnimation, createFft } from '..';
 import { theming, useTheme } from '../Contexts';
 
 export const getFrequencyStyles = (theme: Theme) => ({
@@ -16,7 +16,7 @@ export const getFrequencyStyles = (theme: Theme) => ({
 export const useFrequencyStyles = createUseStyles(getFrequencyStyles, { name: 'Frequency', theming });
 
 export const drawFrequency = (
-	input: Uint8Array,
+	input: Float32Array,
 	output: Uint8ClampedArray,
 	layout: Layout2D,
 ): void => {
@@ -25,22 +25,16 @@ export const drawFrequency = (
 	const { content, background } = parseColorThemeRgb(colorTheme);
 
 	const step = (1.0 * input.length) / view.width;
-	const count = Math.max(Math.floor(step), 1);
 
 	for (let x = 0; x < view.width; x++) {
 		const offset = Math.floor(x * step);
-		let magnitude = 0;
-		for (let i = 0; i < count; i++) {
-			magnitude += input[offset + i];
-		}
-		magnitude *= 1.0;
-		magnitude /= count;
-		magnitude /= 255;
+		const value = Math.log10(input[offset]) / 5;
+		const magnitude = Math.max(0, Math.min(1, value + 1));
 
 		for (let y = 0; y < view.height; y++) {
 			const yIndex = 4 * (position.y + y) * frame.width;
 			const index = 4 * (position.x + x) + yIndex;
-			const isDraw = (magnitude * view.height) > view.height - y - 1;
+			const isDraw = view.height - y - 1 < magnitude * view.height;
 			const color = isDraw ? content : background;
 			output[index + 0] = color.r;
 			output[index + 1] = color.g;
@@ -51,32 +45,20 @@ export const drawFrequency = (
 };
 
 export type FrequencyProps = {
-	recorder: Recorder;
+	soundBuffer: SoundBuffer;
 	size?: Size2D;
 	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const Frequency: React.FC<FrequencyProps> = (props) => {
 	const {
-		recorder, performanceMonitor,
-		size = { width: 600, height: 400 },
+		soundBuffer, performanceMonitor,
+		size = { width: 1024, height: 400 },
 	} = props;
 	const { theme } = useTheme();
 	const classes = useFrequencyStyles();
 
-	const { mediaStream } = recorder;
-
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
-
-	const [analyserNode, audioData] = useMemo(() => {
-		const audioContext = new AudioContext();
-		const source = audioContext.createMediaStreamSource(mediaStream);
-		const analyserNodeR = audioContext.createAnalyser();
-		analyserNodeR.fftSize = 2048;
-		source.connect(analyserNodeR);
-		const audioDataR = new Uint8Array(analyserNodeR.frequencyBinCount);
-		return [analyserNodeR, audioDataR];
-	}, [mediaStream]);
 
 	const info = useMemo(() => {
 		if (!canvas) return null;
@@ -91,20 +73,24 @@ export const Frequency: React.FC<FrequencyProps> = (props) => {
 			frame: size,
 			colorTheme: theme.color,
 		};
-		return { context, image, layout };
+		const windowSize = size.width * 2;
+		const fft = createFft(windowSize);
+		const result = new Float32Array(size.width);
+		return { context, image, layout, windowSize, fft, result };
 	}, [canvas, size, theme]);
 
 	useAnimation(() => {
 		if (!info) return;
 		performanceMonitor?.begin();
-		const { context, image, layout } = info;
-		analyserNode.getByteFrequencyData(audioData);
+		const { context, image, layout, windowSize, fft, result } = info;
 
-		drawFrequency(audioData, image.data, layout);
+		const cursor = soundBuffer.cursor + windowSize < soundBuffer.memorySize ? soundBuffer.cursor : soundBuffer.memorySize - windowSize;
+		fft.frequency(soundBuffer.buffers[0], result, cursor);
+		drawFrequency(result, image.data, layout);
 		context.putImageData(image, 0, 0);
 
 		performanceMonitor?.end();
-	}, [analyserNode, info, audioData, performanceMonitor]);
+	}, [info, performanceMonitor, soundBuffer]);
 
 	return (
 		<canvas className={classes.root} ref={setCanvas} {...size} />

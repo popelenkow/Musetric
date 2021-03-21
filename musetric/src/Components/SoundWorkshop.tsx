@@ -1,11 +1,11 @@
 /* eslint-disable max-len */
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useMemo, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { createUseStyles } from 'react-jss';
 import {
 	SoundBufferProvider, useSoundBuffer, Theme,
 	Button, SelectFile, Radio, Checkbox, SoundProgress,
-	Frequency, Waveform, Spectrogram, useAnimation,
+	Frequency, Waveform, Spectrogram,
 	RecordIcon, SaveIcon, FrequencyIcon, OpenFileIcon,
 	WaveformIcon, SpectrogramIcon, StopIcon, PlayIcon, LiveIcon,
 	PerformanceMonitor, PerformanceMonitorRef,
@@ -83,75 +83,34 @@ const Root: React.FC<RootProps> = () => {
 	const classes = useSoundWorkshopStyles();
 
 	const performanceMonitor = useRef<PerformanceMonitorRef>(null);
-	const [isPlaying, setIsPlaying] = useState<boolean>(false);
-	const { setFile, soundBuffer, saveFile, soundBlob, recorder, startRecord, stopRecord, isRecording } = useSoundBuffer();
+	const { soundBuffer, player, file, recorder } = useSoundBuffer();
 
 	type SoundViewId = 'Frequency' | 'Spectrogram' | 'Waveform';
 	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
-
-	const player = useMemo(() => {
-		if (!soundBlob) return undefined;
-		const url = URL.createObjectURL(soundBlob);
-		const element = document.createElement('audio');
-		element.src = url;
-		element.onended = () => {
-			setIsPlaying(false);
-			soundBuffer.cursor = 0;
-		};
-		const { cursor, sampleRate } = soundBuffer;
-		element.currentTime = cursor / sampleRate;
-		return {
-			prevCursor: soundBuffer.cursor,
-			element,
-		};
-	}, [soundBlob, soundBuffer]);
-
-	useAnimation(() => {
-		if (!player) return;
-		if (!isPlaying) return;
-		const { sampleRate, cursor } = soundBuffer;
-		const { element, prevCursor } = player;
-		if (prevCursor !== cursor) {
-			element.currentTime = cursor / sampleRate;
-		} else {
-			soundBuffer.cursor = Math.floor(element.currentTime * sampleRate);
-		}
-		player.prevCursor = soundBuffer.cursor;
-	}, [player, soundBuffer, isPlaying]);
-
-	const startPlayer = async () => {
-		await player?.element?.play();
-		setIsPlaying(true);
-	};
-
-	const stopPlayer = () => {
-		player?.element?.pause();
-		setIsPlaying(false);
-	};
 
 	return (
 		<div className={classes.root}>
 			<div className={classes.view}>
 				<PerformanceMonitor ref={performanceMonitor} />
 				{soundViewId === 'Waveform' && <Waveform soundBuffer={soundBuffer} performanceMonitor={performanceMonitor.current} />}
-				{soundViewId === 'Frequency' && recorder && <Frequency recorder={recorder} performanceMonitor={performanceMonitor.current} />}
+				{soundViewId === 'Frequency' && <Frequency soundBuffer={soundBuffer} performanceMonitor={performanceMonitor.current} />}
 				{soundViewId === 'Spectrogram' && <Spectrogram soundBuffer={soundBuffer} performanceMonitor={performanceMonitor.current} />}
 			</div>
 			<div className={classes.loadBar}>
 				<Waveform soundBuffer={soundBuffer} size={{ width: 600, height: 50 }} />
 			</div>
 			<div className={classes.toolbar}>
-				<Button onClick={() => saveFile('myRecording.wav')}><SaveIcon /></Button>
-				<SelectFile onChangeFile={setFile}><OpenFileIcon /></SelectFile>
+				<Button onClick={() => file.save('myRecording.wav')}><SaveIcon /></Button>
+				<SelectFile onChangeFile={file.set}><OpenFileIcon /></SelectFile>
 				<SoundProgress soundBuffer={soundBuffer} />
 			</div>
 			<div className={classes.sidebar}>
-				{!isPlaying
-					? <Button disabled={!player || isRecording} onClick={() => startPlayer()}><PlayIcon /></Button>
-					: <Button onClick={() => stopPlayer()}><StopIcon /></Button>}
-				{!isRecording
-					? <Button disabled={isPlaying} onClick={() => startRecord()}><RecordIcon /></Button>
-					: <Button onClick={() => stopRecord()}><StopIcon /></Button>}
+				{!player.isPlaying
+					? <Button disabled={recorder.isRecording} onClick={() => player.start()}><PlayIcon /></Button>
+					: <Button onClick={() => player.stop()}><StopIcon /></Button>}
+				{!recorder.isRecording
+					? <Button disabled={player.isPlaying} onClick={() => recorder.start()}><RecordIcon /></Button>
+					: <Button onClick={() => recorder.stop()}><StopIcon /></Button>}
 				<Checkbox disabled onToggle={() => {}}><LiveIcon /></Checkbox>
 				<Radio name='soundView' value='Waveform' onSelected={setSoundViewId} checkedValue={soundViewId}><WaveformIcon /></Radio>
 				<Radio name='soundView' value='Frequency' onSelected={setSoundViewId} checkedValue={soundViewId}><FrequencyIcon /></Radio>

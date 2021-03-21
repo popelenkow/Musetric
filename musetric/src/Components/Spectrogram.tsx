@@ -84,21 +84,21 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 		const context = canvas.getContext('2d');
 		if (!context) return null;
 		const image = context.getImageData(0, 0, size.width, size.height);
-		const windowSize = size.height * 2;
-		const fft = createFft(size.height * 2);
 		const layout: Layout2D = {
 			position: { x: 0, y: 0 },
 			view: size,
 			frame: size,
 			colorTheme: theme.color,
 		};
+		const windowSize = size.height * 2;
+		const fft = createFft(windowSize);
 		return { context, image, windowSize, fft, layout };
 	}, [canvas, size, theme]);
 
 	useAnimation(() => {
 		if (!info) return;
-		const { context, image, windowSize, fft, layout } = info;
 		performanceMonitor?.begin();
+		const { context, image, windowSize, fft, layout } = info;
 
 		const buffer = soundBuffer.buffers[0];
 
@@ -108,8 +108,8 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 			const array = new Float32Array(windowSize / 2);
 			frequencies.push(array);
 		}
-		fft.getFrequencies(buffer, frequencies);
-		const cursor = Math.floor(soundBuffer.cursor / windowSize);
+		fft.frequencies(buffer, frequencies);
+		const cursor = Math.floor((soundBuffer.cursor / windowSize) + 0.5);
 		drawSpectrogram(frequencies, image.data, cursor, layout);
 		context.putImageData(image, 0, 0);
 
