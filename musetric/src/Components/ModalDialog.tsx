@@ -1,9 +1,7 @@
 import React from 'react';
-import { createUseStyles } from 'react-jss';
-import { Theme, Button, CloseIcon, useAppElement, AppTitlebar } from '..';
-import { theming } from '../Contexts';
+import { Theme, createUseClasses, Button, CloseIcon, useAppElement, AppTitlebar } from '..';
 
-export const getModalDialogStyles = (theme: Theme) => ({
+export const getModalDialogClasses = (theme: Theme) => ({
 	root: {
 		position: 'absolute',
 		'z-index': '200',
@@ -29,14 +27,14 @@ export const getModalDialogStyles = (theme: Theme) => ({
 	},
 });
 
-export const useModalDialogStyles = createUseStyles(getModalDialogStyles, { name: 'ModalDialog', theming });
+export const useModalDialogClasses = createUseClasses('ModalDialog', getModalDialogClasses);
 
 export type ModalDialogProps = {
 };
 
 export const ModalDialog: React.FC<ModalDialogProps> = (props) => {
 	const { children } = props;
-	const classes = useModalDialogStyles();
+	const classes = useModalDialogClasses();
 
 	const { setModalDialog } = useAppElement();
 

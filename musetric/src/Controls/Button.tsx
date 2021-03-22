@@ -1,9 +1,8 @@
 import React from 'react';
-import { createUseStyles } from 'react-jss';
 import classNames from 'classnames';
-import { Theme, theming } from '..';
+import { Theme, createUseClasses } from '..';
 
-export const getButtonStyles = (theme: Theme) => ({
+export const getButtonClasses = (theme: Theme) => ({
 	root: {
 		margin: '0',
 		padding: '0',
@@ -38,7 +37,7 @@ export const getButtonStyles = (theme: Theme) => ({
 	},
 });
 
-export const useButtonStyles = createUseStyles(getButtonStyles, { name: 'Button', theming });
+export const useButtonClasses = createUseClasses('Button', getButtonClasses);
 
 export type ButtonProps = {
 	onClick: () => void;
@@ -49,7 +48,7 @@ export type ButtonProps = {
 
 export const Button: React.FC<ButtonProps> = (props) => {
 	const { children, className, classNameDisabled, onClick, disabled } = props;
-	const classes = useButtonStyles();
+	const classes = useButtonClasses();
 
 	const rootName = classNames(className || classes.root, {
 		[classNameDisabled || classes.disabled]: disabled,

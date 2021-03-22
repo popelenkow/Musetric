@@ -1,10 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { JssProvider, createTheming } from 'react-jss';
+import { Classes } from 'jss';
+import { JssProvider, createTheming, createUseStyles, Styles } from 'react-jss';
 import { ColorTheme, PlatformTheme, Theme, getPlatformId } from '..';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ThemingContext = React.createContext<Theme>({} as any);
 export const theming = createTheming(ThemingContext);
+
+export const createUseClasses = <C extends string = string, Props = unknown>(
+	name: string,
+	styles: Styles<C, Props, Theme> | ((theme: Theme) => Styles<C, Props, undefined>),
+): (data?: Props & { theme?: Theme }) => Classes<C> => {
+	return createUseStyles(styles, { name, theming });
+};
 
 export type ThemeStore = {
 	theme: Theme;

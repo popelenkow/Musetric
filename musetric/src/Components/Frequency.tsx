@@ -1,10 +1,12 @@
 /* eslint-disable max-len */
 import React, { useState, useMemo } from 'react';
-import { createUseStyles } from 'react-jss';
-import { Layout2D, Size2D, PerformanceMonitorRef, parseColorThemeRgb, SoundBuffer, Theme, useAnimation, createFft } from '..';
-import { theming, useTheme } from '../Contexts';
+import {
+	Theme, createUseClasses, useTheme, parseColorThemeRgb,
+	Layout2D, Size2D, useAnimation,
+	PerformanceMonitorRef, SoundBuffer, SoundFixedQueue, createFft,
+} from '..';
 
-export const getFrequencyStyles = (theme: Theme) => ({
+export const getFrequencyClasses = (theme: Theme) => ({
 	root: {
 		display: 'block',
 		background: theme.color.app,
@@ -13,7 +15,7 @@ export const getFrequencyStyles = (theme: Theme) => ({
 	},
 });
 
-export const useFrequencyStyles = createUseStyles(getFrequencyStyles, { name: 'Frequency', theming });
+export const useFrequencyClasses = createUseClasses('Frequency', getFrequencyClasses);
 
 export const drawFrequency = (
 	input: Float32Array,
@@ -46,17 +48,19 @@ export const drawFrequency = (
 
 export type FrequencyProps = {
 	soundBuffer: SoundBuffer;
+	soundFixedQueue?: SoundFixedQueue;
+	isLive?: boolean;
 	size?: Size2D;
 	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const Frequency: React.FC<FrequencyProps> = (props) => {
 	const {
-		soundBuffer, performanceMonitor,
+		soundBuffer, soundFixedQueue, isLive, performanceMonitor,
 		size = { width: 1024, height: 400 },
 	} = props;
 	const { theme } = useTheme();
-	const classes = useFrequencyStyles();
+	const classes = useFrequencyClasses();
 
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
@@ -84,13 +88,14 @@ export const Frequency: React.FC<FrequencyProps> = (props) => {
 		performanceMonitor?.begin();
 		const { context, image, layout, windowSize, fft, result } = info;
 
-		const cursor = soundBuffer.cursor + windowSize < soundBuffer.memorySize ? soundBuffer.cursor : soundBuffer.memorySize - windowSize;
-		fft.frequency(soundBuffer.buffers[0], result, cursor);
+		const { cursor, memorySize, buffers } = isLive && soundFixedQueue ? { ...soundFixedQueue, cursor: soundFixedQueue.memorySize } : soundBuffer;
+		const offset = cursor + windowSize < memorySize ? cursor : memorySize - windowSize;
+		fft.frequency(buffers[0], result, offset);
 		drawFrequency(result, image.data, layout);
 		context.putImageData(image, 0, 0);
 
 		performanceMonitor?.end();
-	}, [info, performanceMonitor, soundBuffer]);
+	}, [soundBuffer, soundFixedQueue, isLive, info, performanceMonitor]);
 
 	return (
 		<canvas className={classes.root} ref={setCanvas} {...size} />

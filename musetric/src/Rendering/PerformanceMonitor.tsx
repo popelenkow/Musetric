@@ -1,9 +1,8 @@
 /* eslint-disable max-len */
 import React, { useMemo, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
-import { createUseStyles } from 'react-jss';
-import { theming } from '../Contexts';
+import { createUseClasses } from '..';
 
-export const getPerformanceMonitorStyles = () => ({
+export const getPerformanceMonitorClasses = () => ({
 	root: {
 		position: 'absolute',
 		top: '0',
@@ -11,7 +10,7 @@ export const getPerformanceMonitorStyles = () => ({
 	},
 });
 
-export const usePerformanceMonitorStyles = createUseStyles(getPerformanceMonitorStyles(), { name: 'PerformanceMonitor', theming });
+export const usePerformanceMonitorClasses = createUseClasses('PerformanceMonitor', getPerformanceMonitorClasses());
 
 /** Based on https://github.com/mrdoob/stats.js */
 
@@ -171,10 +170,10 @@ export type PerformanceMonitorRef = {
 };
 
 export const PerformanceMonitor = forwardRef<PerformanceMonitorRef, PerformanceMonitorProps>((_, ref) => {
+	const classes = usePerformanceMonitorClasses();
+
 	const root = useRef<HTMLDivElement>(null);
 	const stats = useMemo(() => createStats(), []);
-
-	const classes = usePerformanceMonitorStyles();
 
 	useImperativeHandle(ref, () => ({
 		begin: () => {

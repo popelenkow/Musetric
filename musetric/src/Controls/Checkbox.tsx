@@ -2,17 +2,15 @@
 /* eslint-disable @typescript-eslint/comma-dangle */
 /* eslint-disable max-len */
 import React from 'react';
-import { createUseStyles } from 'react-jss';
 import classNames from 'classnames';
-import { getButtonStyles, Theme } from '..';
-import { theming } from '../Contexts';
+import { Theme, createUseClasses, getButtonClasses } from '..';
 
-export const getCheckboxStyles = (theme: Theme) => ({
+export const getCheckboxClasses = (theme: Theme) => ({
 	root: {
-		...getButtonStyles(theme).root,
+		...getButtonClasses(theme).root,
 	},
 	disabled: {
-		...getButtonStyles(theme).disabled,
+		...getButtonClasses(theme).disabled,
 	},
 	checked: {
 		background: theme.color.checked,
@@ -25,7 +23,7 @@ export const getCheckboxStyles = (theme: Theme) => ({
 	},
 });
 
-export const useCheckboxStyles = createUseStyles(getCheckboxStyles, { name: 'Checkbox', theming });
+export const useCheckboxClasses = createUseClasses('Checkbox', getCheckboxClasses);
 
 export type CheckboxProps = {
 	onToggle: () => void;
@@ -38,7 +36,7 @@ export type CheckboxProps = {
 
 export const Checkbox: React.FC<CheckboxProps> = (props) => {
 	const { children, className, classNameDisabled, classNameChecked, onToggle, disabled, checked } = props;
-	const classes = useCheckboxStyles();
+	const classes = useCheckboxClasses();
 
 	const rootName = classNames(className || classes.root, {
 		[classNameDisabled || classes.disabled]: disabled,

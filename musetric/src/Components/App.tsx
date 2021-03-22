@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { createUseStyles } from 'react-jss';
-import { AppElementProvider, useAppElement, LocaleProvider,
-	ThemeProvider, LocaleProviderProps, ThemeProviderProps, Theme,
+import {
+	Theme, createUseClasses, ThemeProvider, ThemeProviderProps,
+	AppElementProvider, useAppElement, LocaleProvider, LocaleProviderProps,
 	AppTitlebar, Switch, SwitchProps, Button, InfoIcon, useLocale, useTheme,
-	localizeColorThemeId, localizeLocaleId, getButtonStyles, AboutInfo, ModalDialog,
+	localizeColorThemeId, localizeLocaleId, getButtonClasses, AboutInfo, ModalDialog,
 } from '..';
-import { theming } from '../Contexts';
 
-export const getAppStyles = (theme: Theme) => ({
+export const getAppClasses = (theme: Theme) => ({
 	root: {
 		width: `calc(${theme.platform.width} - 2px)`,
 		height: `calc(${theme.platform.height} - 2px)`,
@@ -17,20 +16,20 @@ export const getAppStyles = (theme: Theme) => ({
 		gridTemplateColumns: '1fr',
 	},
 	textButton: {
-		...getButtonStyles(theme).root,
+		...getButtonClasses(theme).root,
 		width: 'auto',
 		padding: '0 6px',
 	},
 });
 
-export const useAppStyles = createUseStyles(getAppStyles, { name: 'App', theming });
+export const useAppClasses = createUseClasses('App', getAppClasses);
 
 type RootProps = {
 };
 
 const Root: React.FC<RootProps> = (props) => {
 	const { children } = props;
-	const classes = useAppStyles();
+	const classes = useAppClasses();
 
 	const { setModalDialog } = useAppElement();
 	const { localeId, setLocaleId, localeIdList } = useLocale();

@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 import { v4 as uuid } from 'uuid';
-import { SoundBuffer } from '..';
+import { SoundBuffer, SoundFixedQueue } from '..';
 
-export const createRecorderApi = (mediaStream: MediaStream, messagePort: MessagePort, soundBuffer: SoundBuffer) => {
+export const createRecorderApi = (mediaStream: MediaStream, messagePort: MessagePort, soundBuffer: SoundBuffer, soundFixedQueue: SoundFixedQueue) => {
 	const onStartCbs: Record<string, () => void> = {};
 	const onStopCbs: Record<string, () => void> = {};
 
@@ -15,8 +15,9 @@ export const createRecorderApi = (mediaStream: MediaStream, messagePort: Message
 			onStopCbs[id]();
 			delete onStopCbs[id];
 		},
-		onChunk: (chunk: Float32Array[]): void => {
-			soundBuffer.push(chunk);
+		onChunk: (chunk: Float32Array[], isRecording: boolean): void => {
+			isRecording && soundBuffer.push(chunk);
+			soundFixedQueue.push(chunk);
 		},
 	};
 
@@ -77,10 +78,8 @@ function createRecorderWorkletApi(messagePort: MessagePort) {
 	const api = {
 		process(inputRaw: Float32Array[]) {
 			const { isRecording } = state;
-			if (isRecording) {
-				const input = inputRaw.map(x => x.map(y => y));
-				postMessage('onChunk', input);
-			}
+			const input = inputRaw.map(x => x.map(y => y));
+			postMessage('onChunk', input, isRecording);
 		},
 		start: (id: string) => {
 			state.isRecording = true;
@@ -149,10 +148,10 @@ const createRecorderWorklet = async (context: BaseAudioContext, channelCount: nu
 	return worklet;
 };
 
-export const createRecorder = async (audioContext: AudioContext, soundBuffer: SoundBuffer): Promise<Recorder> => {
+export const createRecorder = async (audioContext: AudioContext, soundBuffer: SoundBuffer, soundFixedQueue: SoundFixedQueue): Promise<Recorder> => {
 	const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 	const source = audioContext.createMediaStreamSource(mediaStream);
 	const worklet = await createRecorderWorklet(source.context, soundBuffer.channelCount);
 	source.connect(worklet);
-	return createRecorderApi(mediaStream, worklet.port, soundBuffer).recorder;
+	return createRecorderApi(mediaStream, worklet.port, soundBuffer, soundFixedQueue).recorder;
 };

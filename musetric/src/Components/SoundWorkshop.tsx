@@ -1,18 +1,17 @@
 /* eslint-disable max-len */
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useState, useRef } from 'react';
-import { createUseStyles } from 'react-jss';
+import React, { useRef, useState } from 'react';
 import {
-	SoundBufferProvider, useSoundBuffer, Theme,
+	Theme, createUseClasses,
+	SoundBufferProvider, useSoundBuffer,
 	Button, SelectFile, Radio, Checkbox, SoundProgress,
 	Frequency, Waveform, Spectrogram,
 	RecordIcon, SaveIcon, FrequencyIcon, OpenFileIcon,
 	WaveformIcon, SpectrogramIcon, StopIcon, PlayIcon, LiveIcon,
 	PerformanceMonitor, PerformanceMonitorRef,
 } from '..';
-import { theming } from '../Contexts';
 
-export const getSoundWorkshopStyles = (theme: Theme) => ({
+export const getSoundWorkshopClasses = (theme: Theme) => ({
 	root: {
 		width: '100%',
 		height: '100%',
@@ -74,27 +73,34 @@ export const getSoundWorkshopStyles = (theme: Theme) => ({
 	},
 });
 
-export const useSoundWorkshopStyles = createUseStyles(getSoundWorkshopStyles, { name: 'SoundWorkshop', theming });
+export const useSoundWorkshopClasses = createUseClasses('SoundWorkshop', getSoundWorkshopClasses);
 
 type RootProps = {
 };
 
 const Root: React.FC<RootProps> = () => {
-	const classes = useSoundWorkshopStyles();
+	const classes = useSoundWorkshopClasses();
+
+	const { soundBuffer, soundFixedQueue, isLive, setIsLive, player, file, recorder } = useSoundBuffer();
+	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
+	type SoundViewId = 'Frequency' | 'Spectrogram' | 'Waveform';
 
 	const performanceMonitor = useRef<PerformanceMonitorRef>(null);
-	const { soundBuffer, player, file, recorder } = useSoundBuffer();
 
-	type SoundViewId = 'Frequency' | 'Spectrogram' | 'Waveform';
-	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
+	const viewProps = {
+		soundBuffer,
+		soundFixedQueue,
+		isLive,
+		performanceMonitor: performanceMonitor.current,
+	};
 
 	return (
 		<div className={classes.root}>
 			<div className={classes.view}>
 				<PerformanceMonitor ref={performanceMonitor} />
-				{soundViewId === 'Waveform' && <Waveform soundBuffer={soundBuffer} performanceMonitor={performanceMonitor.current} />}
-				{soundViewId === 'Frequency' && <Frequency soundBuffer={soundBuffer} performanceMonitor={performanceMonitor.current} />}
-				{soundViewId === 'Spectrogram' && <Spectrogram soundBuffer={soundBuffer} performanceMonitor={performanceMonitor.current} />}
+				{soundViewId === 'Waveform' && <Waveform {...viewProps} />}
+				{soundViewId === 'Frequency' && <Frequency {...viewProps} />}
+				{soundViewId === 'Spectrogram' && <Spectrogram {...viewProps} />}
 			</div>
 			<div className={classes.loadBar}>
 				<Waveform soundBuffer={soundBuffer} size={{ width: 600, height: 50 }} />
@@ -111,7 +117,7 @@ const Root: React.FC<RootProps> = () => {
 				{!recorder.isRecording
 					? <Button disabled={player.isPlaying} onClick={() => recorder.start()}><RecordIcon /></Button>
 					: <Button onClick={() => recorder.stop()}><StopIcon /></Button>}
-				<Checkbox disabled onToggle={() => {}}><LiveIcon /></Checkbox>
+				<Checkbox checked={isLive} onToggle={() => setIsLive(!isLive)}><LiveIcon /></Checkbox>
 				<Radio name='soundView' value='Waveform' onSelected={setSoundViewId} checkedValue={soundViewId}><WaveformIcon /></Radio>
 				<Radio name='soundView' value='Frequency' onSelected={setSoundViewId} checkedValue={soundViewId}><FrequencyIcon /></Radio>
 				<Radio name='soundView' value='Spectrogram' onSelected={setSoundViewId} checkedValue={soundViewId}><SpectrogramIcon /></Radio>
