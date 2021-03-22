@@ -13,12 +13,12 @@ Musetric is a application for exploration of sounds. The application supports We
 
 ## Features
 
+- Player
 - Recorder
 - Audio Visualizer (Sonogram, Frequency, Waveform)
 
 ### in future
 
-- Player
 - Vocal Remover
 - Score and Tabs Generator
 
@@ -36,24 +36,6 @@ For our nightly builds:
 
 ```bash
 npm install musetric@next
-```
-
-## Building
-
-In order to build the Musetric Web Application, ensure that you have [Node.js](https://nodejs.org/) installed.
-
-Build
-```
-cd web-app
-yarn
-yarn build
-```
-
-Dev
-```bash
-cd web-app
-yarn
-yarn dev
 ```
 
 ## Licence

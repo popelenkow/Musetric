@@ -12,43 +12,14 @@ Musetric is a application for exploration of sounds. The application supports We
 
 # Features
 
+- Player
 - Recorder
-- Audio Visualizer (Sonogram, Frequency, Waveform)
+- Audio Visualizer
 
 ## in future
 
-- Player
 - Vocal Remover
 - Score and Tabs Generator
-
-# Using
-
-Docker pull & run
-```
-docker pull popelenkow/musetric:latest
-docker run -p 8080:3000 -d popelenkow/musetric:latest
-```
-# Building
-
-Electron application with react & typescript & sass & webpack. Node >= v12.
-
-Build
-```bash
-yarn
-yarn build
-```
-
-Dev
-```bash
-yarn
-yarn dev
-```
-
-Docker build & run
-```bash
-docker build -t musetric .
-docker run -p 8080:3000 -d musetric
-```
 
 # Licence
 

@@ -12,12 +12,12 @@ Musetric is a application for exploration of sounds. The application supports We
 
 ## Features
 
+- Player
 - Recorder
 - Audio Visualizer (Sonogram, Frequency, Waveform)
 
 ### in future
 
-- Player
 - Vocal Remover
 - Score and Tabs Generator
 
