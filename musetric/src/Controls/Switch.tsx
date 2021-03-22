@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/comma-dangle */
 import React, { useState } from 'react';
 import { TFunction } from 'i18next';
-import { createUseStyles } from 'react-jss';
-import { theming } from '../Contexts';
-import { Theme, useLocale } from '..';
-import { getButtonStyles } from './Button';
+import { Theme, createUseClasses, useLocale, getButtonClasses } from '..';
 
-export const getSwitchStyles = (theme: Theme) => ({
+export const getSwitchClasses = (theme: Theme) => ({
 	root: {
-		...getButtonStyles(theme).root,
+		...getButtonClasses(theme).root,
 	},
 });
 
-export const useSwitchStyles = createUseStyles(getButtonStyles, { name: 'Switch', theming });
+export const useSwitchClasses = createUseClasses('Switch', getSwitchClasses);
 
 export type SwitchProps<T> = {
 	currentId: T;
@@ -28,7 +25,7 @@ export type SwitchState<T> = {
 
 export const Switch = <T, >(props: React.PropsWithChildren<SwitchProps<T>>): JSX.Element => {
 	const { currentId, ids, view, set, className } = props;
-	const classes = useSwitchStyles();
+	const classes = useSwitchClasses();
 	const { t } = useLocale();
 
 	const [id, setId] = useState(currentId);

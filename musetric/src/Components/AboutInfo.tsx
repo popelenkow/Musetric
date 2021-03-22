@@ -1,16 +1,14 @@
 import React from 'react';
-import { createUseStyles } from 'react-jss';
-import { Theme } from '..';
-import { theming } from '../Contexts';
+import { Theme, createUseClasses } from '..';
 
-export const getAboutInfoStyles = (theme: Theme) => ({
+export const getAboutInfoClasses = (theme: Theme) => ({
 	root: {
 		width: '100%',
 		height: '100%',
 		display: 'flex',
 		'justify-content': 'center',
 		'align-items': 'center',
-		backgroundColor: theme.color.app,
+		'background-color': theme.color.app,
 	},
 	container: {
 		width: 'auto',
@@ -18,11 +16,11 @@ export const getAboutInfoStyles = (theme: Theme) => ({
 		display: 'flex',
 		flexDirection: 'column',
 		font: '18px/24px "Segoe UI", Arial, sans-serif',
-		backgroundColor: theme.color.app,
+		'background-color': theme.color.app,
 	},
 });
 
-export const useAboutInfoStyles = createUseStyles(getAboutInfoStyles, { name: 'AboutInfo', theming });
+export const useAboutInfoClasses = createUseClasses('AboutInfo', getAboutInfoClasses);
 
 export type AboutInfoProps = {
 };
@@ -30,7 +28,7 @@ export type AboutInfoProps = {
 export const AboutInfo: React.FC<AboutInfoProps> = () => {
 	const appVersion = process.env.MUSETRIC_APP_VERSION || '???';
 	const libVersion = process.env.MUSETRIC_VERSION || '???';
-	const classes = useAboutInfoStyles();
+	const classes = useAboutInfoClasses();
 
 	return (
 		<div className={classes.root}>

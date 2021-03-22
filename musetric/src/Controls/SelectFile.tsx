@@ -1,12 +1,10 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React from 'react';
-import { createUseStyles } from 'react-jss';
-import { getButtonStyles, Theme } from '..';
-import { theming } from '../Contexts';
+import { Theme, createUseClasses, getButtonClasses } from '..';
 
-export const getSelectFileStyles = (theme: Theme) => ({
+export const getSelectFileClasses = (theme: Theme) => ({
 	root: {
-		...getButtonStyles(theme).root,
+		...getButtonClasses(theme).root,
 	},
 	input: {
 		opacity: '0',
@@ -18,7 +16,7 @@ export const getSelectFileStyles = (theme: Theme) => ({
 	},
 });
 
-export const useSelectFileStyles = createUseStyles(getSelectFileStyles, { name: 'SelectFile', theming });
+export const useSelectFileClasses = createUseClasses('SelectFile', getSelectFileClasses);
 
 export type SelectFileProps = {
 	onChangeFile: (file: File) => void;
@@ -27,7 +25,7 @@ export type SelectFileProps = {
 
 export const SelectFile: React.FC<SelectFileProps> = (props) => {
 	const { children, onChangeFile, className } = props;
-	const classes = useSelectFileStyles();
+	const classes = useSelectFileClasses();
 
 	const onChange = (input: React.ChangeEvent<HTMLInputElement>) => {
 		const file = input.target.files?.item(0);

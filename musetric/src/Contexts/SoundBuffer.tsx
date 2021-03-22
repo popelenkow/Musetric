@@ -1,9 +1,12 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { saveAs } from 'file-saver';
-import { SoundBuffer, createSoundBuffer, createWavCoder, Recorder, createRecorder, useAnimation } from '..';
+import { SoundBuffer, createSoundBuffer, SoundFixedQueue, createSoundFixedQueue, createWavCoder, Recorder, createRecorder, useAnimation } from '..';
 
 export type SoundBufferStore = {
 	soundBuffer: SoundBuffer;
+	soundFixedQueue: SoundFixedQueue;
+	isLive: boolean;
+	setIsLive: (value: boolean) => void;
 	file: {
 		set: (file: File) => Promise<void>;
 		save: (fileName: string) => void;
@@ -75,14 +78,14 @@ const useFile = (soundBuffer: SoundBuffer, setSoundBlob: (blob: Blob) => void) =
 };
 
 // eslint-disable-next-line max-len
-const useRecorder = (soundBuffer: SoundBuffer, getBlob: () => Promise<Blob>, setSoundBlob: (blob: Blob) => void) => {
+const useRecorder = (soundBuffer: SoundBuffer, soundFixedQueue: SoundFixedQueue, getBlob: () => Promise<Blob>, setSoundBlob: (blob: Blob) => void) => {
 	const [recorderState, setRecorder] = useState<Recorder>();
 	const getRecorder = async () => {
 		let recorder = recorderState;
 		if (!recorder) {
 			const audioContext = new AudioContext();
 
-			recorder = await createRecorder(audioContext, soundBuffer);
+			recorder = await createRecorder(audioContext, soundBuffer, soundFixedQueue);
 			setRecorder(recorder);
 		}
 		return recorder;
@@ -166,13 +169,18 @@ export const SoundBufferProvider: React.FC<SoundBufferProviderProps> = (props) =
 	const { children } = props;
 
 	const soundBuffer = useMemo(() => createSoundBuffer(48000, 2), []);
+	const soundFixedQueue = useMemo(() => createSoundFixedQueue(48000, 2), []);
 	const [soundBlob, setSoundBlob] = useState<Blob>();
+	const [isLive, setIsLive] = useState<boolean>(false);
 	const file = useFile(soundBuffer, setSoundBlob);
-	const recorder = useRecorder(soundBuffer, file.getBlob, setSoundBlob);
+	const recorder = useRecorder(soundBuffer, soundFixedQueue, file.getBlob, setSoundBlob);
 	const player = usePlayer(soundBuffer, soundBlob);
 
 	const store: SoundBufferStore = {
 		soundBuffer,
+		soundFixedQueue,
+		isLive,
+		setIsLive,
 		file,
 		recorder,
 		player,

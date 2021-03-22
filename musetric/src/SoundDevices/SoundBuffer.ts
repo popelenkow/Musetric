@@ -44,3 +44,42 @@ export const createSoundBuffer = (
 	};
 	return soundBuffer;
 };
+
+export type SoundFixedQueue = {
+	readonly sampleRate: number;
+	readonly channelCount: number;
+	readonly memorySize: number;
+	readonly buffers: Float32Array[];
+	readonly push: (chunk: Float32Array[]) => void;
+};
+
+export const createSoundFixedQueue = (
+	sampleRate: number,
+	channelCount: number,
+	memorySize = sampleRate * 5,
+): SoundFixedQueue => {
+	const buffers: Float32Array[] = [];
+	for (let i = 0; i < channelCount; i++) {
+		buffers[i] = new Float32Array(memorySize);
+	}
+	const soundBuffer = {
+		sampleRate,
+		channelCount,
+		memorySize,
+		buffers,
+		push: (chunk: Float32Array[]) => {
+			for (let i = 0; i < channelCount; i++) {
+				const size = Math.min(memorySize, chunk[i].length);
+				const buffer = buffers[i];
+				const offset = memorySize - size;
+				for (let j = 0; j < offset; j++) {
+					buffer[j] = buffer[j + size];
+				}
+				for (let j = 0; j < size; j++) {
+					buffer[j + offset] = chunk[i][j];
+				}
+			}
+		},
+	};
+	return soundBuffer;
+};

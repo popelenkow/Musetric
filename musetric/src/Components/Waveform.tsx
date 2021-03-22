@@ -1,10 +1,12 @@
 /* eslint-disable max-len */
 import React, { useMemo, useState, useCallback } from 'react';
-import { createUseStyles } from 'react-jss';
-import { Layout2D, Size2D, parseColorThemeRgb, SoundBuffer, Theme, PerformanceMonitorRef, getCanvasCursorPosition, useAnimation } from '..';
-import { theming, useTheme } from '../Contexts';
+import {
+	Theme, createUseClasses, useTheme, parseColorThemeRgb,
+	Layout2D, Size2D, getCanvasCursorPosition, useAnimation,
+	SoundBuffer, SoundFixedQueue, PerformanceMonitorRef,
+} from '..';
 
-export const getWaveformStyles = (theme: Theme) => ({
+export const getWaveformClasses = (theme: Theme) => ({
 	root: {
 		display: 'block',
 		background: theme.color.app,
@@ -13,13 +15,13 @@ export const getWaveformStyles = (theme: Theme) => ({
 	},
 });
 
-export const useWaveformStyles = createUseStyles(getWaveformStyles, { name: 'Waveform', theming });
+export const useWaveformClasses = createUseClasses('Waveform', getWaveformClasses);
 
 export const drawWaveform = (
 	input: Float32Array,
 	output: Uint8ClampedArray,
-	cursor: number,
 	layout: Layout2D,
+	cursor?: number,
 ): void => {
 	const { position, view, frame, colorTheme } = layout;
 
@@ -62,7 +64,7 @@ export const drawWaveform = (
 		}
 	}
 
-	{
+	if (typeof cursor === 'number') {
 		cursor = Math.max(0, Math.min(input.length - 1, cursor));
 		const x = Math.floor((view.width / input.length) * cursor);
 		const color = content;
@@ -79,17 +81,19 @@ export const drawWaveform = (
 
 export type WaveformProps = {
 	soundBuffer: SoundBuffer;
+	soundFixedQueue?: SoundFixedQueue;
+	isLive?: boolean;
 	size?: Size2D;
 	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const Waveform: React.FC<WaveformProps> = (props) => {
 	const {
-		soundBuffer, performanceMonitor,
+		soundBuffer, soundFixedQueue, isLive, performanceMonitor,
 		size = { width: 800, height: 800 },
 	} = props;
 	const { theme } = useTheme();
-	const classes = useWaveformStyles();
+	const classes = useWaveformClasses();
 
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
 
@@ -114,11 +118,13 @@ export const Waveform: React.FC<WaveformProps> = (props) => {
 		performanceMonitor?.begin();
 		const { context, image, layout } = info;
 
-		drawWaveform(soundBuffer.buffers[0], image.data, soundBuffer.cursor, layout);
+		const buffer = isLive && soundFixedQueue ? soundFixedQueue.buffers[0] : soundBuffer.buffers[0];
+		const cursor = isLive && soundFixedQueue ? undefined : soundBuffer.cursor;
+		drawWaveform(buffer, image.data, layout, cursor);
 		context.putImageData(image, 0, 0);
 
 		performanceMonitor?.end();
-	}, [soundBuffer, info, performanceMonitor]);
+	}, [soundBuffer, soundFixedQueue, isLive, info, performanceMonitor]);
 
 	const click = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
 		const pos = getCanvasCursorPosition(e.currentTarget, e.nativeEvent);

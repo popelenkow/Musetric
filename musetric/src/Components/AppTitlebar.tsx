@@ -1,9 +1,7 @@
 import React from 'react';
-import { createUseStyles } from 'react-jss';
-import { Theme, AppIcon } from '..';
-import { theming } from '../Contexts';
+import { Theme, createUseClasses, AppIcon } from '..';
 
-export const getAppTitlebarStyles = (theme: Theme) => ({
+export const getAppTitlebarClasses = (theme: Theme) => ({
 	root: {
 		display: 'flex',
 		width: '100%',
@@ -35,7 +33,7 @@ export const getAppTitlebarStyles = (theme: Theme) => ({
 	},
 });
 
-export const useAppTitlebarStyles = createUseStyles(getAppTitlebarStyles, { name: 'AppTitlebar', theming });
+export const useAppTitlebarClasses = createUseClasses('AppTitlebar', getAppTitlebarClasses);
 
 export type AppTitlebarProps = {
 };
@@ -43,7 +41,7 @@ export type AppTitlebarProps = {
 export const AppTitlebar: React.FC<AppTitlebarProps> = (props) => {
 	const { children } = props;
 
-	const classes = useAppTitlebarStyles();
+	const classes = useAppTitlebarClasses();
 
 	return (
 		<div className={classes.root}>

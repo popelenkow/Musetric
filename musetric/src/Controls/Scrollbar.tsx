@@ -1,7 +1,6 @@
-import { createUseStyles } from 'react-jss';
-import { Theme, theming } from '..';
+import { Theme, createUseClasses } from '..';
 
-export const getScrollbarStyles = (theme: Theme) => ({
+export const getScrollbarClasses = (theme: Theme) => ({
 	root: {
 		'& ::-webkit-scrollbar': {
 			width: '15px',
@@ -24,4 +23,4 @@ export const getScrollbarStyles = (theme: Theme) => ({
 	},
 });
 
-export const useScrollbarStyles = createUseStyles(getScrollbarStyles, { name: 'Scrollbar', theming });
+export const useScrollbarClasses = createUseClasses('Scrollbar', getScrollbarClasses);

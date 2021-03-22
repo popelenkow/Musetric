@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { createUseStyles } from 'react-jss';
 import classNames from 'classnames';
-import { Theme, theming, SoundBuffer, useAnimation } from '..';
+import { Theme, createUseClasses, SoundBuffer, useAnimation } from '..';
 
-export const getSoundProgressStyles = (theme: Theme) => ({
+export const getSoundProgressClasses = (theme: Theme) => ({
 	root: {
 		width: '118px',
 		height: '42px',
@@ -22,7 +21,7 @@ export const getSoundProgressStyles = (theme: Theme) => ({
 	},
 });
 
-export const useSoundProgressStyles = createUseStyles(getSoundProgressStyles, { name: 'SoundProgress', theming });
+export const useSoundProgressClasses = createUseClasses('SoundProgress', getSoundProgressClasses);
 
 export type SoundProgressProps = {
 	soundBuffer: SoundBuffer;
@@ -31,7 +30,7 @@ export type SoundProgressProps = {
 
 export const SoundProgress: React.FC<SoundProgressProps> = (props) => {
 	const { soundBuffer, className } = props;
-	const classes = useSoundProgressStyles();
+	const classes = useSoundProgressClasses();
 
 	const rootName = classNames(className || classes.root);
 

@@ -1,10 +1,12 @@
 /* eslint-disable max-len */
 import React, { useMemo, useState, useCallback } from 'react';
-import { createUseStyles } from 'react-jss';
-import { createFft, Layout2D, parseColorThemeRgb, Size2D, PerformanceMonitorRef, SoundBuffer, Theme, getCanvasCursorPosition, useAnimation } from '..';
-import { theming, useTheme } from '../Contexts';
+import {
+	Theme, createUseClasses, useTheme, parseColorThemeRgb,
+	Layout2D, Size2D, getCanvasCursorPosition, useAnimation,
+	createFft, PerformanceMonitorRef, SoundBuffer, SoundFixedQueue,
+} from '..';
 
-export const getSpectrogramStyles = (theme: Theme) => ({
+export const getSpectrogramClasses = (theme: Theme) => ({
 	root: {
 		display: 'block',
 		background: theme.color.app,
@@ -13,13 +15,13 @@ export const getSpectrogramStyles = (theme: Theme) => ({
 	},
 });
 
-export const useSpectrogramStyles = createUseStyles(getSpectrogramStyles, { name: 'Spectrogram', theming });
+export const useSpectrogramClasses = createUseClasses('Spectrogram', getSpectrogramClasses);
 
 export const drawSpectrogram = (
 	input: Float32Array[],
 	output: Uint8ClampedArray,
-	cursor: number,
 	layout: Layout2D,
+	cursor?: number,
 ): void => {
 	const { frame, view, position, colorTheme } = layout;
 
@@ -46,7 +48,7 @@ export const drawSpectrogram = (
 		}
 	}
 
-	{
+	if (typeof cursor === 'number') {
 		cursor = Math.max(0, Math.min(input.length - 1, cursor));
 		const x = Math.floor((view.width / input.length) * cursor);
 		const color = content;
@@ -63,17 +65,19 @@ export const drawSpectrogram = (
 
 export type SpectrogramProps = {
 	soundBuffer: SoundBuffer;
+	soundFixedQueue?: SoundFixedQueue;
+	isLive?: boolean;
 	size?: Size2D;
 	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 	const {
-		soundBuffer, performanceMonitor,
+		soundBuffer, soundFixedQueue, isLive, performanceMonitor,
 		size = { width: 600, height: 1024 },
 	} = props;
 	const { theme } = useTheme();
-	const classes = useSpectrogramStyles();
+	const classes = useSpectrogramClasses();
 
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
 
@@ -100,7 +104,8 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 		performanceMonitor?.begin();
 		const { context, image, windowSize, fft, layout } = info;
 
-		const buffer = soundBuffer.buffers[0];
+		const buffer = isLive && soundFixedQueue ? soundFixedQueue.buffers[0] : soundBuffer.buffers[0];
+		const cursor = isLive && soundFixedQueue ? undefined : Math.floor((soundBuffer.cursor / windowSize) + 0.5);
 
 		const frequencies: Float32Array[] = [];
 		const count = Math.floor(buffer.length / windowSize);
@@ -109,12 +114,11 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 			frequencies.push(array);
 		}
 		fft.frequencies(buffer, frequencies);
-		const cursor = Math.floor((soundBuffer.cursor / windowSize) + 0.5);
-		drawSpectrogram(frequencies, image.data, cursor, layout);
+		drawSpectrogram(frequencies, image.data, layout, cursor);
 		context.putImageData(image, 0, 0);
 
 		performanceMonitor?.end();
-	}, [soundBuffer, info, performanceMonitor]);
+	}, [soundBuffer, soundFixedQueue, isLive, info, performanceMonitor]);
 
 	const click = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
 		const pos = getCanvasCursorPosition(e.currentTarget, e.nativeEvent);

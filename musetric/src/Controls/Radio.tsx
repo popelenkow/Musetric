@@ -2,17 +2,15 @@
 /* eslint-disable @typescript-eslint/comma-dangle */
 /* eslint-disable max-len */
 import React from 'react';
-import { createUseStyles } from 'react-jss';
 import classNames from 'classnames';
-import { getButtonStyles, Theme } from '..';
-import { theming } from '../Contexts';
+import { Theme, createUseClasses, getButtonClasses } from '..';
 
-export const getRadioStyles = (theme: Theme) => ({
+export const getRadioClasses = (theme: Theme) => ({
 	root: {
-		...getButtonStyles(theme).root,
+		...getButtonClasses(theme).root,
 	},
 	disabled: {
-		...getButtonStyles(theme).disabled,
+		...getButtonClasses(theme).disabled,
 	},
 	checked: {
 		background: theme.color.checked,
@@ -25,7 +23,7 @@ export const getRadioStyles = (theme: Theme) => ({
 	},
 });
 
-export const useRadioStyles = createUseStyles(getRadioStyles, { name: 'Radio', theming });
+export const useRadioClasses = createUseClasses('Radio', getRadioClasses);
 
 export type RadioProps<T extends string> = {
 	onSelected: (value: T) => void;
@@ -40,7 +38,7 @@ export type RadioProps<T extends string> = {
 
 export const Radio = <T extends string, >(props: React.PropsWithChildren<RadioProps<T>>): JSX.Element => {
 	const { children, className, classNameDisabled, onSelected, disabled, name, value, checkedValue, classNameChecked } = props;
-	const classes = useRadioStyles();
+	const classes = useRadioClasses();
 
 	const checked = checkedValue === value;
 	const rootName = classNames(className || classes.root, {

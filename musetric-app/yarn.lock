@@ -2447,10 +2447,10 @@ ms@2.1.2:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-musetric@0.0.17-dev.51:
-  version "0.0.17-dev.51"
-  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.17-dev.51.tgz#b31e86dfa979822beb2c4acc92f09b4645d6c285"
-  integrity sha512-dX09jhObiLsuwzCla8K7KQeAXmQn2q9dEtSu0C+e536kth3IUR4AwzfrdPSPRzKCSlaVYE2gqnQYrREoPhYlVQ==
+musetric@0.0.17:
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.17.tgz#d2dd425945c77c9d13525c9df1cb0b486a735fbd"
+  integrity sha512-ffCZHL3ezEtq/WA1fyTZsvQ2nvDcSjz0FZnl7vJQU0bSQrU0hTuMQ7o5LIW+si4Ds67fjnCU7bfK92APAYcUpA==
   dependencies:
     "@types/classnames" "^2.2.11"
     "@types/color" "^3.0.1"
