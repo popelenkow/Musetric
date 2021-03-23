@@ -13,7 +13,10 @@ export const getRadioClasses = (theme: Theme) => ({
 		...getButtonClasses(theme).disabled,
 	},
 	checked: {
-		background: theme.color.checked,
+		color: theme.color.active,
+		'& path, rect, polygon': {
+			fill: theme.color.active,
+		},
 	},
 	input: {
 		position: 'absolute',

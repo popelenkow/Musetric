@@ -104,10 +104,10 @@ export const createFft = (windowSize: number) => {
 			result.forward(window, frequency);
 			normComplexArray(frequency, output, windowSize / 2, 1 / windowSize);
 		},
-		frequencies: (input: Float32Array, output: Float32Array[]) => {
-			const count = Math.floor(input.length / windowSize);
+		frequencies: (input: Float32Array, output: Float32Array[], step: number) => {
+			const count = 1 + Math.floor((input.length - windowSize) / step);
 			for (let i = 0; i < count; i++) {
-				const offset = i * windowSize;
+				const offset = i * step;
 				result.frequency(input, output[i], offset);
 			}
 		},

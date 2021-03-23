@@ -6,7 +6,7 @@ export type SoundBufferStore = {
 	soundBuffer: SoundBuffer;
 	soundFixedQueue: SoundFixedQueue;
 	isLive: boolean;
-	setIsLive: (value: boolean) => void;
+	setIsLive: (value: boolean) => Promise<void>;
 	file: {
 		set: (file: File) => Promise<void>;
 		save: (fileName: string) => void;
@@ -108,6 +108,7 @@ const useRecorder = (soundBuffer: SoundBuffer, soundFixedQueue: SoundFixedQueue,
 
 	return {
 		isRecording,
+		getRecorder,
 		start,
 		stop,
 	};
@@ -180,7 +181,10 @@ export const SoundBufferProvider: React.FC<SoundBufferProviderProps> = (props) =
 		soundBuffer,
 		soundFixedQueue,
 		isLive,
-		setIsLive,
+		setIsLive: async (value) => {
+			await recorder.getRecorder();
+			setIsLive(value);
+		},
 		file,
 		recorder,
 		player,

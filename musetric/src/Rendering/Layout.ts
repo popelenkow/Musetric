@@ -31,9 +31,11 @@ export const getRgb = (color: Color): Rgb => {
 export const parseColorThemeRgb = (theme: ColorTheme) => {
 	const background = getRgb(new Color(theme.app));
 	const content = getRgb(new Color(theme.content));
+	const active = getRgb(new Color(theme.active));
 	const colors = {
 		background,
 		content,
+		active,
 	};
 	return colors;
 };
@@ -41,9 +43,11 @@ export const parseColorThemeRgb = (theme: ColorTheme) => {
 export const parseColorThemeHex = (theme: ColorTheme) => {
 	const background = new Color(theme.app).hex();
 	const content = new Color(theme.content).hex();
+	const active = new Color(theme.active).hex();
 	const colors = {
 		background,
 		content,
+		active,
 	};
 	return colors;
 };

@@ -114,9 +114,7 @@ const Root: React.FC<RootProps> = () => {
 				{!player.isPlaying
 					? <Button disabled={recorder.isRecording} onClick={() => player.start()}><PlayIcon /></Button>
 					: <Button onClick={() => player.stop()}><StopIcon /></Button>}
-				{!recorder.isRecording
-					? <Button disabled={player.isPlaying} onClick={() => recorder.start()}><RecordIcon /></Button>
-					: <Button onClick={() => recorder.stop()}><StopIcon /></Button>}
+				<Checkbox disabled={player.isPlaying} checked={recorder.isRecording} onToggle={() => (recorder.isRecording ? recorder.stop() : recorder.start())}><RecordIcon /></Checkbox>
 				<Checkbox checked={isLive} onToggle={() => setIsLive(!isLive)}><LiveIcon /></Checkbox>
 				<Radio name='soundView' value='Waveform' onSelected={setSoundViewId} checkedValue={soundViewId}><WaveformIcon /></Radio>
 				<Radio name='soundView' value='Frequency' onSelected={setSoundViewId} checkedValue={soundViewId}><FrequencyIcon /></Radio>
