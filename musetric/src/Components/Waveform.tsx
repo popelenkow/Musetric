@@ -25,7 +25,7 @@ export const drawWaveform = (
 ): void => {
 	const { position, view, frame, colorTheme } = layout;
 
-	const { content, background } = parseColorThemeRgb(colorTheme);
+	const { content, background, active } = parseColorThemeRgb(colorTheme);
 
 	const minArray = new Float32Array(view.width);
 	const maxArray = new Float32Array(view.width);
@@ -67,7 +67,7 @@ export const drawWaveform = (
 	if (typeof cursor === 'number') {
 		cursor = Math.max(0, Math.min(input.length - 1, cursor));
 		const x = Math.floor((view.width / input.length) * cursor);
-		const color = content;
+		const color = active;
 		for (let y = 0; y < view.height; y++) {
 			const yIndex = 4 * (position.y + y) * frame.width;
 			const index = 4 * (position.x + x) + yIndex;
@@ -127,10 +127,11 @@ export const Waveform: React.FC<WaveformProps> = (props) => {
 	}, [soundBuffer, soundFixedQueue, isLive, info, performanceMonitor]);
 
 	const click = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+		if (isLive) return;
 		const pos = getCanvasCursorPosition(e.currentTarget, e.nativeEvent);
 		const val = Math.floor(pos.x * (soundBuffer.memorySize - 1));
 		soundBuffer.cursor = val;
-	}, [soundBuffer]);
+	}, [soundBuffer, isLive]);
 
 	return (
 		<canvas className={classes.root} ref={setCanvas} {...size} onClick={click} />

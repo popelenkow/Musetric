@@ -13,7 +13,6 @@ export const getSoundProgressClasses = (theme: Theme) => ({
 		display: 'flex',
 		'justify-content': 'center',
 		'align-items': 'center',
-		background: theme.color.checked,
 		color: theme.color.content,
 		'& path, rect, polygon': {
 			fill: theme.color.content,

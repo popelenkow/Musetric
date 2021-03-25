@@ -25,7 +25,7 @@ export const drawSpectrogram = (
 ): void => {
 	const { frame, view, position, colorTheme } = layout;
 
-	const { content, background } = parseColorThemeRgb(colorTheme);
+	const { content, background, active } = parseColorThemeRgb(colorTheme);
 
 	const column = new Float32Array(view.height);
 	const step = input.length / view.width;
@@ -51,7 +51,7 @@ export const drawSpectrogram = (
 	if (typeof cursor === 'number') {
 		cursor = Math.max(0, Math.min(input.length - 1, cursor));
 		const x = Math.floor((view.width / input.length) * cursor);
-		const color = content;
+		const color = active;
 		for (let y = 0; y < view.height; y++) {
 			const yIndex = 4 * (position.y + y) * frame.width;
 			const index = 4 * (position.x + x) + yIndex;
@@ -108,12 +108,13 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 		const cursor = isLive && soundFixedQueue ? undefined : Math.floor((soundBuffer.cursor / windowSize) + 0.5);
 
 		const frequencies: Float32Array[] = [];
-		const count = Math.floor(buffer.length / windowSize);
+		const step = windowSize / 4;
+		const count = 1 + Math.floor((buffer.length - windowSize) / step);
 		for (let i = 0; i < count; i++) {
 			const array = new Float32Array(windowSize / 2);
 			frequencies.push(array);
 		}
-		fft.frequencies(buffer, frequencies);
+		fft.frequencies(buffer, frequencies, step);
 		drawSpectrogram(frequencies, image.data, layout, cursor);
 		context.putImageData(image, 0, 0);
 
@@ -121,10 +122,11 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 	}, [soundBuffer, soundFixedQueue, isLive, info, performanceMonitor]);
 
 	const click = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+		if (isLive) return;
 		const pos = getCanvasCursorPosition(e.currentTarget, e.nativeEvent);
 		const val = Math.floor(pos.x * (soundBuffer.memorySize - 1));
 		soundBuffer.cursor = val;
-	}, [soundBuffer]);
+	}, [soundBuffer, isLive]);
 
 	return (
 		<canvas className={classes.root} ref={setCanvas} {...size} onClick={click} />
