@@ -1,5 +1,5 @@
 import React from 'react';
-import { Theme, createUseClasses, Button, CloseIcon, useAppElement, AppTitlebar } from '..';
+import { Theme, createUseClasses, Button, CloseIcon, AppTitlebar } from '..';
 
 export const getModalDialogClasses = (theme: Theme) => ({
 	root: {
@@ -17,31 +17,22 @@ export const getModalDialogClasses = (theme: Theme) => ({
 		border: `1px solid ${theme.color.splitter}`,
 		backgroundColor: theme.color.app,
 	},
-	text: {
-		flexGrow: '2',
-		maxHeight: '42px',
-		width: 'auto',
-		font: '18px/42px "Segoe UI", Arial, sans-serif',
-		color: theme.color.content,
-		textIndent: '10px',
-	},
 });
 
 export const useModalDialogClasses = createUseClasses('ModalDialog', getModalDialogClasses);
 
 export type ModalDialogProps = {
+	closeModal: (modal?: React.ReactNode) => void
 };
 
 export const ModalDialog: React.FC<ModalDialogProps> = (props) => {
-	const { children } = props;
+	const { closeModal, children } = props;
 	const classes = useModalDialogClasses();
-
-	const { setModalDialog } = useAppElement();
 
 	return (
 		<div className={classes.root}>
 			<AppTitlebar>
-				<Button onClick={() => setModalDialog()}><CloseIcon /></Button>
+				<Button onClick={() => closeModal()}><CloseIcon /></Button>
 			</AppTitlebar>
 			{children}
 		</div>

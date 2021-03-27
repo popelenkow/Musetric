@@ -54,7 +54,12 @@ const Root: React.FC<RootProps> = (props) => {
 	};
 
 	const openAboutDialog = () => {
-		setModalDialog(<ModalDialog><AboutInfo /></ModalDialog>);
+		const value = (
+			<ModalDialog closeModal={() => setModalDialog()}>
+				<AboutInfo />
+			</ModalDialog>
+		);
+		setModalDialog(value);
 	};
 
 	const { setAppElement } = useAppElement();

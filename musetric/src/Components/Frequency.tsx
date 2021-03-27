@@ -3,7 +3,7 @@ import React, { useState, useMemo } from 'react';
 import {
 	Theme, createUseClasses, useTheme, parseColorThemeRgb,
 	Layout2D, Size2D, useAnimation,
-	PerformanceMonitorRef, SoundBuffer, SoundFixedQueue, createFft,
+	PerformanceMonitorRef, SoundBuffer, createFft,
 } from '..';
 
 export const getFrequencyClasses = (theme: Theme) => ({
@@ -48,7 +48,6 @@ export const drawFrequency = (
 
 export type FrequencyProps = {
 	soundBuffer: SoundBuffer;
-	soundFixedQueue?: SoundFixedQueue;
 	isLive?: boolean;
 	size?: Size2D;
 	performanceMonitor?: PerformanceMonitorRef | null;
@@ -56,7 +55,7 @@ export type FrequencyProps = {
 
 export const Frequency: React.FC<FrequencyProps> = (props) => {
 	const {
-		soundBuffer, soundFixedQueue, isLive, performanceMonitor,
+		soundBuffer, performanceMonitor,
 		size = { width: 1024, height: 400 },
 	} = props;
 	const { theme } = useTheme();
@@ -88,14 +87,14 @@ export const Frequency: React.FC<FrequencyProps> = (props) => {
 		performanceMonitor?.begin();
 		const { context, image, layout, windowSize, fft, result } = info;
 
-		const { cursor, memorySize, buffers } = isLive && soundFixedQueue ? { ...soundFixedQueue, cursor: soundFixedQueue.memorySize } : soundBuffer;
+		const { cursor, memorySize, buffers } = soundBuffer;
 		const offset = cursor + windowSize < memorySize ? cursor : memorySize - windowSize;
 		fft.frequency(buffers[0], result, offset);
 		drawFrequency(result, image.data, layout);
 		context.putImageData(image, 0, 0);
 
 		performanceMonitor?.end();
-	}, [soundBuffer, soundFixedQueue, isLive, info, performanceMonitor]);
+	}, [soundBuffer, info, performanceMonitor]);
 
 	return (
 		<canvas className={classes.root} ref={setCanvas} {...size} />

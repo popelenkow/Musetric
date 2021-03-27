@@ -1,10 +1,12 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { saveAs } from 'file-saver';
-import { SoundBuffer, createSoundBuffer, SoundFixedQueue, createSoundFixedQueue, createWavCoder, Recorder, createRecorder, useAnimation } from '..';
+import { SoundBuffer, createSoundBuffer, createSoundFixedQueue, createWavCoder, Recorder, createRecorder, useAnimation } from '..';
 
 export type SoundBufferStore = {
-	soundBuffer: SoundBuffer;
-	soundFixedQueue: SoundFixedQueue;
+	sound: {
+		buffer: SoundBuffer;
+		fixedQueue: SoundBuffer;
+	},
 	isLive: boolean;
 	setIsLive: (value: boolean) => Promise<void>;
 	file: {
@@ -78,14 +80,18 @@ const useFile = (soundBuffer: SoundBuffer, setSoundBlob: (blob: Blob) => void) =
 };
 
 // eslint-disable-next-line max-len
-const useRecorder = (soundBuffer: SoundBuffer, soundFixedQueue: SoundFixedQueue, getBlob: () => Promise<Blob>, setSoundBlob: (blob: Blob) => void) => {
+const useRecorder = (soundBuffer: SoundBuffer, soundFixedQueue: SoundBuffer, getBlob: () => Promise<Blob>, setSoundBlob: (blob: Blob) => void) => {
 	const [recorderState, setRecorder] = useState<Recorder>();
 	const getRecorder = async () => {
 		let recorder = recorderState;
 		if (!recorder) {
 			const audioContext = new AudioContext();
 
-			recorder = await createRecorder(audioContext, soundBuffer, soundFixedQueue);
+			const onChunk = (chunk: Float32Array[], isRecording: boolean): void => {
+				isRecording && soundBuffer.push(chunk);
+				soundFixedQueue.push(chunk);
+			};
+			recorder = await createRecorder(audioContext, soundBuffer.channelCount, onChunk);
 			setRecorder(recorder);
 		}
 		return recorder;
@@ -123,7 +129,7 @@ const usePlayer = (soundBuffer: SoundBuffer, soundBlob?: Blob) => {
 		element.src = url;
 		element.onended = () => {
 			setIsPlaying(false);
-			soundBuffer.cursor = 0;
+			soundBuffer.setCursor(0);
 		};
 		const { cursor, sampleRate } = soundBuffer;
 		element.currentTime = cursor / sampleRate;
@@ -141,7 +147,8 @@ const usePlayer = (soundBuffer: SoundBuffer, soundBlob?: Blob) => {
 		if (prevCursor !== cursor) {
 			element.currentTime = cursor / sampleRate;
 		} else {
-			soundBuffer.cursor = Math.floor(element.currentTime * sampleRate);
+			const value = Math.floor(element.currentTime * sampleRate);
+			soundBuffer.setCursor(value);
 		}
 		player.prevCursor = soundBuffer.cursor;
 	}, [player, soundBuffer, isPlaying]);
@@ -169,17 +176,18 @@ export type SoundBufferProviderProps = {
 export const SoundBufferProvider: React.FC<SoundBufferProviderProps> = (props) => {
 	const { children } = props;
 
-	const soundBuffer = useMemo(() => createSoundBuffer(48000, 2), []);
-	const soundFixedQueue = useMemo(() => createSoundFixedQueue(48000, 2), []);
+	const sound = useMemo(() => ({
+		buffer: createSoundBuffer(48000, 2),
+		fixedQueue: createSoundFixedQueue(48000, 2),
+	}), []);
 	const [soundBlob, setSoundBlob] = useState<Blob>();
 	const [isLive, setIsLive] = useState<boolean>(false);
-	const file = useFile(soundBuffer, setSoundBlob);
-	const recorder = useRecorder(soundBuffer, soundFixedQueue, file.getBlob, setSoundBlob);
-	const player = usePlayer(soundBuffer, soundBlob);
+	const file = useFile(sound.buffer, setSoundBlob);
+	const recorder = useRecorder(sound.buffer, sound.fixedQueue, file.getBlob, setSoundBlob);
+	const player = usePlayer(sound.buffer, soundBlob);
 
 	const store: SoundBufferStore = {
-		soundBuffer,
-		soundFixedQueue,
+		sound,
 		isLive,
 		setIsLive: async (value) => {
 			await recorder.getRecorder();

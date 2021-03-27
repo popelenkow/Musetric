@@ -3,7 +3,7 @@ import React, { useMemo, useState, useCallback } from 'react';
 import {
 	Theme, createUseClasses, useTheme, parseColorThemeRgb,
 	Layout2D, Size2D, getCanvasCursorPosition, useAnimation,
-	createFft, PerformanceMonitorRef, SoundBuffer, SoundFixedQueue,
+	createFft, PerformanceMonitorRef, SoundBuffer,
 } from '..';
 
 export const getSpectrogramClasses = (theme: Theme) => ({
@@ -28,9 +28,9 @@ export const drawSpectrogram = (
 	const { content, background, active } = parseColorThemeRgb(colorTheme);
 
 	const column = new Float32Array(view.height);
-	const step = input.length / view.width;
+	const step = (input.length - 1) / (view.width - 1);
 	for (let x = 0; x < view.width; x++) {
-		const offset = Math.floor(x * step);
+		const offset = Math.round(x * step);
 		const spectrum = input[offset];
 		for (let y = 0; y < view.height; y++) {
 			const value = Math.log10(spectrum[y]) / 5;
@@ -49,8 +49,7 @@ export const drawSpectrogram = (
 	}
 
 	if (typeof cursor === 'number') {
-		cursor = Math.max(0, Math.min(input.length - 1, cursor));
-		const x = Math.floor((view.width / input.length) * cursor);
+		const x = Math.round(cursor * (view.width - 1));
 		const color = active;
 		for (let y = 0; y < view.height; y++) {
 			const yIndex = 4 * (position.y + y) * frame.width;
@@ -65,7 +64,6 @@ export const drawSpectrogram = (
 
 export type SpectrogramProps = {
 	soundBuffer: SoundBuffer;
-	soundFixedQueue?: SoundFixedQueue;
 	isLive?: boolean;
 	size?: Size2D;
 	performanceMonitor?: PerformanceMonitorRef | null;
@@ -73,7 +71,7 @@ export type SpectrogramProps = {
 
 export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 	const {
-		soundBuffer, soundFixedQueue, isLive, performanceMonitor,
+		soundBuffer, isLive, performanceMonitor,
 		size = { width: 600, height: 1024 },
 	} = props;
 	const { theme } = useTheme();
@@ -104,11 +102,11 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 		performanceMonitor?.begin();
 		const { context, image, windowSize, fft, layout } = info;
 
-		const buffer = isLive && soundFixedQueue ? soundFixedQueue.buffers[0] : soundBuffer.buffers[0];
-		const cursor = isLive && soundFixedQueue ? undefined : Math.floor((soundBuffer.cursor / windowSize) + 0.5);
+		const buffer = soundBuffer.buffers[0];
+		const step = windowSize / 4;
+		const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
 
 		const frequencies: Float32Array[] = [];
-		const step = windowSize / 4;
 		const count = 1 + Math.floor((buffer.length - windowSize) / step);
 		for (let i = 0; i < count; i++) {
 			const array = new Float32Array(windowSize / 2);
@@ -119,13 +117,13 @@ export const Spectrogram: React.FC<SpectrogramProps> = (props) => {
 		context.putImageData(image, 0, 0);
 
 		performanceMonitor?.end();
-	}, [soundBuffer, soundFixedQueue, isLive, info, performanceMonitor]);
+	}, [soundBuffer, isLive, info, performanceMonitor]);
 
 	const click = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
 		if (isLive) return;
 		const pos = getCanvasCursorPosition(e.currentTarget, e.nativeEvent);
-		const val = Math.floor(pos.x * (soundBuffer.memorySize - 1));
-		soundBuffer.cursor = val;
+		const value = Math.round(pos.x * (soundBuffer.memorySize - 1));
+		soundBuffer.setCursor(value);
 	}, [soundBuffer, isLive]);
 
 	return (

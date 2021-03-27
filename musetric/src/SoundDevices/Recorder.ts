@@ -1,8 +1,7 @@
 /* eslint-disable max-len */
 import { v4 as uuid } from 'uuid';
-import { SoundBuffer, SoundFixedQueue } from '..';
 
-export const createRecorderApi = (mediaStream: MediaStream, messagePort: MessagePort, soundBuffer: SoundBuffer, soundFixedQueue: SoundFixedQueue) => {
+export const createRecorderApi = (mediaStream: MediaStream, messagePort: MessagePort, onChunk: (chunk: Float32Array[], isRecording: boolean) => void) => {
 	const onStartCbs: Record<string, () => void> = {};
 	const onStopCbs: Record<string, () => void> = {};
 
@@ -15,10 +14,7 @@ export const createRecorderApi = (mediaStream: MediaStream, messagePort: Message
 			onStopCbs[id]();
 			delete onStopCbs[id];
 		},
-		onChunk: (chunk: Float32Array[], isRecording: boolean): void => {
-			isRecording && soundBuffer.push(chunk);
-			soundFixedQueue.push(chunk);
-		},
+		onChunk,
 	};
 
 	messagePort.onmessage = (e: MessageEvent<CallbackMessage>) => {
@@ -148,10 +144,10 @@ const createRecorderWorklet = async (context: BaseAudioContext, channelCount: nu
 	return worklet;
 };
 
-export const createRecorder = async (audioContext: AudioContext, soundBuffer: SoundBuffer, soundFixedQueue: SoundFixedQueue): Promise<Recorder> => {
+export const createRecorder = async (audioContext: AudioContext, channelCount: number, onChunk: (chunk: Float32Array[], isRecording: boolean) => void): Promise<Recorder> => {
 	const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 	const source = audioContext.createMediaStreamSource(mediaStream);
-	const worklet = await createRecorderWorklet(source.context, soundBuffer.channelCount);
+	const worklet = await createRecorderWorklet(source.context, channelCount);
 	source.connect(worklet);
-	return createRecorderApi(mediaStream, worklet.port, soundBuffer, soundFixedQueue).recorder;
+	return createRecorderApi(mediaStream, worklet.port, onChunk).recorder;
 };

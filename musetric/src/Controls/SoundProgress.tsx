@@ -1,22 +1,15 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
-import { Theme, createUseClasses, SoundBuffer, useAnimation } from '..';
+import { Theme, createUseClasses, SoundBuffer, useAnimation, getFieldClasses } from '..';
 
 export const getSoundProgressClasses = (theme: Theme) => ({
 	root: {
+		...getFieldClasses(theme).root,
 		width: '118px',
 		height: '42px',
 		position: 'relative',
 		'border-radius': '21px',
 		'user-select': 'none',
-		font: '18px/42px "Segoe UI", Arial, sans-serif',
-		display: 'flex',
-		'justify-content': 'center',
-		'align-items': 'center',
-		color: theme.color.content,
-		'& path, rect, polygon': {
-			fill: theme.color.content,
-		},
 	},
 });
 
