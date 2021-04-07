@@ -3,7 +3,7 @@ import React, { useMemo, useState, useCallback } from 'react';
 import {
 	Theme, createUseClasses, useTheme, parseColorThemeRgb,
 	Layout2D, Size2D, getCanvasCursorPosition, useAnimation,
-	SoundBuffer, SoundFixedQueue, PerformanceMonitorRef,
+	SoundBuffer, PerformanceMonitorRef,
 } from '..';
 
 export const getWaveformClasses = (theme: Theme) => ({
@@ -65,8 +65,7 @@ export const drawWaveform = (
 	}
 
 	if (typeof cursor === 'number') {
-		cursor = Math.max(0, Math.min(input.length - 1, cursor));
-		const x = Math.floor((view.width / input.length) * cursor);
+		const x = Math.round(cursor * (view.width - 1));
 		const color = active;
 		for (let y = 0; y < view.height; y++) {
 			const yIndex = 4 * (position.y + y) * frame.width;
@@ -81,7 +80,6 @@ export const drawWaveform = (
 
 export type WaveformProps = {
 	soundBuffer: SoundBuffer;
-	soundFixedQueue?: SoundFixedQueue;
 	isLive?: boolean;
 	size?: Size2D;
 	performanceMonitor?: PerformanceMonitorRef | null;
@@ -89,7 +87,7 @@ export type WaveformProps = {
 
 export const Waveform: React.FC<WaveformProps> = (props) => {
 	const {
-		soundBuffer, soundFixedQueue, isLive, performanceMonitor,
+		soundBuffer, isLive, performanceMonitor,
 		size = { width: 800, height: 800 },
 	} = props;
 	const { theme } = useTheme();
@@ -118,19 +116,19 @@ export const Waveform: React.FC<WaveformProps> = (props) => {
 		performanceMonitor?.begin();
 		const { context, image, layout } = info;
 
-		const buffer = isLive && soundFixedQueue ? soundFixedQueue.buffers[0] : soundBuffer.buffers[0];
-		const cursor = isLive && soundFixedQueue ? undefined : soundBuffer.cursor;
+		const buffer = soundBuffer.buffers[0];
+		const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
 		drawWaveform(buffer, image.data, layout, cursor);
 		context.putImageData(image, 0, 0);
 
 		performanceMonitor?.end();
-	}, [soundBuffer, soundFixedQueue, isLive, info, performanceMonitor]);
+	}, [soundBuffer, isLive, info, performanceMonitor]);
 
 	const click = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
 		if (isLive) return;
 		const pos = getCanvasCursorPosition(e.currentTarget, e.nativeEvent);
-		const val = Math.floor(pos.x * (soundBuffer.memorySize - 1));
-		soundBuffer.cursor = val;
+		const value = Math.floor(pos.x * (soundBuffer.memorySize - 1));
+		soundBuffer.setCursor(value);
 	}, [soundBuffer, isLive]);
 
 	return (

@@ -1,9 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Theme, createUseClasses } from '..';
+import { Theme, createUseClasses, getFieldClasses } from '..';
 
 export const getButtonClasses = (theme: Theme) => ({
 	root: {
+		...getFieldClasses(theme).root,
 		margin: '0',
 		padding: '0',
 		border: '0',
@@ -12,18 +13,10 @@ export const getButtonClasses = (theme: Theme) => ({
 		height: '42px',
 		'user-select': 'none',
 		position: 'relative',
-		'border-radius': '8px',
-		font: '18px/42px "Segoe UI", Arial, sans-serif',
-		display: 'flex',
-		'justify-content': 'center',
-		'align-items': 'center',
+		'border-radius': '10px',
 		background: 'transparent',
 		[theme.platform.id === 'mobile' ? '&:active' : '&:hover']: {
 			background: theme.color.hover,
-		},
-		color: theme.color.content,
-		'& path, rect, polygon': {
-			fill: theme.color.content,
 		},
 	},
 	disabled: {

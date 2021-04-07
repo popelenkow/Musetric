@@ -47,8 +47,9 @@ export const getSoundWorkshopClasses = (theme: Theme) => ({
 		'grid-column-start': '1',
 		'grid-column-end': '3',
 		'grid-row-start': '3',
-		width: '100%',
-		height: '48px',
+		width: 'calc(100% - 6px)',
+		height: 'calc(100% - 6px)',
+		padding: '3px',
 		display: 'flex',
 		'flex-direction': 'row-reverse',
 		'column-gap': '4px',
@@ -61,8 +62,9 @@ export const getSoundWorkshopClasses = (theme: Theme) => ({
 		'grid-column-end': '3',
 		'grid-row-start': '1',
 		'grid-row-end': '3',
-		width: '48px',
-		height: '100%',
+		width: 'calc(100% - 6px)',
+		height: 'calc(100% - 6px)',
+		padding: '3px',
 		display: 'flex',
 		'flex-direction': 'column',
 		'justify-content': 'center',
@@ -81,15 +83,14 @@ type RootProps = {
 const Root: React.FC<RootProps> = () => {
 	const classes = useSoundWorkshopClasses();
 
-	const { soundBuffer, soundFixedQueue, isLive, setIsLive, player, file, recorder } = useSoundBuffer();
+	const { sound, isLive, setIsLive, player, file, recorder } = useSoundBuffer();
 	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
 	type SoundViewId = 'Frequency' | 'Spectrogram' | 'Waveform';
 
 	const performanceMonitor = useRef<PerformanceMonitorRef>(null);
 
 	const viewProps = {
-		soundBuffer,
-		soundFixedQueue,
+		soundBuffer: isLive ? sound.fixedQueue : sound.buffer,
 		isLive,
 		performanceMonitor: performanceMonitor.current,
 	};
@@ -103,12 +104,12 @@ const Root: React.FC<RootProps> = () => {
 				{soundViewId === 'Spectrogram' && <Spectrogram {...viewProps} />}
 			</div>
 			<div className={classes.loadBar}>
-				<Waveform soundBuffer={soundBuffer} size={{ width: 600, height: 50 }} />
+				<Waveform soundBuffer={sound.buffer} size={{ width: 600, height: 50 }} />
 			</div>
 			<div className={classes.toolbar}>
 				<Button onClick={() => file.save('myRecording.wav')}><SaveIcon /></Button>
 				<SelectFile onChangeFile={file.set}><OpenFileIcon /></SelectFile>
-				<SoundProgress soundBuffer={soundBuffer} />
+				<SoundProgress soundBuffer={sound.buffer} />
 			</div>
 			<div className={classes.sidebar}>
 				{!player.isPlaying

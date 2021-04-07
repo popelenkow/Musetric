@@ -1,35 +1,32 @@
 import React from 'react';
-import { Theme, createUseClasses, AppIcon } from '..';
+import { Theme, createUseClasses, AppIcon, getFieldClasses } from '..';
 
 export const getAppTitlebarClasses = (theme: Theme) => ({
 	root: {
 		display: 'flex',
-		width: '100%',
-		height: '48px',
+		width: 'calc(100% - 6px)',
+		height: '42px',
 		'column-gap': '4px',
 		background: theme.color.sidebar,
+		padding: '3px',
 		cursor: 'default',
 		'align-items': 'center',
 		'border-bottom': `1px solid ${theme.color.splitter}`,
 	},
 	icon: {
+		...getFieldClasses(theme).root,
 		'flex-grow': '1',
 		'max-width': '42px',
 		'max-height': '42px',
-		display: 'flex',
-		'justify-content': 'center',
-		'align-items': 'center',
-		'& path': {
-			fill: theme.color.content,
-		},
 	},
 	text: {
-		flexGrow: '2',
+		...getFieldClasses(theme).root,
+		'justify-content': 'left',
+		'flex-grow': '2',
 		'user-select': 'none',
 		'max-height': '42px',
+		'text-indent': '10px',
 		width: 'auto',
-		font: '18px/42px "Segoe UI", Arial, sans-serif',
-		color: theme.color.content,
 	},
 });
 

@@ -1,13 +1,11 @@
 import React from 'react';
-import { Theme, createUseClasses } from '..';
+import { Theme, createUseClasses, getFieldClasses } from '..';
 
 export const getAboutInfoClasses = (theme: Theme) => ({
 	root: {
+		...getFieldClasses(theme).root,
 		width: '100%',
 		height: '100%',
-		display: 'flex',
-		'justify-content': 'center',
-		'align-items': 'center',
 		'background-color': theme.color.app,
 	},
 	container: {
@@ -15,8 +13,6 @@ export const getAboutInfoClasses = (theme: Theme) => ({
 		height: 'auto',
 		display: 'flex',
 		flexDirection: 'column',
-		font: '18px/24px "Segoe UI", Arial, sans-serif',
-		'background-color': theme.color.app,
 	},
 });
 
