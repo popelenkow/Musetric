@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 export type ComplexArray = {
 	real: Float32Array;
 	imag: Float32Array;
@@ -14,7 +13,9 @@ export const createComplexArrayBy = (real: Float32Array, imag: Float32Array) => 
 	imag,
 });
 
-export const normComplexArray = (input: ComplexArray, output: Float32Array, size: number, factor: number) => {
+export const normComplexArray = (
+	input: ComplexArray, output: Float32Array, size: number, factor: number,
+) => {
 	for (let i = 0; i < size; i++) {
 		const real = input.real[i];
 		const imag = input.imag[i];

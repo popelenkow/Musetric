@@ -79,8 +79,12 @@ const useFile = (soundBuffer: SoundBuffer, setSoundBlob: (blob: Blob) => void) =
 	};
 };
 
-// eslint-disable-next-line max-len
-const useRecorder = (soundBuffer: SoundBuffer, soundFixedQueue: SoundBuffer, getBlob: () => Promise<Blob>, setSoundBlob: (blob: Blob) => void) => {
+const useRecorder = (
+	soundBuffer: SoundBuffer,
+	soundFixedQueue: SoundBuffer,
+	getBlob: () => Promise<Blob>,
+	setSoundBlob: (blob: Blob) => void,
+) => {
 	const [recorderState, setRecorder] = useState<Recorder>();
 	const getRecorder = async () => {
 		let recorder = recorderState;
@@ -91,7 +95,8 @@ const useRecorder = (soundBuffer: SoundBuffer, soundFixedQueue: SoundBuffer, get
 				isRecording && soundBuffer.push(chunk);
 				soundFixedQueue.push(chunk);
 			};
-			recorder = await createRecorder(audioContext, soundBuffer.channelCount, onChunk);
+			const { channelCount } = soundBuffer;
+			recorder = await createRecorder({ audioContext, channelCount, onChunk });
 			setRecorder(recorder);
 		}
 		return recorder;

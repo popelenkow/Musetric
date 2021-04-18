@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/media-has-caption */
-/* eslint-disable @typescript-eslint/comma-dangle */
-/* eslint-disable max-len */
 import React from 'react';
 import classNames from 'classnames';
 import { Theme, createUseClasses, getButtonClasses } from '..';
@@ -38,7 +35,10 @@ export type CheckboxProps = {
 };
 
 export const Checkbox: React.FC<CheckboxProps> = (props) => {
-	const { children, className, classNameDisabled, classNameChecked, onToggle, disabled, checked } = props;
+	const {
+		children, className, classNameDisabled, classNameChecked,
+		onToggle, disabled, checked,
+	} = props;
 	const classes = useCheckboxClasses();
 
 	const rootName = classNames(className || classes.root, {

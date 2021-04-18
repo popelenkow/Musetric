@@ -1,7 +1,13 @@
-/* eslint-disable max-len */
 import { v4 as uuid } from 'uuid';
 
-export const createRecorderApi = (mediaStream: MediaStream, messagePort: MessagePort, onChunk: (chunk: Float32Array[], isRecording: boolean) => void) => {
+export type CreateRecorderApiOptions = {
+	mediaStream: MediaStream;
+	messagePort: MessagePort;
+	onChunk: (chunk: Float32Array[], isRecording: boolean) => void;
+};
+
+export const createRecorderApi = (options: CreateRecorderApiOptions) => {
+	const { mediaStream, messagePort, onChunk } = options;
 	const onStartCbs: Record<string, () => void> = {};
 	const onStopCbs: Record<string, () => void> = {};
 
@@ -136,18 +142,24 @@ function runRecorderWorklet(): void {
 	registerProcessor('recorder-worklet', RecorderProcessor);
 }
 
-// eslint-disable-next-line max-len
-const createRecorderWorklet = async (context: BaseAudioContext, channelCount: number): Promise<AudioWorkletNode> => {
+const createRecorderWorklet = async (context: BaseAudioContext, channelCount: number)
+: Promise<AudioWorkletNode> => {
 	const workletUrl = URL.createObjectURL(new Blob([createRecorderWorkletApi.toString(), ';', '(', runRecorderWorklet.toString(), ')()'], { type: 'application/javascript' }));
 	await context.audioWorklet.addModule(workletUrl);
 	const worklet = new AudioWorkletNode(context, 'recorder-worklet', { channelCount, numberOfOutputs: 0, numberOfInputs: 1 });
 	return worklet;
 };
 
-export const createRecorder = async (audioContext: AudioContext, channelCount: number, onChunk: (chunk: Float32Array[], isRecording: boolean) => void): Promise<Recorder> => {
+export type CreateRecorderOptions = {
+	audioContext: AudioContext;
+	channelCount: number;
+	onChunk: (chunk: Float32Array[], isRecording: boolean) => void;
+};
+export const createRecorder = async (options: CreateRecorderOptions): Promise<Recorder> => {
+	const { audioContext, channelCount, onChunk } = options;
 	const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 	const source = audioContext.createMediaStreamSource(mediaStream);
 	const worklet = await createRecorderWorklet(source.context, channelCount);
 	source.connect(worklet);
-	return createRecorderApi(mediaStream, worklet.port, onChunk).recorder;
+	return createRecorderApi({ mediaStream, messagePort: worklet.port, onChunk }).recorder;
 };

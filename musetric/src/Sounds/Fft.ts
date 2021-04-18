@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { ComplexArray, createComplexArray, normComplexArray, gaussWindowFilter } from '..';
 
 /** Based on https://github.com/corbanbrook/dsp.js */
@@ -30,7 +29,9 @@ const createReverseTable = (size: number) => {
 	return reverseTable;
 };
 
-const evalFft = (arr: ComplexArray, windowSize: number, sinTable: Float32Array, cosTable: Float32Array) => {
+const evalFft = (
+	arr: ComplexArray, windowSize: number, sinTable: Float32Array, cosTable: Float32Array,
+) => {
 	let halfSize = 1;
 	while (halfSize < windowSize) {
 		const cos = cosTable[halfSize];

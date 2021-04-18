@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import React, { useMemo, useState, useCallback } from 'react';
 import {
 	Theme, createUseClasses, useTheme, parseColorThemeRgb,

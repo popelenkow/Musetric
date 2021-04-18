@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type MessageHandler<T = any> = (id: string, options: T) => void;
 export type MessageId = { id: string };
@@ -112,4 +114,49 @@ export const createWorker = (): Worker => {
 	const workerUrl = URL.createObjectURL(new Blob(['(', workerFunction.toString(), ')(this)'], { type: 'application/javascript' }));
 	const worker = new Worker(workerUrl);
 	return worker;
+};
+
+type ResultCallback<T> = (result: T) => void;
+
+export type WavCoder = {
+	encode: (options: EncodeOptions) => Promise<Blob>;
+};
+
+export const createWavCoder = (): WavCoder => {
+	const worker = createWorker();
+
+	const postMessage: (message: WorkerMessage) => void = (message) => {
+		worker.postMessage(message);
+	};
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const callbacks: Record<string, ResultCallback<any>> = {};
+
+	worker.onmessage = (e: MessageEvent<WavCoderMessage>) => {
+		const cb = callbacks[e.data.id];
+		delete callbacks[e.data.id];
+		cb(e.data.result);
+	};
+
+	const encode: WavCoder['encode'] = (options) => {
+		return new Promise((resolve) => {
+			const id = uuid();
+
+			const cb: ResultCallback<Blob> = (result) => {
+				resolve(result);
+			};
+			callbacks[id] = cb;
+
+			postMessage({
+				id,
+				type: 'encode',
+				options,
+			});
+		});
+	};
+
+	const result: WavCoder = {
+		encode,
+	};
+	return result;
 };
