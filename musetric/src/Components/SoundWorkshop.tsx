@@ -1,10 +1,8 @@
-/* eslint-disable max-len */
-/* eslint-disable jsx-a11y/media-has-caption */
 import React, { useRef, useState } from 'react';
 import {
 	Theme, createUseClasses,
 	SoundBufferProvider, useSoundBuffer,
-	Button, SelectFile, Radio, Checkbox, SoundProgress,
+	Button, SelectFile, Radio, Checkbox, CheckboxProps, SoundProgress,
 	Frequency, Waveform, Spectrogram,
 	RecordIcon, SaveIcon, FrequencyIcon, OpenFileIcon,
 	WaveformIcon, SpectrogramIcon, StopIcon, PlayIcon, LiveIcon,
@@ -95,6 +93,11 @@ const Root: React.FC<RootProps> = () => {
 		performanceMonitor: performanceMonitor.current,
 	};
 
+	const recorderProps: CheckboxProps = {
+		disabled: player.isPlaying,
+		checked: recorder.isRecording,
+		onToggle: () => (recorder.isRecording ? recorder.stop() : recorder.start()),
+	};
 	return (
 		<div className={classes.root}>
 			<div className={classes.view}>
@@ -113,9 +116,9 @@ const Root: React.FC<RootProps> = () => {
 			</div>
 			<div className={classes.sidebar}>
 				{!player.isPlaying
-					? <Button disabled={recorder.isRecording} onClick={() => player.start()}><PlayIcon /></Button>
+					? <Button disabled={recorder.isRecording} onClick={player.start}><PlayIcon /></Button>
 					: <Button onClick={() => player.stop()}><StopIcon /></Button>}
-				<Checkbox disabled={player.isPlaying} checked={recorder.isRecording} onToggle={() => (recorder.isRecording ? recorder.stop() : recorder.start())}><RecordIcon /></Checkbox>
+				<Checkbox {...recorderProps}><RecordIcon /></Checkbox>
 				<Checkbox checked={isLive} onToggle={() => setIsLive(!isLive)}><LiveIcon /></Checkbox>
 				<Radio name='soundView' value='Waveform' onSelected={setSoundViewId} checkedValue={soundViewId}><WaveformIcon /></Radio>
 				<Radio name='soundView' value='Frequency' onSelected={setSoundViewId} checkedValue={soundViewId}><FrequencyIcon /></Radio>

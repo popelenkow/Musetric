@@ -1,4 +1,5 @@
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 import benchmark from 'benchmark';
 import { ComplexArray, createComplexArray, createFft } from '../src';
@@ -16,7 +17,7 @@ export const performanceFft = () => {
 	input.imag.set(arr);
 
 	const suite = new benchmark.Suite();
-	for (let i = 64; i <= windowSize; i*=2) {
+	for (let i = 64; i <= windowSize; i *= 2) {
 		const fft = createFft(i);
 		suite.add(`fft.forward ${i}`, () => {
 			fft.forward(input, output);

@@ -1,4 +1,5 @@
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import benchmark from 'benchmark';
 import { drawWaveform, Layout2D, Size2D, allColorThemes } from '../src';
@@ -9,40 +10,40 @@ export const performanceWaveform = () => {
 		const frame: Size2D = {
 			width,
 			height,
-		}
+		};
 		const layout: Layout2D = {
 			frame,
 			view: frame,
 			position: { x: 0, y: 0 },
-			colorTheme: allColorThemes.white
-		}
+			colorTheme: allColorThemes.white,
+		};
 		const output = new Uint8ClampedArray(frame.width * frame.height);
 		const input = new Float32Array(44000 * sec);
 		suite.add(`drawWaveform [${frame.width}x${frame.height}] sec ${sec}`, () => {
-			drawWaveform(input, output, layout)
+			drawWaveform(input, output, layout);
 		});
-	}
+	};
 	const runSec = () => {
 		const width = 600;
 		const height = 600;
-		for (let sec = 10; sec <= 60; sec+=10) {
+		for (let sec = 10; sec <= 60; sec += 10) {
 			run(width, height, sec);
 		}
-	}
+	};
 	const runWidth = () => {
 		const height = 600;
 		const sec = 40;
-		for (let width = 400; width <= 800; width+=200) {
+		for (let width = 400; width <= 800; width += 200) {
 			run(width, height, sec);
 		}
-	}
+	};
 	const runHeight = () => {
 		const width = 600;
 		const sec = 40;
-		for (let height = 400; height <= 800; height+=200) {
+		for (let height = 400; height <= 800; height += 200) {
 			run(width, height, sec);
 		}
-	}
+	};
 	runSec();
 	runWidth;
 	runHeight;
@@ -53,4 +54,4 @@ export const performanceWaveform = () => {
 		ev;
 	});
 	suite.run({ async: false });
-}
+};

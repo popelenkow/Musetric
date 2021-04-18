@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/comma-dangle */
 import React, { useState } from 'react';
 import { TFunction } from 'i18next';
 import { Theme, createUseClasses, useLocale, getButtonClasses } from '..';
@@ -18,12 +17,9 @@ export type SwitchProps<T> = {
 	view?: (id: T, t: TFunction) => JSX.Element | string;
 	className?: string;
 };
+type Props<T> = React.PropsWithChildren<SwitchProps<T>>;
 
-export type SwitchState<T> = {
-	id: T;
-};
-
-export const Switch = <T, >(props: React.PropsWithChildren<SwitchProps<T>>): JSX.Element => {
+export function Switch<T>(props: Props<T>): JSX.Element {
 	const { currentId, ids, view, set, className } = props;
 	const classes = useSwitchClasses();
 	const { t } = useLocale();
@@ -43,4 +39,4 @@ export const Switch = <T, >(props: React.PropsWithChildren<SwitchProps<T>>): JSX
 			{view ? view(id, t) : id}
 		</button>
 	);
-};
+}

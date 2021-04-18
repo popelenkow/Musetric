@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const copyfiles = require('copyfiles');
 
 const err = (error) => error && console.error(error);

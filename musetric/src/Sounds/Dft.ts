@@ -1,7 +1,8 @@
-/* eslint-disable max-len */
 import { ComplexArray, createComplexArray, normComplexArray, gaussWindowFilter } from '..';
 
-const evalDft = (input: ComplexArray, output: ComplexArray, windowSize: number, isInverse: boolean) => {
+const evalDft = (
+	input: ComplexArray, output: ComplexArray, windowSize: number, isInverse: boolean,
+) => {
 	for (let i = 0; i < windowSize; i++) {
 		output.real[i] = 0;
 		output.imag[i] = 0;

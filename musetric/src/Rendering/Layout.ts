@@ -52,8 +52,9 @@ export const parseColorThemeHex = (theme: ColorTheme) => {
 	return colors;
 };
 
-// eslint-disable-next-line max-len
-export const getCanvasCursorPosition = (canvas: HTMLCanvasElement, event: MouseEvent): Position2D => {
+export const getCanvasCursorPosition = (
+	canvas: HTMLCanvasElement, event: MouseEvent,
+): Position2D => {
 	const rect = canvas.getBoundingClientRect();
 	const x = (event.clientX - rect.left) / (rect.width - 1);
 	const y = (event.clientY - rect.top) / (rect.height - 1);
