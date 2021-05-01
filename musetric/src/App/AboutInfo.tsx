@@ -1,5 +1,6 @@
 import React from 'react';
-import { Theme, createUseClasses, getFieldClasses } from '..';
+import { Theme, getFieldClasses } from '..';
+import { createUseClasses } from './Theme';
 
 export const getAboutInfoClasses = (theme: Theme) => ({
 	root: {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TFunction } from 'i18next';
-import { Theme, createUseClasses, useLocale, getButtonClasses } from '..';
+import { Theme, createUseClasses, useLocaleContext, getButtonClasses } from '..';
 
 export const getSwitchClasses = (theme: Theme) => ({
 	root: {
@@ -22,7 +22,7 @@ type Props<T> = React.PropsWithChildren<SwitchProps<T>>;
 export function Switch<T>(props: Props<T>): JSX.Element {
 	const { currentId, ids, view, set, className } = props;
 	const classes = useSwitchClasses();
-	const { t } = useLocale();
+	const { t } = useLocaleContext();
 
 	const [id, setId] = useState(currentId);
 

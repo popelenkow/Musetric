@@ -1,8 +1,8 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import {
-	Theme, createUseClasses, useTheme, parseColorThemeRgb,
-	Layout2D, Size2D, getCanvasCursorPosition, useAnimation,
-	SoundBuffer, PerformanceMonitorRef,
+	Theme, createUseClasses, ColorTheme, parseColorThemeRgb,
+	Layout2D, Size2D, getCanvasCursorPosition,
+	SoundBuffer, CanvasViewProps,
 } from '..';
 
 export const getWaveformClasses = (theme: Theme) => ({
@@ -20,9 +20,10 @@ export const drawWaveform = (
 	input: Float32Array,
 	output: Uint8ClampedArray,
 	layout: Layout2D,
+	colorTheme: ColorTheme,
 	cursor?: number,
 ): void => {
-	const { position, view, frame, colorTheme } = layout;
+	const { position, view, frame } = layout;
 
 	const { content, background, active } = parseColorThemeRgb(colorTheme);
 
@@ -79,58 +80,33 @@ export const drawWaveform = (
 
 export type WaveformProps = {
 	soundBuffer: SoundBuffer;
+	size: Size2D;
 	isLive?: boolean;
-	size?: Size2D;
-	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
-export const Waveform: React.FC<WaveformProps> = (props) => {
+export const useWaveform = (props: WaveformProps): CanvasViewProps => {
 	const {
-		soundBuffer, isLive, performanceMonitor,
-		size = { width: 800, height: 800 },
+		soundBuffer, size, isLive,
 	} = props;
-	const { theme } = useTheme();
-	const classes = useWaveformClasses();
 
-	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
-
-	const info = useMemo(() => {
-		if (!canvas) return null;
-		canvas.width = size.width;
-		canvas.height = size.height;
-		const context = canvas.getContext('2d');
-		if (!context) return null;
-		const image = context.getImageData(0, 0, size.width, size.height);
-		const layout: Layout2D = {
-			position: { x: 0, y: 0 },
-			view: size,
-			frame: size,
-			colorTheme: theme.color,
+	const draw = useMemo(() => {
+		return (output: Uint8ClampedArray, layout: Layout2D, colorTheme: ColorTheme) => {
+			const buffer = soundBuffer.buffers[0];
+			const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
+			drawWaveform(buffer, output, layout, colorTheme, cursor);
 		};
-		return { context, image, layout };
-	}, [canvas, size, theme]);
+	}, [soundBuffer, isLive]);
 
-	useAnimation(() => {
-		if (!info) return;
-		performanceMonitor?.begin();
-		const { context, image, layout } = info;
-
-		const buffer = soundBuffer.buffers[0];
-		const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
-		drawWaveform(buffer, image.data, layout, cursor);
-		context.putImageData(image, 0, 0);
-
-		performanceMonitor?.end();
-	}, [soundBuffer, isLive, info, performanceMonitor]);
-
-	const click = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+	const onClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
 		if (isLive) return;
 		const pos = getCanvasCursorPosition(e.currentTarget, e.nativeEvent);
 		const value = Math.floor(pos.x * (soundBuffer.memorySize - 1));
 		soundBuffer.setCursor(value);
 	}, [soundBuffer, isLive]);
 
-	return (
-		<canvas className={classes.root} ref={setCanvas} {...size} onClick={click} />
-	);
+	const canvasViewProps: CanvasViewProps = {
+		draw, size, onClick,
+	};
+
+	return canvasViewProps;
 };

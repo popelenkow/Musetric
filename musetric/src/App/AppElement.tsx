@@ -31,4 +31,4 @@ export const AppElementProvider: React.FC<AppElementProviderProps> = (props) => 
 	);
 };
 
-export const useAppElement = () => useContext(AppElementContext);
+export const useAppElementContext = () => useContext(AppElementContext);

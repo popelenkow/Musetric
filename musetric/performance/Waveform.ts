@@ -15,12 +15,11 @@ export const performanceWaveform = () => {
 			frame,
 			view: frame,
 			position: { x: 0, y: 0 },
-			colorTheme: allColorThemes.white,
 		};
 		const output = new Uint8ClampedArray(frame.width * frame.height);
 		const input = new Float32Array(44000 * sec);
 		suite.add(`drawWaveform [${frame.width}x${frame.height}] sec ${sec}`, () => {
-			drawWaveform(input, output, layout);
+			drawWaveform(input, output, layout, allColorThemes.white);
 		});
 	};
 	const runSec = () => {
