@@ -1,11 +1,13 @@
 import React from 'react';
-import { Theme, createUseClasses, AppIcon, getFieldClasses } from '..';
+import { Theme, AppIcon, getFieldClasses } from '..';
+import { createUseClasses } from './Theme';
 
 export const getAppTitlebarClasses = (theme: Theme) => ({
 	root: {
 		display: 'flex',
-		width: 'calc(100% - 6px)',
-		height: '42px',
+		'box-sizing': 'border-box',
+		width: '100%',
+		height: '100%',
 		'column-gap': '4px',
 		background: theme.color.sidebar,
 		padding: '3px',

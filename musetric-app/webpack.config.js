@@ -21,7 +21,7 @@ const common = {
 		path: path.join(__dirname, 'dist'),
 		filename: 'index.js',
 	},
-	stats: { modules: false, children: false, entrypoints: false },
+	stats: { modules: false, children: false, entrypoints: false, assets: false },
 	plugins: [
 		new webpack.DefinePlugin({
 			'process.env': {
@@ -36,27 +36,14 @@ const common = {
 	],
 };
 
-const runOnce = (compiler, run) => {
-	let done = false;
-	compiler.hooks.done.tap('run-host', () => {
-		!done && run();
-		done = true;
-	});
-};
-
 const specific = process.env.DEV ? {
 	mode: 'development',
 	devtool: 'source-map',
-	plugins: [
-		{
-			apply: (compiler) => process.env.DEV && runOnce(compiler, () => {
-				console.log('Starting Host Process...');
-				spawn('node', ['host.js'], { shell: true, env: process.env, stdio: 'inherit' })
-					.on('close', code => process.exit(code))
-					.on('error', spawnError => console.error(spawnError));
-			}),
-		},
-	],
+	devServer: {
+		hot: true,
+		compress: true,
+		port: 3000,
+	},
 	resolve: {
 		modules: [path.join(__dirname, 'node_modules')],
 		alias: {

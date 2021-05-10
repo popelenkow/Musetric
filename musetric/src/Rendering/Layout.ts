@@ -21,7 +21,6 @@ export type Layout2D = {
 	position: Position2D;
 	view: Size2D;
 	frame: Size2D;
-	colorTheme: ColorTheme;
 };
 
 export const getRgb = (color: Color): Rgb => {

@@ -161,7 +161,6 @@ const createStats = () => {
 };
 
 export type PerformanceMonitorProps = {
-	initViewId?: string;
 };
 
 export type PerformanceMonitorRef = {

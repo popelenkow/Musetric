@@ -40,4 +40,4 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
 	);
 };
 
-export const useLocale = () => useContext(LocaleContext);
+export const useLocaleContext = () => useContext(LocaleContext);
