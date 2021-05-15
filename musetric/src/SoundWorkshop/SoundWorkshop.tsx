@@ -5,7 +5,7 @@ import {
 	useSoundView, useSoundProgressBar, useSoundFile,
 	SoundProgress,
 	PerformanceMonitor, PerformanceMonitorRef,
-	createSoundBuffer, createSoundFixedQueue,
+	createSoundBuffer, createSoundCircularBuffer,
 } from '..';
 
 export const getSoundWorkshopClasses = (theme: Theme) => ({
@@ -87,13 +87,13 @@ export const SoundWorkshop: React.FC<SoundWorkshopProps> = () => {
 	const performanceMonitor = useRef<PerformanceMonitorRef>(null);
 
 	const soundBuffer = useMemo(() => createSoundBuffer(48000, 2), []);
-	const soundFixedQueue = useMemo(() => createSoundFixedQueue(48000, 2), []);
+	const soundCircularBuffer = useMemo(() => createSoundCircularBuffer(48000, 2), []);
 	const { soundBlob, refreshSound, openFileButton, saveFileButton } = useSoundFile(soundBuffer);
 
 	const { isPlaying, getPlayerButton } = useSoundPlayer(soundBuffer, soundBlob);
 	const { isRecording, getRecorderCheckbox, initRecorder } = useSoundRecorder({
 		soundBuffer,
-		soundFixedQueue,
+		soundCircularBuffer,
 		refreshSound,
 	});
 
@@ -102,12 +102,13 @@ export const SoundWorkshop: React.FC<SoundWorkshopProps> = () => {
 	}, [isLive, initRecorder]);
 
 	const { soundView, waveformRadio, frequencyRadio, spectrogramRadio } = useSoundView({
-		soundBuffer: isLive ? soundFixedQueue : soundBuffer,
+		soundBuffer,
+		soundCircularBuffer,
 		isLive,
 		performanceMonitor: performanceMonitor.current,
 	});
 
-	const { progressBarView } = useSoundProgressBar(soundBuffer);
+	const { progressBarView } = useSoundProgressBar(soundBuffer, soundCircularBuffer);
 
 	return (
 		<div className={classes.root}>

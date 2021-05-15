@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 
 import {
-	SoundBuffer, createRecorder, Recorder,
+	SoundBuffer, SoundCircularBuffer, createRecorder, Recorder,
 	Checkbox, CheckboxProps, RecordIcon,
 } from '..';
 
 export type UseSoundRecorderProps = {
 	soundBuffer: SoundBuffer;
-	soundFixedQueue: SoundBuffer;
+	soundCircularBuffer: SoundCircularBuffer;
 	refreshSound: () => Promise<void>;
 };
 
 export const useSoundRecorder = (props: UseSoundRecorderProps) => {
-	const { soundBuffer, soundFixedQueue, refreshSound } = props;
+	const { soundBuffer, soundCircularBuffer, refreshSound } = props;
 
 	const [recorderState, setRecorder] = useState<Recorder>();
 	const getRecorder = async () => {
@@ -22,7 +22,7 @@ export const useSoundRecorder = (props: UseSoundRecorderProps) => {
 
 			const onChunk = (chunk: Float32Array[], isRecording: boolean): void => {
 				isRecording && soundBuffer.push(chunk);
-				soundFixedQueue.push(chunk);
+				soundCircularBuffer.push(chunk);
 			};
 			const { channelCount } = soundBuffer;
 			recorder = await createRecorder({ audioContext, channelCount, onChunk });

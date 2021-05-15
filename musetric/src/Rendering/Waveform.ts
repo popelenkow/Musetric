@@ -2,7 +2,8 @@ import React, { useMemo, useCallback } from 'react';
 import {
 	ColorTheme, parseColorThemeRgb,
 	Layout2D, Size2D, getCanvasCursorPosition,
-	SoundBuffer, CanvasViewProps,
+	SoundBuffer, SoundCircularBuffer,
+	CanvasViewProps,
 } from '..';
 
 export type CacheDrawWaveform = {
@@ -52,11 +53,11 @@ export const drawWaveform = (
 	for (let y = 0; y < view.height; y++) {
 		const yIndex = 4 * (position.y + y) * frame.width;
 		for (let x = 0; x < view.width; x++) {
-			const index = 4 * (position.x + x) + yIndex;
-			const max = maxArray[x];
 			const min = minArray[x];
+			const max = maxArray[x];
 			const isDraw = (min <= y) && (y <= max);
 			const color = isDraw ? content : background;
+			const index = 4 * (position.x + x) + yIndex;
 			output[index + 0] = color.r;
 			output[index + 1] = color.g;
 			output[index + 2] = color.b;
@@ -82,23 +83,24 @@ export const drawWaveform = (
 
 export type WaveformProps = {
 	soundBuffer: SoundBuffer;
+	soundCircularBuffer: SoundCircularBuffer;
 	size: Size2D;
 	isLive?: boolean;
 };
 
 export const useWaveform = (props: WaveformProps): CanvasViewProps => {
 	const {
-		soundBuffer, size, isLive,
+		soundBuffer, soundCircularBuffer, size, isLive,
 	} = props;
 
 	const draw = useMemo(() => {
 		let cache: CacheDrawWaveform | undefined;
 		return (output: Uint8ClampedArray, layout: Layout2D, colorTheme: ColorTheme) => {
-			const buffer = soundBuffer.buffers[0];
+			const buffer = isLive ? soundCircularBuffer.buffers[0] : soundBuffer.buffers[0];
 			const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
 			cache = drawWaveform(buffer, output, layout, colorTheme, cache, cursor);
 		};
-	}, [soundBuffer, isLive]);
+	}, [soundBuffer, soundCircularBuffer, isLive]);
 
 	const onClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
 		if (isLive) return;

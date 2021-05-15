@@ -1,8 +1,8 @@
 import { useMemo, useCallback, MouseEvent, useRef } from 'react';
 import {
 	ColorTheme, parseColorThemeRgb,
-	Layout2D, Size2D, getCanvasCursorPosition,
-	createFft, SoundBuffer,
+	Layout2D, Size2D, getCanvasCursorPosition, createFft,
+	SoundBuffer, SoundCircularBuffer,
 	CanvasViewProps,
 } from '..';
 
@@ -54,13 +54,14 @@ export const drawSpectrogram = (
 
 export type SpectrogramProps = {
 	soundBuffer: SoundBuffer;
+	soundCircularBuffer: SoundCircularBuffer;
 	size: Size2D;
 	isLive?: boolean;
 };
 
 export const useSpectrogram = (props: SpectrogramProps): CanvasViewProps => {
 	const {
-		soundBuffer, size, isLive,
+		soundBuffer, soundCircularBuffer, size, isLive,
 	} = props;
 
 	const result = useRef<Float32Array[]>([]);
@@ -75,7 +76,7 @@ export const useSpectrogram = (props: SpectrogramProps): CanvasViewProps => {
 		return (output: Uint8ClampedArray, layout: Layout2D, colorTheme: ColorTheme) => {
 			const { windowSize, fft } = info;
 
-			const buffer = soundBuffer.buffers[0];
+			const buffer = isLive ? soundCircularBuffer.buffers[0] : soundBuffer.buffers[0];
 			const step = windowSize;
 			const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
 
@@ -93,7 +94,7 @@ export const useSpectrogram = (props: SpectrogramProps): CanvasViewProps => {
 			fft.frequencies(buffer, frequencies, step);
 			drawSpectrogram(frequencies, output, layout, colorTheme, cursor);
 		};
-	}, [soundBuffer, isLive, info, result]);
+	}, [soundBuffer, soundCircularBuffer, isLive, info, result]);
 
 	const onClick = useCallback((e: MouseEvent<HTMLCanvasElement>) => {
 		if (isLive) return;

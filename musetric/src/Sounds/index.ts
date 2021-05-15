@@ -3,6 +3,7 @@ export * from './Dft';
 export * from './Fft';
 export * from './Recorder';
 export * from './SoundBuffer';
+export * from './SoundCircularBuffer';
 export * from './SoundConverter';
 export * from './WavConverter';
 export * from './WindowFilters';

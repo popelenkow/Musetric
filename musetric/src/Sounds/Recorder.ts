@@ -80,7 +80,11 @@ function createRecorderWorkletApi(messagePort: MessagePort) {
 	const api = {
 		process(inputRaw: Float32Array[]) {
 			const { isRecording } = state;
-			const input = inputRaw.map(x => x.map(y => y));
+			const input = inputRaw.map(x => {
+				const result = new Float32Array(x.length);
+				result.set(x);
+				return result;
+			});
 			postMessage('onChunk', input, isRecording);
 		},
 		start: (id: string) => {

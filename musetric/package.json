@@ -1,7 +1,7 @@
 {
 	"name": "musetric",
 	"description": "Musetric is a javascript library for building music applications",
-	"version": "0.0.18",
+	"version": "0.0.19",
 	"license": "MIT",
 	"main": "index.js",
 	"types": "index.d.ts",
