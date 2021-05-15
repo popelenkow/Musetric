@@ -10,12 +10,12 @@ export type EncodeOptions = {
 export type WorkerMessage = MessageId & (
 	| { type: 'encode', options: EncodeOptions }
 );
-export type WavCoderMessage = MessageId & (
+export type WavConverterMessage = MessageId & (
 	| { type: 'encode', result: Blob }
 );
 
 export function workerFunction(self: Worker): void {
-	const postMessage: (message: WavCoderMessage) => void = (message) => self.postMessage(message);
+	const postMessage = (message: WavConverterMessage): void => self.postMessage(message);
 
 	const floatTo16BitPCM = (view: DataView, offset: number, buffer: Float32Array) => {
 		let arrayOffset = 0;
@@ -118,11 +118,11 @@ export const createWorker = (): Worker => {
 
 type ResultCallback<T> = (result: T) => void;
 
-export type WavCoder = {
+export type WavConverter = {
 	encode: (options: EncodeOptions) => Promise<Blob>;
 };
 
-export const createWavCoder = (): WavCoder => {
+export const createWavConverter = (): WavConverter => {
 	const worker = createWorker();
 
 	const postMessage: (message: WorkerMessage) => void = (message) => {
@@ -132,13 +132,13 @@ export const createWavCoder = (): WavCoder => {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const callbacks: Record<string, ResultCallback<any>> = {};
 
-	worker.onmessage = (e: MessageEvent<WavCoderMessage>) => {
+	worker.onmessage = (e: MessageEvent<WavConverterMessage>) => {
 		const cb = callbacks[e.data.id];
 		delete callbacks[e.data.id];
 		cb(e.data.result);
 	};
 
-	const encode: WavCoder['encode'] = (options) => {
+	const encode: WavConverter['encode'] = (options) => {
 		return new Promise((resolve) => {
 			const id = uuid();
 
@@ -155,7 +155,7 @@ export const createWavCoder = (): WavCoder => {
 		});
 	};
 
-	const result: WavCoder = {
+	const result: WavConverter = {
 		encode,
 	};
 	return result;

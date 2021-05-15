@@ -4,13 +4,7 @@ import {
 	SoundBuffer, useWaveform, CanvasView,
 } from '..';
 
-export type UseSoundProgressBarProps = {
-	soundBuffer: SoundBuffer;
-};
-
-export const useSoundProgressBar = (props: UseSoundProgressBarProps) => {
-	const { soundBuffer } = props;
-
+export const useSoundProgressBar = (soundBuffer: SoundBuffer) => {
 	const progressBarProps = useWaveform({
 		soundBuffer,
 		size: { width: 600, height: 50 },
