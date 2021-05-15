@@ -1,7 +1,7 @@
 {
 	"name": "musetric-app",
 	"description": "Musetric is javascript music application",
-	"version": "0.0.7-dev.39",
+	"version": "0.0.7-dev.42",
 	"license": "MIT",
 	"main": "index.js",
 	"homepage": "https://github.com/popelenkow/Musetric",
@@ -27,14 +27,14 @@
 		"cross-env": "7.0.3",
 		"eslint-config-musetric": "0.0.28",
 		"html-webpack-plugin": "5.3.1",
-		"musetric": "0.0.18-dev.73",
+		"musetric": "0.0.18-dev.76",
 		"rimraf": "3.0.2",
-		"ts-loader": "9.1.1",
+		"ts-loader": "9.1.2",
 		"typescript": "4.2.4",
-		"webpack": "5.36.2",
+		"webpack": "5.37.0",
 		"webpack-bundle-analyzer": "4.4.1",
-		"webpack-cli": "4.6.0",
-		"webpack-dev-server": "4.0.0-beta.2",
+		"webpack-cli": "4.7.0",
+		"webpack-dev-server": "4.0.0-beta.3",
 		"webpack-merge": "5.7.3"
 	}
 }

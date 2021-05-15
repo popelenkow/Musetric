@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import {
 	Theme, createUseClasses,
 	useSoundRecorder, useSoundPlayer, useSoundLive,
@@ -83,28 +83,19 @@ export type SoundWorkshopProps = {
 export const SoundWorkshop: React.FC<SoundWorkshopProps> = () => {
 	const classes = useSoundWorkshopClasses();
 
-	const soundBuffer = useMemo(() => createSoundBuffer(48000, 2), []);
-	const soundFixedQueue = useMemo(() => createSoundFixedQueue(48000, 2), []);
-	const [soundBlob, setSoundBlob] = useState<Blob>();
-
 	const { isLive, liveCheckbox } = useSoundLive();
-
 	const performanceMonitor = useRef<PerformanceMonitorRef>(null);
 
-	const { getBlob, openFileButton, saveFileButton } = useSoundFile(soundBuffer, setSoundBlob);
+	const soundBuffer = useMemo(() => createSoundBuffer(48000, 2), []);
+	const soundFixedQueue = useMemo(() => createSoundFixedQueue(48000, 2), []);
+	const { soundBlob, refreshSound, openFileButton, saveFileButton } = useSoundFile(soundBuffer);
 
-	const refreshSound = async () => {
-		const blob = await getBlob();
-		setSoundBlob(blob);
-	};
-
+	const { isPlaying, getPlayerButton } = useSoundPlayer(soundBuffer, soundBlob);
 	const { isRecording, getRecorderCheckbox, initRecorder } = useSoundRecorder({
 		soundBuffer,
 		soundFixedQueue,
 		refreshSound,
 	});
-
-	const { isPlaying, getPlayerButton } = useSoundPlayer(soundBuffer, soundBlob);
 
 	useEffect(() => {
 		isLive && initRecorder();
@@ -116,9 +107,7 @@ export const SoundWorkshop: React.FC<SoundWorkshopProps> = () => {
 		performanceMonitor: performanceMonitor.current,
 	});
 
-	const { progressBarView } = useSoundProgressBar({
-		soundBuffer,
-	});
+	const { progressBarView } = useSoundProgressBar(soundBuffer);
 
 	return (
 		<div className={classes.root}>

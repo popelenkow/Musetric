@@ -9,6 +9,6 @@
 	"dependencies": {},
 	"devDependencies": {
 		"copyfiles": "2.4.1",
-		"musetric-app": "0.0.7-dev.39"
+		"musetric-app": "0.0.7-dev.42"
 	}
 }

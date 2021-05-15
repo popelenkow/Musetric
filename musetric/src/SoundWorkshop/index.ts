@@ -1,4 +1,3 @@
-export * from './CanvasView';
 export * from './SoundFile';
 export * from './SoundLive';
 export * from './SoundPlayer';

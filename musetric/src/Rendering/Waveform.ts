@@ -1,34 +1,34 @@
 import React, { useMemo, useCallback } from 'react';
 import {
-	Theme, createUseClasses, ColorTheme, parseColorThemeRgb,
+	ColorTheme, parseColorThemeRgb,
 	Layout2D, Size2D, getCanvasCursorPosition,
 	SoundBuffer, CanvasViewProps,
 } from '..';
 
-export const getWaveformClasses = (theme: Theme) => ({
-	root: {
-		display: 'block',
-		background: theme.color.app,
-		width: '100%',
-		height: '100%',
-	},
-});
-
-export const useWaveformClasses = createUseClasses('Waveform', getWaveformClasses);
+export type CacheDrawWaveform = {
+	minArray: Float32Array;
+	maxArray: Float32Array;
+};
 
 export const drawWaveform = (
 	input: Float32Array,
 	output: Uint8ClampedArray,
 	layout: Layout2D,
 	colorTheme: ColorTheme,
+	cache?: CacheDrawWaveform,
 	cursor?: number,
-): void => {
+): CacheDrawWaveform => {
 	const { position, view, frame } = layout;
 
 	const { content, background, active } = parseColorThemeRgb(colorTheme);
 
-	const minArray = new Float32Array(view.width);
-	const maxArray = new Float32Array(view.width);
+	if (!cache || (cache.minArray.length !== view.width)) {
+		cache = {
+			minArray: new Float32Array(view.width),
+			maxArray: new Float32Array(view.width),
+		};
+	}
+	const { minArray, maxArray } = cache;
 
 	const step = input.length / view.width;
 	for (let x = 0; x < view.width; x++) {
@@ -76,6 +76,8 @@ export const drawWaveform = (
 			output[index + 3] = 255;
 		}
 	}
+
+	return cache;
 };
 
 export type WaveformProps = {
@@ -90,10 +92,11 @@ export const useWaveform = (props: WaveformProps): CanvasViewProps => {
 	} = props;
 
 	const draw = useMemo(() => {
+		let cache: CacheDrawWaveform | undefined;
 		return (output: Uint8ClampedArray, layout: Layout2D, colorTheme: ColorTheme) => {
 			const buffer = soundBuffer.buffers[0];
 			const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
-			drawWaveform(buffer, output, layout, colorTheme, cursor);
+			cache = drawWaveform(buffer, output, layout, colorTheme, cache, cursor);
 		};
 	}, [soundBuffer, isLive]);
 
