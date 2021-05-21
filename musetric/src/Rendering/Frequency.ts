@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import {
 	ColorTheme, parseColorThemeRgb,
-	Layout2D, Size2D,
-	SoundBuffer, createFft,
+	Layout2D, Size2D, createFft,
+	SoundBuffer, SoundCircularBuffer,
 	CanvasViewProps,
 } from '..';
 
@@ -38,13 +38,14 @@ export const drawFrequency = (
 
 export type FrequencyProps = {
 	soundBuffer: SoundBuffer;
+	soundCircularBuffer: SoundCircularBuffer;
 	size: Size2D;
 	isLive?: boolean;
 };
 
 export const useFrequency = (props: FrequencyProps): CanvasViewProps => {
 	const {
-		soundBuffer, size,
+		soundBuffer, soundCircularBuffer, size, isLive,
 	} = props;
 
 	const info = useMemo(() => {
@@ -58,12 +59,17 @@ export const useFrequency = (props: FrequencyProps): CanvasViewProps => {
 		return (output: Uint8ClampedArray, layout: Layout2D, colorTheme: ColorTheme) => {
 			const { windowSize, fft, result } = info;
 
-			const { cursor, memorySize, buffers } = soundBuffer;
-			const offset = cursor + windowSize < memorySize ? cursor : memorySize - windowSize;
+			const getBuffer = () => {
+				if (isLive) return { ...soundCircularBuffer, cursor: soundCircularBuffer.memorySize };
+				return soundBuffer;
+			};
+			const { cursor, memorySize, buffers } = getBuffer();
+			let offset = cursor < memorySize ? cursor - windowSize : memorySize - windowSize;
+			offset = offset < 0 ? 0 : offset;
 			fft.frequency(buffers[0], result, offset);
 			drawFrequency(result, output, layout, colorTheme);
 		};
-	}, [soundBuffer, info]);
+	}, [soundBuffer, soundCircularBuffer, isLive, info]);
 
 	const canvasViewProps: CanvasViewProps = {
 		draw, size,

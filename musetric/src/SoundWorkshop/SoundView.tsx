@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import {
-	SoundBuffer,
+	SoundBuffer, SoundCircularBuffer,
 	useWaveform, useFrequency, useSpectrogram,
 	WaveformIcon, FrequencyIcon, SpectrogramIcon,
 	Radio, CanvasView, PerformanceMonitorRef,
@@ -11,16 +11,18 @@ export type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
 
 export type UseSoundViewProps = {
 	soundBuffer: SoundBuffer;
+	soundCircularBuffer: SoundCircularBuffer;
 	isLive: boolean;
 	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const useSoundView = (props: UseSoundViewProps) => {
-	const { soundBuffer, isLive, performanceMonitor } = props;
+	const { soundBuffer, soundCircularBuffer, isLive, performanceMonitor } = props;
 	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
 
 	const viewProps = {
 		soundBuffer,
+		soundCircularBuffer,
 		size: { width: 1024, height: 1024 },
 		isLive,
 	};

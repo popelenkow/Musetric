@@ -6,17 +6,17 @@
 
 [**Live Demo**](https://popelenkow.github.io/Musetric)
 
-Musetric is a application for exploration of sounds. The application supports Web and Windows. There is support for localization and themes.
+Musetric is a application for exploration of sounds. Record or upload sound and play it. Visualize to parse sound techniques.
 
-<img src="https://user-images.githubusercontent.com/7475599/104832178-d75c1280-58c1-11eb-81a5-3164b90c48cf.png">
+<img src="https://user-images.githubusercontent.com/7475599/118389995-f3e13f00-b656-11eb-8e7b-e6957948a482.png">
 
-# Features
+## Sound visualizer
 
-- Player
-- Recorder
-- Audio Visualizer
+- Sonogram
+- Frequency
+- Waveform
 
-## in future
+### Development plans
 
 - Vocal Remover
 - Score and Tabs Generator
