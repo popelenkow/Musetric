@@ -2,7 +2,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import benchmark from 'benchmark';
-import { drawWaveform, Layout2D, Size2D, allColorThemes } from '../src';
+import {
+	drawWaveform, analyzeWaveform, AnalyzeWaveformResult,
+	Layout2D, Size2D, allColorThemes,
+} from '../src';
 
 export const performanceWaveform = () => {
 	const suite = new benchmark.Suite();
@@ -18,8 +21,13 @@ export const performanceWaveform = () => {
 		};
 		const output = new Uint8ClampedArray(frame.width * frame.height);
 		const input = new Float32Array(44000 * sec);
+		const analysis: AnalyzeWaveformResult = {
+			minArray: new Float32Array(frame.height),
+			maxArray: new Float32Array(frame.height),
+		};
 		suite.add(`drawWaveform [${frame.width}x${frame.height}] sec ${sec}`, () => {
-			drawWaveform(input, output, layout, allColorThemes.white);
+			analyzeWaveform(input, analysis, layout);
+			drawWaveform(analysis, output, layout, allColorThemes.white);
 		});
 	};
 	const runSec = () => {

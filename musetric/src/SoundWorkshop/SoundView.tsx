@@ -23,7 +23,7 @@ export const useSoundView = (props: UseSoundViewProps) => {
 	const viewProps = {
 		soundBuffer,
 		soundCircularBuffer,
-		size: { width: 1024, height: 1024 },
+		size: { width: 256, height: 1024 },
 		isLive,
 	};
 

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import {
-	ColorTheme, parseColorThemeRgb,
+	ColorTheme, parseThemeRgbColor,
 	Layout2D, Size2D, createFft,
 	SoundBuffer, SoundCircularBuffer,
 	CanvasViewProps,
@@ -14,7 +14,7 @@ export const drawFrequency = (
 ): void => {
 	const { position, view, frame } = layout;
 
-	const { content, background } = parseColorThemeRgb(colorTheme);
+	const { content, background } = parseThemeRgbColor(colorTheme);
 
 	const step = (1.0 * input.length) / view.width;
 
