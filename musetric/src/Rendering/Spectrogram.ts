@@ -1,6 +1,6 @@
 import { useMemo, useCallback, MouseEvent, useRef } from 'react';
 import {
-	ColorTheme, parseColorThemeRgb,
+	ColorTheme, parseThemeRgbColor,
 	Layout2D, Size2D, getCanvasCursorPosition, createFft,
 	SoundBuffer, SoundCircularBuffer,
 	CanvasViewProps,
@@ -15,7 +15,7 @@ export const drawSpectrogram = (
 ): void => {
 	const { frame, view, position } = layout;
 
-	const { content, background, active } = parseColorThemeRgb(colorTheme);
+	const { content, background, active } = parseThemeRgbColor(colorTheme);
 
 	const column = new Float32Array(view.height);
 	const step = (input.length - 1) / (view.width - 1);

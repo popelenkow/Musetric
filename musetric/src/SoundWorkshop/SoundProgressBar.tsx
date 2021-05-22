@@ -11,7 +11,7 @@ export const useSoundProgressBar = (
 	const progressBarProps = useWaveform({
 		soundBuffer,
 		soundCircularBuffer,
-		size: { width: 600, height: 50 },
+		size: { width: 32, height: 256 },
 	});
 
 	const progressBarView = <CanvasView {...progressBarProps} />;
