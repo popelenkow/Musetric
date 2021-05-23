@@ -4,7 +4,7 @@
 import benchmark from 'benchmark';
 import {
 	drawWaveform, analyzeWaveform, AnalyzeWaveformResult,
-	Layout2D, Size2D, allColorThemes,
+	Size2D, allColorThemes,
 } from '../src';
 
 export const performanceWaveform = () => {
@@ -14,11 +14,6 @@ export const performanceWaveform = () => {
 			width,
 			height,
 		};
-		const layout: Layout2D = {
-			frame,
-			view: frame,
-			position: { x: 0, y: 0 },
-		};
 		const output = new Uint8ClampedArray(frame.width * frame.height);
 		const input = new Float32Array(44000 * sec);
 		const analysis: AnalyzeWaveformResult = {
@@ -26,8 +21,8 @@ export const performanceWaveform = () => {
 			maxArray: new Float32Array(frame.height),
 		};
 		suite.add(`drawWaveform [${frame.width}x${frame.height}] sec ${sec}`, () => {
-			analyzeWaveform(input, analysis, layout);
-			drawWaveform(analysis, output, layout, allColorThemes.white);
+			analyzeWaveform(input, analysis, frame);
+			drawWaveform(analysis, output, frame, allColorThemes.white);
 		});
 	};
 	const runSec = () => {

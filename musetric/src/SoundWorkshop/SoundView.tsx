@@ -4,7 +4,8 @@ import {
 	SoundBuffer, SoundCircularBuffer,
 	useWaveform, useFrequency, useSpectrogram,
 	WaveformIcon, FrequencyIcon, SpectrogramIcon,
-	Radio, CanvasView, PerformanceMonitorRef,
+	Radio, PixelCanvas, PixelCanvasProps,
+	PerformanceMonitorRef, Size2D,
 } from '..';
 
 export type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
@@ -20,27 +21,36 @@ export const useSoundView = (props: UseSoundViewProps) => {
 	const { soundBuffer, soundCircularBuffer, isLive, performanceMonitor } = props;
 	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
 
-	const viewProps = {
+	const size: Size2D = { width: 512, height: 1024 };
+
+	const waveform = useWaveform({
 		soundBuffer,
 		soundCircularBuffer,
-		size: { width: 256, height: 1024 },
 		isLive,
-	};
+	});
+	const frequency = useFrequency({
+		soundBuffer,
+		soundCircularBuffer,
+		size,
+		isLive,
+	});
+	const spectrogram = useSpectrogram({
+		soundBuffer,
+		soundCircularBuffer,
+		size,
+		isLive,
+	});
 
-	const waveformProps = useWaveform(viewProps);
-	const frequencyProps = useFrequency(viewProps);
-	const spectrogramProps = useSpectrogram(viewProps);
-
-	const getCanvasViewProps = () => {
-		if (soundViewId === 'Waveform') return { ...waveformProps, performanceMonitor };
-		if (soundViewId === 'Frequency') return { ...frequencyProps, performanceMonitor };
-		if (soundViewId === 'Spectrogram') return { ...spectrogramProps, performanceMonitor };
+	const getCanvasViewProps = (): PixelCanvasProps | undefined => {
+		if (soundViewId === 'Waveform') return { ...waveform, size, direction: 'left', performanceMonitor };
+		if (soundViewId === 'Frequency') return { ...frequency, size, direction: 'right', performanceMonitor };
+		if (soundViewId === 'Spectrogram') return { ...spectrogram, size, direction: 'up', performanceMonitor };
 		return undefined;
 	};
 
 	const canvasViewProps = getCanvasViewProps();
 
-	const soundView = canvasViewProps && <CanvasView {...canvasViewProps} />;
+	const soundView = canvasViewProps && <PixelCanvas {...canvasViewProps} />;
 
 	const waveformRadio = <Radio name='soundView' value='Waveform' onSelected={setSoundViewId} checkedValue={soundViewId}><WaveformIcon /></Radio>;
 	const frequencyRadio = <Radio name='soundView' value='Frequency' onSelected={setSoundViewId} checkedValue={soundViewId}><FrequencyIcon /></Radio>;

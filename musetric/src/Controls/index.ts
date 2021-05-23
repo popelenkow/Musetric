@@ -1,5 +1,5 @@
 export * from './Button';
-export * from './CanvasView';
+export * from './PixelCanvas';
 export * from './Checkbox';
 export * from './Field';
 export * from './ModalDialog';
