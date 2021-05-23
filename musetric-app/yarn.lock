@@ -2768,10 +2768,10 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
-musetric@0.0.19-dev.91:
-  version "0.0.19-dev.91"
-  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.19-dev.91.tgz#5e85c0b8420585c8ecfa935955b0198b4078c510"
-  integrity sha512-biO8Yonkz2tq9sPra8bxD82jwlseX+eio9jbBve6fXhowDcS2p9V1nSQnLBbDTF293JyocMqvFbJxH/v+DqO0w==
+musetric@0.0.19:
+  version "0.0.19"
+  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.19.tgz#a7dc44b0422afd5883f3ac0a03d5140ba3d6fc04"
+  integrity sha512-DISH9mft9FCz9JhVfNMPBHQQ1erkOlEcT9an9yVMWJApIQBE9APZbweJ1Uvnjz7OAZ4GFhXWpVy43fa43twqWg==
   dependencies:
     "@types/color" "^3.0.1"
     "@types/file-saver" "^2.0.2"

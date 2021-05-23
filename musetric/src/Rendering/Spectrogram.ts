@@ -1,36 +1,33 @@
-import { useMemo, useCallback, MouseEvent, useRef } from 'react';
+import { useMemo, useCallback, useRef } from 'react';
 import {
 	ColorTheme, parseThemeRgbColor,
-	Layout2D, Size2D, getCanvasCursorPosition, createFft,
+	Size2D, Position2D, createFft,
 	SoundBuffer, SoundCircularBuffer,
-	CanvasViewProps,
 } from '..';
 
 export const drawSpectrogram = (
 	input: Float32Array[],
 	output: Uint8ClampedArray,
-	layout: Layout2D,
+	frame: Size2D,
 	colorTheme: ColorTheme,
 	cursor?: number,
 ): void => {
-	const { frame, view, position } = layout;
-
 	const { content, background, active } = parseThemeRgbColor(colorTheme);
 
-	const column = new Float32Array(view.height);
-	const step = (input.length - 1) / (view.width - 1);
-	for (let x = 0; x < view.width; x++) {
+	const column = new Float32Array(frame.height);
+	const step = (input.length - 1) / (frame.width - 1);
+	for (let x = 0; x < frame.width; x++) {
 		const offset = Math.round(x * step);
 		const spectrum = input[offset];
-		for (let y = 0; y < view.height; y++) {
+		for (let y = 0; y < frame.height; y++) {
 			const value = Math.log10(spectrum[y]) / 5;
 			column[y] = Math.max(0, Math.min(1, value + 1));
 		}
 
-		for (let y = 0; y < view.height; y++) {
+		for (let y = 0; y < frame.height; y++) {
 			const value = column[y];
-			const yIndex = 4 * (position.y + frame.height - y) * frame.width;
-			const index = 4 * (position.x + x) + yIndex;
+			const yIndex = 4 * y * frame.width;
+			const index = 4 * x + yIndex;
 			output[index] = (content.r * value + background.r * (1 - value));
 			output[index + 1] = (content.g * value + background.g * (1 - value));
 			output[index + 2] = (content.b * value + background.b * (1 - value));
@@ -39,11 +36,11 @@ export const drawSpectrogram = (
 	}
 
 	if (typeof cursor === 'number') {
-		const x = Math.round(cursor * (view.width - 1));
+		const x = Math.round(cursor * (frame.width - 1));
 		const color = active;
-		for (let y = 0; y < view.height; y++) {
-			const yIndex = 4 * (position.y + y) * frame.width;
-			const index = 4 * (position.x + x) + yIndex;
+		for (let y = 0; y < frame.height; y++) {
+			const yIndex = 4 * y * frame.width;
+			const index = 4 * x + yIndex;
 			output[index + 0] = color.r;
 			output[index + 1] = color.g;
 			output[index + 2] = color.b;
@@ -59,7 +56,7 @@ export type SpectrogramProps = {
 	isLive?: boolean;
 };
 
-export const useSpectrogram = (props: SpectrogramProps): CanvasViewProps => {
+export const useSpectrogram = (props: SpectrogramProps) => {
 	const {
 		soundBuffer, soundCircularBuffer, size, isLive,
 	} = props;
@@ -73,7 +70,7 @@ export const useSpectrogram = (props: SpectrogramProps): CanvasViewProps => {
 	}, [size]);
 
 	const draw = useMemo(() => {
-		return (output: Uint8ClampedArray, layout: Layout2D, colorTheme: ColorTheme) => {
+		return (output: Uint8ClampedArray, frame: Size2D, colorTheme: ColorTheme) => {
 			const { windowSize, fft } = info;
 
 			const buffer = isLive ? soundCircularBuffer.buffers[0] : soundBuffer.buffers[0];
@@ -92,20 +89,17 @@ export const useSpectrogram = (props: SpectrogramProps): CanvasViewProps => {
 			}
 
 			fft.frequencies(buffer, frequencies, step);
-			drawSpectrogram(frequencies, output, layout, colorTheme, cursor);
+			drawSpectrogram(frequencies, output, frame, colorTheme, cursor);
 		};
 	}, [soundBuffer, soundCircularBuffer, isLive, info, result]);
 
-	const onClick = useCallback((e: MouseEvent<HTMLCanvasElement>) => {
+	const onClick = useCallback((cursorPosition: Position2D) => {
 		if (isLive) return;
-		const pos = getCanvasCursorPosition(e.currentTarget, e.nativeEvent);
-		const value = Math.round(pos.x * (soundBuffer.memorySize - 1));
+		const value = Math.round(cursorPosition.x * (soundBuffer.memorySize - 1));
 		soundBuffer.setCursor(value);
 	}, [soundBuffer, isLive]);
 
-	const canvasViewProps: CanvasViewProps = {
-		draw, size, onClick,
+	return {
+		draw, onClick,
 	};
-
-	return canvasViewProps;
 };

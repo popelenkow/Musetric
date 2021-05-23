@@ -1,6 +1,8 @@
 import Color from 'color';
 import { ColorTheme } from '..';
 
+export type Direction = 'down' | 'up' | 'left' | 'right';
+
 export type Position2D = {
 	x: number;
 	y: number;
@@ -18,9 +20,10 @@ export type Rgb = {
 };
 
 export type Layout2D = {
-	position: Position2D;
-	view: Size2D;
 	frame: Size2D;
+	view?: Size2D;
+	position?: Position2D;
+	direction?: Direction;
 };
 
 export const parseRgbColor = (color: Color): Rgb => {
@@ -74,11 +77,52 @@ export const parseThemeHexColor = (theme: ColorTheme) => {
 	return colors;
 };
 
-export const getCanvasCursorPosition = (
-	canvas: HTMLCanvasElement, event: MouseEvent,
+export const getCanvasCursorPosition2D = (
+	canvas: HTMLCanvasElement,
+	event: MouseEvent,
 ): Position2D => {
 	const rect = canvas.getBoundingClientRect();
 	const x = (event.clientX - rect.left) / (rect.width - 1);
 	const y = (event.clientY - rect.top) / (rect.height - 1);
 	return { x, y };
+};
+
+export const rotatePosition2D = (
+	position: Position2D,
+	direction?: Direction,
+): Position2D => {
+	if (!direction || direction === 'down') return position;
+	if (direction === 'up') return { x: position.x, y: 1 - position.y };
+	if (direction === 'left') return { x: 1 - position.y, y: position.x };
+	if (direction === 'right') return { x: position.y, y: 1 - position.x };
+	return position;
+};
+
+export const rotateSize2D = (
+	size: Size2D,
+	direction?: Direction,
+): Size2D => {
+	if (!direction || direction === 'down' || direction === 'up') return size;
+	if (direction === 'left' || direction === 'right') return { width: size.height, height: size.width };
+	return size;
+};
+
+export const drawImage = (
+	context: CanvasRenderingContext2D,
+	image: HTMLCanvasElement,
+	layout: Layout2D,
+) => {
+	const { frame, direction } = layout;
+	context.save();
+	if (direction === 'up') {
+		context.transform(1, 0, 0, -1, 0, frame.height);
+	} else if (direction === 'right') {
+		context.translate(frame.width, 0);
+		context.rotate(Math.PI / 2);
+	} else if (direction === 'left') {
+		context.translate(0, frame.height);
+		context.rotate(-Math.PI / 2);
+	}
+	context.drawImage(image, 0, 0);
+	context.restore();
 };
