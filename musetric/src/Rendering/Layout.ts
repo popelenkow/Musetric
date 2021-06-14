@@ -1,7 +1,12 @@
 import Color from 'color';
 import { ColorTheme } from '..';
 
-export type Direction = 'down' | 'up' | 'left' | 'right';
+export type Rotation2D = 'none' | 'left' | 'right' | 'twice';
+
+export type Direction2D = {
+	rotation: Rotation2D;
+	reflection: boolean;
+};
 
 export type Position2D = {
 	x: number;
@@ -23,7 +28,7 @@ export type Layout2D = {
 	frame: Size2D;
 	view?: Size2D;
 	position?: Position2D;
-	direction?: Direction;
+	direction?: Direction2D;
 };
 
 export const parseRgbColor = (color: Color): Rgb => {
@@ -87,23 +92,35 @@ export const getCanvasCursorPosition2D = (
 	return { x, y };
 };
 
+const rotate = (
+	position: Position2D,
+	rotation: Rotation2D,
+) => {
+	if (rotation === 'none') return position;
+	if (rotation === 'left') return { x: 1 - position.y, y: position.x };
+	if (rotation === 'right') return { x: position.y, y: 1 - position.x };
+	if (rotation === 'twice') return { x: 1 - position.x, y: 1 - position.y };
+	return position;
+};
+
 export const rotatePosition2D = (
 	position: Position2D,
-	direction?: Direction,
+	direction?: Direction2D,
 ): Position2D => {
-	if (!direction || direction === 'down') return position;
-	if (direction === 'up') return { x: position.x, y: 1 - position.y };
-	if (direction === 'left') return { x: 1 - position.y, y: position.x };
-	if (direction === 'right') return { x: position.y, y: 1 - position.x };
-	return position;
+	if (!direction) return position;
+	const { rotation, reflection } = direction;
+	const p = rotate(position, rotation);
+	return reflection ? { x: 1 - p.x, y: p.y } : p;
 };
 
 export const rotateSize2D = (
 	size: Size2D,
-	direction?: Direction,
+	direction?: Direction2D,
 ): Size2D => {
-	if (!direction || direction === 'down' || direction === 'up') return size;
-	if (direction === 'left' || direction === 'right') return { width: size.height, height: size.width };
+	if (!direction) return size;
+	const { rotation } = direction;
+	if (rotation === 'none' || rotation === 'twice') return size;
+	if (rotation === 'left' || rotation === 'right') return { width: size.height, height: size.width };
 	return size;
 };
 
@@ -113,15 +130,43 @@ export const drawImage = (
 	layout: Layout2D,
 ) => {
 	const { frame, direction } = layout;
+	if (!direction) {
+		context.drawImage(image, 0, 0);
+		return;
+	}
 	context.save();
-	if (direction === 'up') {
-		context.transform(1, 0, 0, -1, 0, frame.height);
-	} else if (direction === 'right') {
-		context.translate(frame.width, 0);
-		context.rotate(Math.PI / 2);
-	} else if (direction === 'left') {
-		context.translate(0, frame.height);
-		context.rotate(-Math.PI / 2);
+	const { rotation, reflection } = direction;
+	if (rotation === 'twice') {
+		if (reflection) {
+			context.transform(1, 0, 0, -1, 0, frame.height);
+		} else {
+			context.transform(-1, 0, 0, -1, frame.width, frame.height);
+		}
+	}
+	if (rotation === 'right') {
+		if (reflection) {
+			context.transform(-1, 0, 0, 1, frame.width, 0);
+			context.translate(0, frame.height);
+			context.rotate(-Math.PI / 2);
+		} else {
+			context.translate(frame.width, 0);
+			context.rotate(Math.PI / 2);
+		}
+	}
+	if (rotation === 'left') {
+		if (reflection) {
+			context.transform(-1, 0, 0, 1, frame.width, 0);
+			context.translate(frame.width, 0);
+			context.rotate(Math.PI / 2);
+		} else {
+			context.translate(0, frame.height);
+			context.rotate(-Math.PI / 2);
+		}
+	}
+	if (rotation === 'none') {
+		if (reflection) {
+			context.transform(-1, 0, 0, 1, frame.width, 0);
+		}
 	}
 	context.drawImage(image, 0, 0);
 	context.restore();

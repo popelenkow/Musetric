@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import {
 	Theme, createUseClasses, useThemeContext, ColorTheme,
 	Size2D, Layout2D, Position2D, getCanvasCursorPosition2D,
-	rotatePosition2D, rotateSize2D, drawImage, Direction,
+	rotatePosition2D, rotateSize2D, drawImage, Direction2D,
 	useAnimation, PerformanceMonitorRef,
 } from '..';
 
@@ -19,7 +19,7 @@ export const useCanvasViewClasses = createUseClasses('CanvasView', getCanvasView
 
 const useInCanvas = (
 	size: Size2D,
-	direction?: Direction,
+	direction?: Direction2D,
 ) => {
 	const inCanvas = useMemo(() => document.createElement('canvas'), []);
 
@@ -47,7 +47,7 @@ type InCanvasInfo = ReturnType<typeof useInCanvas>;
 export type PixelCanvasProps = {
 	draw: (output: Uint8ClampedArray, frame: Size2D, colorTheme: ColorTheme) => void;
 	size: Size2D;
-	direction?: Direction;
+	direction?: Direction2D;
 	onClick?: (cursorPosition: Position2D) => void;
 	performanceMonitor?: PerformanceMonitorRef | null;
 };

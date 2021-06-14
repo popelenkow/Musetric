@@ -19,7 +19,7 @@ export const useSoundProgressBar = (
 	const canvasViewProps: PixelCanvasProps = {
 		...waveform,
 		size,
-		direction: 'left',
+		direction: { rotation: 'left', reflection: false },
 	};
 
 	const progressBarView = <PixelCanvas {...canvasViewProps} />;
