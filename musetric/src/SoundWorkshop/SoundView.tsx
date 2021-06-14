@@ -42,9 +42,9 @@ export const useSoundView = (props: UseSoundViewProps) => {
 	});
 
 	const getCanvasViewProps = (): PixelCanvasProps | undefined => {
-		if (soundViewId === 'Waveform') return { ...waveform, size, direction: 'left', performanceMonitor };
-		if (soundViewId === 'Frequency') return { ...frequency, size, direction: 'right', performanceMonitor };
-		if (soundViewId === 'Spectrogram') return { ...spectrogram, size, direction: 'up', performanceMonitor };
+		if (soundViewId === 'Waveform') return { ...waveform, size, direction: { rotation: 'left', reflection: false }, performanceMonitor };
+		if (soundViewId === 'Frequency') return { ...frequency, size, direction: { rotation: 'right', reflection: true }, performanceMonitor };
+		if (soundViewId === 'Spectrogram') return { ...spectrogram, size, direction: { rotation: 'twice', reflection: true }, performanceMonitor };
 		return undefined;
 	};
 
