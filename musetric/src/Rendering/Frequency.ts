@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import {
-	ColorTheme, parseThemeRgbColor,
+	ColorTheme, parseThemeUint32Color,
 	Size2D, createFft,
 	SoundBuffer, SoundCircularBuffer,
 } from '..';
@@ -11,25 +11,20 @@ export const drawFrequency = (
 	frame: Size2D,
 	colorTheme: ColorTheme,
 ): void => {
-	const { content, background } = parseThemeRgbColor(colorTheme);
+	const { content, background } = parseThemeUint32Color(colorTheme);
+	const out = new Uint32Array(output.buffer);
 
-	const step = (1.0 * input.length) / frame.width;
+	const step = (1.0 * input.length) / frame.height;
 
-	for (let x = 0; x < frame.width; x++) {
-		const offset = Math.floor(x * step);
+	for (let y = 0; y < frame.height; y++) {
+		const offset = Math.floor(y * step);
 		const value = Math.log10(input[offset]) / 5;
 		const magnitude = Math.max(0, Math.min(1, value + 1));
+		const index = y * frame.width;
+		const limit = Math.ceil(magnitude * frame.width);
 
-		for (let y = 0; y < frame.height; y++) {
-			const yIndex = 4 * y * frame.width;
-			const index = 4 * x + yIndex;
-			const isDraw = frame.height - y - 1 < magnitude * frame.height;
-			const color = isDraw ? content : background;
-			output[index + 0] = color.r;
-			output[index + 1] = color.g;
-			output[index + 2] = color.b;
-			output[index + 3] = 255;
-		}
+		out.fill(content, index, index + limit);
+		out.fill(background, index + limit, index + frame.width);
 	}
 };
 

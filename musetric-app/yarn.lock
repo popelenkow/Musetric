@@ -2756,10 +2756,10 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
-musetric@0.0.20:
-  version "0.0.20"
-  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.20.tgz#80405e5ca2b4a738946a0f3dc0fb63706c09daa6"
-  integrity sha512-Fr27mG35eC5p6TAhPIdk6G6g/4e7g/uSkzz31ZZ/oin2dRQigJKSh83CQxGsolI5IdI1fRb6pXsS/6lciBDYiQ==
+musetric@0.0.21:
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.21.tgz#4495c50fd537b21e1e6b547677311b0fff55f485"
+  integrity sha512-NfYQQ8MpG06M6Ckz0xszIWpOj0Qx//Ax+fGNpeFTIkcHvo4fsoyieqbxr9Bk5VcxMPtwWGdTsX8UjOhA/YALTg==
   dependencies:
     "@types/color" "^3.0.1"
     "@types/file-saver" "^2.0.2"
