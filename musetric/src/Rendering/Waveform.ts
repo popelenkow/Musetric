@@ -16,12 +16,13 @@ export const analyzeWaveform = (
 	frame: Size2D,
 ) => {
 	const { minArray, maxArray } = output;
-	const step = input.length / frame.height;
+	const window = input.length / frame.height;
+	const step = Math.max(1, Math.round(window / 20));
 	for (let y = 0; y < frame.height; y++) {
 		let min = 1.0;
 		let max = -1.0;
-		const offset = Math.floor(y * step);
-		for (let i = 0; i < step; i++) {
+		const offset = Math.floor(y * window);
+		for (let i = 0; i < window; i += step) {
 			const value = input[offset + i];
 			if (value < min) min = value;
 			if (value > max) max = value;

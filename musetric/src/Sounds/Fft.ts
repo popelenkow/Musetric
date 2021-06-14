@@ -66,6 +66,16 @@ const evalFft = (
 	}
 };
 
+export type FftFrequencyOptions = {
+	offset: number;
+};
+
+export type FftFrequenciesOptions = {
+	offset: number;
+	step: number;
+	count: number;
+};
+
 export const createFft = (windowSize: number) => {
 	const window = createComplexArray(windowSize);
 	const frequency = createComplexArray(windowSize);
@@ -97,21 +107,35 @@ export const createFft = (windowSize: number) => {
 				output.imag[i] = arr.imag[i] / windowSize;
 			}
 		},
-		frequency: (input: Float32Array, output: Float32Array, inputOffset: number) => {
+		frequency: (input: Float32Array, output: Float32Array, options: FftFrequencyOptions) => {
+			const { offset } = options;
 			for (let i = 0; i < windowSize; i++) {
-				window.real[i] = input[i + inputOffset] * filter[i];
+				window.real[i] = input[i + offset] * filter[i];
 				window.imag[i] = 0;
 			}
 			result.forward(window, frequency);
 			normComplexArray(frequency, output, windowSize / 2, 1 / windowSize);
 		},
-		frequencies: (input: Float32Array, output: Float32Array[], step: number) => {
-			const count = 1 + Math.floor((input.length - windowSize) / step);
+		frequencies: (input: Float32Array, output: Float32Array[], options: FftFrequenciesOptions) => {
+			const { offset, step, count } = options;
 			for (let i = 0; i < count; i++) {
-				const offset = i * step;
-				result.frequency(input, output[i], offset);
+				result.frequency(input, output[i], {
+					offset: offset + i * step,
+				});
 			}
 		},
 	};
 	return result;
+};
+
+/** Pseudo conversion. Rendering only */
+export const mapAmplitudeToBel = (spectrum: Float32Array[]) => {
+	for (let i = 0; i < spectrum.length; i++) {
+		for (let j = 0; j < spectrum[i].length; j++) {
+			const amplitude = spectrum[i][j];
+			const value = Math.log10(amplitude) / 5;
+			const bel = Math.max(0, Math.min(1, value + 1));
+			spectrum[i][j] = bel;
+		}
+	}
 };

@@ -3,6 +3,7 @@ import {
 	ColorTheme, parseThemeUint32Color,
 	Size2D, createFft,
 	SoundBuffer, SoundCircularBuffer,
+	mapAmplitudeToBel,
 } from '..';
 
 export const drawFrequency = (
@@ -18,8 +19,7 @@ export const drawFrequency = (
 
 	for (let y = 0; y < frame.height; y++) {
 		const offset = Math.floor(y * step);
-		const value = Math.log10(input[offset]) / 5;
-		const magnitude = Math.max(0, Math.min(1, value + 1));
+		const magnitude = input[offset];
 		const index = y * frame.width;
 		const limit = Math.ceil(magnitude * frame.width);
 
@@ -58,7 +58,8 @@ export const useFrequency = (props: FrequencyProps) => {
 			const { cursor, memorySize, buffers } = getBuffer();
 			let offset = cursor < memorySize ? cursor - windowSize : memorySize - windowSize;
 			offset = offset < 0 ? 0 : offset;
-			fft.frequency(buffers[0], result, offset);
+			fft.frequency(buffers[0], result, { offset });
+			mapAmplitudeToBel([result]);
 			drawFrequency(result, output, frame, colorTheme);
 		};
 	}, [soundBuffer, soundCircularBuffer, isLive, info]);
