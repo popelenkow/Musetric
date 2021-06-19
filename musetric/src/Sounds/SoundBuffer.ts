@@ -1,7 +1,7 @@
 export const createSoundBuffer = (
 	sampleRate: number,
 	channelCount: number,
-	initMemorySize = 32768,
+	initMemorySize = sampleRate * 2,
 ) => {
 	const buffers: Float32Array[] = [];
 	for (let i = 0; i < channelCount; i++) {

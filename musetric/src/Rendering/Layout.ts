@@ -25,8 +25,7 @@ export type Rgb = {
 };
 
 export type Layout2D = {
-	frame: Size2D;
-	view?: Size2D;
+	size: Size2D;
 	position?: Position2D;
 	direction?: Direction2D;
 };
@@ -126,46 +125,42 @@ export const rotateSize2D = (
 
 export const drawImage = (
 	context: CanvasRenderingContext2D,
-	image: HTMLCanvasElement,
+	image: CanvasImageSource,
 	layout: Layout2D,
 ) => {
-	const { frame, direction } = layout;
-	if (!direction) {
-		context.drawImage(image, 0, 0);
-		return;
-	}
+	const { size, direction } = layout;
+	const { rotation = 'none', reflection = false } = direction || {};
 	context.save();
-	const { rotation, reflection } = direction;
 	if (rotation === 'twice') {
 		if (reflection) {
-			context.transform(1, 0, 0, -1, 0, frame.height);
+			context.transform(1, 0, 0, -1, 0, size.height);
 		} else {
-			context.transform(-1, 0, 0, -1, frame.width, frame.height);
+			context.transform(-1, 0, 0, -1, size.width, size.height);
 		}
 	}
 	if (rotation === 'right') {
 		if (reflection) {
-			context.transform(-1, 0, 0, 1, frame.width, 0);
-			context.translate(0, frame.height);
+			context.transform(-1, 0, 0, 1, size.width, 0);
+			context.translate(0, size.height);
 			context.rotate(-Math.PI / 2);
 		} else {
-			context.translate(frame.width, 0);
+			context.translate(size.width, 0);
 			context.rotate(Math.PI / 2);
 		}
 	}
 	if (rotation === 'left') {
 		if (reflection) {
-			context.transform(-1, 0, 0, 1, frame.width, 0);
-			context.translate(frame.width, 0);
+			context.transform(-1, 0, 0, 1, size.width, 0);
+			context.translate(size.width, 0);
 			context.rotate(Math.PI / 2);
 		} else {
-			context.translate(0, frame.height);
+			context.translate(0, size.height);
 			context.rotate(-Math.PI / 2);
 		}
 	}
 	if (rotation === 'none') {
 		if (reflection) {
-			context.transform(-1, 0, 0, 1, frame.width, 0);
+			context.transform(-1, 0, 0, 1, size.width, 0);
 		}
 	}
 	context.drawImage(image, 0, 0);

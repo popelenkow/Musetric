@@ -3,6 +3,7 @@ import {
 	ColorTheme, parseThemeRgbColor,
 	Size2D, Position2D, createFft,
 	SoundBuffer, SoundCircularBuffer,
+	mapAmplitudeToBel,
 } from '..';
 
 export const drawSpectrogram = (
@@ -14,18 +15,13 @@ export const drawSpectrogram = (
 ): void => {
 	const { content, background, active } = parseThemeRgbColor(colorTheme);
 
-	const column = new Float32Array(frame.height);
 	const step = (input.length - 1) / (frame.width - 1);
 	for (let x = 0; x < frame.width; x++) {
 		const offset = Math.round(x * step);
 		const spectrum = input[offset];
-		for (let y = 0; y < frame.height; y++) {
-			const value = Math.log10(spectrum[y]) / 5;
-			column[y] = Math.max(0, Math.min(1, value + 1));
-		}
 
 		for (let y = 0; y < frame.height; y++) {
-			const value = column[y];
+			const value = spectrum[y];
 			const yIndex = 4 * y * frame.width;
 			const index = 4 * x + yIndex;
 			output[index] = (content.r * value + background.r * (1 - value));
@@ -87,8 +83,8 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 				}
 				result.current = frequencies;
 			}
-
-			fft.frequencies(buffer, frequencies, step);
+			fft.frequencies(buffer, frequencies, { offset: 0, step, count });
+			mapAmplitudeToBel(frequencies);
 			drawSpectrogram(frequencies, output, frame, colorTheme, cursor);
 		};
 	}, [soundBuffer, soundCircularBuffer, isLive, info, result]);

@@ -30,6 +30,16 @@ const evalDft = (
 	}
 };
 
+export type DftFrequencyOptions = {
+	offset: number;
+};
+
+export type DftFrequenciesOptions = {
+	offset: number;
+	step: number;
+	count: number;
+};
+
 export const createDft = (windowSize: number) => {
 	const window = createComplexArray(windowSize);
 	const frequency = createComplexArray(windowSize);
@@ -42,19 +52,21 @@ export const createDft = (windowSize: number) => {
 		inverse: (input: ComplexArray, output: ComplexArray) => {
 			evalDft(input, output, windowSize, true);
 		},
-		frequency: (input: Float32Array, output: Float32Array, inputOffset: number) => {
+		frequency: (input: Float32Array, output: Float32Array, options: DftFrequencyOptions) => {
+			const { offset } = options;
 			for (let i = 0; i < windowSize; i++) {
-				window.real[i] = input[i + inputOffset] * filter[i];
+				window.real[i] = input[i + offset] * filter[i];
 				window.imag[i] = 0;
 			}
 			result.forward(window, frequency);
 			normComplexArray(frequency, output, windowSize / 2, 1 / windowSize);
 		},
-		frequencies: (input: Float32Array, output: Float32Array[]) => {
-			const count = Math.floor(input.length / windowSize);
+		frequencies: (input: Float32Array, output: Float32Array[], options: DftFrequenciesOptions) => {
+			const { offset, step, count } = options;
 			for (let i = 0; i < count; i++) {
-				const offset = i * windowSize;
-				result.frequency(input, output[i], offset);
+				result.frequency(input, output[i], {
+					offset: offset + i * step,
+				});
 			}
 		},
 	};
