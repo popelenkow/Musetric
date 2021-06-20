@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-
+import React, { useState, useMemo } from 'react';
 import {
 	SoundBuffer, SoundCircularBuffer,
 	useWaveform, useFrequency, useSpectrogram,
 	WaveformIcon, FrequencyIcon, SpectrogramIcon,
 	Radio, PixelCanvas, PixelCanvasProps,
-	PerformanceMonitorRef, Size2D,
+	PerformanceMonitorRef, Size2D, Direction2D,
 } from '..';
 
 export type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
@@ -18,33 +17,47 @@ export type UseSoundViewProps = {
 };
 
 export const useSoundView = (props: UseSoundViewProps) => {
-	const { soundBuffer, soundCircularBuffer, isLive, performanceMonitor } = props;
+	const { performanceMonitor } = props;
 	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
 
-	const size: Size2D = { width: 512, height: 1024 };
+	const waveformLayout = useMemo(() => {
+		const size: Size2D = { width: 512, height: 1024 };
+		const direction: Direction2D = { rotation: 'left', reflection: false };
+		return { size, direction };
+	}, []);
+	const waveform = useWaveform({ ...props });
+	const waveformProps: PixelCanvasProps = {
+		...waveform, ...waveformLayout, performanceMonitor,
+	};
 
-	const waveform = useWaveform({
-		soundBuffer,
-		soundCircularBuffer,
-		isLive,
-	});
+	const frequencyLayout = useMemo(() => {
+		const size: Size2D = { width: 512, height: 1024 };
+		const direction: Direction2D = { rotation: 'twice', reflection: true };
+		return { size, direction };
+	}, []);
 	const frequency = useFrequency({
-		soundBuffer,
-		soundCircularBuffer,
-		size,
-		isLive,
+		...props, ...frequencyLayout,
 	});
+	const frequencyProps: PixelCanvasProps = {
+		...frequency, ...frequencyLayout, performanceMonitor,
+	};
+
+	const spectrogramLayout = useMemo(() => {
+		const size: Size2D = { width: 512, height: 1024 };
+		const direction: Direction2D = { rotation: 'twice', reflection: true };
+		return { size, direction };
+	}, []);
 	const spectrogram = useSpectrogram({
-		soundBuffer,
-		soundCircularBuffer,
-		size,
-		isLive,
+		...props, ...spectrogramLayout,
 	});
+	const spectrogramProps: PixelCanvasProps = {
+		...spectrogram, ...spectrogramLayout, performanceMonitor,
+	};
 
 	const getCanvasViewProps = (): PixelCanvasProps | undefined => {
-		if (soundViewId === 'Waveform') return { ...waveform, size, direction: { rotation: 'left', reflection: false }, performanceMonitor };
-		if (soundViewId === 'Frequency') return { ...frequency, size, direction: { rotation: 'twice', reflection: true }, performanceMonitor };
-		if (soundViewId === 'Spectrogram') return { ...spectrogram, size, direction: { rotation: 'twice', reflection: true }, performanceMonitor };
+		if (soundViewId === 'Waveform') return waveformProps;
+		if (soundViewId === 'Frequency') return frequencyProps;
+		if (soundViewId === 'Spectrogram') return spectrogramProps;
 		return undefined;
 	};
 
