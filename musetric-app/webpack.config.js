@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const { spawn } = require('child_process');
 const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -8,7 +7,11 @@ const musetricAppPkg = require('./package.json');
 const musetricPkg = require('./node_modules/musetric/package.json');
 
 const common = {
-	entry: './src/index.tsx',
+	entry: {
+		start: './src/start.js',
+		musetricApp: './src/musetricApp.tsx',
+		index: './src/index.js',
+	},
 	resolve: {
 		extensions: ['.js', '.ts', '.tsx'],
 	},
@@ -19,7 +22,14 @@ const common = {
 	},
 	output: {
 		path: path.join(__dirname, 'dist'),
-		filename: 'index.js',
+		filename: '[name].js',
+		library: {
+			type: 'umd',
+		},
+	},
+	performance: {
+		maxEntrypointSize: 2000000,
+		maxAssetSize: 2000000,
 	},
 	stats: { modules: false, children: false, entrypoints: false, assets: false },
 	plugins: [
@@ -32,6 +42,10 @@ const common = {
 		new HtmlWebpackPlugin({
 			template: './src/index.html',
 			filename: 'index.html',
+			inject: false,
+			minify: {
+				collapseWhitespace: false,
+			},
 		}),
 	],
 };
@@ -52,10 +66,6 @@ const specific = process.env.DEV ? {
 	},
 } : {
 	mode: 'production',
-	performance: {
-		maxEntrypointSize: 2000000,
-		maxAssetSize: 2000000,
-	},
 	plugins: process.env.SIZE ? [new BundleAnalyzerPlugin()] : [],
 };
 

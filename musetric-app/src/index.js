@@ -1,0 +1,1 @@
+createMusetricApp('root');
