@@ -87,8 +87,15 @@ export const SoundWorkshop: React.FC<SoundWorkshopProps> = () => {
 	const { isLive, liveCheckbox } = useSoundLive();
 	const performanceMonitor = useRef<PerformanceMonitorRef>(null);
 
-	const soundBuffer = useMemo(() => createSoundBuffer(48000, 2), []);
-	const soundCircularBuffer = useMemo(() => createSoundCircularBuffer(48000, 2), []);
+	const [sampleRate, channelCount] = useMemo(() => [48000, 2], []);
+	const soundBuffer = useMemo(
+		() => createSoundBuffer(sampleRate, channelCount),
+		[sampleRate, channelCount],
+	);
+	const soundCircularBuffer = useMemo(
+		() => createSoundCircularBuffer(sampleRate, channelCount),
+		[sampleRate, channelCount],
+	);
 	const { soundBlob, refreshSound, openFileButton, saveFileButton } = useSoundFile(soundBuffer);
 
 	const { isPlaying, getPlayerButton } = useSoundPlayer(soundBuffer, soundBlob);

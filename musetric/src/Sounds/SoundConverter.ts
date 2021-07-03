@@ -18,7 +18,7 @@ export const useSoundConverter = (soundBuffer: SoundBuffer) => {
 	const wavConverter = useMemo(() => createWavConverter(), []);
 	const getBlob = useCallback(async (): Promise<Blob> => {
 		const { buffers, sampleRate } = soundBuffer;
-		const blob = await wavConverter.encode({ buffers, sampleRate });
+		const blob = await wavConverter.encode(buffers, sampleRate);
 		return blob;
 	}, [wavConverter, soundBuffer]);
 

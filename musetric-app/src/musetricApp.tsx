@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { App, AppProps, SoundWorkshop, allColorThemes, allColorThemeIds, localeIdList, createI18n } from 'musetric';
+import { CreateMusetricApp } from './types';
 
-const init = async () => {
+export const createMusetricApp: CreateMusetricApp = async (elementId: string) => {
 	const params = new URLSearchParams(window.location.search);
 
 	const initColorThemeId = params.get('theme') || 'dark';
@@ -25,10 +28,6 @@ const init = async () => {
 			</App>
 		</Suspense>
 	);
-	const root = document.createElement('div');
-	document.body.appendChild(root);
+	const root = document.getElementById(elementId);
 	ReactDOM.render(app, root);
 };
-
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-init();

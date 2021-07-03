@@ -1,22 +1,17 @@
-import { v4 as uuid } from 'uuid';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { createPromiseWorkerApi } from '..';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type MessageHandler<T = any> = (id: string, options: T) => void;
-export type MessageId = { id: string };
-export type EncodeOptions = {
-	sampleRate: number;
-	buffers: Float32Array[]
+export type WavConverter = {
+	encode: (buffers: Float32Array[], sampleRate: number) => Promise<Blob>;
 };
-export type WorkerMessage = MessageId & (
-	| { type: 'encode', options: EncodeOptions }
-);
-export type WavConverterMessage = MessageId & (
-	| { type: 'encode', result: Blob }
-);
+export type WavConverterHandlers = {
+	encode: (buffers: Float32Array[], sampleRate: number) => Blob;
+};
+export type WavConverterType = keyof WavConverterHandlers;
+const allWavConverterTypes: WavConverterType[] = ['encode'];
 
-export function workerFunction(self: Worker): void {
-	const postMessage = (message: WavConverterMessage): void => self.postMessage(message);
-
+export function createWavConverterHandlers(): WavConverterHandlers {
 	const floatTo16BitPCM = (view: DataView, offset: number, buffer: Float32Array) => {
 		let arrayOffset = 0;
 		for (let i = 0; i < buffer.length; i++) {
@@ -85,8 +80,7 @@ export function workerFunction(self: Worker): void {
 		return result;
 	};
 
-	const encode: MessageHandler<EncodeOptions> = (id, options) => {
-		const { sampleRate, buffers } = options;
+	const encode: WavConverterHandlers['encode'] = (buffers, sampleRate) => {
 		const channelCount = buffers.length;
 		const interleaved = channelCount === 2
 			? interleave(buffers[0], buffers[1])
@@ -94,69 +88,16 @@ export function workerFunction(self: Worker): void {
 		const dataView = createDataView(sampleRate, channelCount, interleaved);
 		const audioBlob = new Blob([dataView], { type: 'audio/wav' });
 
-		postMessage({ id, type: 'encode', result: audioBlob });
+		return audioBlob;
 	};
 
-	const api: Record<WorkerMessage['type'], MessageHandler> = {
+	return {
 		encode,
-	};
-
-	self.onmessage = (e: MessageEvent<WorkerMessage>) => {
-		api[e.data.type](e.data.id, e.data.options);
 	};
 }
 
-/*
-https://stackoverflow.com/questions/5408406/web-workers-without-a-separate-javascript-file
-https://developer.mozilla.org/ru/docs/Web/API/Service_Worker_API/Using_Service_Workers
-*/
-export const createWorker = (): Worker => {
-	const workerUrl = URL.createObjectURL(new Blob(['(', workerFunction.toString(), ')(this)'], { type: 'application/javascript' }));
-	const worker = new Worker(workerUrl);
-	return worker;
-};
-
-type ResultCallback<T> = (result: T) => void;
-
-export type WavConverter = {
-	encode: (options: EncodeOptions) => Promise<Blob>;
-};
-
 export const createWavConverter = (): WavConverter => {
-	const worker = createWorker();
-
-	const postMessage: (message: WorkerMessage) => void = (message) => {
-		worker.postMessage(message);
-	};
-
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const callbacks: Record<string, ResultCallback<any>> = {};
-
-	worker.onmessage = (e: MessageEvent<WavConverterMessage>) => {
-		const cb = callbacks[e.data.id];
-		delete callbacks[e.data.id];
-		cb(e.data.result);
-	};
-
-	const encode: WavConverter['encode'] = (options) => {
-		return new Promise((resolve) => {
-			const id = uuid();
-
-			const cb: ResultCallback<Blob> = (result) => {
-				resolve(result);
-			};
-			callbacks[id] = cb;
-
-			postMessage({
-				id,
-				type: 'encode',
-				options,
-			});
-		});
-	};
-
-	const result: WavConverter = {
-		encode,
-	};
-	return result;
+	const api = createPromiseWorkerApi(allWavConverterTypes, createWavConverterHandlers);
+	const { encode } = api;
+	return { encode };
 };
