@@ -1,15 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import {
-	Theme, createUseClasses, useThemeContext, ColorTheme,
+	AppCss, createUseClasses, useAppCssContext, Theme,
 	Size2D, Layout2D, Position2D, getCanvasCursorPosition2D,
 	rotatePosition2D, rotateSize2D, Direction2D,
 	drawImage, useAnimation, PerformanceMonitorRef,
 } from '..';
 
-export const getCanvasViewClasses = (theme: Theme) => ({
+export const getCanvasViewClasses = (css: AppCss) => ({
 	root: {
 		display: 'block',
-		background: theme.color.app,
+		background: css.theme.app,
 		width: '100%',
 		height: '100%',
 	},
@@ -63,7 +63,7 @@ const useScreen = (
 };
 
 export type PixelCanvasProps = {
-	draw: (output: Uint8ClampedArray, frame: Size2D, colorTheme: ColorTheme) => void;
+	draw: (output: Uint8ClampedArray, frame: Size2D, theme: Theme) => void;
 	size: Size2D;
 	direction?: Direction2D;
 	onClick?: (cursorPosition: Position2D) => void;
@@ -72,7 +72,7 @@ export type PixelCanvasProps = {
 
 export const PixelCanvas: React.FC<PixelCanvasProps> = (props) => {
 	const { draw, size, direction, onClick, performanceMonitor } = props;
-	const { theme } = useThemeContext();
+	const { css } = useAppCssContext();
 
 	const click = useMemo(() => {
 		if (!onClick) return undefined;
@@ -93,12 +93,12 @@ export const PixelCanvas: React.FC<PixelCanvasProps> = (props) => {
 		if (!screen.context) return;
 		performanceMonitor?.begin();
 
-		draw(offscreen.image.data, offscreen.size, theme.color);
+		draw(offscreen.image.data, offscreen.size, css.theme);
 		offscreen.context.putImageData(offscreen.image, 0, 0);
 		drawImage(screen.context, offscreen.canvas, layout);
 
 		performanceMonitor?.end();
-	}, [draw, performanceMonitor, theme, offscreen, screen, layout]);
+	}, [draw, performanceMonitor, css, offscreen, screen, layout]);
 
 	return screen.element;
 };

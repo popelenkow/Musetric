@@ -1,10 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Theme, createUseClasses, getFieldClasses } from '..';
+import { AppCss, createUseClasses, getFieldClasses } from '..';
 
-export const getButtonClasses = (theme: Theme) => ({
+export const getButtonClasses = (css: AppCss) => ({
 	root: {
-		...getFieldClasses(theme).root,
+		...getFieldClasses(css).root,
 		margin: '0',
 		padding: '0',
 		border: '0',
@@ -15,17 +15,17 @@ export const getButtonClasses = (theme: Theme) => ({
 		position: 'relative',
 		'border-radius': '10px',
 		background: 'transparent',
-		[theme.platform.id === 'mobile' ? '&:active' : '&:hover']: {
-			background: theme.color.hover,
+		[css.platform.id === 'mobile' ? '&:active' : '&:hover']: {
+			background: css.theme.hover,
 		},
 	},
 	disabled: {
-		[theme.platform.id === 'mobile' ? '&:active' : '&:hover']: {
+		[css.platform.id === 'mobile' ? '&:active' : '&:hover']: {
 			background: 'transparent',
 		},
-		color: theme.color.disabled,
+		color: css.theme.disabled,
 		'& path, rect, polygon': {
-			fill: theme.color.disabled,
+			fill: css.theme.disabled,
 		},
 	},
 });

@@ -1,1 +1,0 @@
-createMusetricApp('root');

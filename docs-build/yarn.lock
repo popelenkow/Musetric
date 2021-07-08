@@ -103,6 +103,18 @@ glob@^7.0.5:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
+glob@^7.1.3:
+  version "7.1.7"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.7.tgz#3b193e9233f01d42d0b3f78294bbeeb418f94a90"
+  integrity sha512-OvD9ENzPLbegENnYP5UUfJIirTg4+XwMWGaQfQTY0JenxNvvIKP3U3/tAQSPIu/lHxXYSZmpXlUHeqAIdKzBLQ==
+  dependencies:
+    fs.realpath "^1.0.0"
+    inflight "^1.0.4"
+    inherits "2"
+    minimatch "^3.0.4"
+    once "^1.3.0"
+    path-is-absolute "^1.0.0"
+
 inflight@^1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"
@@ -143,10 +155,10 @@ mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-musetric-app@0.0.13:
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/musetric-app/-/musetric-app-0.0.13.tgz#aee9567450e430cab7408baccd46502b4da8f19a"
-  integrity sha512-NmHH52TLT3v9/BRqyKB8P8NbeI1iSoEWIKtoMDd6psfgViEv+KXsaLXyY27BL9A8P2opw07q6ZEh9J2eL2Iy0g==
+musetric-app@0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/musetric-app/-/musetric-app-0.0.14.tgz#61b612811b07e6f8314d213f3a0b63aac8b88892"
+  integrity sha512-gj9ekWOwjXBhLd8XnZ5YzCVJZ+RJXX7Spx2vXlo4x3hJZONmvNKMUHRZrxxuLOy4hZIS6DRvu03iHTx85jqy+w==
 
 noms@0.0.0:
   version "0.0.0"
@@ -200,6 +212,13 @@ require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
   integrity sha1-jGStX9MNqxyXbiNE/+f3kqam30I=
+
+rimraf@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-3.0.2.tgz#f1a5402ba6220ad52cc1282bac1ae3aa49fd061a"
+  integrity sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==
+  dependencies:
+    glob "^7.1.3"
 
 safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"

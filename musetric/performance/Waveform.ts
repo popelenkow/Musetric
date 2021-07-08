@@ -4,7 +4,7 @@
 import benchmark from 'benchmark';
 import {
 	drawWaveform, analyzeWaveform, AnalyzeWaveformResult,
-	Size2D, allColorThemes,
+	Size2D, allThemes,
 } from '../src';
 
 export const performanceWaveform = () => {
@@ -22,7 +22,7 @@ export const performanceWaveform = () => {
 		};
 		suite.add(`drawWaveform [${frame.width}x${frame.height}] sec ${sec}`, () => {
 			analyzeWaveform(input, analysis, frame);
-			drawWaveform(analysis, output, frame, allColorThemes.white);
+			drawWaveform(analysis, output, frame, allThemes.white);
 		});
 	};
 	const runSec = () => {

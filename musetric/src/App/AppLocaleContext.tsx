@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { i18n as I18n, TFunction } from 'i18next';
 
-export type LocaleStore = {
+export type AppLocaleStore = {
 	t: TFunction;
 	localeId: string;
 	setLocaleId: (id: string) => Promise<void>;
@@ -9,35 +9,36 @@ export type LocaleStore = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const LocaleContext = React.createContext<LocaleStore>({} as any);
+export const AppLocaleContext = React.createContext<AppLocaleStore>({} as any);
+export const AppLocaleConsumer = AppLocaleContext.Consumer;
 
-export const LocaleConsumer = LocaleContext.Consumer;
-
-export type LocaleProviderProps = {
+export type AppLocaleProviderProps = {
 	i18n: I18n;
 	localeIdList: string[];
+	onSetLocaleId: (localeId: string) => void;
 };
 
-export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
-	const { children, i18n, localeIdList } = props;
+export const AppLocaleProvider: React.FC<AppLocaleProviderProps> = (props) => {
+	const { children, i18n, localeIdList, onSetLocaleId } = props;
 
 	const [localeId, setLocaleId] = useState<string>(i18n.language);
 
-	const store: LocaleStore = {
+	const store: AppLocaleStore = {
 		t: (...args: Parameters<TFunction>) => i18n.t(...args),
 		localeId,
 		setLocaleId: async (id: string) => {
 			await i18n.changeLanguage(id);
 			setLocaleId(id);
+			onSetLocaleId(id);
 		},
 		localeIdList,
 	};
 
 	return (
-		<LocaleContext.Provider value={store}>
+		<AppLocaleContext.Provider value={store}>
 			{children}
-		</LocaleContext.Provider>
+		</AppLocaleContext.Provider>
 	);
 };
 
-export const useLocaleContext = () => useContext(LocaleContext);
+export const useAppLocaleContext = () => useContext(AppLocaleContext);

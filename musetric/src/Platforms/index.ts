@@ -1,12 +1,12 @@
-export type PlatformThemeId = 'desktop' | 'mobile';
+export type PlatformId = 'desktop' | 'mobile';
 
-export type PlatformTheme = {
-	id: PlatformThemeId,
+export type Platform = {
+	id: PlatformId,
 	height: string;
 	width: string;
 };
 
-export const getPlatformId = (): PlatformThemeId => {
+export const getPlatformId = (): PlatformId => {
 	const detectMobile = (): boolean => {
 		const toMatch = [
 			/Android/i,

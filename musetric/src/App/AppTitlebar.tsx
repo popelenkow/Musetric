@@ -1,28 +1,28 @@
 import React from 'react';
-import { Theme, AppIcon, getFieldClasses } from '..';
-import { createUseClasses } from './Theme';
+import { AppCss, AppIcon, getFieldClasses } from '..';
+import { createUseClasses } from './AppCssContext';
 
-export const getAppTitlebarClasses = (theme: Theme) => ({
+export const getAppTitlebarClasses = (css: AppCss) => ({
 	root: {
 		display: 'flex',
 		'box-sizing': 'border-box',
 		width: '100%',
 		height: '100%',
 		'column-gap': '4px',
-		background: theme.color.sidebar,
+		background: css.theme.sidebar,
 		padding: '3px',
 		cursor: 'default',
 		'align-items': 'center',
-		'border-bottom': `1px solid ${theme.color.splitter}`,
+		'border-bottom': `1px solid ${css.theme.splitter}`,
 	},
 	icon: {
-		...getFieldClasses(theme).root,
+		...getFieldClasses(css).root,
 		'flex-grow': '1',
 		'max-width': '42px',
 		'max-height': '42px',
 	},
 	text: {
-		...getFieldClasses(theme).root,
+		...getFieldClasses(css).root,
 		'justify-content': 'left',
 		'flex-grow': '2',
 		'user-select': 'none',

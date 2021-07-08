@@ -1,15 +1,15 @@
 import React from 'react';
-import { Theme, createUseClasses } from '..';
+import { AppCss, createUseClasses } from '..';
 
-export const getFieldClasses = (theme: Theme) => ({
+export const getFieldClasses = (css: AppCss) => ({
 	root: {
 		font: '18px/24px "Segoe UI", Arial, sans-serif',
 		display: 'flex',
 		'justify-content': 'center',
 		'align-items': 'center',
-		color: theme.color.content,
+		color: css.theme.content,
 		'& path, rect, polygon': {
-			fill: theme.color.content,
+			fill: css.theme.content,
 		},
 	},
 });

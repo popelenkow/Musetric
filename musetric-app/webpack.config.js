@@ -1,16 +1,17 @@
 const path = require('path');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const musetricAppPkg = require('./package.json');
 const musetricPkg = require('./node_modules/musetric/package.json');
 
 const common = {
 	entry: {
-		start: './src/start.js',
+		splashScreen: './src/splashScreen.ts',
 		musetricApp: './src/musetricApp.tsx',
-		index: './src/index.js',
+		index: './src/index.ts',
 	},
 	resolve: {
 		extensions: ['.js', '.ts', '.tsx'],
@@ -39,13 +40,18 @@ const common = {
 				MUSETRIC_VERSION: JSON.stringify(musetricPkg.version),
 			},
 		}),
-		new HtmlWebpackPlugin({
+		new HtmlPlugin({
 			template: './src/index.html',
 			filename: 'index.html',
 			inject: false,
 			minify: {
 				collapseWhitespace: false,
 			},
+		}),
+		new CopyPlugin({
+			patterns: [
+				{ from: './src/favicon.ico', to: './favicon.ico' },
+			],
 		}),
 	],
 };

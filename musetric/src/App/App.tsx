@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
 import {
-	Theme, ThemeProvider, ThemeProviderProps,
-	AppElementProvider, useAppElementContext, LocaleProvider, LocaleProviderProps,
-	AppTitlebar, Switch, SwitchProps, Button, InfoIcon, useLocaleContext, useThemeContext,
-	localizeColorThemeId, localizeLocaleId, getButtonClasses, AboutInfo, ModalDialog,
+	AppCss, AppCssProvider, AppCssProviderProps,
+	AppElementProvider, useAppElementContext, AppLocaleProvider, AppLocaleProviderProps,
+	AppTitlebar, Switch, SwitchProps, Button, InfoIcon, useAppLocaleContext, useAppCssContext,
+	localizeThemeId, localizeLocaleId, getButtonClasses, AboutInfo, ModalDialog,
 } from '..';
-import { createUseClasses } from './Theme';
+import { createUseClasses } from './AppCssContext';
 
-export const getAppClasses = (theme: Theme) => ({
+export const getAppClasses = (css: AppCss) => ({
 	root: {
 		'box-sizing': 'border-box',
-		width: theme.platform.width,
-		height: theme.platform.height,
-		border: `1px solid ${theme.color.splitter}`,
+		width: css.platform.width,
+		height: css.platform.height,
+		border: `1px solid ${css.theme.splitter}`,
 		display: 'grid',
-		gridTemplateRows: '48px 1fr',
-		gridTemplateColumns: '1fr',
+		'grid-template-rows': '48px 1fr',
+		'grid-template-columns': '1fr',
 	},
 	textButton: {
-		...getButtonClasses(theme).root,
+		...getButtonClasses(css).root,
 		width: 'auto',
 		padding: '0 6px',
 	},
@@ -34,16 +34,16 @@ const Root: React.FC<RootProps> = (props) => {
 	const classes = useAppClasses();
 
 	const { setModalDialog } = useAppElementContext();
-	const { localeId, setLocaleId, localeIdList } = useLocaleContext();
-	const { colorThemeId, setColorThemeId, allColorThemeIds } = useThemeContext();
+	const { localeId, setLocaleId, localeIdList } = useAppLocaleContext();
+	const { themeId, setThemeId, allThemeIds } = useAppCssContext();
 
 	const themeSwitchProps: SwitchProps<string> = {
-		currentId: colorThemeId,
-		ids: allColorThemeIds,
+		currentId: themeId,
+		ids: allThemeIds,
 		set: (id) => {
-			setColorThemeId(id);
+			setThemeId(id);
 		},
-		view: (id, t) => localizeColorThemeId(id, t) || id,
+		view: (id, t) => localizeThemeId(id, t) || id,
 		className: classes.textButton,
 	};
 
@@ -78,24 +78,24 @@ const Root: React.FC<RootProps> = (props) => {
 };
 
 export type AppProps =
-	& LocaleProviderProps
-	& ThemeProviderProps;
+	& AppLocaleProviderProps
+	& AppCssProviderProps;
 
 export const App: React.FC<AppProps> = (props) => {
 	const { children } = props;
 
-	const [modal, setModal] = useState<React.ReactNode>();
+	const [modalDialog, setModalDialog] = useState<React.ReactNode>();
 
 	return (
-		<LocaleProvider {...props}>
-			<ThemeProvider {...props}>
-				<AppElementProvider initAppElement={document.body} setModalDialog={setModal}>
+		<AppLocaleProvider {...props}>
+			<AppCssProvider {...props}>
+				<AppElementProvider initAppElement={document.body} setModalDialog={setModalDialog}>
 					<Root>
 						{children}
-						{modal}
+						{modalDialog}
 					</Root>
 				</AppElementProvider>
-			</ThemeProvider>
-		</LocaleProvider>
+			</AppCssProvider>
+		</AppLocaleProvider>
 	);
 };

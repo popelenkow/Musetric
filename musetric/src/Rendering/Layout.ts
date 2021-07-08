@@ -1,5 +1,5 @@
 import Color from 'color';
-import { ColorTheme } from '..';
+import { Theme } from '..';
 
 export type Rotation2D = 'none' | 'left' | 'right' | 'twice';
 
@@ -34,7 +34,7 @@ export const parseRgbColor = (color: Color): Rgb => {
 	return { r: color.red(), g: color.green(), b: color.blue() };
 };
 
-export const parseThemeRgbColor = (theme: ColorTheme) => {
+export const parseThemeRgbColor = (theme: Theme) => {
 	const background = parseRgbColor(new Color(theme.app));
 	const content = parseRgbColor(new Color(theme.content));
 	const active = parseRgbColor(new Color(theme.active));
@@ -57,7 +57,7 @@ export const parseUint32Color = (color: Color) => {
 	return result[0];
 };
 
-export const parseThemeUint32Color = (theme: ColorTheme) => {
+export const parseThemeUint32Color = (theme: Theme) => {
 	const background = parseUint32Color(new Color(theme.app));
 	const content = parseUint32Color(new Color(theme.content));
 	const active = parseUint32Color(new Color(theme.active));
@@ -69,7 +69,7 @@ export const parseThemeUint32Color = (theme: ColorTheme) => {
 	return colors;
 };
 
-export const parseThemeHexColor = (theme: ColorTheme) => {
+export const parseThemeHexColor = (theme: Theme) => {
 	const background = new Color(theme.app).hex();
 	const content = new Color(theme.content).hex();
 	const active = new Color(theme.active).hex();

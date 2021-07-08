@@ -1,21 +1,21 @@
 import React from 'react';
-import { Theme, createUseClasses, Button, CloseIcon, AppTitlebar } from '..';
+import { AppCss, createUseClasses, Button, CloseIcon, AppTitlebar } from '..';
 
-export const getModalDialogClasses = (theme: Theme) => ({
+export const getModalDialogClasses = (css: AppCss) => ({
 	root: {
 		position: 'absolute',
 		'z-index': '200',
 		top: '0',
 		left: '0',
 		display: 'grid',
-		gridTemplateRows: '49px 1fr',
-		gridTemplateColumns: '1fr',
+		'grid-template-rows': '49px 1fr',
+		'grid-template-columns': '1fr',
 		width: 'calc(100vw - 2px)',
 		height: 'calc(100vh - 2px)',
 		overflow: 'hidden',
-		color: theme.color.content,
-		border: `1px solid ${theme.color.splitter}`,
-		backgroundColor: theme.color.app,
+		color: css.theme.content,
+		border: `1px solid ${css.theme.splitter}`,
+		'background-color': css.theme.app,
 	},
 });
 
