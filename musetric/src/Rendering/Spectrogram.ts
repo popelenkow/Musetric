@@ -1,6 +1,6 @@
 import { useMemo, useCallback, useRef } from 'react';
 import {
-	ColorTheme, parseThemeRgbColor,
+	Theme, parseThemeRgbColor,
 	Size2D, Position2D, createFft,
 	SoundBuffer, SoundCircularBuffer,
 	mapAmplitudeToBel,
@@ -10,10 +10,10 @@ export const drawSpectrogram = (
 	input: Float32Array[],
 	output: Uint8ClampedArray,
 	frame: Size2D,
-	colorTheme: ColorTheme,
+	theme: Theme,
 	cursor?: number,
 ): void => {
-	const { content, background, active } = parseThemeRgbColor(colorTheme);
+	const { content, background, active } = parseThemeRgbColor(theme);
 
 	const step = (input.length - 1) / (frame.width - 1);
 	for (let x = 0; x < frame.width; x++) {
@@ -66,7 +66,7 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 	}, [size]);
 
 	const draw = useMemo(() => {
-		return (output: Uint8ClampedArray, frame: Size2D, colorTheme: ColorTheme) => {
+		return (output: Uint8ClampedArray, frame: Size2D, theme: Theme) => {
 			const { windowSize, fft } = info;
 
 			const buffer = isLive ? soundCircularBuffer.buffers[0] : soundBuffer.buffers[0];
@@ -85,7 +85,7 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 			}
 			fft.frequencies(buffer, frequencies, { offset: 0, step, count });
 			mapAmplitudeToBel(frequencies);
-			drawSpectrogram(frequencies, output, frame, colorTheme, cursor);
+			drawSpectrogram(frequencies, output, frame, theme, cursor);
 		};
 	}, [soundBuffer, soundCircularBuffer, isLive, info, result]);
 

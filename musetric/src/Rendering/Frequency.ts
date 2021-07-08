@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import {
-	ColorTheme, parseThemeUint32Color,
+	Theme, parseThemeUint32Color,
 	Size2D, createFft,
 	SoundBuffer, SoundCircularBuffer,
 	mapAmplitudeToBel,
@@ -10,9 +10,9 @@ export const drawFrequency = (
 	input: Float32Array,
 	output: Uint8ClampedArray,
 	frame: Size2D,
-	colorTheme: ColorTheme,
+	theme: Theme,
 ): void => {
-	const { content, background } = parseThemeUint32Color(colorTheme);
+	const { content, background } = parseThemeUint32Color(theme);
 	const out = new Uint32Array(output.buffer);
 
 	const step = (1.0 * input.length) / frame.height;
@@ -48,7 +48,7 @@ export const useFrequency = (props: FrequencyProps) => {
 	}, [size]);
 
 	const draw = useMemo(() => {
-		return (output: Uint8ClampedArray, frame: Size2D, colorTheme: ColorTheme) => {
+		return (output: Uint8ClampedArray, frame: Size2D, theme: Theme) => {
 			const { windowSize, fft, result } = info;
 
 			const getBuffer = () => {
@@ -60,7 +60,7 @@ export const useFrequency = (props: FrequencyProps) => {
 			offset = offset < 0 ? 0 : offset;
 			fft.frequency(buffers[0], result, { offset });
 			mapAmplitudeToBel([result]);
-			drawFrequency(result, output, frame, colorTheme);
+			drawFrequency(result, output, frame, theme);
 		};
 	}, [soundBuffer, soundCircularBuffer, isLive, info]);
 

@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import classNames from 'classnames';
-import { Theme, createUseClasses, SoundBuffer, useAnimation, getFieldClasses } from '..';
+import { AppCss, createUseClasses, SoundBuffer, useAnimation, getFieldClasses } from '..';
 
-export const getSoundProgressClasses = (theme: Theme) => ({
+export const getSoundProgressClasses = (css: AppCss) => ({
 	root: {
-		...getFieldClasses(theme).root,
+		...getFieldClasses(css).root,
 		width: '118px',
 		height: '42px',
 		position: 'relative',

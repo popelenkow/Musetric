@@ -1,18 +1,18 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Theme, createUseClasses, getButtonClasses } from '..';
+import { AppCss, createUseClasses, getButtonClasses } from '..';
 
-export const getCheckboxClasses = (theme: Theme) => ({
+export const getCheckboxClasses = (css: AppCss) => ({
 	root: {
-		...getButtonClasses(theme).root,
+		...getButtonClasses(css).root,
 	},
 	disabled: {
-		...getButtonClasses(theme).disabled,
+		...getButtonClasses(css).disabled,
 	},
 	checked: {
-		color: theme.color.active,
+		color: css.theme.active,
 		'& path, rect, polygon': {
-			fill: theme.color.active,
+			fill: css.theme.active,
 		},
 	},
 	input: {

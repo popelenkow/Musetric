@@ -1,19 +1,19 @@
 import React from 'react';
-import { Theme, getFieldClasses } from '..';
-import { createUseClasses } from './Theme';
+import { AppCss, getFieldClasses } from '..';
+import { createUseClasses } from './AppCssContext';
 
-export const getAboutInfoClasses = (theme: Theme) => ({
+export const getAboutInfoClasses = (css: AppCss) => ({
 	root: {
-		...getFieldClasses(theme).root,
+		...getFieldClasses(css).root,
 		width: '100%',
 		height: '100%',
-		'background-color': theme.color.app,
+		'background-color': css.theme.app,
 	},
 	container: {
 		width: 'auto',
 		height: 'auto',
 		display: 'flex',
-		flexDirection: 'column',
+		'flex-direction': 'column',
 	},
 });
 

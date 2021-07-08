@@ -1,9 +1,9 @@
 import React from 'react';
-import { Theme, createUseClasses, getButtonClasses } from '..';
+import { AppCss, createUseClasses, getButtonClasses } from '..';
 
-export const getSelectFileClasses = (theme: Theme) => ({
+export const getSelectFileClasses = (css: AppCss) => ({
 	root: {
-		...getButtonClasses(theme).root,
+		...getButtonClasses(css).root,
 	},
 	input: {
 		opacity: '0',

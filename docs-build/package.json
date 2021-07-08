@@ -4,11 +4,12 @@
 	"version": "0.0.1",
 	"license": "MIT",
 	"scripts": {
-		"build": "node copy.js"
+		"build": "rimraf ../docs && node copy.js"
 	},
 	"dependencies": {},
 	"devDependencies": {
 		"copyfiles": "2.4.1",
-		"musetric-app": "0.0.13"
+		"musetric-app": "0.0.14",
+		"rimraf": "^3.0.2"
 	}
 }

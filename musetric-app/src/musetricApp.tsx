@@ -2,23 +2,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import { App, AppProps, SoundWorkshop, allColorThemes, allColorThemeIds, localeIdList, createI18n } from 'musetric';
+import {
+	App, AppProps, SoundWorkshop,
+	allThemes, allThemeIds, getStorageThemeId, setStorageThemeId,
+	localeIdList, createI18n, getStorageLocaleId, setStorageLocaleId,
+} from 'musetric';
 import { CreateMusetricApp } from './types';
 
 export const createMusetricApp: CreateMusetricApp = async (elementId: string) => {
-	const params = new URLSearchParams(window.location.search);
-
-	const initColorThemeId = params.get('theme') || 'dark';
-
-	const initLocaleId = params.get('locale');
+	const initThemeId = getStorageThemeId();
+	const initLocaleId = getStorageLocaleId();
 	const i18n = await createI18n(initLocaleId);
 
 	const appProps: AppProps = {
 		i18n,
 		localeIdList,
-		initColorThemeId,
-		allColorThemeIds,
-		allColorThemes,
+		onSetLocaleId: setStorageLocaleId,
+		initThemeId,
+		allThemeIds,
+		allThemes,
+		onSetThemeId: setStorageThemeId,
 	};
 
 	const app = (

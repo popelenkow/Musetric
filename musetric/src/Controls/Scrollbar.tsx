@@ -1,23 +1,23 @@
-import { Theme, createUseClasses } from '..';
+import { AppCss, createUseClasses } from '..';
 
-export const getScrollbarClasses = (theme: Theme) => ({
+export const getScrollbarClasses = (css: AppCss) => ({
 	root: {
 		'& ::-webkit-scrollbar': {
 			width: '15px',
 		},
 		'& ::-webkit-scrollbar-track': {
-			background: theme.color.content,
+			background: css.theme.content,
 		},
 		'& ::-webkit-scrollbar-corner': {
-			background: theme.color.content,
+			background: css.theme.content,
 		},
 		'& ::-webkit-scrollbar-thumb': {
-			background: theme.color.content,
+			background: css.theme.content,
 			'&:hover': {
-				background: theme.color.content,
+				background: css.theme.content,
 			},
 			'&:active': {
-				background: theme.color.content,
+				background: css.theme.content,
 			},
 		},
 	},

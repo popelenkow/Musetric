@@ -14,7 +14,16 @@ const allLocales = createRecord({
 export type LocaleId = keyof typeof allLocales;
 export const localeIdList = Object.keys(allLocales) as LocaleId[];
 // eslint-disable-next-line max-len
-export const isLocale = (value?: string | null): value is LocaleId => localeIdList.findIndex(x => x === value) !== -1;
+export const isLocaleId = (value?: string | null): value is LocaleId => localeIdList.findIndex(x => x === value) !== -1;
+
+export const getStorageLocaleId = () => {
+	const themeId = localStorage.getItem('locale');
+	if (isLocaleId(themeId)) return themeId;
+	return 'en';
+};
+export const setStorageLocaleId = (themeId: string) => {
+	localStorage.setItem('locale', themeId);
+};
 
 export const localizeLocaleId = (lng: string, t: TFunction): string | undefined => {
 	const res = t('Musetric:locale', { lng });
@@ -26,7 +35,7 @@ export const resources: Resource = allLocales;
 export const createI18n = async (initLocaleId?: string | null): Promise<I18n> => {
 	const result = i18n.createInstance();
 
-	const locale = isLocale(initLocaleId) ? initLocaleId : localeIdList[0];
+	const locale = isLocaleId(initLocaleId) ? initLocaleId : localeIdList[0];
 
 	await result
 		.init({

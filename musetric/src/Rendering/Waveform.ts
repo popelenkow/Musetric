@@ -1,6 +1,6 @@
 import { useMemo, useCallback } from 'react';
 import {
-	ColorTheme, parseThemeUint32Color,
+	Theme, parseThemeUint32Color,
 	Size2D, Position2D,
 	SoundBuffer, SoundCircularBuffer,
 } from '..';
@@ -41,10 +41,10 @@ export const drawWaveform = (
 	input: AnalyzeWaveformResult,
 	output: Uint8ClampedArray,
 	frame: Size2D,
-	colorTheme: ColorTheme,
+	theme: Theme,
 	cursor?: number,
 ): void => {
-	const { content, background, active } = parseThemeUint32Color(colorTheme);
+	const { content, background, active } = parseThemeUint32Color(theme);
 	const { minArray, maxArray } = input;
 	const out = new Uint32Array(output.buffer);
 
@@ -86,12 +86,12 @@ export const useWaveform = (props: WaveformProps) => {
 			}
 			return analysisState;
 		};
-		return (output: Uint8ClampedArray, frame: Size2D, colorTheme: ColorTheme) => {
+		return (output: Uint8ClampedArray, frame: Size2D, theme: Theme) => {
 			const buffer = isLive ? soundCircularBuffer.buffers[0] : soundBuffer.buffers[0];
 			const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
 			const analysis = getAnalysis(frame);
 			analyzeWaveform(buffer, analysis, frame);
-			drawWaveform(analysis, output, frame, colorTheme, cursor);
+			drawWaveform(analysis, output, frame, theme, cursor);
 		};
 	}, [soundBuffer, soundCircularBuffer, isLive]);
 

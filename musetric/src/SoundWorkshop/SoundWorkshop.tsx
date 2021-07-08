@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useMemo } from 'react';
 import {
-	Theme, createUseClasses,
+	AppCss, createUseClasses,
 	useSoundRecorder, useSoundPlayer, useSoundLive,
 	useSoundView, useSoundProgressBar, useSoundFile,
 	SoundProgress,
@@ -8,7 +8,7 @@ import {
 	createSoundBuffer, createSoundCircularBuffer,
 } from '..';
 
-export const getSoundWorkshopClasses = (theme: Theme) => ({
+export const getSoundWorkshopClasses = (css: AppCss) => ({
 	root: {
 		width: '100%',
 		height: '100%',
@@ -25,7 +25,7 @@ export const getSoundWorkshopClasses = (theme: Theme) => ({
 		width: '100%',
 		height: '100%',
 		overflow: 'hidden',
-		background: theme.color.app,
+		background: css.theme.app,
 		display: 'flex',
 		position: 'relative',
 	},
@@ -38,8 +38,8 @@ export const getSoundWorkshopClasses = (theme: Theme) => ({
 		width: '100%',
 		height: '100%',
 		overflow: 'hidden',
-		background: theme.color.app,
-		'border-top': `1px solid ${theme.color.splitter}`,
+		background: css.theme.app,
+		'border-top': `1px solid ${css.theme.splitter}`,
 	},
 	toolbar: {
 		'grid-column-start': '1',
@@ -54,8 +54,8 @@ export const getSoundWorkshopClasses = (theme: Theme) => ({
 		'flex-direction': 'row-reverse',
 		'column-gap': '4px',
 		'align-items': 'center',
-		'background-color': theme.color.sidebar,
-		'border-top': `1px solid ${theme.color.splitter}`,
+		'background-color': css.theme.sidebar,
+		'border-top': `1px solid ${css.theme.splitter}`,
 	},
 	sidebar: {
 		'grid-column-start': '2',
@@ -71,8 +71,8 @@ export const getSoundWorkshopClasses = (theme: Theme) => ({
 		'justify-content': 'center',
 		'row-gap': '4px',
 		'align-items': 'center',
-		'background-color': theme.color.sidebar,
-		'border-left': `1px solid ${theme.color.splitter}`,
+		'background-color': css.theme.sidebar,
+		'border-left': `1px solid ${css.theme.splitter}`,
 	},
 });
 
