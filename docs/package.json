@@ -1,7 +1,7 @@
 {
 	"name": "musetric-app",
 	"description": "Musetric is javascript music application",
-	"version": "0.0.14",
+	"version": "0.0.15",
 	"license": "MIT",
 	"main": "musetricApp.js",
 	"types": "musetricApp.d.ts",
@@ -17,8 +17,8 @@
 		"musetric-app"
 	],
 	"scripts": {
-		"dev": "rimraf dist && node copy.js && cross-env DEV=1 webpack-dev-server --progress",
-		"build": "rimraf dist && node copy.js && webpack --progress",
+		"dev": "rimraf dist && node copy.js && cross-env WORKLET=1 webpack --progress && cross-env DEV=1 webpack-dev-server --progress",
+		"build": "rimraf dist && node copy.js && cross-env WORKLET=1 webpack --progress && cross-env webpack --progress",
 		"lint": "eslint \"{src/**/*.{js,ts,tsx}, webpack.config.js}\"",
 		"size": "cross-env SIZE=1 yarn build"
 	},
@@ -29,7 +29,7 @@
 		"cross-env": "7.0.3",
 		"eslint-config-musetric": "0.0.29",
 		"html-webpack-plugin": "5.3.2",
-		"musetric": "0.0.24",
+		"musetric": "0.0.25",
 		"rimraf": "3.0.2",
 		"ts-loader": "9.2.3",
 		"typescript": "4.3.5",

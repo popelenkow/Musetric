@@ -20,38 +20,44 @@ type ProcessorCtor = (new (options?: AudioWorkletNodeOptions) => AudioWorkletPro
 & { parameterDescriptors?: AudioParamDescriptor[] };
 declare function registerProcessor(name: string, processorCtor: ProcessorCtor): void;
 
-/** [id, type, args] */
-export type PromiseAudioWorkletRequest = [string, string, ...any[]];
-/** [id, type, args] */
-export type PromiseAudioWorkletResponse = [string, string, any];
+export type PromiseAudioWorkletRequest = {
+	id: string;
+	type: string;
+	args: any[];
+};
+export type PromiseAudioWorkletResponse = {
+	id: string;
+	type: string;
+	result: any;
+};
 // eslint-disable-next-line max-len
-export type PromiseAudioWorkletHandlers = { process: (inputRaw: Float32Array[]) => [boolean, any]; } & Record<string, (...args: any[]) => any>;
+export type PromiseAudioWorkletHandlers = { process: (inputRaw: Float32Array[]) => void; } & Record<string, (...args: any[]) => any>;
 export type PromiseAudioWorkletApi = Record<string, (...args: any[]) => Promise<any>>;
+export type PostPromiseAudioWorklet = (message: PromiseAudioWorkletResponse) => void;
 
-export function promiseAudioWorkletFunction(
-	processorName: string, createHandlers: (messagePort: MessagePort) => PromiseAudioWorkletHandlers,
+export function runPromiseAudioWorklet(
+	processorName: string,
+	createHandlers: (post: PostPromiseAudioWorklet) => PromiseAudioWorkletHandlers,
 ): void {
 	const initHandlers = (messagePort: MessagePort) => {
-		const handlers = createHandlers(messagePort);
+		const postMessage: PostPromiseAudioWorklet = (message) => {
+			messagePort.postMessage(message);
+		};
+
+		const handlers = createHandlers(postMessage);
 		messagePort.onmessage = (e: MessageEvent<PromiseAudioWorkletRequest>) => {
-			const postMessage = (message: PromiseAudioWorkletResponse) => {
-				messagePort.postMessage(message);
-			};
-			const [id, type, ...args] = e.data;
+			const { id, type, args } = e.data;
 			const result = handlers[type](...args);
-			postMessage([id, type, result]);
+			postMessage({ id, type, result });
 		};
 		return handlers;
 	};
 
 	class RecorderProcessor extends AudioWorkletProcessor {
-		public static parameterDescriptors = [];
-
 		handlers = initHandlers(this.port);
 
 		process([inputRaw]: Float32Array[][]): boolean {
-			const [need, ...result] = this.handlers.process(inputRaw);
-			need && this.port.postMessage(['', 'process', ...result]);
+			this.handlers.process(inputRaw);
 			return true;
 		}
 	}
@@ -61,14 +67,9 @@ export function promiseAudioWorkletFunction(
 
 export const createPromiseAudioWorklet = async (
 	audioNode: AudioNode,
+	workletUrl: string,
 	processorName: string,
-	createHandlers: (messagePort: MessagePort) => PromiseAudioWorkletHandlers,
 ): Promise<AudioWorkletNode> => {
-	const createHandlersCode = `const createHandlers = ${createHandlers.toString()};`;
-	const createWorkletCode = `const createWorklet = ${promiseAudioWorkletFunction.toString()};`;
-	const runWorkerCode = `createWorklet('${processorName}', createHandlers);`;
-	const code = `${createHandlersCode}\n${createWorkletCode}\n${runWorkerCode}`;
-	const workletUrl = URL.createObjectURL(new Blob([code], { type: 'application/javascript' }));
 	await audioNode.context.audioWorklet.addModule(workletUrl);
 	const options: AudioWorkletNodeOptions = {
 		channelCount: audioNode.channelCount,
@@ -80,15 +81,11 @@ export const createPromiseAudioWorklet = async (
 	return worklet;
 };
 
-export const createPromiseAudioWorkletApi = async (
-	audioNode: AudioNode,
-	processorName: string,
+export const createPromiseAudioWorkletApi = (
+	worklet: AudioWorkletNode,
 	process: (options: any) => void,
-	createHandlers: (messagePort: MessagePort) => PromiseAudioWorkletHandlers,
 	allTypes: string[],
 ) => {
-	// eslint-disable-next-line max-len
-	const worklet = await createPromiseAudioWorklet(audioNode, processorName, createHandlers);
 	const massagePort = worklet.port;
 	const postMessage = (message: PromiseAudioWorkletRequest): void => {
 		massagePort.postMessage(message);
@@ -96,7 +93,7 @@ export const createPromiseAudioWorkletApi = async (
 	const callbacks: Record<string, (result: any) => void> = {};
 
 	massagePort.onmessage = (e: MessageEvent<PromiseAudioWorkletResponse>) => {
-		const [id, type, result] = e.data;
+		const { id, type, result } = e.data;
 		if (type === 'process') {
 			process(result);
 			return;
@@ -113,7 +110,7 @@ export const createPromiseAudioWorkletApi = async (
 				const id = uuid();
 				const callback = (result: any) => { resolve(result); };
 				callbacks[id] = callback;
-				postMessage([id, type, ...args]);
+				postMessage({ id, type, args });
 			});
 		};
 	});
