@@ -1,56 +1,13 @@
-import { createPromiseAudioWorkletApi } from '..';
+import { createPromiseAudioWorkletApi, createPromiseAudioWorklet } from './PromiseAudioWorklet';
+import { RecorderProcessOptions } from './RecorderWorklet';
 
 export type Recorder = {
 	mediaStream: MediaStream;
 	start: () => Promise<void>;
 	stop: () => Promise<void>;
 };
-export type RecorderProcessOptions = {
-	chunk: Float32Array[];
-	isRecording: boolean;
-};
-export type RecorderHandlers = {
-	process: (inputRaw: Float32Array[]) => [boolean, RecorderProcessOptions];
-	start: () => void;
-	stop: () => void;
-};
-type RecorderType = keyof RecorderHandlers;
-const allRecorderTypes: RecorderType[] = ['start', 'stop'];
 
-export function createRecorderHandlers(): RecorderHandlers {
-	type State = {
-		isRecording: boolean;
-	};
-	const state: State = {
-		isRecording: false,
-	};
-
-	const process: RecorderHandlers['process'] = (inputRaw) => {
-		const { isRecording } = state;
-		const chunk = inputRaw.map(x => {
-			const result = new Float32Array(x.length);
-			result.set(x);
-			return result;
-		});
-		const options: RecorderProcessOptions = {
-			chunk,
-			isRecording,
-		};
-		return [true, options];
-	};
-	const start: RecorderHandlers['start'] = () => {
-		state.isRecording = true;
-	};
-	const stop: RecorderHandlers['stop'] = () => {
-		state.isRecording = false;
-	};
-	const handlers: RecorderHandlers = {
-		process,
-		start,
-		stop,
-	};
-	return handlers;
-}
+const allRecorderTypes: (keyof Recorder)[] = ['start', 'stop'];
 
 export type CreateRecorderOptions = {
 	channelCount: number;
@@ -62,7 +19,8 @@ export const createRecorder = async (options: CreateRecorderOptions): Promise<Re
 	const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount } });
 	const source = audioContext.createMediaStreamSource(mediaStream);
 	source.channelCount = channelCount;
-	const api = await createPromiseAudioWorkletApi(source, 'recorder-worklet', process, createRecorderHandlers, allRecorderTypes);
+	const worklet = await createPromiseAudioWorklet(source, 'musetricRecorder.js', 'recorder-worklet');
+	const api = createPromiseAudioWorkletApi(worklet, process, allRecorderTypes);
 	const { start, stop } = api;
 	return { mediaStream, start, stop };
 };
