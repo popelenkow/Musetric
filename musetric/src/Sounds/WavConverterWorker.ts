@@ -1,4 +1,4 @@
-import { runPromiseWorker } from './PromiseWorker';
+import { runPromiseWorker } from '../Workers/PromiseWorker';
 
 export const createWavConverterHandlers = () => {
 	const floatTo16BitPCM = (view: DataView, offset: number, buffer: Float32Array) => {

@@ -1,8 +1,9 @@
 import { useMemo, useCallback } from 'react';
 import {
 	Theme, parseThemeUint32Color,
-	Size2D, Position2D,
-	SoundBuffer, SoundCircularBuffer,
+	Size2D, Position2D, useAnimation, useAppCssContext,
+	SoundBuffer, SoundCircularBuffer, PerformanceMonitorRef,
+	usePixelCanvas,
 } from '..';
 
 export type AnalyzeWaveformResult = {
@@ -68,12 +69,16 @@ export type WaveformProps = {
 	soundBuffer: SoundBuffer;
 	soundCircularBuffer: SoundCircularBuffer;
 	isLive?: boolean;
+	size: Size2D;
+	pause?: boolean;
+	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const useWaveform = (props: WaveformProps) => {
 	const {
-		soundBuffer, soundCircularBuffer, isLive,
+		soundBuffer, soundCircularBuffer, isLive, size, pause, performanceMonitor,
 	} = props;
+	const { css } = useAppCssContext();
 
 	const draw = useMemo(() => {
 		let analysisState: AnalyzeWaveformResult | undefined;
@@ -101,7 +106,19 @@ export const useWaveform = (props: WaveformProps) => {
 		soundBuffer.setCursor(value);
 	}, [soundBuffer, isLive]);
 
+	const pixelCanvas = usePixelCanvas({ size });
+
+	useAnimation(() => {
+		if (pause) return;
+		performanceMonitor?.begin();
+
+		draw(pixelCanvas.image.data, pixelCanvas.size, css.theme);
+		pixelCanvas.context.putImageData(pixelCanvas.image, 0, 0);
+
+		performanceMonitor?.end();
+	}, [draw, pixelCanvas, css, pause, performanceMonitor]);
+
 	return {
-		draw, onClick,
+		image: pixelCanvas.canvas, onClick,
 	};
 };

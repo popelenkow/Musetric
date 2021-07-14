@@ -2,6 +2,7 @@ export * from './Button';
 export * from './PixelCanvas';
 export * from './Checkbox';
 export * from './Field';
+export * from './MasterCanvas';
 export * from './ModalDialog';
 export * from './Radio';
 export * from './Scrollbar';

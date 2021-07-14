@@ -7,3 +7,4 @@ export * from './Rendering';
 export * from './Sounds';
 export * from './SoundWorkshop';
 export * from './Themes';
+export * from './Workers';

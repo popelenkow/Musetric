@@ -1,38 +1,50 @@
-import { runPromiseAudioWorklet, PostPromiseAudioWorklet } from './PromiseAudioWorklet';
+import { runPromiseAudioWorklet } from '../Workers/PromiseAudioWorklet';
+import { PromiseAudioWorkletOptions } from '../Workers/PromiseAudioWorkletTypes';
 
 export type RecorderProcessOptions = {
 	chunk: Float32Array[];
 	isRecording: boolean;
 };
 
-export const createRecorderHandlers = (post: PostPromiseAudioWorklet) => {
-	type State = {
-		isRecording: boolean;
-	};
-	const state: State = {
-		isRecording: false,
-	};
+export const createRecorderHandlers = (options: PromiseAudioWorkletOptions) => {
+	const { post, sampleRate } = options;
 
-	const process = (inputRaw: Float32Array[]) => {
-		const { isRecording } = state;
-		const chunk = inputRaw.map(x => {
-			const result = new Float32Array(x.length);
-			result.set(x);
-			return result;
-		});
-		const id = '';
-		const type = 'process';
-		const result : RecorderProcessOptions = {
-			chunk,
-			isRecording,
+	let isRecording = false;
+	const length = Math.floor(sampleRate / 30);
+	let offset = 0;
+	const buffer = [
+		new Float32Array(length),
+		new Float32Array(length),
+	];
+
+	const process = (input: Float32Array[]) => {
+		const step = input[0].length;
+		const push = () => {
+			if (length < offset + step) throw new Error(`Recorder: { length: ${length}, offset: ${offset}, step: ${step} }`);
+			for (let i = 0; i < input.length; i++) {
+				const x = input[i];
+				buffer[i].set(x, offset);
+			}
+			offset += step;
 		};
-		post({ id, type, result });
+		push();
+		if (length < offset + step) {
+			const chunk = buffer.map(x => x.slice(0, offset));
+			const id = '';
+			const type = 'process';
+			const result : RecorderProcessOptions = {
+				chunk,
+				isRecording,
+			};
+			post({ id, type, result });
+			offset = 0;
+		}
 	};
 	const start = () => {
-		state.isRecording = true;
+		isRecording = true;
 	};
 	const stop = () => {
-		state.isRecording = false;
+		isRecording = false;
 	};
 	const handlers = {
 		process,

@@ -1,4 +1,4 @@
-import { createPromiseWorkerApi } from '..';
+import { createPromiseWorkerApi } from '../Workers/PromiseWorkerApi';
 
 export type WavConverter = {
 	encode: (buffers: Float32Array[], sampleRate: number) => Promise<Blob>;

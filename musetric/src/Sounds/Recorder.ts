@@ -1,4 +1,4 @@
-import { createPromiseAudioWorkletApi, createPromiseAudioWorklet } from './PromiseAudioWorklet';
+import { createPromiseAudioWorkletApi, createPromiseAudioWorklet } from '../Workers/PromiseAudioWorkletApi';
 import { RecorderProcessOptions } from './RecorderWorklet';
 
 export type Recorder = {

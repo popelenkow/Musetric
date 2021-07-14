@@ -1,9 +1,9 @@
 import { useMemo, useCallback, useRef } from 'react';
 import {
-	Theme, parseThemeRgbColor,
-	Size2D, Position2D, createFft,
+	Theme, parseThemeRgbColor, PerformanceMonitorRef,
+	Size2D, Position2D, createFft, useAppCssContext, useAnimation,
 	SoundBuffer, SoundCircularBuffer,
-	mapAmplitudeToBel,
+	mapAmplitudeToBel, usePixelCanvas,
 } from '..';
 
 export const drawSpectrogram = (
@@ -48,16 +48,19 @@ export const drawSpectrogram = (
 export type SpectrogramProps = {
 	soundBuffer: SoundBuffer;
 	soundCircularBuffer: SoundCircularBuffer;
-	size: Size2D;
 	isLive?: boolean;
+	size: Size2D;
+	pause?: boolean;
+	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const useSpectrogram = (props: SpectrogramProps) => {
 	const {
-		soundBuffer, soundCircularBuffer, size, isLive,
+		soundBuffer, soundCircularBuffer, isLive, size, pause, performanceMonitor,
 	} = props;
+	const { css } = useAppCssContext();
 
-	const result = useRef<Float32Array[]>([]);
+	const frequenciesRef = useRef<Float32Array[]>([]);
 
 	const info = useMemo(() => {
 		const windowSize = size.height * 2;
@@ -73,7 +76,7 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 			const step = windowSize;
 			const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
 
-			let frequencies: Float32Array[] = result.current;
+			let frequencies: Float32Array[] = frequenciesRef.current;
 			const count = 1 + Math.floor((buffer.length - windowSize) / step);
 			if (frequencies.length !== count) {
 				frequencies = [];
@@ -81,13 +84,13 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 					const array = new Float32Array(windowSize / 2);
 					frequencies.push(array);
 				}
-				result.current = frequencies;
+				frequenciesRef.current = frequencies;
 			}
 			fft.frequencies(buffer, frequencies, { offset: 0, step, count });
 			mapAmplitudeToBel(frequencies);
 			drawSpectrogram(frequencies, output, frame, theme, cursor);
 		};
-	}, [soundBuffer, soundCircularBuffer, isLive, info, result]);
+	}, [soundBuffer, soundCircularBuffer, isLive, info, frequenciesRef]);
 
 	const onClick = useCallback((cursorPosition: Position2D) => {
 		if (isLive) return;
@@ -95,7 +98,22 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 		soundBuffer.setCursor(value);
 	}, [soundBuffer, isLive]);
 
-	return {
-		draw, onClick,
-	};
+	const pixelCanvas = usePixelCanvas({ size });
+
+	useAnimation(() => {
+		if (pause) return;
+		performanceMonitor?.begin();
+
+		draw(pixelCanvas.image.data, pixelCanvas.size, css.theme);
+		pixelCanvas.context.putImageData(pixelCanvas.image, 0, 0);
+
+		performanceMonitor?.end();
+	}, [draw, pixelCanvas, css, pause, performanceMonitor]);
+
+	const result = useMemo(() => {
+		return {
+			image: pixelCanvas.canvas, onClick,
+		};
+	}, [pixelCanvas.canvas, onClick]);
+	return result;
 };

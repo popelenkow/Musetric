@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import {
-	Theme, parseThemeUint32Color,
-	Size2D, createFft,
+	Theme, parseThemeUint32Color, PerformanceMonitorRef,
+	Size2D, createFft, useAppCssContext,
 	SoundBuffer, SoundCircularBuffer,
-	mapAmplitudeToBel,
+	mapAmplitudeToBel, usePixelCanvas, useAnimation,
 } from '..';
 
 export const drawFrequency = (
@@ -31,14 +31,17 @@ export const drawFrequency = (
 export type FrequencyProps = {
 	soundBuffer: SoundBuffer;
 	soundCircularBuffer: SoundCircularBuffer;
-	size: Size2D;
 	isLive?: boolean;
+	size: Size2D;
+	pause?: boolean;
+	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const useFrequency = (props: FrequencyProps) => {
 	const {
-		soundBuffer, soundCircularBuffer, size, isLive,
+		soundBuffer, soundCircularBuffer, isLive, size, pause, performanceMonitor,
 	} = props;
+	const { css } = useAppCssContext();
 
 	const info = useMemo(() => {
 		const windowSize = size.width * 2;
@@ -64,7 +67,19 @@ export const useFrequency = (props: FrequencyProps) => {
 		};
 	}, [soundBuffer, soundCircularBuffer, isLive, info]);
 
+	const pixelCanvas = usePixelCanvas({ size });
+
+	useAnimation(() => {
+		if (pause) return;
+		performanceMonitor?.begin();
+
+		draw(pixelCanvas.image.data, pixelCanvas.size, css.theme);
+		pixelCanvas.context.putImageData(pixelCanvas.image, 0, 0);
+
+		performanceMonitor?.end();
+	}, [draw, pixelCanvas, pause, css, performanceMonitor]);
+
 	return {
-		draw,
+		image: pixelCanvas.canvas,
 	};
 };

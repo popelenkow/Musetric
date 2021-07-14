@@ -12,7 +12,7 @@ Musetric is a application for exploration of sounds. Record or upload sound and 
 
 ## Sound visualizer
 
-- Sonogram
+- Spectrogram
 - Frequency
 - Waveform
 
