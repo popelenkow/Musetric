@@ -1,14 +1,14 @@
-import { useRef, useEffect, MutableRefObject, DependencyList } from 'react';
+import { useRef, useEffect, DependencyList } from 'react';
 
 export type DrawFrame = (delta: number) => void;
-export type DrawFrameRef = MutableRefObject<DrawFrame | undefined>;
 export type AnimationSubscription = { stop: () => void };
 
-export const startAnimation = (draw: DrawFrameRef): AnimationSubscription => {
+export const startAnimation = (getDraw: () => DrawFrame | undefined): AnimationSubscription => {
 	let next = true;
 	let time = 0;
 	const loop = (curTime: number) => {
-		if (draw.current) draw.current(curTime - time);
+		const draw = getDraw();
+		if (draw) draw(curTime - time);
 		time = curTime;
 		next && requestAnimationFrame(loop);
 	};
@@ -25,7 +25,7 @@ export const useAnimation = (draw: DrawFrame, deps: DependencyList) => {
 	}, deps);
 
 	useEffect(() => {
-		const subscription = startAnimation(drawRef);
+		const subscription = startAnimation(() => drawRef.current);
 		return () => subscription.stop();
 	}, []);
 };

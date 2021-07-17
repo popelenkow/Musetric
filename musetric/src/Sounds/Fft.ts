@@ -1,4 +1,5 @@
-import { ComplexArray, createComplexArray, normComplexArray, gaussWindowFilter } from '..';
+import { ComplexArray, createComplexArray, normComplexArray } from './ComplexArray';
+import { gaussWindowFilter } from './WindowFilters';
 
 /** Based on https://github.com/corbanbrook/dsp.js */
 
@@ -108,7 +109,7 @@ export const createFft = (windowSize: number) => {
 			}
 		},
 		frequency: (input: Float32Array, output: Float32Array, options: FftFrequencyOptions) => {
-			const { offset } = options;
+			const offset = Math.floor(options.offset);
 			for (let i = 0; i < windowSize; i++) {
 				window.real[i] = input[i + offset] * filter[i];
 				window.imag[i] = 0;
@@ -117,16 +118,17 @@ export const createFft = (windowSize: number) => {
 			normComplexArray(frequency, output, windowSize / 2, 1 / windowSize);
 		},
 		frequencies: (input: Float32Array, output: Float32Array[], options: FftFrequenciesOptions) => {
-			const { offset, step, count } = options;
+			const { step, count } = options;
+			let { offset } = options;
 			for (let i = 0; i < count; i++) {
-				result.frequency(input, output[i], {
-					offset: offset + i * step,
-				});
+				result.frequency(input, output[i], { offset });
+				offset += step;
 			}
 		},
 	};
 	return result;
 };
+export type Fft = ReturnType<typeof createFft>;
 
 /** Pseudo conversion. Rendering only */
 export const mapAmplitudeToBel = (spectrum: Float32Array[]) => {

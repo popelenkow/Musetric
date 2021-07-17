@@ -1,3 +1,5 @@
+export * from './AsyncFft';
+export * from './AsyncFftWorker';
 export * from './ComplexArray';
 export * from './Dft';
 export * from './Fft';

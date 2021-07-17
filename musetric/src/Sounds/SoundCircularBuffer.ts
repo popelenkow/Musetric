@@ -3,9 +3,12 @@ export const createSoundCircularBuffer = (
 	channelCount: number,
 	memorySize = sampleRate * 5,
 ) => {
+	const rawBuffers: SharedArrayBuffer[] = [];
 	const buffers: Float32Array[] = [];
 	for (let i = 0; i < channelCount; i++) {
-		buffers[i] = new Float32Array(memorySize);
+		const raw = new SharedArrayBuffer(memorySize * Float32Array.BYTES_PER_ELEMENT);
+		rawBuffers[i] = raw;
+		buffers[i] = new Float32Array(raw);
 	}
 	const soundBuffer = {
 		sampleRate,
@@ -13,14 +16,13 @@ export const createSoundCircularBuffer = (
 		memorySize,
 		setCursor: () => {},
 		buffers,
+		rawBuffers,
 		push: (chunk: Float32Array[]) => {
 			for (let i = 0; i < channelCount; i++) {
 				if (memorySize > chunk[i].length) {
 					const newSize = chunk[i].length;
 					const oldSize = memorySize - newSize;
-					const offset = newSize * Float32Array.BYTES_PER_ELEMENT;
-					const self = new Float32Array(buffers[i].buffer, offset, oldSize);
-					buffers[i].set(self);
+					buffers[i].copyWithin(0, newSize);
 					buffers[i].set(chunk[i], oldSize);
 				}
 			}

@@ -7,7 +7,7 @@ export type Recorder = {
 	stop: () => Promise<void>;
 };
 
-const allRecorderTypes: (keyof Recorder)[] = ['start', 'stop'];
+const allTypes: (keyof Recorder)[] = ['start', 'stop'];
 
 export type CreateRecorderOptions = {
 	channelCount: number;
@@ -20,7 +20,7 @@ export const createRecorder = async (options: CreateRecorderOptions): Promise<Re
 	const source = audioContext.createMediaStreamSource(mediaStream);
 	source.channelCount = channelCount;
 	const worklet = await createPromiseAudioWorklet(source, 'musetricRecorder.js', 'recorder-worklet');
-	const api = createPromiseAudioWorkletApi(worklet, process, allRecorderTypes);
+	const api = createPromiseAudioWorkletApi(worklet, process, allTypes);
 	const { start, stop } = api;
 	return { mediaStream, start, stop };
 };
