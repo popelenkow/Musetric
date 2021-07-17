@@ -3,9 +3,12 @@ export const createSoundBuffer = (
 	channelCount: number,
 	initMemorySize = sampleRate * 2,
 ) => {
+	const rawBuffers: SharedArrayBuffer[] = [];
 	const buffers: Float32Array[] = [];
 	for (let i = 0; i < channelCount; i++) {
-		buffers[i] = new Float32Array(initMemorySize);
+		const raw = new SharedArrayBuffer(initMemorySize * Float32Array.BYTES_PER_ELEMENT);
+		rawBuffers[i] = raw;
+		buffers[i] = new Float32Array(raw);
 	}
 	const soundBuffer = {
 		sampleRate,
@@ -16,6 +19,7 @@ export const createSoundBuffer = (
 			soundBuffer.cursor = value;
 		},
 		buffers,
+		rawBuffers,
 		push: (chunk: Float32Array[]) => {
 			let { cursor, memorySize } = soundBuffer;
 			const chunkSize = chunk[0].length;
@@ -23,8 +27,10 @@ export const createSoundBuffer = (
 			if (newSize > memorySize) {
 				memorySize = 2 ** Math.ceil(Math.log2(newSize));
 				for (let i = 0; i < channelCount; i++) {
-					const buffer = new Float32Array(memorySize);
+					const raw = new SharedArrayBuffer(memorySize * Float32Array.BYTES_PER_ELEMENT);
+					const buffer = new Float32Array(raw);
 					buffer.set(buffers[i]);
+					rawBuffers[i] = raw;
 					buffers[i] = buffer;
 				}
 			}

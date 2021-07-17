@@ -92,6 +92,7 @@ const create = () => {
 	const others = {
 		entry: {
 			splashScreen: './src/splashScreen.ts',
+			musetricAsyncFft: './src/musetricAsyncFft.ts',
 			musetricWavConverter: './src/musetricWavConverter.ts',
 			index: './src/index.ts',
 		},
@@ -122,6 +123,7 @@ const create = () => {
 			new CopyPlugin({
 				patterns: [
 					{ from: './dist/musetricRecorder.js', to: './musetricRecorder.js' },
+					{ from: './dist/musetricRecorder.js.map', to: './musetricRecorder.js.map' },
 				],
 			}),
 		],
