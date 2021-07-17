@@ -3,20 +3,11 @@ const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const HtmlPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const musetricAppPkg = require('./package.json');
 const musetricPkg = require('./node_modules/musetric/package.json');
 
-const createConfig = ({ entry, library }) => {
-	const copyWorklet = process.env.WORKLET ? [] : [
-		new CopyPlugin({
-			patterns: [
-				{ from: './dist/musetricRecorder.js', to: './musetricRecorder.js' },
-			],
-		}),
-	];
+const createConfig = (options) => {
 	const common = {
-		entry,
 		resolve: {
 			extensions: ['.js', '.ts', '.tsx'],
 		},
@@ -28,13 +19,12 @@ const createConfig = ({ entry, library }) => {
 		output: {
 			path: path.join(__dirname, 'dist'),
 			filename: '[name].js',
-			library,
 		},
 		performance: {
 			maxEntrypointSize: 2000000,
 			maxAssetSize: 2000000,
 		},
-		stats: { modules: false, children: false, entrypoints: false, assets: false },
+		stats: { modules: false, children: false, entrypoints: false },
 		plugins: [
 			new webpack.DefinePlugin({
 				'process.env': {
@@ -42,6 +32,76 @@ const createConfig = ({ entry, library }) => {
 					MUSETRIC_VERSION: JSON.stringify(musetricPkg.version),
 				},
 			}),
+		],
+	};
+
+	const specific = process.env.DEV ? {
+		mode: 'development',
+		devtool: 'source-map',
+		devServer: {
+			hot: true,
+			compress: true,
+			port: 3000,
+			firewall: false,
+		},
+		stats: { assets: false },
+		resolve: {
+			modules: [path.join(__dirname, 'node_modules')],
+			alias: {
+				musetric: path.join(__dirname, '../musetric/src/'),
+			},
+		},
+	} : {
+		mode: 'production',
+	};
+	return merge(common, options, specific);
+};
+
+const createConfigs = (args) => {
+	const configs = [];
+	for (let i = 0; i < args.length; i++) {
+		const result = createConfig(args[i]);
+		if (i !== 0) delete result.devServer;
+		configs.push(result);
+	}
+	return configs;
+};
+
+const create = () => {
+	const worklet = {
+		entry: {
+			musetricRecorder: './src/musetricRecorder.ts',
+		},
+		output: {
+			library: {
+				name: '_',
+				type: 'var',
+			},
+		},
+	};
+	const musetric = {
+		entry: {
+			musetricApp: './src/musetricApp.tsx',
+		},
+		output: {
+			library: {
+				type: 'umd',
+			},
+		},
+	};
+	const others = {
+		entry: {
+			splashScreen: './src/splashScreen.ts',
+			musetricWavConverter: './src/musetricWavConverter.ts',
+			index: './src/index.ts',
+		},
+		output: {
+			library: {
+				name: '_',
+				type: 'var',
+			},
+		},
+		plugins: [
 			new HtmlPlugin({
 				template: './src/index.html',
 				filename: 'index.html',
@@ -55,69 +115,24 @@ const createConfig = ({ entry, library }) => {
 					{ from: './src/favicon.ico', to: './favicon.ico' },
 				],
 			}),
-			...copyWorklet,
 		],
 	};
-
-	const specific = process.env.DEV ? {
-		mode: 'development',
-		devtool: 'source-map',
-		devServer: {
-			hot: true,
-			compress: true,
-			port: 3000,
-		},
-		resolve: {
-			modules: [path.join(__dirname, 'node_modules')],
-			alias: {
-				musetric: path.join(__dirname, '../musetric/src'),
-			},
-		},
-	} : {
-		mode: 'production',
-		plugins: process.env.SIZE ? [new BundleAnalyzerPlugin()] : [],
+	const copyWorklet = {
+		plugins: [
+			new CopyPlugin({
+				patterns: [
+					{ from: './dist/musetricRecorder.js', to: './musetricRecorder.js' },
+				],
+			}),
+		],
 	};
-	return merge(common, specific);
-};
-
-const createConfigs = (args) => {
-	const configs = [];
-	for (let i = 0; i < args.length; i++) {
-		const result = createConfig(args[i]);
-		if (i !== 0) delete result.devServer;
-		configs.push(result);
+	if (process.env.WORKLET) {
+		return [worklet];
 	}
-	return configs;
+	if (process.env.DEV) {
+		return [merge(musetric, copyWorklet), others];
+	}
+	return [worklet, musetric, others];
 };
 
-module.exports = createConfigs(process.env.WORKLET ? [
-	{
-		entry: {
-			musetricRecorder: './src/musetricRecorder.ts',
-		},
-		library: {
-			name: '_',
-			type: 'var',
-		},
-	},
-] : [
-	{
-		entry: {
-			musetricApp: './src/musetricApp.tsx',
-		},
-		library: {
-			type: 'umd',
-		},
-	},
-	{
-		entry: {
-			splashScreen: './src/splashScreen.ts',
-			musetricWavConverter: './src/musetricWavConverter.ts',
-			index: './src/index.ts',
-		},
-		library: {
-			name: '_',
-			type: 'var',
-		},
-	},
-]);
+module.exports = createConfigs(create());

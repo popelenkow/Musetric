@@ -1,36 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { v4 as uuid } from 'uuid';
-
-export type PromiseWorkerRequest = {
-	id: string;
-	type: string;
-	args: any[];
-};
-export type PromiseWorkerResponse = {
-	id: string;
-	type: string;
-	result: any;
-};
-export type PromiseWorkerHandlers = Record<string, (...args: any[]) => any>;
-export type PromiseWorkerApi = Record<string, (...args: any[]) => Promise<any>>;
-export type PostPromiseWorker = (message: PromiseWorkerResponse) => void;
-
-export const runPromiseWorker = (
-	worker: Worker,
-	createHandlers: (post: PostPromiseWorker) => PromiseWorkerHandlers,
-): void => {
-	const postMessage: PostPromiseWorker = (message) => {
-		worker.postMessage(message);
-	};
-
-	const handlers = createHandlers(postMessage);
-	worker.onmessage = (e: MessageEvent<PromiseWorkerRequest>) => {
-		const { id, type, args } = e.data;
-		const result = handlers[type](...args);
-		postMessage({ id, type, result });
-	};
-};
+import { PromiseWorkerRequest, PromiseWorkerResponse, PromiseWorkerApi } from './PromiseWorkerTypes';
 
 export const createPromiseWorkerApi = (
 	worker: Worker,

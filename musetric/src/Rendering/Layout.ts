@@ -140,11 +140,11 @@ export const drawImage = (
 	}
 	if (rotation === 'right') {
 		if (reflection) {
-			context.transform(-1, 0, 0, 1, size.width, 0);
-			context.translate(0, size.height);
+			context.transform(-1, 0, 0, 1, size.height, 0);
+			context.translate(0, size.width);
 			context.rotate(-Math.PI / 2);
 		} else {
-			context.translate(size.width, 0);
+			context.translate(size.height, 0);
 			context.rotate(Math.PI / 2);
 		}
 	}
@@ -154,7 +154,7 @@ export const drawImage = (
 			context.translate(size.width, 0);
 			context.rotate(Math.PI / 2);
 		} else {
-			context.translate(0, size.height);
+			context.translate(0, size.width);
 			context.rotate(-Math.PI / 2);
 		}
 	}

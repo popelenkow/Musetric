@@ -1,13 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import {
+	MasterCanvas, MasterCanvasItem, MasterCanvasProps,
 	SoundBuffer, SoundCircularBuffer,
 	useWaveform, useFrequency, useSpectrogram,
 	WaveformIcon, FrequencyIcon, SpectrogramIcon,
-	Radio, PixelCanvas, PixelCanvasProps,
-	PerformanceMonitorRef, Size2D, Direction2D,
+	Radio, PerformanceMonitorRef, Size2D, Direction2D, Layout2D,
+	rotateSize2D,
 } from '..';
 
-export type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
+type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
 
 export type UseSoundViewProps = {
 	soundBuffer: SoundBuffer;
@@ -16,54 +17,93 @@ export type UseSoundViewProps = {
 	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
-export const useSoundView = (props: UseSoundViewProps) => {
-	const { performanceMonitor } = props;
-	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
+type UseItemProps = UseSoundViewProps & {
+	soundViewId: SoundViewId;
+};
 
-	const waveformLayout = useMemo(() => {
-		const size: Size2D = { width: 512, height: 1024 };
+const useWaveformItem = (props: UseItemProps) => {
+	const layout = useMemo<Layout2D>(() => {
+		const size: Size2D = { width: 1024, height: 512 };
 		const direction: Direction2D = { rotation: 'left', reflection: false };
 		return { size, direction };
 	}, []);
-	const waveform = useWaveform({ ...props });
-	const waveformProps: PixelCanvasProps = {
-		...waveform, ...waveformLayout, performanceMonitor,
-	};
+	const { image, onClick } = useWaveform({
+		...props,
+		size: layout.size,
+		pause: props.soundViewId !== 'Waveform',
+	});
+	const result = useMemo(() => {
+		const size = rotateSize2D(layout.size, layout.direction);
+		const item: MasterCanvasItem = { image, layout, onClick };
+		const items = [item];
+		return { size, items };
+	}, [image, layout, onClick]);
 
-	const frequencyLayout = useMemo(() => {
+	return result;
+};
+
+const useFrequencyItem = (props: UseItemProps) => {
+	const layout = useMemo<Layout2D>(() => {
 		const size: Size2D = { width: 512, height: 1024 };
 		const direction: Direction2D = { rotation: 'twice', reflection: true };
 		return { size, direction };
 	}, []);
-	const frequency = useFrequency({
-		...props, ...frequencyLayout,
+	const { image } = useFrequency({
+		...props,
+		size: layout.size,
+		pause: props.soundViewId !== 'Frequency',
 	});
-	const frequencyProps: PixelCanvasProps = {
-		...frequency, ...frequencyLayout, performanceMonitor,
-	};
+	const result = useMemo(() => {
+		const size = rotateSize2D(layout.size, layout.direction);
+		const item: MasterCanvasItem = { image, layout };
+		const items = [item];
+		return { size, items };
+	}, [image, layout]);
 
-	const spectrogramLayout = useMemo(() => {
+	return result;
+};
+
+const useSpectrogramItem = (props: UseItemProps) => {
+	const layout = useMemo<Layout2D>(() => {
 		const size: Size2D = { width: 512, height: 1024 };
 		const direction: Direction2D = { rotation: 'twice', reflection: true };
 		return { size, direction };
 	}, []);
-	const spectrogram = useSpectrogram({
-		...props, ...spectrogramLayout,
+	const { image, onClick } = useSpectrogram({
+		...props,
+		size: layout.size,
+		pause: props.soundViewId !== 'Spectrogram',
 	});
-	const spectrogramProps: PixelCanvasProps = {
-		...spectrogram, ...spectrogramLayout, performanceMonitor,
-	};
+	const result = useMemo(() => {
+		const size = rotateSize2D(layout.size, layout.direction);
+		const item: MasterCanvasItem = {
+			image,
+			layout,
+			onClick,
+		};
+		const items = [item];
+		return { size, items };
+	}, [image, layout, onClick]);
 
-	const getCanvasViewProps = (): PixelCanvasProps | undefined => {
-		if (soundViewId === 'Waveform') return waveformProps;
-		if (soundViewId === 'Frequency') return frequencyProps;
-		if (soundViewId === 'Spectrogram') return spectrogramProps;
-		return undefined;
-	};
+	return result;
+};
 
-	const canvasViewProps = getCanvasViewProps();
+export const useSoundView = (props: UseSoundViewProps) => {
+	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
 
-	const soundView = canvasViewProps && <PixelCanvas {...canvasViewProps} />;
+	const waveform = useWaveformItem({ ...props, soundViewId });
+	const frequency = useFrequencyItem({ ...props, soundViewId });
+	const spectrogram = useSpectrogramItem({ ...props, soundViewId });
+
+	const masterCanvasProps = useMemo<MasterCanvasProps>(() => {
+		if (soundViewId === 'Waveform') return waveform;
+		if (soundViewId === 'Frequency') return frequency;
+		if (soundViewId === 'Spectrogram') return spectrogram;
+		const size: Size2D = { width: 0, height: 0 };
+		const items: MasterCanvasItem[] = [];
+		return { size, items };
+	}, [soundViewId, waveform, frequency, spectrogram]);
+	const soundView = <MasterCanvas {...masterCanvasProps} />;
 
 	const waveformRadio = <Radio name='soundView' value='Waveform' onSelected={setSoundViewId} checkedValue={soundViewId}><WaveformIcon /></Radio>;
 	const frequencyRadio = <Radio name='soundView' value='Frequency' onSelected={setSoundViewId} checkedValue={soundViewId}><FrequencyIcon /></Radio>;
