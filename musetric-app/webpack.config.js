@@ -43,6 +43,10 @@ const createConfig = (options) => {
 			compress: true,
 			port: 3000,
 			firewall: false,
+			headers: {
+				'Cross-Origin-Opener-Policy': 'same-origin',
+				'Cross-Origin-Embedder-Policy': 'require-corp',
+			},
 		},
 		stats: { assets: false },
 		resolve: {
