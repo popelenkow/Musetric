@@ -30,6 +30,18 @@ export type Layout2D = {
 	direction?: Direction2D;
 };
 
+export const parseThemeColor = (theme: Theme) => {
+	const background = new Color(theme.app);
+	const content = new Color(theme.content);
+	const active = new Color(theme.active);
+	const colors = {
+		background,
+		content,
+		active,
+	};
+	return colors;
+};
+
 export const parseRgbColor = (color: Color): Rgb => {
 	return { r: color.red(), g: color.green(), b: color.blue() };
 };
@@ -55,6 +67,26 @@ export const parseUint32Color = (color: Color) => {
 	rgba[2] = color.blue();
 	rgba[3] = 255;
 	return result[0];
+};
+
+export const gradientUint32ByRgb = (from: Rgb, to: Rgb, count: number) => {
+	const buffer = new ArrayBuffer(4 * count);
+	const rgba = new Uint8Array(buffer);
+	const result = new Uint32Array(buffer);
+	let offset = 0;
+	for (let i = 0; i < count; i++) {
+		const value = i / (count - 1);
+		rgba[offset] = (to.r * value + from.r * (1 - value));
+		rgba[offset + 1] = (to.g * value + from.g * (1 - value));
+		rgba[offset + 2] = (to.b * value + from.b * (1 - value));
+		rgba[offset + 3] = 255;
+		offset += 4;
+	}
+	return result;
+};
+
+export const gradientUint32Color = (from: Color, to: Color, count: number) => {
+	return gradientUint32ByRgb(parseRgbColor(from), parseRgbColor(to), count);
 };
 
 export const parseThemeUint32Color = (theme: Theme) => {

@@ -1,6 +1,6 @@
 import { useMemo, useCallback, useEffect, useState } from 'react';
 import {
-	Theme, parseThemeRgbColor, PerformanceMonitorRef,
+	Theme, parseThemeRgbColor, parseThemeUint32Color, gradientUint32ByRgb, PerformanceMonitorRef,
 	Size2D, Position2D, createAsyncFft,
 	useAppCssContext, useAnimation, createFrequenciesView,
 	SoundBuffer, SoundCircularBuffer, usePixelCanvas,
@@ -13,35 +13,29 @@ export const drawSpectrogram = (
 	theme: Theme,
 	cursor?: number,
 ): void => {
-	const { content, background, active } = parseThemeRgbColor(theme);
+	const count = 256;
+	const { active } = parseThemeUint32Color(theme);
+	const { content, background } = parseThemeRgbColor(theme);
+	const gradient = gradientUint32ByRgb(background, content, count);
+	const out = new Uint32Array(output.buffer);
 
-	const step = (input.length - 1) / (frame.width - 1);
-	for (let x = 0; x < frame.width; x++) {
-		const offset = Math.round(x * step);
+	const step = input.length / frame.height;
+	let index = 0;
+	for (let y = 0; y < frame.height; y++) {
+		const offset = Math.floor(y * step);
 		const spectrum = input[offset];
-
-		for (let y = 0; y < frame.height; y++) {
-			const value = spectrum[y];
-			const yIndex = 4 * y * frame.width;
-			const index = 4 * x + yIndex;
-			output[index] = (content.r * value + background.r * (1 - value));
-			output[index + 1] = (content.g * value + background.g * (1 - value));
-			output[index + 2] = (content.b * value + background.b * (1 - value));
-			output[index + 3] = 255;
+		for (let x = 0; x < frame.width; x++) {
+			const value = spectrum[x];
+			const colorIndex = Math.round(value * (count - 1));
+			out[index] = gradient[colorIndex];
+			index++;
 		}
 	}
 
 	if (typeof cursor === 'number') {
-		const x = Math.round(cursor * (frame.width - 1));
-		const color = active;
-		for (let y = 0; y < frame.height; y++) {
-			const yIndex = 4 * y * frame.width;
-			const index = 4 * x + yIndex;
-			output[index + 0] = color.r;
-			output[index + 1] = color.g;
-			output[index + 2] = color.b;
-			output[index + 3] = 255;
-		}
+		const y = Math.round(cursor * (frame.height - 1));
+		index = y * frame.width;
+		out.fill(active, index, index + frame.width);
 	}
 };
 
@@ -60,7 +54,7 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 	} = props;
 	const { css } = useAppCssContext();
 
-	const windowSize = useMemo(() => size.height * 2, [size]);
+	const windowSize = useMemo(() => size.width * 2, [size]);
 	const asyncFft = useMemo(() => createAsyncFft(), []);
 
 	useEffect(() => {
@@ -69,7 +63,7 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 		return () => { asyncFft.stop().finally(() => {}); };
 	}, [asyncFft, pause]);
 
-	const fftCount = useMemo(() => 70, []);
+	const fftCount = useMemo(() => 1000, []);
 	const [frequencies, setFrequencies] = useState<Float32Array[]>();
 	useEffect(() => {
 		const run = async () => {
@@ -99,7 +93,7 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 
 	const onClick = useCallback((cursorPosition: Position2D) => {
 		if (isLive) return;
-		const value = Math.round(cursorPosition.x * (soundBuffer.memorySize - 1));
+		const value = Math.round(cursorPosition.y * (soundBuffer.memorySize - 1));
 		soundBuffer.setCursor(value);
 	}, [soundBuffer, isLive]);
 

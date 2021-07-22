@@ -65,8 +65,8 @@ const useFrequencyItem = (props: UseItemProps) => {
 
 const useSpectrogramItem = (props: UseItemProps) => {
 	const layout = useMemo<Layout2D>(() => {
-		const size: Size2D = { width: 512, height: 1024 };
-		const direction: Direction2D = { rotation: 'twice', reflection: true };
+		const size: Size2D = { width: 1024, height: 512 };
+		const direction: Direction2D = { rotation: 'left', reflection: false };
 		return { size, direction };
 	}, []);
 	const { image, onClick } = useSpectrogram({
