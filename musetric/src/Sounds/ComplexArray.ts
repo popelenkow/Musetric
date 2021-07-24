@@ -14,8 +14,9 @@ export const createComplexArrayBy = (real: Float32Array, imag: Float32Array) => 
 });
 
 export const normComplexArray = (
-	input: ComplexArray, output: Float32Array, size: number, factor: number,
+	input: ComplexArray, output: Float32Array, factor: number,
 ) => {
+	const size = output.length;
 	for (let i = 0; i < size; i++) {
 		const real = input.real[i];
 		const imag = input.imag[i];

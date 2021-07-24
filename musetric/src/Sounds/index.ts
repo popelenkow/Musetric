@@ -1,5 +1,4 @@
-export * from './AsyncFft';
-export * from './AsyncFftWorker';
+export * from './AmplitudeConverter';
 export * from './ComplexArray';
 export * from './Dft';
 export * from './Fft';
@@ -8,6 +7,9 @@ export * from './RecorderWorklet';
 export * from './SoundBuffer';
 export * from './SoundCircularBuffer';
 export * from './SoundConverter';
+export * from './Spectrometer';
+export * from './Spectrum';
+export * from './SpectrumWorker';
 export * from './WavConverter';
 export * from './WavConverterWorker';
 export * from './WindowFilters';

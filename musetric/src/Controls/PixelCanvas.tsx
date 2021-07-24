@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import {
-	AppCss, createUseClasses, Theme,
-	Size2D, Position2D, Direction2D, PerformanceMonitorRef,
+	AppCss, createUseClasses, Size2D,
 } from '..';
 
 export const getPixelCanvasClasses = (css: AppCss) => ({
@@ -38,12 +37,4 @@ export const usePixelCanvas = (props: UsePixelCanvasProps) => {
 	}, [info, size]);
 
 	return result;
-};
-
-export type PixelCanvasProps = {
-	draw: (output: Uint8ClampedArray, frame: Size2D, theme: Theme) => void;
-	size: Size2D;
-	direction?: Direction2D;
-	onClick?: (cursorPosition: Position2D) => void;
-	performanceMonitor?: PerformanceMonitorRef | null;
 };

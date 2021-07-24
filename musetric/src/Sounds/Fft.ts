@@ -1,8 +1,7 @@
-import { ComplexArray, createComplexArray, normComplexArray } from './ComplexArray';
-import { gaussWindowFilter } from './WindowFilters';
+import { ComplexArray, createComplexArray } from './ComplexArray';
+import { SpectrometerBase, createSpectrometer, Spectrometer } from './Spectrometer';
 
 /** Based on https://github.com/corbanbrook/dsp.js */
-
 const createSinAndCosTable = (size: number) => {
 	const sinTable = new Float32Array(size);
 	const cosTable = new Float32Array(size);
@@ -67,25 +66,12 @@ const evalFft = (
 	}
 };
 
-export type FftFrequencyOptions = {
-	offset: number;
-};
-
-export type FftFrequenciesOptions = {
-	offset: number;
-	step: number;
-	count: number;
-};
-
-export const createFft = (windowSize: number) => {
-	const window = createComplexArray(windowSize);
-	const frequency = createComplexArray(windowSize);
-	const filter = gaussWindowFilter(windowSize);
+export const createFftBase = (windowSize: number) => {
 	const arr = createComplexArray(windowSize);
 	const reverseTable = createReverseTable(windowSize);
 	const { sinTable, cosTable } = createSinAndCosTable(windowSize);
 
-	const result = {
+	const api: SpectrometerBase = {
 		forward: (input: ComplexArray, output: ComplexArray) => {
 			for (let i = 0; i < windowSize; i++) {
 				arr.real[i] = input.real[reverseTable[i]];
@@ -108,36 +94,12 @@ export const createFft = (windowSize: number) => {
 				output.imag[i] = arr.imag[i] / windowSize;
 			}
 		},
-		frequency: (input: Float32Array, output: Float32Array, options: FftFrequencyOptions) => {
-			const offset = Math.floor(options.offset);
-			for (let i = 0; i < windowSize; i++) {
-				window.real[i] = input[i + offset] * filter[i];
-				window.imag[i] = 0;
-			}
-			result.forward(window, frequency);
-			normComplexArray(frequency, output, windowSize / 2, 1 / windowSize);
-		},
-		frequencies: (input: Float32Array, output: Float32Array[], options: FftFrequenciesOptions) => {
-			const { step, count } = options;
-			let { offset } = options;
-			for (let i = 0; i < count; i++) {
-				result.frequency(input, output[i], { offset });
-				offset += step;
-			}
-		},
 	};
-	return result;
+	return api;
 };
-export type Fft = ReturnType<typeof createFft>;
 
-/** Pseudo conversion. Rendering only */
-export const mapAmplitudeToBel = (spectrum: Float32Array[]) => {
-	for (let i = 0; i < spectrum.length; i++) {
-		for (let j = 0; j < spectrum[i].length; j++) {
-			const amplitude = spectrum[i][j];
-			const value = Math.log10(amplitude) / 5;
-			const bel = Math.max(0, Math.min(1, value + 1));
-			spectrum[i][j] = bel;
-		}
-	}
+export const createFft = (windowSize: number) => {
+	const base = createFftBase(windowSize);
+	const api: Spectrometer = createSpectrometer(windowSize, base);
+	return api;
 };

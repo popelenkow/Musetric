@@ -95,8 +95,8 @@ const create = () => {
 	};
 	const others = {
 		entry: {
-			splashScreen: './src/splashScreen.ts',
-			musetricAsyncFft: './src/musetricAsyncFft.ts',
+			musetricSplashScreen: './src/musetricSplashScreen.ts',
+			musetricSpectrum: './src/musetricSpectrum.ts',
 			musetricWavConverter: './src/musetricWavConverter.ts',
 			index: './src/index.ts',
 		},
