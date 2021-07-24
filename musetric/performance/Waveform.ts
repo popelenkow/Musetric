@@ -3,12 +3,13 @@
 
 import benchmark from 'benchmark';
 import {
-	drawWaveform, analyzeWaveform, AnalyzeWaveformResult,
-	Size2D, allThemes,
+	drawWaveform, evalWaves, Waves,
+	Size2D, allThemes, createWaveformColors,
 } from '../src';
 
 export const performanceWaveform = () => {
 	const suite = new benchmark.Suite();
+	const colors = createWaveformColors(allThemes.white);
 	const run = (width: number, height: number, sec: number) => {
 		const frame: Size2D = {
 			width,
@@ -16,13 +17,13 @@ export const performanceWaveform = () => {
 		};
 		const output = new Uint8ClampedArray(frame.width * frame.height);
 		const input = new Float32Array(44000 * sec);
-		const analysis: AnalyzeWaveformResult = {
+		const analysis: Waves = {
 			minArray: new Float32Array(frame.height),
 			maxArray: new Float32Array(frame.height),
 		};
 		suite.add(`drawWaveform [${frame.width}x${frame.height}] sec ${sec}`, () => {
-			analyzeWaveform(input, analysis, frame);
-			drawWaveform(analysis, output, frame, allThemes.white);
+			evalWaves(input, analysis, frame);
+			drawWaveform(analysis, output, frame, colors);
 		});
 	};
 	const runSec = () => {

@@ -6,14 +6,14 @@ import {
 	usePixelCanvas,
 } from '..';
 
-export type AnalyzeWaveformResult = {
+export type Waves = {
 	minArray: Float32Array;
 	maxArray: Float32Array;
 };
 
-export const analyzeWaveform = (
+export const evalWaves = (
 	input: Float32Array,
-	output: AnalyzeWaveformResult,
+	output: Waves,
 	frame: Size2D,
 ) => {
 	const { minArray, maxArray } = output;
@@ -38,14 +38,24 @@ export const analyzeWaveform = (
 	}
 };
 
+export type WaveformColors = {
+	content: number;
+	background: number;
+	active: number;
+};
+export const createWaveformColors = (theme: Theme): WaveformColors => {
+	const { content, background, active } = parseThemeUint32Color(theme);
+	return { content, background, active };
+};
+
 export const drawWaveform = (
-	input: AnalyzeWaveformResult,
+	input: Waves,
 	output: Uint8ClampedArray,
 	frame: Size2D,
-	theme: Theme,
+	colors: WaveformColors,
 	cursor?: number,
 ): void => {
-	const { content, background, active } = parseThemeUint32Color(theme);
+	const { content, background, active } = colors;
 	const { minArray, maxArray } = input;
 	const out = new Uint32Array(output.buffer);
 
@@ -79,26 +89,27 @@ export const useWaveform = (props: WaveformProps) => {
 		soundBuffer, soundCircularBuffer, isLive, size, pause, performanceMonitor,
 	} = props;
 	const { css } = useAppCssContext();
+	const colors = useMemo(() => createWaveformColors(css.theme), [css.theme]);
 
-	const draw = useMemo(() => {
-		let analysisState: AnalyzeWaveformResult | undefined;
-		const getAnalysis = (view: Size2D) => {
-			if (!analysisState || (analysisState.minArray.length !== view.height)) {
-				analysisState = {
+	const getWaves = useMemo(() => {
+		let waves: Waves | undefined;
+		return (view: Size2D) => {
+			if (!waves || (waves.minArray.length !== view.height)) {
+				waves = {
 					minArray: new Float32Array(view.height),
 					maxArray: new Float32Array(view.height),
 				};
 			}
-			return analysisState;
+			return waves;
 		};
-		return (output: Uint8ClampedArray, frame: Size2D, theme: Theme) => {
-			const buffer = isLive ? soundCircularBuffer.buffers[0] : soundBuffer.buffers[0];
-			const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
-			const analysis = getAnalysis(frame);
-			analyzeWaveform(buffer, analysis, frame);
-			drawWaveform(analysis, output, frame, theme, cursor);
-		};
-	}, [soundBuffer, soundCircularBuffer, isLive]);
+	}, []);
+	const draw = useCallback((output: Uint8ClampedArray, frame: Size2D) => {
+		const buffer = isLive ? soundCircularBuffer.buffers[0] : soundBuffer.buffers[0];
+		const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
+		const waves = getWaves(frame);
+		evalWaves(buffer, waves, frame);
+		drawWaveform(waves, output, frame, colors, cursor);
+	}, [soundBuffer, soundCircularBuffer, isLive, colors, getWaves]);
 
 	const onClick = useCallback((cursorPosition: Position2D) => {
 		if (isLive) return;
@@ -112,11 +123,11 @@ export const useWaveform = (props: WaveformProps) => {
 		if (pause) return;
 		performanceMonitor?.begin();
 
-		draw(pixelCanvas.image.data, pixelCanvas.size, css.theme);
+		draw(pixelCanvas.image.data, pixelCanvas.size);
 		pixelCanvas.context.putImageData(pixelCanvas.image, 0, 0);
 
 		performanceMonitor?.end();
-	}, [draw, pixelCanvas, css, pause, performanceMonitor]);
+	}, [draw, pixelCanvas, pause, performanceMonitor]);
 
 	return {
 		image: pixelCanvas.canvas, onClick,

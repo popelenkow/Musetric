@@ -1,4 +1,5 @@
-import { ComplexArray, createComplexArray, normComplexArray, gaussWindowFilter } from '..';
+import { ComplexArray } from './ComplexArray';
+import { SpectrometerBase, createSpectrometer, Spectrometer } from './Spectrometer';
 
 const evalDft = (
 	input: ComplexArray, output: ComplexArray, windowSize: number, isInverse: boolean,
@@ -40,35 +41,20 @@ export type DftFrequenciesOptions = {
 	count: number;
 };
 
-export const createDft = (windowSize: number) => {
-	const window = createComplexArray(windowSize);
-	const frequency = createComplexArray(windowSize);
-	const filter = gaussWindowFilter(windowSize);
-
-	const result = {
+export const createDftBase = (windowSize: number) => {
+	const api: SpectrometerBase = {
 		forward: (input: ComplexArray, output: ComplexArray) => {
 			evalDft(input, output, windowSize, false);
 		},
 		inverse: (input: ComplexArray, output: ComplexArray) => {
 			evalDft(input, output, windowSize, true);
 		},
-		frequency: (input: Float32Array, output: Float32Array, options: DftFrequencyOptions) => {
-			const { offset } = options;
-			for (let i = 0; i < windowSize; i++) {
-				window.real[i] = input[i + offset] * filter[i];
-				window.imag[i] = 0;
-			}
-			result.forward(window, frequency);
-			normComplexArray(frequency, output, windowSize / 2, 1 / windowSize);
-		},
-		frequencies: (input: Float32Array, output: Float32Array[], options: DftFrequenciesOptions) => {
-			const { offset, step, count } = options;
-			for (let i = 0; i < count; i++) {
-				result.frequency(input, output[i], {
-					offset: offset + i * step,
-				});
-			}
-		},
 	};
-	return result;
+	return api;
+};
+
+export const createDft = (windowSize: number) => {
+	const base = createDftBase(windowSize);
+	const api: Spectrometer = createSpectrometer(windowSize, base);
+	return api;
 };

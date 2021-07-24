@@ -1,22 +1,30 @@
 import { useMemo, useCallback, useEffect, useState } from 'react';
 import {
 	Theme, parseThemeRgbColor, parseThemeUint32Color, gradientUint32ByRgb, PerformanceMonitorRef,
-	Size2D, Position2D, createAsyncFft,
+	Size2D, Position2D, createSpectrum,
 	useAppCssContext, useAnimation, createFrequenciesView,
 	SoundBuffer, SoundCircularBuffer, usePixelCanvas,
 } from '..';
 
-export const drawSpectrogram = (
-	input: Float32Array[],
-	output: Uint8ClampedArray,
-	frame: Size2D,
-	theme: Theme,
-	cursor?: number,
-): void => {
-	const count = 256;
+export type SpectrogramColors = {
+	gradient: Uint32Array;
+	active: number;
+};
+export const createSpectrogramColors = (theme: Theme) => {
 	const { active } = parseThemeUint32Color(theme);
 	const { content, background } = parseThemeRgbColor(theme);
-	const gradient = gradientUint32ByRgb(background, content, count);
+	const gradient = gradientUint32ByRgb(background, content, 256);
+	return { gradient, active };
+};
+
+export const drawSpectrogram = (
+	input: Uint8Array[],
+	output: Uint8ClampedArray,
+	frame: Size2D,
+	colors: SpectrogramColors,
+	cursor?: number,
+): void => {
+	const { gradient, active } = colors;
 	const out = new Uint32Array(output.buffer);
 
 	const step = input.length / frame.height;
@@ -25,8 +33,7 @@ export const drawSpectrogram = (
 		const offset = Math.floor(y * step);
 		const spectrum = input[offset];
 		for (let x = 0; x < frame.width; x++) {
-			const value = spectrum[x];
-			const colorIndex = Math.round(value * (count - 1));
+			const colorIndex = spectrum[x];
 			out[index] = gradient[colorIndex];
 			index++;
 		}
@@ -53,26 +60,27 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 		soundBuffer, soundCircularBuffer, isLive, size, pause, performanceMonitor,
 	} = props;
 	const { css } = useAppCssContext();
+	const colors = useMemo(() => createSpectrogramColors(css.theme), [css.theme]);
 
 	const windowSize = useMemo(() => size.width * 2, [size]);
-	const asyncFft = useMemo(() => createAsyncFft(), []);
+	const spectrum = useMemo(() => createSpectrum(), []);
 
 	useEffect(() => {
 		if (pause) return undefined;
-		asyncFft.start().finally(() => {});
-		return () => { asyncFft.stop().finally(() => {}); };
-	}, [asyncFft, pause]);
+		spectrum.start().finally(() => {});
+		return () => { spectrum.stop().finally(() => {}); };
+	}, [spectrum, pause]);
 
-	const fftCount = useMemo(() => 1000, []);
-	const [frequencies, setFrequencies] = useState<Float32Array[]>();
+	const count = useMemo(() => 100, []);
+	const [frequencies, setFrequencies] = useState<Uint8Array[]>();
 	useEffect(() => {
 		const run = async () => {
-			const raw = await asyncFft.setup({ windowSize, fftCount });
-			const result = createFrequenciesView(raw, windowSize, fftCount);
+			const raw = await spectrum.setup({ windowSize, count });
+			const result = createFrequenciesView(raw, windowSize, count);
 			setFrequencies(result);
 		};
 		run().finally(() => {});
-	}, [asyncFft, windowSize, fftCount]);
+	}, [spectrum, windowSize, count]);
 
 	const [buffer, setBuffer] = useState<SharedArrayBuffer>();
 
@@ -88,8 +96,8 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 
 	useEffect(() => {
 		if (!buffer) return;
-		asyncFft.setSoundBuffer(buffer).finally(() => {});
-	}, [asyncFft, buffer]);
+		spectrum.setSoundBuffer(buffer).finally(() => {});
+	}, [spectrum, buffer]);
 
 	const onClick = useCallback((cursorPosition: Position2D) => {
 		if (isLive) return;
@@ -105,13 +113,13 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 		performanceMonitor?.begin();
 
 		const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
-		drawSpectrogram(frequencies, pixelCanvas.image.data, size, css.theme, cursor);
+		drawSpectrogram(frequencies, pixelCanvas.image.data, size, colors, cursor);
 		pixelCanvas.context.putImageData(pixelCanvas.image, 0, 0);
 
 		performanceMonitor?.end();
 	}, [
 		soundBuffer, frequencies,
-		pixelCanvas, css,
+		pixelCanvas, colors,
 		isLive, size,
 		pause, performanceMonitor,
 	]);
