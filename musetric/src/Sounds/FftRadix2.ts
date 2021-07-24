@@ -1,7 +1,7 @@
 import { ComplexArray, createComplexArray } from './ComplexArray';
 import { SpectrometerBase, createSpectrometer, Spectrometer } from './Spectrometer';
 
-/** Based on https://github.com/corbanbrook/dsp.js */
+/** Licensed by MIT. Based on https://github.com/corbanbrook/dsp.js/tree/c6144fcd75b65f72eac4791ab9f7268a814f44a8 */
 const createSinAndCosTable = (size: number) => {
 	const sinTable = new Float32Array(size);
 	const cosTable = new Float32Array(size);
@@ -29,7 +29,7 @@ const createReverseTable = (size: number) => {
 	return reverseTable;
 };
 
-const evalFft = (
+const transform = (
 	arr: ComplexArray, windowSize: number, sinTable: Float32Array, cosTable: Float32Array,
 ) => {
 	let halfSize = 1;
@@ -66,7 +66,7 @@ const evalFft = (
 	}
 };
 
-export const createFftBase = (windowSize: number) => {
+export const createFftRadix2Base = (windowSize: number) => {
 	const arr = createComplexArray(windowSize);
 	const reverseTable = createReverseTable(windowSize);
 	const { sinTable, cosTable } = createSinAndCosTable(windowSize);
@@ -77,7 +77,7 @@ export const createFftBase = (windowSize: number) => {
 				arr.real[i] = input.real[reverseTable[i]];
 				arr.imag[i] = input.imag[reverseTable[i]];
 			}
-			evalFft(arr, windowSize, sinTable, cosTable);
+			transform(arr, windowSize, sinTable, cosTable);
 			for (let i = 0; i < windowSize; i++) {
 				output.real[i] = arr.real[i];
 				output.imag[i] = arr.imag[i];
@@ -86,20 +86,20 @@ export const createFftBase = (windowSize: number) => {
 		inverse: (input: ComplexArray, output: ComplexArray) => {
 			for (let i = 0; i < windowSize; i++) {
 				arr.real[i] = input.real[reverseTable[i]];
-				arr.imag[i] = input.imag[reverseTable[i]] * -1;
+				arr.imag[i] = -input.imag[reverseTable[i]];
 			}
-			evalFft(arr, windowSize, sinTable, cosTable);
+			transform(arr, windowSize, sinTable, cosTable);
 			for (let i = 0; i < windowSize; i++) {
 				output.real[i] = arr.real[i] / windowSize;
-				output.imag[i] = arr.imag[i] / windowSize;
+				output.imag[i] = -arr.imag[i] / windowSize;
 			}
 		},
 	};
 	return api;
 };
 
-export const createFft = (windowSize: number) => {
-	const base = createFftBase(windowSize);
+export const createFftRadix2 = (windowSize: number) => {
+	const base = createFftRadix2Base(windowSize);
 	const api: Spectrometer = createSpectrometer(windowSize, base);
 	return api;
 };

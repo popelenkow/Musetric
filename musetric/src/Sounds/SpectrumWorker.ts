@@ -1,4 +1,4 @@
-import { createFft } from './Fft';
+import { createFftRadix4 } from './FftRadix4';
 import { Spectrometer, SpectrometerFrequenciesOptions } from './Spectrometer';
 import { startAnimation, AnimationSubscription } from '../Rendering/Animation';
 import { runPromiseWorker } from '../Workers/PromiseWorker';
@@ -26,7 +26,7 @@ export type SpectrumOptions = {
 };
 export const createSpectrumHandlers = () => {
 	type SpectrumState = SpectrumOptions & {
-		fft: Spectrometer;
+		spectrometer: Spectrometer;
 		frequencies: Uint8Array[];
 		raw: Uint8Array;
 		result: Uint8Array;
@@ -34,14 +34,14 @@ export const createSpectrumHandlers = () => {
 	let state: SpectrumState | undefined;
 	const setup = (options: SpectrumOptions) => {
 		const { windowSize, count } = options;
-		const fftSize = windowSize / 2;
-		const fft = createFft(windowSize);
-		const shared = new SharedArrayBuffer(count * fftSize * Uint8Array.BYTES_PER_ELEMENT);
-		const buffer = new ArrayBuffer(count * fftSize * Uint8Array.BYTES_PER_ELEMENT);
+		const spectrometerSize = windowSize / 2;
+		const spectrometer = createFftRadix4(windowSize);
+		const shared = new SharedArrayBuffer(count * spectrometerSize * Uint8Array.BYTES_PER_ELEMENT);
+		const buffer = new ArrayBuffer(count * spectrometerSize * Uint8Array.BYTES_PER_ELEMENT);
 		const frequencies = createFrequenciesView(buffer, windowSize, count);
 		const raw = new Uint8Array(buffer);
 		const result = new Uint8Array(shared);
-		state = { windowSize, count, fft, frequencies, raw, result };
+		state = { windowSize, count, spectrometer, frequencies, raw, result };
 		return shared;
 	};
 
@@ -57,14 +57,14 @@ export const createSpectrumHandlers = () => {
 	};
 	const calc = (): void => {
 		if (!state || !buffer) return;
-		const { windowSize, count, fft, frequencies } = state;
+		const { windowSize, count, spectrometer, frequencies } = state;
 		const step = (buffer.length - windowSize) / (count - 1);
 		const options: SpectrometerFrequenciesOptions = {
 			offset: 0,
 			step,
 			count,
 		};
-		fft.byteFrequencies(buffer, frequencies, options);
+		spectrometer.byteFrequencies(buffer, frequencies, options);
 		copy();
 	};
 

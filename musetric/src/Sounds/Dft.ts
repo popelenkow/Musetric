@@ -1,7 +1,7 @@
 import { ComplexArray } from './ComplexArray';
 import { SpectrometerBase, createSpectrometer, Spectrometer } from './Spectrometer';
 
-const evalDft = (
+const transform = (
 	input: ComplexArray, output: ComplexArray, windowSize: number, isInverse: boolean,
 ) => {
 	for (let i = 0; i < windowSize; i++) {
@@ -44,10 +44,10 @@ export type DftFrequenciesOptions = {
 export const createDftBase = (windowSize: number) => {
 	const api: SpectrometerBase = {
 		forward: (input: ComplexArray, output: ComplexArray) => {
-			evalDft(input, output, windowSize, false);
+			transform(input, output, windowSize, false);
 		},
 		inverse: (input: ComplexArray, output: ComplexArray) => {
-			evalDft(input, output, windowSize, true);
+			transform(input, output, windowSize, true);
 		},
 	};
 	return api;
