@@ -8,11 +8,6 @@ export const createComplexArray = (size: number): ComplexArray => ({
 	imag: new Float32Array(size),
 });
 
-export const createComplexArrayBy = (real: Float32Array, imag: Float32Array) => ({
-	real,
-	imag,
-});
-
 export const normComplexArray = (
 	input: ComplexArray, output: Float32Array, factor: number,
 ) => {

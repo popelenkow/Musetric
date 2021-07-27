@@ -12,8 +12,6 @@ export const getPerformanceMonitorClasses = () => ({
 
 export const usePerformanceMonitorClasses = createUseClasses('PerformanceMonitor', getPerformanceMonitorClasses());
 
-/** Based on https://github.com/mrdoob/stats.js */
-
 declare	const performance: Window['performance'] & {
 	memory?: {
 		/** The maximum size of the heap, in bytes, that is available to the context. */
@@ -25,6 +23,7 @@ declare	const performance: Window['performance'] & {
 	};
 };
 
+/** Licensed by MIT. Based on https://github.com/mrdoob/stats.js/tree/4a46c8b7e89e8a210ffc0e71450b12369d9f49e3 */
 const createStats = () => {
 	const createPanel = (name: string, fg: string, bg: string) => {
 		let min = Infinity;

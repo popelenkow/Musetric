@@ -1,4 +1,4 @@
-/** Based on https://github.com/corbanbrook/dsp.js */
+/** Licensed by MIT. Based on https://github.com/corbanbrook/dsp.js/tree/c6144fcd75b65f72eac4791ab9f7268a814f44a8 */
 
 export type GetWindowFilter = (windowSize: number) => Float32Array;
 

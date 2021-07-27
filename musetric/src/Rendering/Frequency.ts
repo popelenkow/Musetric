@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import {
 	Theme, parseThemeUint32Color, PerformanceMonitorRef,
-	Size2D, createFft, useAppCssContext,
+	Size2D, createFftRadix4, useAppCssContext,
 	SoundBuffer, SoundCircularBuffer,
 	usePixelCanvas, useAnimation,
 } from '..';
@@ -55,7 +55,7 @@ export const useFrequency = (props: FrequencyProps) => {
 
 	const info = useMemo(() => {
 		const windowSize = size.width * 2;
-		const fft = createFft(windowSize);
+		const fft = createFftRadix4(windowSize);
 		const result = new Float32Array(size.width);
 		return { windowSize, fft, result };
 	}, [size]);
