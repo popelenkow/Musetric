@@ -1,5 +1,5 @@
 import { convertAmplitudeToBel } from './AmplitudeConverter';
-import { ComplexArray, createComplexArray, normComplexArray } from './ComplexArray';
+import { RealArray, ComplexArray, createComplexArray, normComplexArray, createRealArray, viewRealArray } from './ComplexArray';
 import { gaussWindowFilter } from './WindowFilters';
 
 export type SpectrometerBase = {
@@ -8,29 +8,29 @@ export type SpectrometerBase = {
 };
 
 export type SpectrometerFrequencyOptions = {
-	convert?: (amplitudes: Float32Array) => void;
+	convert?: (amplitudes: RealArray) => void;
 };
 
 export type SpectrometerFrequenciesOptions = {
 	offset: number;
 	step: number;
 	count: number;
-	convert?: (amplitudes: Float32Array) => void;
+	convert?: (amplitudes: RealArray) => void;
 };
 
 export const createSpectrometer = (windowSize: number, base: SpectrometerBase) => {
 	const { forward, inverse } = base;
-	const window = createComplexArray(windowSize);
-	const buf = new Float32Array(windowSize / 2);
-	const frequency = createComplexArray(windowSize);
-	const filter = gaussWindowFilter(windowSize);
+	const window = createComplexArray(windowSize, 'float64');
+	const buf = createRealArray(windowSize / 2, 'float64');
+	const frequency = createComplexArray(windowSize, 'list');
+	const filter = gaussWindowFilter(windowSize, 'float64');
 
 	const api = {
 		forward,
 		inverse,
 		frequency: (
-			input: Float32Array,
-			output: Float32Array,
+			input: RealArray,
+			output: RealArray,
 			options: SpectrometerFrequencyOptions,
 		) => {
 			const { convert = convertAmplitudeToBel } = options;
@@ -50,8 +50,7 @@ export const createSpectrometer = (windowSize: number, base: SpectrometerBase) =
 			const { step, count, convert } = options;
 			let { offset } = options;
 			for (let i = 0; i < count; i++) {
-				const index = Math.floor(offset) * Float32Array.BYTES_PER_ELEMENT;
-				const view = new Float32Array(input.buffer, index, windowSize);
+				const view = viewRealArray(input, Math.floor(offset), windowSize);
 				api.frequency(view, output[i], { convert });
 				offset += step;
 			}
@@ -64,8 +63,7 @@ export const createSpectrometer = (windowSize: number, base: SpectrometerBase) =
 			const { step, count, convert } = options;
 			let { offset } = options;
 			for (let i = 0; i < count; i++) {
-				const index = Math.floor(offset) * Float32Array.BYTES_PER_ELEMENT;
-				const view = new Float32Array(input.buffer, index, windowSize);
+				const view = viewRealArray(input, Math.floor(offset), windowSize);
 				api.frequency(view, buf, { convert });
 				for (let j = 0; j < windowSize / 2; j++) {
 					output[i][j] = Math.round(buf[j] * 255);

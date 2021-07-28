@@ -1,25 +1,25 @@
+/* eslint-disable max-len */
+import { RealArray, createRealArray, RealArrayType } from './ComplexArray';
+
 /** Licensed by MIT. Based on https://github.com/corbanbrook/dsp.js/tree/c6144fcd75b65f72eac4791ab9f7268a814f44a8 */
-
-export type GetWindowFilter = (windowSize: number) => Float32Array;
-
-export const zeroWindowFilter: GetWindowFilter = (windowSize) => {
-	const filter = new Float32Array(windowSize);
+export const zeroWindowFilter = <K extends RealArrayType>(windowSize: number, type: K): RealArray<K> => {
+	const filter = createRealArray(windowSize, type);
 	for (let i = 0; i < windowSize; i++) {
 		filter[i] = 0;
 	}
 	return filter;
 };
 
-export const bartlettWindowFilter: GetWindowFilter = (windowSize) => {
-	const filter = new Float32Array(windowSize);
+export const bartlettWindowFilter = <K extends RealArrayType>(windowSize: number, type: K): RealArray<K> => {
+	const filter = createRealArray(windowSize, type);
 	const last = windowSize - 1;
 	for (let i = 0; i < windowSize; i++) {
 		filter[i] = (2 / last) * (last / 2 - Math.abs(i - last / 2));
 	}
 	return filter;
 };
-export const bartlettHannWindowFilter: GetWindowFilter = (windowSize) => {
-	const filter = new Float32Array(windowSize);
+export const bartlettHannWindowFilter = <K extends RealArrayType>(windowSize: number, type: K): RealArray<K> => {
+	const filter = createRealArray(windowSize, type);
 	const last = windowSize - 1;
 	for (let i = 0; i < windowSize; i++) {
 		filter[i] = (2 / last) * (last / 2 - Math.abs(i - last / 2));
@@ -27,8 +27,8 @@ export const bartlettHannWindowFilter: GetWindowFilter = (windowSize) => {
 	return filter;
 };
 
-export const blackmanWindowFilter: GetWindowFilter = (windowSize) => {
-	const filter = new Float32Array(windowSize);
+export const blackmanWindowFilter = <K extends RealArrayType>(windowSize: number, type: K): RealArray<K> => {
+	const filter = createRealArray(windowSize, type);
 	const last = windowSize - 1;
 	const alpha = 0.16;
 	for (let i = 0; i < windowSize; i++) {
@@ -39,16 +39,16 @@ export const blackmanWindowFilter: GetWindowFilter = (windowSize) => {
 	return filter;
 };
 
-export const cosineWindowFilter: GetWindowFilter = (windowSize) => {
-	const filter = new Float32Array(windowSize);
+export const cosineWindowFilter = <K extends RealArrayType>(windowSize: number, type: K): RealArray<K> => {
+	const filter = createRealArray(windowSize, type);
 	for (let i = 0; i < windowSize; i++) {
 		filter[i] = Math.cos((Math.PI * i) / (windowSize - 1) - Math.PI / 2);
 	}
 	return filter;
 };
 
-export const gaussWindowFilter: GetWindowFilter = (windowSize) => {
-	const filter = new Float32Array(windowSize);
+export const gaussWindowFilter = <K extends RealArrayType>(windowSize: number, type: K): RealArray<K> => {
+	const filter = createRealArray(windowSize, type);
 	const alpha = 0.25;
 	for (let i = 0; i < windowSize; i++) {
 		const r1 = (i - (windowSize - 1) / 2) / ((alpha * (windowSize - 1)) / 2);
@@ -57,24 +57,24 @@ export const gaussWindowFilter: GetWindowFilter = (windowSize) => {
 	return filter;
 };
 
-export const hammingWindowFilter: GetWindowFilter = (windowSize) => {
-	const filter = new Float32Array(windowSize);
+export const hammingWindowFilter = <K extends RealArrayType>(windowSize: number, type: K): RealArray<K> => {
+	const filter = createRealArray(windowSize, type);
 	for (let i = 0; i < windowSize; i++) {
 		filter[i] = 0.54 - 0.46 * Math.cos((Math.PI * 2 * i) / (windowSize - 1));
 	}
 	return filter;
 };
 
-export const hannWindowFilter: GetWindowFilter = (windowSize) => {
-	const filter = new Float32Array(windowSize);
+export const hannWindowFilter = <K extends RealArrayType>(windowSize: number, type: K): RealArray<K> => {
+	const filter = createRealArray(windowSize, type);
 	for (let i = 0; i < windowSize; i++) {
 		filter[i] = 0.5 * (1 - Math.cos((Math.PI * 2 * i) / (windowSize - 1)));
 	}
 	return filter;
 };
 
-export const lanczozWindowFilter: GetWindowFilter = (windowSize) => {
-	const filter = new Float32Array(windowSize);
+export const lanczozWindowFilter = <K extends RealArrayType>(windowSize: number, type: K): RealArray<K> => {
+	const filter = createRealArray(windowSize, type);
 	const last = windowSize - 1;
 	for (let i = 0; i < windowSize; i++) {
 		filter[i] = Math.sin(Math.PI * ((2 * i) / last - 1)) / (Math.PI * ((2 * i) / last - 1));
@@ -82,16 +82,16 @@ export const lanczozWindowFilter: GetWindowFilter = (windowSize) => {
 	return filter;
 };
 
-export const rectangularWindowFilter: GetWindowFilter = (windowSize) => {
-	const filter = new Float32Array(windowSize);
+export const rectangularWindowFilter = <K extends RealArrayType>(windowSize: number, type: K): RealArray<K> => {
+	const filter = createRealArray(windowSize, type);
 	for (let i = 0; i < windowSize; i++) {
 		filter[i] = 1;
 	}
 	return filter;
 };
 
-export const triangularWindowFilter: GetWindowFilter = (windowSize) => {
-	const filter = new Float32Array(windowSize);
+export const triangularWindowFilter = <K extends RealArrayType>(windowSize: number, type: K): RealArray<K> => {
+	const filter = createRealArray(windowSize, type);
 	for (let i = 0; i < windowSize; i++) {
 		filter[i] = (2 / windowSize) * (windowSize / 2 - Math.abs(i - (windowSize - 1) / 2));
 	}

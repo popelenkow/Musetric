@@ -3,7 +3,7 @@ import {
 	Theme, parseThemeUint32Color, PerformanceMonitorRef,
 	Size2D, createFftRadix4, useAppCssContext,
 	SoundBuffer, SoundCircularBuffer,
-	usePixelCanvas, useAnimation,
+	usePixelCanvas, useAnimation, viewRealArray,
 } from '..';
 
 export type FrequencyColors = {
@@ -71,8 +71,7 @@ export const useFrequency = (props: FrequencyProps) => {
 			const { cursor, memorySize, buffers } = getBuffer();
 			let offset = cursor < memorySize ? cursor - windowSize : memorySize - windowSize;
 			offset = offset < 0 ? 0 : offset;
-			const index = Math.floor(offset) * Float32Array.BYTES_PER_ELEMENT;
-			const view = new Float32Array(buffers[0].buffer, index, windowSize);
+			const view = viewRealArray(buffers[0], Math.floor(offset), windowSize);
 			fft.frequency(view, result, { });
 			drawFrequency(result, output, frame, colors);
 		};
