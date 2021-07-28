@@ -1,5 +1,5 @@
 import { convertAmplitudeToBel } from './AmplitudeConverter';
-import { ComplexArray, createComplexArray, normComplexArray } from './ComplexArray';
+import { RealArray, ComplexArray, createComplexArray, normComplexArray, createRealArray } from './ComplexArray';
 import { gaussWindowFilter } from './WindowFilters';
 
 export type SpectrometerBase = {
@@ -8,29 +8,29 @@ export type SpectrometerBase = {
 };
 
 export type SpectrometerFrequencyOptions = {
-	convert?: (amplitudes: Float32Array) => void;
+	convert?: (amplitudes: RealArray) => void;
 };
 
 export type SpectrometerFrequenciesOptions = {
 	offset: number;
 	step: number;
 	count: number;
-	convert?: (amplitudes: Float32Array) => void;
+	convert?: (amplitudes: RealArray) => void;
 };
 
 export const createSpectrometer = (windowSize: number, base: SpectrometerBase) => {
 	const { forward, inverse } = base;
-	const window = createComplexArray(windowSize);
-	const buf = new Float32Array(windowSize / 2);
-	const frequency = createComplexArray(windowSize);
-	const filter = gaussWindowFilter(windowSize);
+	const window = createComplexArray(windowSize, 'list');
+	const buf = createRealArray(windowSize / 2, 'float64');
+	const frequency = createComplexArray(windowSize, 'list');
+	const filter = gaussWindowFilter(windowSize, 'list');
 
 	const api = {
 		forward,
 		inverse,
 		frequency: (
-			input: Float32Array,
-			output: Float32Array,
+			input: RealArray,
+			output: RealArray,
 			options: SpectrometerFrequencyOptions,
 		) => {
 			const { convert = convertAmplitudeToBel } = options;

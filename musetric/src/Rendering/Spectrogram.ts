@@ -71,7 +71,7 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 		return () => { spectrum.stop().finally(() => {}); };
 	}, [spectrum, pause]);
 
-	const count = useMemo(() => 100, []);
+	const count = useMemo(() => 128, []);
 	const [frequencies, setFrequencies] = useState<Uint8Array[]>();
 	useEffect(() => {
 		const run = async () => {
