@@ -1,5 +1,5 @@
 /* eslint-disable no-continue */
-import { RealArray, ComplexArray, createRealArray } from './ComplexArray';
+import { RealArray, ComplexArray, createRealArray, RealArrayType } from './ComplexArray';
 import { SpectrometerBase, Spectrometer, createSpectrometer } from './Spectrometer';
 
 /** Licensed by MIT. Based on https://github.com/indutny/fft.js/tree/4a18cf88fcdbd4ad5acca6eaea06a0b462047835 */
@@ -94,7 +94,7 @@ type Transform4Options = {
 	inv: boolean;
 	windowSize: number;
 	width: number;
-	reverseTable: RealArray;
+	reverseTable: Uint32Array;
 	table: RealArray;
 };
 /** radix-4 implementation */
@@ -103,26 +103,27 @@ const transform4 = (options: Transform4Options) => {
 
 	// Initial step (permute and transform)
 	let step = 1 << width;
-	let len = (windowSize / step) << 1;
+	let len = windowSize >>> width;
 
+	// console.log({ len, step, windowSize, width });
 	let outOff: number;
 	let t: number;
 	if (len === 2) {
-		for (outOff = 0, t = 0; outOff < windowSize; outOff += len, t++) {
+		for (outOff = 0, t = 0; outOff < windowSize; outOff += 2, t++) {
 			const off = reverseTable[t];
-			singleTransform2({ input, output, outOff, off, step: step >> 1 });
+			singleTransform2({ input, output, outOff, off, step });
 		}
 	} else {
-		// len === 8
-		for (outOff = 0, t = 0; outOff < windowSize; outOff += len, t++) {
+		// len === 4
+		for (outOff = 0, t = 0; outOff < windowSize; outOff += 4, t++) {
 			const off = reverseTable[t];
-			singleTransform4({ input, output, inv, outOff, off, step: step >> 1 });
+			singleTransform4({ input, output, inv, outOff, off, step });
 		}
 	}
 
 	// Loop through steps in decreasing order
 	const sign = inv ? -1 : 1;
-	for (step >>= 2; step >= 2; step >>= 2) {
+	for (step >>= 1; step >= 2; step >>= 2) {
 		len = (windowSize / step) << 1;
 		const quarterLen = len >>> 2;
 		// Loop through offsets in the data
@@ -200,47 +201,12 @@ const transform4 = (options: Transform4Options) => {
 	}
 };
 
-export const createArrayRadix4 = (windowSize: number) => {
-	const api = {
-		createComplexArray: () => {
-			const res = new Array<number>(windowSize * 2);
-			for (let i = 0; i < windowSize * 2; i++) {
-				res[i] = 0;
-			}
-			return res;
-		},
-		toComplexArray: (input: RealArray) => {
-			const res = api.createComplexArray();
-			for (let i = 0; i < windowSize * 2; i += 2) {
-				res[i] = input[i >>> 1];
-				res[i + 1] = 0;
-			}
-			return res;
-		},
-		toArray: (input: ComplexArray) => {
-			const res = api.createComplexArray();
-			for (let i = 0; i < windowSize * 2; i += 2) {
-				res[i] = input.real[i >>> 1];
-				res[i + 1] = input.imag[i >>> 1];
-			}
-			return res;
-		},
-		fromArray: (input: RealArray, storage: ComplexArray) => {
-			for (let i = 0; i < windowSize * 2; i += 2) {
-				storage.real[i >>> 1] = input[i];
-				storage.imag[i >>> 1] = input[i + 1];
-			}
-		},
-	};
-	return api;
-};
-
 const createReverseTable = (width: number) => {
-	const reverseTable = new Array<number>(1 << (width - 1));
+	const reverseTable = new Uint32Array(1 << width);
 	for (let j = 0; j < reverseTable.length; j++) {
 		reverseTable[j] = 0;
-		for (let shift = 0; shift < width; shift += 2) {
-			const revShift = width - shift - 2;
+		for (let shift = 0; shift < width + 1; shift += 2) {
+			const revShift = width - shift - 1;
 			reverseTable[j] |= ((j >>> shift) & 3) << revShift;
 		}
 		reverseTable[j] /= 2;
@@ -248,8 +214,8 @@ const createReverseTable = (width: number) => {
 	return reverseTable;
 };
 
-const createTable = (windowSize: number) => {
-	const table = createRealArray(2 * windowSize, 'list');
+const createTable = <K extends RealArrayType>(windowSize: number, type: K): RealArray<K> => {
+	const table = createRealArray(2 * windowSize, type);
 	for (let i = 0; i < table.length; i += 2) {
 		const angle = (Math.PI * i) / windowSize;
 		table[i] = Math.cos(angle);
@@ -269,7 +235,7 @@ const getWidth = (windowSize: number) => {
 	//   * If we are full radix-4 - it is 2x smaller to give initial len=8
 	//   * Otherwise it is the same as `power` to give len=4
 	const width = power % 2 === 0 ? power - 1 : power;
-	return width;
+	return width - 1;
 };
 
 export const createFftRadix4Base = (windowSize: number) => {
@@ -277,7 +243,7 @@ export const createFftRadix4Base = (windowSize: number) => {
 		throw new Error('FFT size must be a power of two and bigger than 1');
 	}
 
-	const table = createTable(windowSize);
+	const table = createTable(windowSize, 'list');
 
 	const width = getWidth(windowSize);
 
