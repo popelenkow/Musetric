@@ -1,11 +1,12 @@
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-loop-func */
+/* eslint-disable max-len */
 import {
 	createComplexArray, SpectrometerBase,
 	createDftBase, createFftRadix2Base, createFftRadix4Base,
 } from '../src';
 
 const toStringArray = (input: ArrayLike<number>) => {
-	const arr = Array.from<number>(input).map(x => x % 1 ? x.toFixed(2) : x);
+	const arr = Array.from<number>(input).map(x => (x % 1 ? x.toFixed(2) : x));
 	if (arr.length < 9) return `[${arr.join(', ')}]`;
 	return `[${arr.slice(0, 6).join(', ')}, ...(${arr.length})]`;
 };
@@ -21,6 +22,7 @@ const isArrayCloseTo = (arr1: ArrayLike<number>, arr2: ArrayLike<number>) => {
 };
 
 declare global {
+	// eslint-disable-next-line @typescript-eslint/no-namespace
 	namespace jest {
 		interface Matchers<R> {
 			toBeArrayCloseTo(expected: ArrayLike<number>): R;
@@ -45,7 +47,7 @@ const testTransform = (createSpectrometer: (windowSize: number) => SpectrometerB
 			input.real[i] = real[i];
 			input.imag[i] = imag[i];
 		}
-	
+
 		return { input, output };
 	};
 	const arr: { windowSize: number, inputR: number[], inputI: number[], outputR: number[], outputI: number[] }[] = [
@@ -57,7 +59,7 @@ const testTransform = (createSpectrometer: (windowSize: number) => SpectrometerB
 			windowSize: 8,
 			inputR: [0, 1, 2, 3, 4, 5, 6, 7],
 			inputI: [0, 0, 0, 0, 0, 0, 0, 0],
-			outputR:[28, -4, -4, -4, -4, -4, -4, -4],
+			outputR: [28, -4, -4, -4, -4, -4, -4, -4],
 			outputI: [0, 9.656854629516602, 3.999999761581421, 1.6568539142608643, 0, -1.6568541526794434, -3.999999761581421, -9.656853675842285],
 		},
 		{
@@ -87,7 +89,7 @@ const testTransform = (createSpectrometer: (windowSize: number) => SpectrometerB
 			const { windowSize, inputR, inputI, outputR, outputI } = arr[i];
 			it(`${toStringArray(inputR)}, ${toStringArray(inputI)}`, () => {
 				const { input, output } = create(windowSize, inputR, inputI);
-				expect(() => createSpectrometer(windowSize).forward(input, output)).not.toThrow();
+				createSpectrometer(windowSize).forward(input, output);
 				expect(output.real).toBeArrayCloseTo(outputR);
 				expect(output.imag).toBeArrayCloseTo(outputI);
 			});

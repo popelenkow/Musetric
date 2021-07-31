@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
-const HtmlPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const musetricAppPkg = require('./package.json');
 const musetricPkg = require('./node_modules/musetric/package.json');
@@ -98,6 +97,7 @@ const create = () => {
 			musetricSplashScreen: './src/musetricSplashScreen.ts',
 			musetricSpectrum: './src/musetricSpectrum.ts',
 			musetricWavConverter: './src/musetricWavConverter.ts',
+			perf: './src/perf.ts',
 			index: './src/index.ts',
 		},
 		output: {
@@ -107,16 +107,10 @@ const create = () => {
 			},
 		},
 		plugins: [
-			new HtmlPlugin({
-				template: './src/index.html',
-				filename: 'index.html',
-				inject: false,
-				minify: {
-					collapseWhitespace: false,
-				},
-			}),
 			new CopyPlugin({
 				patterns: [
+					{ from: './src/index.html', to: './index.html' },
+					{ from: './src/perf.html', to: './perf.html' },
 					{ from: './src/favicon.ico', to: './favicon.ico' },
 				],
 			}),

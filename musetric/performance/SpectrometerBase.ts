@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import benchmark from 'benchmark';
+import { Suite } from 'benchmark';
 import FFT from 'fft.js';
 import { createComplexArray } from '../src/Sounds/ComplexArray';
 import { createFftRadix2Base } from '../src/Sounds/FftRadix2';
@@ -21,7 +21,7 @@ export const performanceFft = () => {
 	}
 
 	const run = (i: number) => {
-		const suite = new benchmark.Suite();
+		const suite = new Suite();
 		const fftRadix2 = createFftRadix2Base(i);
 		suite.add('fft2R', () => {
 			fftRadix2.forward(input, output);
