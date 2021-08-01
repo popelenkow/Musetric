@@ -1,9 +1,7 @@
-import React, { useState, useMemo } from 'react';
-import {
-	SoundBuffer, SoundCircularBuffer,
-	createRecorder, Recorder, RecorderProcessOptions,
-	Checkbox, CheckboxProps, RecordIcon,
-} from '..';
+import React, { useState, useMemo, FC } from 'react';
+import { Checkbox, CheckboxProps } from '../Controls/Checkbox';
+import { SoundBuffer, SoundCircularBuffer, createRecorder, Recorder, RecorderProcessOptions } from '../Sounds';
+import { useIconContext } from '../AppContexts/IconContext';
 
 export type UseSoundRecorderProps = {
 	soundBuffer: SoundBuffer;
@@ -13,6 +11,7 @@ export type UseSoundRecorderProps = {
 
 export const useSoundRecorder = (props: UseSoundRecorderProps) => {
 	const { soundBuffer, soundCircularBuffer, refreshSound } = props;
+	const { RecordIcon } = useIconContext();
 
 	const getRecorder = useMemo(() => {
 		let recorder: Recorder | undefined;
@@ -44,7 +43,11 @@ export const useSoundRecorder = (props: UseSoundRecorderProps) => {
 		setIsRecording(false);
 	};
 
-	const getRecorderCheckbox = (disabled: boolean) => {
+	type RecorderCheckboxProps = {
+		disabled: boolean;
+	};
+	const RecorderCheckbox: FC<RecorderCheckboxProps> = (recorderCheckboxProps) => {
+		const { disabled } = recorderCheckboxProps;
 		const recorderProps: CheckboxProps = {
 			disabled,
 			checked: isRecording,
@@ -57,6 +60,6 @@ export const useSoundRecorder = (props: UseSoundRecorderProps) => {
 	return {
 		isRecording,
 		initRecorder: getRecorder,
-		getRecorderCheckbox,
+		RecorderCheckbox,
 	};
 };

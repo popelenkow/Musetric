@@ -1,14 +1,16 @@
-import React, { useState, useMemo } from 'react';
-
-import {
-	SoundBuffer, useAnimation, Button, PlayIcon, StopIcon,
-} from '..';
+import React, { useState, useMemo, FC } from 'react';
+import { SoundBuffer } from '../Sounds';
+import { useIconContext } from '../AppContexts/IconContext';
+import { Button } from '../Controls/Button';
+import { useAnimation } from '../Rendering/Animation';
 
 export type UseSoundPlayerProps = {
 	soundBuffer: SoundBuffer;
 };
 
 export const useSoundPlayer = (soundBuffer: SoundBuffer, soundBlob?: Blob) => {
+	const { PlayIcon, StopIcon } = useIconContext();
+
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
 	const player = useMemo(() => {
 		if (!soundBlob) return undefined;
@@ -51,7 +53,11 @@ export const useSoundPlayer = (soundBuffer: SoundBuffer, soundBlob?: Blob) => {
 		setIsPlaying(false);
 	};
 
-	const getPlayerButton = (disabled: boolean) => {
+	type PlayerButtonProps = {
+		disabled: boolean;
+	};
+	const PlayerButton: FC<PlayerButtonProps> = (props) => {
+		const { disabled } = props;
 		return !isPlaying
 			? <Button disabled={disabled} onClick={startPlaying}><PlayIcon /></Button>
 			: <Button onClick={stopPlaying}><StopIcon /></Button>;
@@ -59,6 +65,6 @@ export const useSoundPlayer = (soundBuffer: SoundBuffer, soundBlob?: Blob) => {
 
 	return {
 		isPlaying,
-		getPlayerButton,
+		PlayerButton,
 	};
 };

@@ -1,8 +1,9 @@
-import React from 'react';
-import classNames from 'classnames';
-import { AppCss, createUseClasses, getButtonClasses } from '..';
+import React, { FC } from 'react';
+import className from 'classnames';
+import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { getButtonClasses } from './Button';
 
-export const getCheckboxClasses = (css: AppCss) => ({
+export const getCheckboxClasses = (css: Css) => ({
 	root: {
 		...getButtonClasses(css).root,
 	},
@@ -29,21 +30,24 @@ export type CheckboxProps = {
 	onToggle: () => void;
 	checked?: boolean;
 	disabled?: boolean;
-	className?: string;
-	classNameDisabled?: string;
-	classNameChecked?: string;
+	classNames?: {
+		root?: string;
+		disabled?: string;
+		checked?: string;
+	};
 };
 
-export const Checkbox: React.FC<CheckboxProps> = (props) => {
+export const Checkbox: FC<CheckboxProps> = (props) => {
 	const {
-		children, className, classNameDisabled, classNameChecked,
+		children, classNames,
 		onToggle, disabled, checked,
 	} = props;
 	const classes = useCheckboxClasses();
 
-	const rootName = classNames(className || classes.root, {
-		[classNameDisabled || classes.disabled]: disabled,
-		[classNameChecked || classes.checked]: checked,
+	const rootName = className({
+		[classNames?.root || classes.root]: true,
+		[classNames?.disabled || classes.disabled]: disabled,
+		[classNames?.checked || classes.checked]: checked,
 	});
 
 	return (

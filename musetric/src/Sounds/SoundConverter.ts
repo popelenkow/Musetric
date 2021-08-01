@@ -1,7 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
-import {
-	createWavConverter, SoundBuffer,
-} from '..';
+import { SoundBuffer } from './SoundBuffer';
+import { createWavConverter } from './WavConverter';
 
 export const useSoundConverter = (soundBuffer: SoundBuffer) => {
 	const [audioContextState, setAudioContext] = useState<AudioContext>();

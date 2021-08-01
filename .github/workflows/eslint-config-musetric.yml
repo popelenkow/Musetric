@@ -1,11 +1,11 @@
 name: eslint-config-musetric
 on:
   push:
-    branches: [develop]
+    branches: [main]
     paths:
       - eslint-config-musetric/**
   pull_request:
-    branches: [develop]
+    branches: [main]
     paths:
       - eslint-config-musetric/**
   workflow_dispatch:

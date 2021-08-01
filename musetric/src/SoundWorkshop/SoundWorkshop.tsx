@@ -1,14 +1,15 @@
-import React, { useEffect, useRef, useMemo } from 'react';
-import {
-	AppCss, createUseClasses,
-	useSoundRecorder, useSoundPlayer, useSoundLive,
-	useSoundView, useSoundProgressBar, useSoundFile,
-	SoundProgress,
-	PerformanceMonitor, PerformanceMonitorRef,
-	createSoundBuffer, createSoundCircularBuffer,
-} from '..';
+import React, { useEffect, useMemo, FC } from 'react';
+import { Css, createUseClasses } from '../AppContexts/CssContext';
+import { SoundProgress } from '../Controls/SoundProgress';
+import { createSoundBuffer, createSoundCircularBuffer } from '../Sounds';
+import { useSoundFile } from './SoundFile';
+import { useSoundLive } from './SoundLive';
+import { useSoundPlayer } from './SoundPlayer';
+import { useSoundProgressBar } from './SoundProgressBar';
+import { useSoundRecorder } from './SoundRecorder';
+import { useSoundView } from './SoundView';
 
-export const getSoundWorkshopClasses = (css: AppCss) => ({
+export const getSoundWorkshopClasses = (css: Css) => ({
 	root: {
 		width: '100%',
 		height: '100%',
@@ -81,11 +82,10 @@ export const useSoundWorkshopClasses = createUseClasses('SoundWorkshop', getSoun
 export type SoundWorkshopProps = {
 };
 
-export const SoundWorkshop: React.FC<SoundWorkshopProps> = () => {
+export const SoundWorkshop: FC<SoundWorkshopProps> = () => {
 	const classes = useSoundWorkshopClasses();
 
-	const { isLive, liveCheckbox } = useSoundLive();
-	const performanceMonitor = useRef<PerformanceMonitorRef>(null);
+	const { isLive, LiveCheckbox } = useSoundLive();
 
 	const [sampleRate, channelCount] = useMemo(() => [48000, 2], []);
 	const soundBuffer = useMemo(
@@ -96,10 +96,10 @@ export const SoundWorkshop: React.FC<SoundWorkshopProps> = () => {
 		() => createSoundCircularBuffer(sampleRate, channelCount),
 		[sampleRate, channelCount],
 	);
-	const { soundBlob, refreshSound, openFileButton, saveFileButton } = useSoundFile(soundBuffer);
+	const { soundBlob, refreshSound, OpenFileButton, SaveFileButton } = useSoundFile(soundBuffer);
 
-	const { isPlaying, getPlayerButton } = useSoundPlayer(soundBuffer, soundBlob);
-	const { isRecording, getRecorderCheckbox, initRecorder } = useSoundRecorder({
+	const { isPlaying, PlayerButton } = useSoundPlayer(soundBuffer, soundBlob);
+	const { isRecording, initRecorder, RecorderCheckbox } = useSoundRecorder({
 		soundBuffer,
 		soundCircularBuffer,
 		refreshSound,
@@ -109,36 +109,34 @@ export const SoundWorkshop: React.FC<SoundWorkshopProps> = () => {
 		isLive && initRecorder();
 	}, [isLive, initRecorder]);
 
-	const { soundView, waveformRadio, frequencyRadio, spectrogramRadio } = useSoundView({
+	const { SoundView, WaveformRadio, FrequencyRadio, SpectrogramRadio } = useSoundView({
 		soundBuffer,
 		soundCircularBuffer,
 		isLive,
-		performanceMonitor: performanceMonitor.current,
 	});
 
-	const { progressBarView } = useSoundProgressBar(soundBuffer, soundCircularBuffer);
+	const { ProgressBarView } = useSoundProgressBar(soundBuffer, soundCircularBuffer);
 
 	return (
 		<div className={classes.root}>
 			<div className={classes.view}>
-				<PerformanceMonitor ref={performanceMonitor} />
-				{soundView}
+				<SoundView />
 			</div>
 			<div className={classes.progressBar}>
-				{progressBarView}
+				<ProgressBarView />
 			</div>
 			<div className={classes.toolbar}>
-				{saveFileButton}
-				{openFileButton}
+				<SaveFileButton />
+				<OpenFileButton />
 				<SoundProgress soundBuffer={soundBuffer} />
 			</div>
 			<div className={classes.sidebar}>
-				{getPlayerButton(isRecording)}
-				{getRecorderCheckbox(isPlaying)}
-				{liveCheckbox}
-				{waveformRadio}
-				{frequencyRadio}
-				{spectrogramRadio}
+				<PlayerButton disabled={isRecording} />
+				<RecorderCheckbox disabled={isPlaying} />
+				<LiveCheckbox />
+				<WaveformRadio />
+				<FrequencyRadio />
+				<SpectrogramRadio />
 			</div>
 		</div>
 	);

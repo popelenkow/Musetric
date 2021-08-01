@@ -1,8 +1,12 @@
-import { allThemes, getStorageThemeId } from 'musetric/Themes';
+import { getStorageThemeId, ThemeEntry } from 'musetric/AppBase/Theme';
+
+declare const getMusetricThemeEntries: () => ThemeEntry[];
 
 const runSplashScreen = () => {
-	const themeId = getStorageThemeId();
-	const theme = allThemes[themeId];
+	const themeId = getStorageThemeId() || 'dark';
+	const allThemeEntries = getMusetricThemeEntries();
+	const { theme } = allThemeEntries.find(x => x.themeId === themeId) || {};
+	if (!theme) return;
 	const root = document.getElementById('root');
 	if (!root) return;
 	const splashScreen = document.createElement('div');

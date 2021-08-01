@@ -27,33 +27,37 @@
 		"perf": "ts-node performance/index.ts"
 	},
 	"dependencies": {
-		"@types/color": "^3.0.2",
-		"@types/file-saver": "^2.0.3",
-		"@types/react": "^17.0.15",
-		"@types/react-dom": "^17.0.9",
-		"@types/uuid": "^8.3.1",
 		"classnames": "^2.3.1",
-		"color": "^4.0.0",
+		"color": "^4.0.1",
 		"file-saver": "^2.0.5",
-		"i18next": "^20.3.5",
+		"i18next": "^20.4.0",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
 		"react-icons": "^4.2.0",
 		"react-jss": "^10.7.1",
 		"uuid": "^8.3.2"
 	},
+	"resolutions": {
+		"glob-parent": "^6.0.0"
+	},
 	"devDependencies": {
 		"@types/benchmark": "2.1.1",
-		"@types/jest": "^26.0.24",
+		"@types/color": "3.0.2",
+		"@types/file-saver": "2.0.3",
+		"@types/jest": "27.0.1",
+		"@types/node": "16.7.10",
+		"@types/react": "17.0.19",
+		"@types/react-dom": "17.0.9",
+		"@types/uuid": "8.3.1",
 		"benchmark": "2.1.4",
 		"copyfiles": "2.4.1",
-		"eslint-config-musetric": "0.0.30",
-		"fft.js": "^4.0.4",
-		"i18next-parser": "4.3.0",
-		"jest": "27.0.6",
+		"eslint-config-musetric": "0.0.31",
+		"fft.js": "4.0.4",
+		"i18next-parser": "4.4.0",
+		"jest": "27.1.0",
 		"rimraf": "3.0.2",
-		"ts-jest": "27.0.4",
-		"ts-node": "10.1.0",
-		"typescript": "4.3.5"
+		"ts-jest": "27.0.5",
+		"ts-node": "10.2.1",
+		"typescript": "4.4.2"
 	}
 }

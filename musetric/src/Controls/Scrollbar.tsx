@@ -1,6 +1,6 @@
-import { AppCss, createUseClasses } from '..';
+import { createUseClasses, Css } from '../AppContexts/CssContext';
 
-export const getScrollbarClasses = (css: AppCss) => ({
+export const getScrollbarClasses = (css: Css) => ({
 	root: {
 		'& ::-webkit-scrollbar': {
 			width: '15px',

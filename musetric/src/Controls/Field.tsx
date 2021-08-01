@@ -1,7 +1,7 @@
-import React from 'react';
-import { AppCss, createUseClasses } from '..';
+import React, { FC } from 'react';
+import { createUseClasses, Css } from '../AppContexts/CssContext';
 
-export const getFieldClasses = (css: AppCss) => ({
+export const getFieldClasses = (css: Css) => ({
 	root: {
 		font: '18px/24px "Segoe UI", Arial, sans-serif',
 		display: 'flex',
@@ -19,7 +19,7 @@ export const useFieldClasses = createUseClasses('Field', getFieldClasses);
 export type FieldProps = {
 };
 
-export const Field: React.FC<FieldProps> = (props) => {
+export const Field: FC<FieldProps> = (props) => {
 	const { children } = props;
 	const classes = useFieldClasses();
 

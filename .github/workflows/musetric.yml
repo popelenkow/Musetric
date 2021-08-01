@@ -1,11 +1,11 @@
 name: musetric
 on:
   push:
-    branches: [develop]
+    branches: [main]
     paths:
       - musetric/**
   pull_request:
-    branches: [develop]
+    branches: [main]
     paths:
       - musetric/**
   workflow_dispatch:

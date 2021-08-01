@@ -9,7 +9,7 @@
 	"dependencies": {},
 	"devDependencies": {
 		"copyfiles": "2.4.1",
-		"musetric-app": "0.0.22",
-		"rimraf": "^3.0.2"
+		"musetric-app": "0.0.23",
+		"rimraf": "3.0.2"
 	}
 }

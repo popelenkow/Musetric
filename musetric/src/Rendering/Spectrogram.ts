@@ -1,10 +1,10 @@
 import { useMemo, useCallback, useEffect, useState } from 'react';
-import {
-	Theme, parseThemeRgbColor, parseThemeUint32Color, gradientUint32ByRgb, PerformanceMonitorRef,
-	Size2D, Position2D, createSpectrum,
-	useAppCssContext, useAnimation, createFrequenciesView,
-	SoundBuffer, SoundCircularBuffer, usePixelCanvas,
-} from '..';
+import { useCssContext } from '../AppContexts/CssContext';
+import { SoundBuffer, SoundCircularBuffer, createFrequenciesView, createSpectrum } from '../Sounds';
+import { Theme } from '../AppBase/Theme';
+import { usePixelCanvas } from '../Controls';
+import { Size2D, Position2D, parseThemeRgbColor, parseThemeUint32Color, gradientUint32ByRgb } from './Layout';
+import { useAnimation } from './Animation';
 
 export type SpectrogramColors = {
 	gradient: Uint32Array;
@@ -52,14 +52,13 @@ export type SpectrogramProps = {
 	isLive?: boolean;
 	size: Size2D;
 	pause?: boolean;
-	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const useSpectrogram = (props: SpectrogramProps) => {
 	const {
-		soundBuffer, soundCircularBuffer, isLive, size, pause, performanceMonitor,
+		soundBuffer, soundCircularBuffer, isLive, size, pause,
 	} = props;
-	const { css } = useAppCssContext();
+	const { css } = useCssContext();
 	const colors = useMemo(() => createSpectrogramColors(css.theme), [css.theme]);
 
 	const windowSize = useMemo(() => size.width * 2, [size]);
@@ -110,18 +109,13 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 	useAnimation(() => {
 		if (pause) return;
 		if (!frequencies) return;
-		performanceMonitor?.begin();
-
 		const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
 		drawSpectrogram(frequencies, pixelCanvas.image.data, size, colors, cursor);
 		pixelCanvas.context.putImageData(pixelCanvas.image, 0, 0);
-
-		performanceMonitor?.end();
 	}, [
 		soundBuffer, frequencies,
 		pixelCanvas, colors,
-		isLive, size,
-		pause, performanceMonitor,
+		isLive, size, pause,
 	]);
 
 	const result = useMemo(() => {

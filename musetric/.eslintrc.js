@@ -5,15 +5,8 @@ module.exports = {
 		'musetric',
 	],
 	rules: {
-		'import/no-cycle': 0,
 		'react-hooks/exhaustive-deps': ['error', {
 			additionalHooks: '(useAnimation)',
-		}],
-		'jsx-a11y/label-has-associated-control': [2, {
-			labelComponents: ['CustomInputLabel'],
-			labelAttributes: ['label'],
-			controlComponents: ['CustomInput'],
-			depth: 3,
 		}],
 	},
 	overrides: [

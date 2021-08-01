@@ -1,8 +1,9 @@
-import React from 'react';
-import classNames from 'classnames';
-import { AppCss, createUseClasses, getFieldClasses } from '..';
+import React, { FC } from 'react';
+import className from 'classnames';
+import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { getFieldClasses } from './Field';
 
-export const getButtonClasses = (css: AppCss) => ({
+export const getButtonClasses = (css: Css) => ({
 	root: {
 		...getFieldClasses(css).root,
 		margin: '0',
@@ -15,12 +16,12 @@ export const getButtonClasses = (css: AppCss) => ({
 		position: 'relative',
 		'border-radius': '10px',
 		background: 'transparent',
-		[css.platform.id === 'mobile' ? '&:active' : '&:hover']: {
+		[css.platform.platformId === 'mobile' ? '&:active' : '&:hover']: {
 			background: css.theme.hover,
 		},
 	},
 	disabled: {
-		[css.platform.id === 'mobile' ? '&:active' : '&:hover']: {
+		[css.platform.platformId === 'mobile' ? '&:active' : '&:hover']: {
 			background: 'transparent',
 		},
 		color: css.theme.disabled,
@@ -35,16 +36,19 @@ export const useButtonClasses = createUseClasses('Button', getButtonClasses);
 export type ButtonProps = {
 	onClick: () => void;
 	disabled?: boolean;
-	className?: string;
-	classNameDisabled?: string;
+	classNames?: {
+		root?: string;
+		disabled?: string;
+	};
 };
 
-export const Button: React.FC<ButtonProps> = (props) => {
-	const { children, className, classNameDisabled, onClick, disabled } = props;
+export const Button: FC<ButtonProps> = (props) => {
+	const { children, classNames, onClick, disabled } = props;
 	const classes = useButtonClasses();
 
-	const rootName = classNames(className || classes.root, {
-		[classNameDisabled || classes.disabled]: disabled,
+	const rootName = className({
+		[classNames?.root || classes.root]: true,
+		[classNames?.disabled || classes.disabled]: disabled,
 	});
 
 	return (

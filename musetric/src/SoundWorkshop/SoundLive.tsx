@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-
-import {
-	Checkbox, CheckboxProps, LiveIcon,
-} from '..';
+import React, { useState, FC } from 'react';
+import { useIconContext } from '../AppContexts/IconContext';
+import { Checkbox, CheckboxProps } from '../Controls/Checkbox';
 
 export type UseSoundLiveProps = {
 };
 
 export const useSoundLive = () => {
+	const { LiveIcon } = useIconContext();
+
 	const [isLive, setIsLive] = useState<boolean>(false);
 
 	const liveProps: CheckboxProps = {
@@ -15,7 +15,7 @@ export const useSoundLive = () => {
 		onToggle: () => setIsLive(!isLive),
 	};
 
-	const liveCheckbox = <Checkbox {...liveProps}><LiveIcon /></Checkbox>;
+	const LiveCheckbox: FC = () => <Checkbox {...liveProps}><LiveIcon /></Checkbox>;
 
-	return { isLive, liveCheckbox };
+	return { isLive, LiveCheckbox };
 };

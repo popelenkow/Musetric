@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode, PropsWithChildren } from 'react';
 import { TFunction } from 'i18next';
-import { AppCss, createUseClasses, useAppLocaleContext, getButtonClasses } from '..';
+import { Css, createUseClasses } from '../AppContexts/CssContext';
+import { useLocaleContext } from '../AppContexts/LocaleContext';
+import { getButtonClasses } from './Button';
 
-export const getSwitchClasses = (css: AppCss) => ({
+export const getSwitchClasses = (css: Css) => ({
 	root: {
 		...getButtonClasses(css).root,
 	},
@@ -14,15 +16,15 @@ export type SwitchProps<T> = {
 	currentId: T;
 	ids: T[];
 	set: (id: T) => void;
-	view?: (id: T, t: TFunction) => JSX.Element | string;
+	view?: (id: T, t: TFunction) => ReactNode;
 	className?: string;
 };
-type Props<T> = React.PropsWithChildren<SwitchProps<T>>;
+type Props<T> = PropsWithChildren<SwitchProps<T>>;
 
 export function Switch<T>(props: Props<T>): JSX.Element {
 	const { currentId, ids, view, set, className } = props;
 	const classes = useSwitchClasses();
-	const { t } = useAppLocaleContext();
+	const { t } = useLocaleContext();
 
 	const [id, setId] = useState(currentId);
 

@@ -1,9 +1,14 @@
 {
-	"extends": "../tsconfig",
+	"extends": "../../eslint-config-musetric/tsconfig.base",
 	"compilerOptions": {
-		"noUnusedLocals": false,
-		"esModuleInterop": true,
 		"types": ["node"],
 	},
-	"include": ["./**/*"]
+	"include": [
+		"./**/*",
+		"./src/**/*",
+		"./src/**/*.json",
+	],
+	"exclude": [
+		"./node_modules"
+	],
 }

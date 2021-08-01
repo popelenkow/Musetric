@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, FC } from 'react';
 import { saveAs } from 'file-saver';
-import {
-	SoundBuffer, useSoundConverter,
-	Button, SelectFile, SaveIcon, OpenFileIcon,
-} from '..';
+import { useIconContext } from '../AppContexts/IconContext';
+import { SoundBuffer, useSoundConverter } from '../Sounds';
+import { Button } from '../Controls/Button';
+import { SelectFile } from '../Controls/SelectFile';
 
 export const useSoundFile = (soundBuffer: SoundBuffer) => {
+	const { OpenFileIcon, SaveIcon } = useIconContext();
 	const [soundBlob, setSoundBlob] = useState<Blob>();
 
 	const { getBlob, pushFile } = useSoundConverter(soundBuffer);
@@ -27,8 +28,12 @@ export const useSoundFile = (soundBuffer: SoundBuffer) => {
 		setSoundBlob(blob);
 	};
 
-	const saveFileButton = <Button onClick={() => saveFile('myRecording.wav')}><SaveIcon /></Button>;
-	const openFileButton = <SelectFile onChangeFile={pushSoundFile}><OpenFileIcon /></SelectFile>;
+	const SaveFileButton: FC = () => <Button onClick={() => saveFile('myRecording.wav')}><SaveIcon /></Button>;
+	const OpenFileButton: FC = () => (
+		<SelectFile onChangeFile={pushSoundFile}>
+			<OpenFileIcon />
+		</SelectFile>
+	);
 
 	const refreshSound = async () => {
 		const blob = await getBlob();
@@ -38,7 +43,7 @@ export const useSoundFile = (soundBuffer: SoundBuffer) => {
 	return {
 		soundBlob,
 		refreshSound,
-		saveFileButton,
-		openFileButton,
+		SaveFileButton,
+		OpenFileButton,
 	};
 };

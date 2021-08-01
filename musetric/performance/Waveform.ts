@@ -2,14 +2,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import benchmark from 'benchmark';
-import {
-	drawWaveform, evalWaves, Waves,
-	Size2D, allThemes, createWaveformColors,
-} from '../src';
+import { drawWaveform, evalWaves, Waves, createWaveformColors } from '../src/Rendering/Waveform';
+import { Size2D } from '../src/Rendering/Layout';
+import theme from '../src/Resources/Themes/white';
 
 export const performanceWaveform = () => {
 	const suite = new benchmark.Suite();
-	const colors = createWaveformColors(allThemes.white);
+	const colors = createWaveformColors(theme);
 	const run = (width: number, height: number, sec: number) => {
 		const frame: Size2D = {
 			width,

@@ -1,8 +1,9 @@
-import React from 'react';
-import { AppCss, AppIcon, getFieldClasses } from '..';
-import { createUseClasses } from './AppCssContext';
+import React, { FC } from 'react';
+import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { useIconContext } from '../AppContexts/IconContext';
+import { getFieldClasses } from '../Controls/Field';
 
-export const getAppTitlebarClasses = (css: AppCss) => ({
+export const getAppTitlebarClasses = (css: Css) => ({
 	root: {
 		display: 'flex',
 		'box-sizing': 'border-box',
@@ -37,10 +38,11 @@ export const useAppTitlebarClasses = createUseClasses('AppTitlebar', getAppTitle
 export type AppTitlebarProps = {
 };
 
-export const AppTitlebar: React.FC<AppTitlebarProps> = (props) => {
+export const AppTitlebar: FC<AppTitlebarProps> = (props) => {
 	const { children } = props;
 
 	const classes = useAppTitlebarClasses();
+	const { AppIcon } = useIconContext();
 
 	return (
 		<div className={classes.root}>
