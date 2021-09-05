@@ -9,8 +9,8 @@ export type Spectrum = {
 };
 const allTypes: (keyof Spectrum)[] = ['setup', 'start', 'stop', 'setSoundBuffer'];
 
-export const createSpectrum = (): Spectrum => {
-	const worker = new Worker('musetricSpectrum.js');
+export const createSpectrum = (createWorker: () => Worker): Spectrum => {
+	const worker = createWorker();
 	const api = createPromiseWorkerApi(worker, allTypes);
 	const { setup, start, stop, setSoundBuffer } = api;
 	return { setup, start, stop, setSoundBuffer };

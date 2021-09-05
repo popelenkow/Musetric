@@ -118,8 +118,6 @@ const create = () => {
 	const others = {
 		entry: {
 			musetricSplashScreen: './src/musetricSplashScreen.ts',
-			musetricSpectrum: './src/musetricSpectrum.ts',
-			musetricWavConverter: './src/musetricWavConverter.ts',
 			perf: './src/perf.ts',
 			index: './src/index.ts',
 		},

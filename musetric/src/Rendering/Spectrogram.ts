@@ -1,5 +1,6 @@
 import { useMemo, useCallback, useEffect, useState } from 'react';
 import { useCssContext } from '../AppContexts/CssContext';
+import { useWorkerContext } from '../AppContexts/WorkerContext';
 import { SoundBuffer, SoundCircularBuffer, createFrequenciesView, createSpectrum } from '../Sounds';
 import { Theme } from '../AppBase/Theme';
 import { usePixelCanvas } from '../Controls';
@@ -60,9 +61,10 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 	} = props;
 	const { css } = useCssContext();
 	const colors = useMemo(() => createSpectrogramColors(css.theme), [css.theme]);
+	const { createSpectrumWorker } = useWorkerContext();
 
 	const windowSize = useMemo(() => size.width * 2, [size]);
-	const spectrum = useMemo(() => createSpectrum(), []);
+	const spectrum = useMemo(() => createSpectrum(createSpectrumWorker), [createSpectrumWorker]);
 
 	useEffect(() => {
 		if (pause) return undefined;

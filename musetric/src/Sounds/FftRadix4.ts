@@ -1,4 +1,3 @@
-/* eslint-disable no-continue */
 import { RealArray, ComplexArray, createRealArray, RealArrayType } from './ComplexArray';
 import { SpectrometerBase, Spectrometer, createSpectrometer } from './Spectrometer';
 

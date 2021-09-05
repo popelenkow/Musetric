@@ -5,8 +5,8 @@ export type WavConverter = {
 };
 const allTypes: (keyof WavConverter)[] = ['encode'];
 
-export const createWavConverter = (): WavConverter => {
-	const worker = new Worker('musetricWavConverter.js');
+export const createWavConverter = (createWorker: () => Worker): WavConverter => {
+	const worker = createWorker();
 	const api = createPromiseWorkerApi(worker, allTypes);
 	const { encode } = api;
 	return { encode };
