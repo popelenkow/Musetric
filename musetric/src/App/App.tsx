@@ -90,17 +90,20 @@ export type AppProps<ViewId> = {
 	LocaleProvider: FC;
 	CssProvider: FC;
 	IconProvider: FC;
+	WorkerProvider: FC;
 } & RootProps<ViewId>;
 export function App<ViewId>(props: AppProps<ViewId>): JSX.Element {
-	const { LocaleProvider, CssProvider, IconProvider } = props;
+	const { LocaleProvider, CssProvider, IconProvider, WorkerProvider } = props;
 
 	return (
 		<LocaleProvider>
 			<CssProvider>
 				<IconProvider>
-					<RootElementProvider>
-						<Root {...props} />
-					</RootElementProvider>
+					<WorkerProvider>
+						<RootElementProvider>
+							<Root {...props} />
+						</RootElementProvider>
+					</WorkerProvider>
 				</IconProvider>
 			</CssProvider>
 		</LocaleProvider>

@@ -6,6 +6,7 @@ import { getStorageThemeId, setStorageThemeId } from 'musetric/AppBase/Theme';
 import { LocaleProvider, LocaleProviderProps } from 'musetric/AppContexts/LocaleContext';
 import { CssProvider, CssProviderProps } from 'musetric/AppContexts/CssContext';
 import { IconProvider, IconProviderProps } from 'musetric/AppContexts/IconContext';
+import { WorkerProvider, WorkerProviderProps } from 'musetric/AppContexts/WorkerContext';
 import { Button } from 'musetric/Controls/Button';
 import { SoundWorkshop } from 'musetric/SoundWorkshop';
 import { CreateMusetricApp } from './types/musetricApp';
@@ -42,6 +43,28 @@ export const createMusetricApp: CreateMusetricApp = async (options) => {
 			<CssProvider {...cssProviderProps}>
 				{children}
 			</CssProvider>
+		);
+	};
+
+	const AppWorkerProvider: FC = (props) => {
+		const { children } = props;
+
+		const createSpectrumWorker = () => new Worker(new URL('./musetricSpectrum.ts', import.meta.url), {
+			name: 'musetricSpectrum',
+		});
+		const createWavConverterWorker = () => new Worker(new URL('./musetricWavConverter.ts', import.meta.url), {
+			name: 'musetricWavConverter',
+		});
+		const workerProviderProps: WorkerProviderProps = {
+			workers: {
+				createSpectrumWorker,
+				createWavConverterWorker,
+			},
+		};
+		return (
+			<WorkerProvider {...workerProviderProps}>
+				{children}
+			</WorkerProvider>
 		);
 	};
 
@@ -83,6 +106,7 @@ export const createMusetricApp: CreateMusetricApp = async (options) => {
 		LocaleProvider: AppLocaleProvider,
 		CssProvider: AppCssProvider,
 		IconProvider: AppIconProvider,
+		WorkerProvider: AppWorkerProvider,
 		initViewId: 'soundWorkshop',
 		allViewEntries,
 	};

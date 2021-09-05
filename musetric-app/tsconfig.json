@@ -3,6 +3,8 @@
 	"compilerOptions": {
 		/* Basic Options */
 		"declaration": false, /* Generates corresponding '.d.ts' file. */
+		"module": "es2020", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
+		"lib": ["es2020", "DOM"], /* Specify library files to be included in the compilation. */
 		"outDir": "./dist", /* Redirect output structure to the directory. */
 		"rootDirs": [
 			"./src",
