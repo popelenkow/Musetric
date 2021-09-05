@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, FC } from 'react';
-import { Css, createUseClasses } from '../AppContexts/CssContext';
-import { SoundProgress } from '../Controls/SoundProgress';
+import { Css, createUseClasses } from '../AppContexts/Css';
+import { SoundProgress } from './SoundProgress';
 import { createSoundBuffer, createSoundCircularBuffer } from '../Sounds';
 import { useSoundFile } from './SoundFile';
 import { useSoundLive } from './SoundLive';

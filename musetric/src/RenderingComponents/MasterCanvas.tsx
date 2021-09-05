@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, MouseEvent, FC } from 'react';
-import { createUseClasses, Css } from '../AppContexts/CssContext';
-import { useAnimation } from '../Rendering/Animation';
+import { createUseClasses, Css } from '../AppContexts/Css';
+import { useAnimation } from './Animation';
 import { rotatePosition2D, Size2D, Layout2D, Position2D, getCanvasCursorPosition2D, drawImage } from '../Rendering/Layout';
 
 export const getMasterCanvasClasses = (css: Css) => ({

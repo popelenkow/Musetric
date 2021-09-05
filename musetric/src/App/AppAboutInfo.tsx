@@ -1,5 +1,5 @@
 import React, { ReactNode, FC } from 'react';
-import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { createUseClasses, Css } from '../AppContexts/Css';
 import { getFieldClasses } from '../Controls/Field';
 
 export const getAboutInfoClasses = (css: Css) => ({

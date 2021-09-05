@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { createUseClasses, Css } from '../AppContexts/CssContext';
-import { useIconContext } from '../AppContexts/IconContext';
+import { createUseClasses, Css } from '../AppContexts/Css';
+import { useIconContext } from '../AppContexts/Icon';
 import { getFieldClasses } from '../Controls/Field';
 
 export const getAppTitlebarClasses = (css: Css) => ({

@@ -1,9 +1,10 @@
 import React, { useEffect, useState, FC } from 'react';
 import { saveAs } from 'file-saver';
-import { useIconContext } from '../AppContexts/IconContext';
-import { SoundBuffer, useSoundConverter } from '../Sounds';
+import { useIconContext } from '../AppContexts/Icon';
+import { SoundBuffer } from '../Sounds/SoundBuffer';
 import { Button } from '../Controls/Button';
 import { SelectFile } from '../Controls/SelectFile';
+import { useSoundConverter } from './SoundConverter';
 
 export const useSoundFile = (soundBuffer: SoundBuffer) => {
 	const { OpenFileIcon, SaveIcon } = useIconContext();

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { createUseClasses, Css } from '../AppContexts/Css';
 
 export const getFieldClasses = (css: Css) => ({
 	root: {

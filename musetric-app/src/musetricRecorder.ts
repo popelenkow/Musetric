@@ -1,3 +1,3 @@
-import { runRecorderWorklet } from 'musetric/Sounds/RecorderWorklet';
+import { runRecorderWorklet } from 'musetric/SoundProcessing/RecorderWorklet';
 
 runRecorderWorklet();
