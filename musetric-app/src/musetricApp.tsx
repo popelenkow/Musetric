@@ -1,36 +1,95 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { Suspense } from 'react';
+import React, { FC } from 'react';
 import ReactDOM from 'react-dom';
-import {
-	App, AppProps, SoundWorkshop,
-	allThemes, allThemeIds, getStorageThemeId, setStorageThemeId,
-	localeIdList, createI18n, getStorageLocaleId, setStorageLocaleId,
-} from 'musetric';
-import { CreateMusetricApp } from './types';
+import { App, AppAboutInfo, AppAboutInfoProps, AppProps, AppViewEntry } from 'musetric/App';
+import { getStorageLocaleId, setStorageLocaleId, createI18n } from 'musetric/AppBase/Locale';
+import { getStorageThemeId, setStorageThemeId } from 'musetric/AppBase/Theme';
+import { LocaleProvider, LocaleProviderProps } from 'musetric/AppContexts/LocaleContext';
+import { CssProvider, CssProviderProps } from 'musetric/AppContexts/CssContext';
+import { IconProvider, IconProviderProps } from 'musetric/AppContexts/IconContext';
+import { Button } from 'musetric/Controls/Button';
+import { SoundWorkshop } from 'musetric/SoundWorkshop';
+import { CreateMusetricApp } from './types/musetricApp';
 
-export const createMusetricApp: CreateMusetricApp = async (elementId: string) => {
-	const initThemeId = getStorageThemeId();
-	const initLocaleId = getStorageLocaleId();
-	const i18n = await createI18n(initLocaleId);
+export const createMusetricApp: CreateMusetricApp = async (options) => {
+	const { elementId, allLocaleEntries, allThemeEntries, icons } = options;
 
-	const appProps: AppProps = {
-		i18n,
-		localeIdList,
-		onSetLocaleId: setStorageLocaleId,
-		initThemeId,
-		allThemeIds,
-		allThemes,
-		onSetThemeId: setStorageThemeId,
+	const initLocaleId = getStorageLocaleId() || 'en';
+	const i18n = await createI18n(initLocaleId, allLocaleEntries);
+	const AppLocaleProvider: FC = (props) => {
+		const { children } = props;
+		const localeProviderProps: LocaleProviderProps = {
+			i18n,
+			allLocaleEntries,
+			onSetLocaleId: setStorageLocaleId,
+		};
+		return (
+			<LocaleProvider {...localeProviderProps}>
+				{children}
+			</LocaleProvider>
+		);
 	};
 
-	const app = (
-		<Suspense fallback='loading'>
-			<App {...appProps}>
-				<SoundWorkshop />
-			</App>
-		</Suspense>
-	);
+	const AppCssProvider: FC = (props) => {
+		const { children } = props;
+		const initThemeId = getStorageThemeId() || 'dark';
+
+		const cssProviderProps: CssProviderProps = {
+			initThemeId,
+			allThemeEntries,
+			onSetThemeId: setStorageThemeId,
+		};
+		return (
+			<CssProvider {...cssProviderProps}>
+				{children}
+			</CssProvider>
+		);
+	};
+
+	const AppIconProvider: FC = (props) => {
+		const { children } = props;
+
+		const iconProviderProps: IconProviderProps = {
+			icons,
+		};
+		return (
+			<IconProvider {...iconProviderProps}>
+				{children}
+			</IconProvider>
+		);
+	};
+
+	type ViewId = 'soundWorkshop' | 'aboutInfo';
+	const createViewEntries = (): AppViewEntry<ViewId>[] => {
+		const { GithubIcon, PerformanceIcon } = icons;
+
+		const soundWorkshop = <SoundWorkshop />;
+		const aboutInfoProps: AppAboutInfoProps = {
+			appVersion: process.env.APP_VERSION || '???',
+			links: [
+				<Button key='links_0' onClick={() => { window.location.href = 'https://github.com/popelenkow/Musetric'; }}><GithubIcon /></Button>,
+				<Button key='links_1' onClick={() => { window.location.href = `${window.location.origin}/perf.html`; }}><PerformanceIcon /></Button>,
+			],
+		};
+		const aboutInfo = <AppAboutInfo {...aboutInfoProps} />;
+
+		return [
+			{ viewId: 'soundWorkshop', viewElement: soundWorkshop },
+			{ viewId: 'aboutInfo', viewElement: aboutInfo },
+		];
+	};
+	const allViewEntries = createViewEntries();
+
+	const appProps: AppProps<ViewId> = {
+		LocaleProvider: AppLocaleProvider,
+		CssProvider: AppCssProvider,
+		IconProvider: AppIconProvider,
+		initViewId: 'soundWorkshop',
+		allViewEntries,
+	};
+
+	const app = <App {...appProps} />;
+
 	const root = document.getElementById(elementId);
+	if (!root) throw new Error();
 	ReactDOM.render(app, root);
 };

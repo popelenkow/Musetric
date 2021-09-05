@@ -1,5 +1,5 @@
 import Color from 'color';
-import { Theme } from '..';
+import { Theme } from '../AppBase/Theme';
 
 export type Rotation2D = 'none' | 'left' | 'right' | 'twice';
 

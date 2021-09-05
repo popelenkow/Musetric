@@ -1,8 +1,11 @@
-import React, { useMemo, useState } from 'react';
-import classNames from 'classnames';
-import { AppCss, createUseClasses, SoundBuffer, useAnimation, getFieldClasses } from '..';
+import React, { useMemo, useState, FC } from 'react';
+import className from 'classnames';
+import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { SoundBuffer } from '../Sounds/SoundBuffer';
+import { useAnimation } from '../Rendering/Animation';
+import { getFieldClasses } from './Field';
 
-export const getSoundProgressClasses = (css: AppCss) => ({
+export const getSoundProgressClasses = (css: Css) => ({
 	root: {
 		...getFieldClasses(css).root,
 		width: '118px',
@@ -17,14 +20,18 @@ export const useSoundProgressClasses = createUseClasses('SoundProgress', getSoun
 
 export type SoundProgressProps = {
 	soundBuffer: SoundBuffer;
-	className?: string;
+	classNames?: {
+		root?: string;
+	};
 };
 
-export const SoundProgress: React.FC<SoundProgressProps> = (props) => {
-	const { soundBuffer, className } = props;
+export const SoundProgress: FC<SoundProgressProps> = (props) => {
+	const { soundBuffer, classNames } = props;
 	const classes = useSoundProgressClasses();
 
-	const rootName = classNames(className || classes.root);
+	const rootName = className({
+		[classNames?.root || classes.root]: true,
+	});
 
 	type State = {
 		cursor: number,

@@ -1,7 +1,8 @@
-import React from 'react';
-import { AppCss, createUseClasses, getButtonClasses } from '..';
+import React, { FC, ChangeEvent } from 'react';
+import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { getButtonClasses } from './Button';
 
-export const getSelectFileClasses = (css: AppCss) => ({
+export const getSelectFileClasses = (css: Css) => ({
 	root: {
 		...getButtonClasses(css).root,
 	},
@@ -22,11 +23,11 @@ export type SelectFileProps = {
 	className?: string;
 };
 
-export const SelectFile: React.FC<SelectFileProps> = (props) => {
+export const SelectFile: FC<SelectFileProps> = (props) => {
 	const { children, onChangeFile, className } = props;
 	const classes = useSelectFileClasses();
 
-	const onChange = (input: React.ChangeEvent<HTMLInputElement>) => {
+	const onChange = (input: ChangeEvent<HTMLInputElement>) => {
 		const file = input.target.files?.item(0);
 		if (file) {
 			onChangeFile(file);

@@ -1,10 +1,10 @@
 import { useMemo, useCallback } from 'react';
-import {
-	Theme, parseThemeUint32Color,
-	Size2D, Position2D, useAnimation, useAppCssContext,
-	SoundBuffer, SoundCircularBuffer, PerformanceMonitorRef,
-	usePixelCanvas,
-} from '..';
+import { useCssContext } from '../AppContexts/CssContext';
+import { Theme } from '../AppBase/Theme';
+import { usePixelCanvas } from '../Controls';
+import { SoundBuffer, SoundCircularBuffer } from '../Sounds';
+import { useAnimation } from './Animation';
+import { Size2D, Position2D, parseThemeUint32Color } from './Layout';
 
 export type Waves = {
 	minArray: Float32Array;
@@ -81,14 +81,13 @@ export type WaveformProps = {
 	isLive?: boolean;
 	size: Size2D;
 	pause?: boolean;
-	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const useWaveform = (props: WaveformProps) => {
 	const {
-		soundBuffer, soundCircularBuffer, isLive, size, pause, performanceMonitor,
+		soundBuffer, soundCircularBuffer, isLive, size, pause,
 	} = props;
-	const { css } = useAppCssContext();
+	const { css } = useCssContext();
 	const colors = useMemo(() => createWaveformColors(css.theme), [css.theme]);
 
 	const getWaves = useMemo(() => {
@@ -121,13 +120,9 @@ export const useWaveform = (props: WaveformProps) => {
 
 	useAnimation(() => {
 		if (pause) return;
-		performanceMonitor?.begin();
-
 		draw(pixelCanvas.image.data, pixelCanvas.size);
 		pixelCanvas.context.putImageData(pixelCanvas.image, 0, 0);
-
-		performanceMonitor?.end();
-	}, [draw, pixelCanvas, pause, performanceMonitor]);
+	}, [draw, pixelCanvas, pause]);
 
 	return {
 		image: pixelCanvas.canvas, onClick,

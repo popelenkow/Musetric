@@ -1,22 +1,42 @@
+/** @typedef {import("webpack").Configuration} Configuration */
+/** @typedef {import("webpack-dev-server").Configuration} DevServerConfiguration */
+
 const path = require('path');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const CopyPlugin = require('copy-webpack-plugin');
+const { createDtsBundlePlugin } = require('./DtsBundlePlugin');
 const musetricAppPkg = require('./package.json');
-const musetricPkg = require('./node_modules/musetric/package.json');
 
 const createConfig = (options) => {
+	/** @type {Configuration} */
 	const common = {
 		resolve: {
 			extensions: ['.js', '.ts', '.tsx'],
+			modules: [
+				path.resolve(__dirname, './src'),
+				path.resolve(__dirname, './node_modules'),
+			],
+			alias: {
+				musetric: path.resolve(__dirname, '../musetric/src/'),
+			},
 		},
 		module: {
 			rules: [
-				{ test: /\.(ts|tsx)$/, include: /src/, use: ['ts-loader'] },
+				{
+					test: /\.(ts|tsx)$/,
+					exclude: /node_modules/,
+					use: {
+						loader: 'ts-loader',
+						options: {
+							projectReferences: true,
+						},
+					},
+				},
 			],
 		},
 		output: {
-			path: path.join(__dirname, 'dist'),
+			path: path.resolve(__dirname, 'dist'),
 			filename: '[name].js',
 		},
 		performance: {
@@ -27,19 +47,19 @@ const createConfig = (options) => {
 		plugins: [
 			new webpack.DefinePlugin({
 				'process.env': {
-					MUSETRIC_APP_VERSION: JSON.stringify(musetricAppPkg.version),
-					MUSETRIC_VERSION: JSON.stringify(musetricPkg.version),
+					APP_VERSION: JSON.stringify(musetricAppPkg.version),
 				},
 			}),
 		],
 	};
 
+	/** @type {Configuration} */
 	const specific = process.env.DEV ? {
 		mode: 'development',
 		devtool: 'source-map',
+		/** @type {DevServerConfiguration} */
 		devServer: {
-			hot: true,
-			compress: true,
+			hot: 'only',
 			port: 3000,
 			https: true,
 			headers: {
@@ -48,12 +68,6 @@ const createConfig = (options) => {
 			},
 		},
 		stats: { assets: false },
-		resolve: {
-			modules: [path.join(__dirname, 'node_modules')],
-			alias: {
-				musetric: path.join(__dirname, '../musetric/src/'),
-			},
-		},
 	} : {
 		mode: 'production',
 	};
@@ -71,6 +85,7 @@ const createConfigs = (args) => {
 };
 
 const create = () => {
+	/** @type {Configuration} */
 	const worklet = {
 		entry: {
 			musetricRecorder: './src/musetricRecorder.ts',
@@ -82,8 +97,12 @@ const create = () => {
 			},
 		},
 	};
+	/** @type {Configuration} */
 	const musetric = {
 		entry: {
+			musetricTheme: './src/musetricTheme.ts',
+			musetricLocale: './src/musetricLocale.ts',
+			musetricIcon: './src/musetricIcon.tsx',
 			musetricApp: './src/musetricApp.tsx',
 		},
 		output: {
@@ -91,7 +110,11 @@ const create = () => {
 				type: 'umd',
 			},
 		},
+		plugins: [
+			createDtsBundlePlugin(),
+		],
 	};
+	/** @type {Configuration} */
 	const others = {
 		entry: {
 			musetricSplashScreen: './src/musetricSplashScreen.ts',
@@ -112,10 +135,14 @@ const create = () => {
 					{ from: './src/index.html', to: './index.html' },
 					{ from: './src/perf.html', to: './perf.html' },
 					{ from: './src/favicon.ico', to: './favicon.ico' },
+					{ from: './package.json', to: './package.json' },
+					{ from: '../licence.txt', to: './licence.txt' },
+					{ from: './readme.md', to: './readme.md' },
 				],
 			}),
 		],
 	};
+	/** @type {Configuration} */
 	const copyWorklet = {
 		plugins: [
 			new CopyPlugin({

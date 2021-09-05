@@ -15,8 +15,7 @@ declare const AudioWorkletProcessor: {
 	prototype: AudioWorkletProcessorType;
 	new(options?: AudioWorkletNodeOptions): AudioWorkletProcessorType;
 };
-type ProcessorCtor = (new (options?: AudioWorkletNodeOptions) => AudioWorkletProcessorType)
-& { parameterDescriptors?: AudioParamDescriptor[] };
+type ProcessorCtor = (new (options?: AudioWorkletNodeOptions) => AudioWorkletProcessorType);
 declare function registerProcessor(name: string, processorCtor: ProcessorCtor): void;
 declare const sampleRate: number;
 

@@ -1,11 +1,9 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import {
-	AppCss, createUseClasses, rotatePosition2D,
-	Size2D, Layout2D, Position2D, getCanvasCursorPosition2D,
-	drawImage, useAnimation,
-} from '..';
+import React, { useState, useMemo, useCallback, MouseEvent, FC } from 'react';
+import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { useAnimation } from '../Rendering/Animation';
+import { rotatePosition2D, Size2D, Layout2D, Position2D, getCanvasCursorPosition2D, drawImage } from '../Rendering/Layout';
 
-export const getMasterCanvasClasses = (css: AppCss) => ({
+export const getMasterCanvasClasses = (css: Css) => ({
 	root: {
 		display: 'block',
 		background: css.theme.app,
@@ -18,10 +16,10 @@ export const useMasterCanvasClasses = createUseClasses('MasterCanvas', getMaster
 
 const useScreen = (
 	size: Size2D,
-	onClick: (e: React.MouseEvent<HTMLCanvasElement>) => void,
+	onClick: (e: MouseEvent<HTMLCanvasElement>) => void,
 ) => {
 	const classes = useMasterCanvasClasses();
-	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
+	const [canvas, setCanvas] = useState<HTMLCanvasElement>();
 
 	const context = useMemo(() => {
 		if (!canvas) return undefined;
@@ -33,7 +31,14 @@ const useScreen = (
 		return ctx;
 	}, [canvas, size]);
 
-	const element = <canvas className={classes.root} ref={setCanvas} {...size} onClick={onClick} />;
+	const element = (
+		<canvas
+			className={classes.root}
+			ref={(x) => setCanvas(x || undefined)}
+			onClick={onClick}
+			{...size}
+		/>
+	);
 
 	return { element, context };
 };
@@ -49,10 +54,10 @@ export type MasterCanvasProps = {
 	size: Size2D;
 };
 
-export const MasterCanvas: React.FC<MasterCanvasProps> = (props) => {
+export const MasterCanvas: FC<MasterCanvasProps> = (props) => {
 	const { items, size } = props;
 
-	const click = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+	const click = useCallback((e: MouseEvent<HTMLCanvasElement>) => {
 		const item = items.filter(x => x.onClick)[0];
 		if (!item.onClick) return;
 		const position = getCanvasCursorPosition2D(e.currentTarget, e.nativeEvent);

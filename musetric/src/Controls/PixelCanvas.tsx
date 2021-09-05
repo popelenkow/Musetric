@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
-import {
-	AppCss, createUseClasses, Size2D,
-} from '..';
+import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { Size2D } from '../Rendering/Layout';
 
-export const getPixelCanvasClasses = (css: AppCss) => ({
+export const getPixelCanvasClasses = (css: Css) => ({
 	root: {
 		display: 'block',
 		background: css.theme.app,
@@ -21,7 +20,7 @@ export type UsePixelCanvasProps = {
 export const usePixelCanvas = (props: UsePixelCanvasProps) => {
 	const { size } = props;
 	const info = useMemo(() => {
-		const canvas = new OffscreenCanvas(1, 1);
+		const canvas = document.createElement('canvas');
 		const context = canvas.getContext('2d');
 		if (!context) throw new Error('OffscreenCanvas.getContext("2d") -> null');
 		context.globalCompositeOperation = 'copy';

@@ -1,9 +1,8 @@
-import React, { useMemo } from 'react';
-import {
-	SoundBuffer, SoundCircularBuffer, useWaveform,
-	MasterCanvas, MasterCanvasProps, MasterCanvasItem,
-	Size2D, Direction2D, rotateSize2D,
-} from '..';
+import React, { useMemo, FC } from 'react';
+import { SoundBuffer, SoundCircularBuffer } from '../Sounds';
+import { MasterCanvas, MasterCanvasProps, MasterCanvasItem } from '../Controls/MasterCanvas';
+import { Size2D, Direction2D, rotateSize2D } from '../Rendering/Layout';
+import { useWaveform } from '../Rendering/Waveform';
 
 export const useSoundProgressBar = (
 	soundBuffer: SoundBuffer,
@@ -25,13 +24,15 @@ export const useSoundProgressBar = (
 		onClick: waveform.onClick,
 	};
 
-	// eslint-disable-next-line max-len
-	const masterCanvasSize = useMemo(() => rotateSize2D(waveformLayout.size, waveformLayout.direction), [waveformLayout]);
+	const masterCanvasSize = useMemo(() => {
+		const { size, direction } = waveformLayout;
+		return rotateSize2D(size, direction);
+	}, [waveformLayout]);
 	const masterCanvasProps: MasterCanvasProps = {
 		items: [waveformItem],
 		size: masterCanvasSize,
 	};
-	const progressBarView = <MasterCanvas {...masterCanvasProps} />;
+	const ProgressBarView: FC = () => <MasterCanvas {...masterCanvasProps} />;
 
-	return { progressBarView };
+	return { ProgressBarView };
 };

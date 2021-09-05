@@ -74,6 +74,12 @@ module.exports = {
 				'@typescript-eslint/explicit-module-boundary-types': 0,
 				'no-param-reassign': 0,
 				'no-bitwise': 0,
+				'jsx-a11y/label-has-associated-control': [2, {
+					labelComponents: ['CustomInputLabel'],
+					labelAttributes: ['label'],
+					controlComponents: ['CustomInput'],
+					depth: 3,
+				}],
 			},
 		},
 	],

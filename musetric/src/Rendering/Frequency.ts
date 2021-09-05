@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import {
-	Theme, parseThemeUint32Color, PerformanceMonitorRef,
-	Size2D, createFftRadix4, useAppCssContext,
-	SoundBuffer, SoundCircularBuffer,
-	usePixelCanvas, useAnimation, viewRealArray,
-} from '..';
+import { useCssContext } from '../AppContexts/CssContext';
+import { Theme } from '../AppBase/Theme';
+import { usePixelCanvas } from '../Controls';
+import { SoundBuffer, SoundCircularBuffer, viewRealArray, createFftRadix4 } from '../Sounds';
+import { useAnimation } from './Animation';
+import { Size2D, parseThemeUint32Color } from './Layout';
 
 export type FrequencyColors = {
 	content: number;
@@ -43,14 +43,13 @@ export type FrequencyProps = {
 	isLive?: boolean;
 	size: Size2D;
 	pause?: boolean;
-	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 export const useFrequency = (props: FrequencyProps) => {
 	const {
-		soundBuffer, soundCircularBuffer, isLive, size, pause, performanceMonitor,
+		soundBuffer, soundCircularBuffer, isLive, size, pause,
 	} = props;
-	const { css } = useAppCssContext();
+	const { css } = useCssContext();
 	const colors = useMemo(() => createFrequencyColors(css.theme), [css.theme]);
 
 	const info = useMemo(() => {
@@ -81,13 +80,9 @@ export const useFrequency = (props: FrequencyProps) => {
 
 	useAnimation(() => {
 		if (pause) return;
-		performanceMonitor?.begin();
-
 		draw(pixelCanvas.image.data, pixelCanvas.size);
 		pixelCanvas.context.putImageData(pixelCanvas.image, 0, 0);
-
-		performanceMonitor?.end();
-	}, [draw, pixelCanvas, pause, performanceMonitor]);
+	}, [draw, pixelCanvas, pause]);
 
 	return {
 		image: pixelCanvas.canvas,

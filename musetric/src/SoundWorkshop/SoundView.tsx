@@ -1,12 +1,12 @@
-import React, { useState, useMemo } from 'react';
-import {
-	MasterCanvas, MasterCanvasItem, MasterCanvasProps,
-	SoundBuffer, SoundCircularBuffer,
-	useWaveform, useFrequency, useSpectrogram,
-	WaveformIcon, FrequencyIcon, SpectrogramIcon,
-	Radio, PerformanceMonitorRef, Size2D, Direction2D, Layout2D,
-	rotateSize2D,
-} from '..';
+import React, { useState, useMemo, FC } from 'react';
+import { SoundBuffer, SoundCircularBuffer } from '../Sounds';
+import { useIconContext } from '../AppContexts/IconContext';
+import { MasterCanvas, MasterCanvasProps, MasterCanvasItem } from '../Controls/MasterCanvas';
+import { Radio } from '../Controls/Radio';
+import { Size2D, Direction2D, Layout2D, rotateSize2D } from '../Rendering/Layout';
+import { useWaveform } from '../Rendering/Waveform';
+import { useFrequency } from '../Rendering/Frequency';
+import { useSpectrogram } from '../Rendering/Spectrogram';
 
 type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
 
@@ -14,7 +14,6 @@ export type UseSoundViewProps = {
 	soundBuffer: SoundBuffer;
 	soundCircularBuffer: SoundCircularBuffer;
 	isLive: boolean;
-	performanceMonitor?: PerformanceMonitorRef | null;
 };
 
 type UseItemProps = UseSoundViewProps & {
@@ -89,6 +88,8 @@ const useSpectrogramItem = (props: UseItemProps) => {
 };
 
 export const useSoundView = (props: UseSoundViewProps) => {
+	const { WaveformIcon, FrequencyIcon, SpectrogramIcon } = useIconContext();
+
 	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
 
 	const waveform = useWaveformItem({ ...props, soundViewId });
@@ -103,11 +104,11 @@ export const useSoundView = (props: UseSoundViewProps) => {
 		const items: MasterCanvasItem[] = [];
 		return { size, items };
 	}, [soundViewId, waveform, frequency, spectrogram]);
-	const soundView = <MasterCanvas {...masterCanvasProps} />;
+	const SoundView: FC = () => <MasterCanvas {...masterCanvasProps} />;
 
-	const waveformRadio = <Radio name='soundView' value='Waveform' onSelected={setSoundViewId} checkedValue={soundViewId}><WaveformIcon /></Radio>;
-	const frequencyRadio = <Radio name='soundView' value='Frequency' onSelected={setSoundViewId} checkedValue={soundViewId}><FrequencyIcon /></Radio>;
-	const spectrogramRadio = <Radio name='soundView' value='Spectrogram' onSelected={setSoundViewId} checkedValue={soundViewId}><SpectrogramIcon /></Radio>;
+	const WaveformRadio: FC = () => <Radio label='soundView' value='Waveform' onSelected={setSoundViewId} checkedValue={soundViewId}><WaveformIcon /></Radio>;
+	const FrequencyRadio: FC = () => <Radio label='soundView' value='Frequency' onSelected={setSoundViewId} checkedValue={soundViewId}><FrequencyIcon /></Radio>;
+	const SpectrogramRadio: FC = () => <Radio label='soundView' value='Spectrogram' onSelected={setSoundViewId} checkedValue={soundViewId}><SpectrogramIcon /></Radio>;
 
-	return { soundView, waveformRadio, frequencyRadio, spectrogramRadio };
+	return { SoundView, WaveformRadio, FrequencyRadio, SpectrogramRadio };
 };
