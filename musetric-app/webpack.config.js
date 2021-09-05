@@ -136,7 +136,7 @@ const create = () => {
 					{ from: './src/perf.html', to: './perf.html' },
 					{ from: './src/favicon.ico', to: './favicon.ico' },
 					{ from: './package.json', to: './package.json' },
-					{ from: '../licence.txt', to: './licence.txt' },
+					{ from: '../licence.md', to: './licence.md' },
 					{ from: './readme.md', to: './readme.md' },
 				],
 			}),
