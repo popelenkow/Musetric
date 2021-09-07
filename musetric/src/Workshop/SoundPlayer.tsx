@@ -1,8 +1,8 @@
 import React, { useState, useMemo, FC } from 'react';
 import { SoundBuffer } from '../Sounds';
-import { useIconContext } from '../AppContexts/IconContext';
+import { useIconContext } from '../AppContexts/Icon';
 import { Button } from '../Controls/Button';
-import { useAnimation } from '../Rendering/Animation';
+import { useAnimation } from '../RenderingComponents/Animation';
 
 export type UseSoundPlayerProps = {
 	soundBuffer: SoundBuffer;

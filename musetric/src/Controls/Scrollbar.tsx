@@ -1,4 +1,4 @@
-import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { createUseClasses, Css } from '../AppContexts/Css';
 
 export const getScrollbarClasses = (css: Css) => ({
 	root: {

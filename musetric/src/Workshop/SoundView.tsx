@@ -1,12 +1,12 @@
 import React, { useState, useMemo, FC } from 'react';
 import { SoundBuffer, SoundCircularBuffer } from '../Sounds';
-import { useIconContext } from '../AppContexts/IconContext';
-import { MasterCanvas, MasterCanvasProps, MasterCanvasItem } from '../Controls/MasterCanvas';
+import { useIconContext } from '../AppContexts/Icon';
+import { MasterCanvas, MasterCanvasProps, MasterCanvasItem } from '../RenderingComponents/MasterCanvas';
 import { Radio } from '../Controls/Radio';
 import { Size2D, Direction2D, Layout2D, rotateSize2D } from '../Rendering/Layout';
-import { useWaveform } from '../Rendering/Waveform';
-import { useFrequency } from '../Rendering/Frequency';
-import { useSpectrogram } from '../Rendering/Spectrogram';
+import { useWaveform } from '../RenderingComponents/Waveform';
+import { useFrequency } from '../RenderingComponents/Frequency';
+import { useSpectrogram } from '../RenderingComponents/Spectrogram';
 
 type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
 

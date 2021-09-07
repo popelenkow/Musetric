@@ -1,5 +1,3 @@
-import { useRef, useEffect, DependencyList } from 'react';
-
 export type DrawFrame = (delta: number) => void;
 export type AnimationSubscription = { stop: () => void };
 
@@ -14,18 +12,4 @@ export const startAnimation = (getDraw: () => DrawFrame | undefined): AnimationS
 	};
 	requestAnimationFrame(loop);
 	return { stop: () => { next = false; } };
-};
-
-export const useAnimation = (draw: DrawFrame, deps: DependencyList) => {
-	const drawRef = useRef<DrawFrame>();
-
-	useEffect(() => {
-		drawRef.current = draw;
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, deps);
-
-	useEffect(() => {
-		const subscription = startAnimation(() => drawRef.current);
-		return () => subscription.stop();
-	}, []);
 };

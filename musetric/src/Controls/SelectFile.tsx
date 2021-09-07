@@ -1,5 +1,5 @@
 import React, { FC, ChangeEvent } from 'react';
-import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { createUseClasses, Css } from '../AppContexts/Css';
 import { getButtonClasses } from './Button';
 
 export const getSelectFileClasses = (css: Css) => ({

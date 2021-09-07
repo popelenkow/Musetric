@@ -1,5 +1,5 @@
-import { createFftRadix4 } from './FftRadix4';
-import { Spectrometer, SpectrometerFrequenciesOptions } from './Spectrometer';
+import { createFftRadix4 } from '../Sounds/FftRadix4';
+import { Spectrometer, SpectrometerFrequenciesOptions } from '../Sounds/Spectrometer';
 import { startAnimation, AnimationSubscription } from '../Rendering/Animation';
 import { runPromiseWorker } from '../Workers/PromiseWorker';
 

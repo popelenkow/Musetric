@@ -1,9 +1,9 @@
 import React, { useState, ReactNode, FC } from 'react';
 import { localizeLocaleId, localizeThemeId } from '../AppBase/Locale';
-import { createUseClasses, useCssContext, Css } from '../AppContexts/CssContext';
-import { useIconContext } from '../AppContexts/IconContext';
-import { useLocaleContext } from '../AppContexts/LocaleContext';
-import { RootElementProvider, useRootElementContext } from '../AppContexts/RootElementContext';
+import { createUseClasses, useCssContext, Css } from '../AppContexts/Css';
+import { useIconContext } from '../AppContexts/Icon';
+import { useLocaleContext } from '../AppContexts/Locale';
+import { RootElementProvider, useRootElementContext } from '../AppContexts/RootElement';
 import { getButtonClasses } from '../Controls/Button';
 import { Switch, SwitchProps } from '../Controls/Switch';
 import { AppTitlebar } from './AppTitlebar';

@@ -1,8 +1,8 @@
 import React, { useMemo, FC } from 'react';
 import { SoundBuffer, SoundCircularBuffer } from '../Sounds';
-import { MasterCanvas, MasterCanvasProps, MasterCanvasItem } from '../Controls/MasterCanvas';
+import { MasterCanvas, MasterCanvasProps, MasterCanvasItem } from '../RenderingComponents/MasterCanvas';
 import { Size2D, Direction2D, rotateSize2D } from '../Rendering/Layout';
-import { useWaveform } from '../Rendering/Waveform';
+import { useWaveform } from '../RenderingComponents/Waveform';
 
 export const useSoundProgressBar = (
 	soundBuffer: SoundBuffer,

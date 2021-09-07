@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
-import { useWorkerContext } from '../AppContexts/WorkerContext';
-import { SoundBuffer } from './SoundBuffer';
-import { createWavConverter } from './WavConverter';
+import { useWorkerContext } from '../AppContexts/Worker';
+import { SoundBuffer } from '../Sounds/SoundBuffer';
+import { createWavConverter } from '../SoundProcessing/WavConverter';
 
 export const useSoundConverter = (soundBuffer: SoundBuffer) => {
 	const { createWavConverterWorker } = useWorkerContext();

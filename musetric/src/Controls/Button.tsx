@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import className from 'classnames';
-import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { createUseClasses, Css } from '../AppContexts/Css';
 import { getFieldClasses } from './Field';
 
 export const getButtonClasses = (css: Css) => ({

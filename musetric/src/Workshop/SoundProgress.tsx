@@ -1,9 +1,9 @@
 import React, { useMemo, useState, FC } from 'react';
 import className from 'classnames';
-import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { createUseClasses, Css } from '../AppContexts/Css';
 import { SoundBuffer } from '../Sounds/SoundBuffer';
-import { useAnimation } from '../Rendering/Animation';
-import { getFieldClasses } from './Field';
+import { useAnimation } from '../RenderingComponents/Animation';
+import { getFieldClasses } from '../Controls/Field';
 
 export const getSoundProgressClasses = (css: Css) => ({
 	root: {

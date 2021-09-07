@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import className from 'classnames';
-import { createUseClasses, Css } from '../AppContexts/CssContext';
+import { createUseClasses, Css } from '../AppContexts/Css';
 import { getButtonClasses } from './Button';
 
 export const getRadioClasses = (css: Css) => ({

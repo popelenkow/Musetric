@@ -1,7 +1,8 @@
 import React, { useState, useMemo, FC } from 'react';
 import { Checkbox, CheckboxProps } from '../Controls/Checkbox';
-import { SoundBuffer, SoundCircularBuffer, createRecorder, Recorder, RecorderProcessOptions } from '../Sounds';
-import { useIconContext } from '../AppContexts/IconContext';
+import { SoundBuffer, SoundCircularBuffer } from '../Sounds';
+import { createRecorder, Recorder, RecorderProcessOptions } from '../SoundProcessing';
+import { useIconContext } from '../AppContexts/Icon';
 
 export type UseSoundRecorderProps = {
 	soundBuffer: SoundBuffer;
