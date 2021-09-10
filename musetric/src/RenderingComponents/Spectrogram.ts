@@ -23,10 +23,10 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 	} = props;
 	const { css } = useCssContext();
 	const colors = useMemo(() => createSpectrogramColors(css.theme), [css.theme]);
-	const { createSpectrumWorker } = useWorkerContext();
+	const { spectrumUrl } = useWorkerContext();
 
 	const windowSize = useMemo(() => size.width * 2, [size]);
-	const spectrum = useMemo(() => createSpectrum(createSpectrumWorker), [createSpectrumWorker]);
+	const spectrum = useMemo(() => createSpectrum(spectrumUrl), [spectrumUrl]);
 
 	useEffect(() => {
 		if (pause) return undefined;

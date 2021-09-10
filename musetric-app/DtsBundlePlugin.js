@@ -1,21 +1,20 @@
 /** @typedef {import("webpack").Compiler} Compiler */
 /** @typedef {import("webpack").Compilation} Compilation */
-/** @typedef {import("webpack").Entrypoint} Entrypoint */
 
 const { generateDtsBundle } = require('dts-bundle-generator');
 
 const isTs = (filePath) => /\.(ts|tsx)$/.test(filePath);
 /**
  * @param {Compilation} [compilation]
- * @param {Entrypoint} [entrypoint]
  */
-const build = (compilation, entrypoint) => {
-	const originRecord = entrypoint.origins.length === 1 && entrypoint.origins[0];
-	if (!originRecord) return;
-	if (!isTs(originRecord.request)) return;
+const build = (compilation, entry) => {
+	const { name, paths } = entry;
+	const path = paths.length === 1 && paths[0];
+	if (!path) return;
+	if (!isTs(path)) return;
 	const dts = generateDtsBundle([
 		{
-			filePath: originRecord.request,
+			filePath: path,
 			output: {
 				noBanner: true,
 				inlineDeclareExternals: true,
@@ -30,23 +29,28 @@ const build = (compilation, entrypoint) => {
 		},
 	]);
 	const result = dts.join('');
-	compilation.emitAsset(`${entrypoint.name}.d.ts`, {
+	compilation.emitAsset(`${name}.d.ts`, {
 		source: () => result,
 		size: () => result.length,
 	});
 };
 
-const createDtsBundlePlugin = () => {
+module.exports.createDtsBundlePlugin = () => {
 	/**
 	 * @param {Compiler} [compiler]
 	 */
 	return (compiler) => {
-		compiler.hooks.emit.tap('dts-bundle', (compilation) => {
-			compilation.entrypoints.forEach(entrypoint => build(compilation, entrypoint));
+		compiler.hooks.entryOption.tap('dts-bundle', (_, entry) => {
+			const arr = Object.keys(entry).map(name => {
+				const paths = entry[name].import;
+				return { name, paths };
+			});
+			compiler.hooks.thisCompilation.tap('dts-bundle', (compilation) => {
+				for (let i = 0; i < arr.length; i++) {
+					const x = arr[i];
+					build(compilation, x);
+				}
+			});
 		});
 	};
-};
-
-module.exports = {
-	createDtsBundlePlugin,
 };

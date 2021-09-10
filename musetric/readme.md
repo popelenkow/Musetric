@@ -1,6 +1,6 @@
 # Musetric
 
-[![example branch parameter](https://github.com/popelenkow/Musetric/actions/workflows/musetric.yml/badge.svg?branch=develop)](https://github.com/popelenkow/Musetric/actions/workflows/musetric.yml)
+[![example branch parameter](https://github.com/popelenkow/Musetric/actions/workflows/musetric.yml/badge.svg?branch=main)](https://github.com/popelenkow/Musetric/actions/workflows/musetric.yml)
 [![npm version](https://img.shields.io/npm/v/musetric)](https://www.npmjs.com/package/musetric)
 ![License](https://img.shields.io/github/license/popelenkow/musetric)
 
@@ -29,6 +29,6 @@ The sound analysis module is available as a [npm package](https://www.npmjs.com/
 npm install musetric
 ```
 
-## Licence
+## License
 
-Musetric is [MIT licensed](licence.txt).
+Musetric is [MIT licensed](https://github.com/popelenkow/Musetric/blob/main/license.md).

@@ -3,8 +3,9 @@ import { Workers } from '../AppBase/Worker';
 
 export type WorkerStore = Workers;
 const defaultWorkerStore: WorkerStore = {
-	createSpectrumWorker: () => new Worker(''),
-	createWavConverterWorker: () => new Worker(''),
+	recorderUrl: '',
+	spectrumUrl: '',
+	wavConverterUrl: '',
 };
 export const WorkerContext = createContext<WorkerStore>(defaultWorkerStore);
 

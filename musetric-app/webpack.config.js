@@ -5,10 +5,11 @@ const path = require('path');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const CopyPlugin = require('copy-webpack-plugin');
+const WorkerUrlPlugin = require('worker-url/plugin');
 const { createDtsBundlePlugin } = require('./DtsBundlePlugin');
 const musetricAppPkg = require('./package.json');
 
-const createConfig = (options) => {
+const createConfig = (env, options) => {
 	/** @type {Configuration} */
 	const common = {
 		resolve: {
@@ -36,6 +37,7 @@ const createConfig = (options) => {
 			],
 		},
 		output: {
+			publicPath: '/',
 			path: path.resolve(__dirname, 'dist'),
 			filename: '[name].js',
 		},
@@ -50,11 +52,12 @@ const createConfig = (options) => {
 					APP_VERSION: JSON.stringify(musetricAppPkg.version),
 				},
 			}),
+			new WorkerUrlPlugin(),
 		],
 	};
 
 	/** @type {Configuration} */
-	const specific = process.env.DEV ? {
+	const specific = env.dev ? {
 		mode: 'development',
 		devtool: 'source-map',
 		/** @type {DevServerConfiguration} */
@@ -67,6 +70,9 @@ const createConfig = (options) => {
 				'Cross-Origin-Embedder-Policy': 'require-corp',
 			},
 		},
+		plugins: [
+			new webpack.ProgressPlugin(),
+		],
 		stats: { assets: false },
 	} : {
 		mode: 'production',
@@ -74,29 +80,17 @@ const createConfig = (options) => {
 	return merge(common, options, specific);
 };
 
-const createConfigs = (args) => {
+const createConfigs = (env, args) => {
 	const configs = [];
 	for (let i = 0; i < args.length; i++) {
-		const result = createConfig(args[i]);
+		const result = createConfig(env, args[i]);
 		if (i !== 0) delete result.devServer;
 		configs.push(result);
 	}
 	return configs;
 };
 
-const create = () => {
-	/** @type {Configuration} */
-	const worklet = {
-		entry: {
-			musetricRecorder: './src/musetricRecorder.ts',
-		},
-		output: {
-			library: {
-				name: '_',
-				type: 'var',
-			},
-		},
-	};
+const create = (env) => {
 	/** @type {Configuration} */
 	const musetric = {
 		entry: {
@@ -110,7 +104,7 @@ const create = () => {
 				type: 'umd',
 			},
 		},
-		plugins: [
+		plugins: env.dev ? [] : [
 			createDtsBundlePlugin(),
 		],
 	};
@@ -121,12 +115,6 @@ const create = () => {
 			perf: './src/perf.ts',
 			index: './src/index.ts',
 		},
-		output: {
-			library: {
-				name: '_',
-				type: 'var',
-			},
-		},
 		plugins: [
 			new CopyPlugin({
 				patterns: [
@@ -134,30 +122,13 @@ const create = () => {
 					{ from: './src/perf.html', to: './perf.html' },
 					{ from: './src/favicon.ico', to: './favicon.ico' },
 					{ from: './package.json', to: './package.json' },
-					{ from: '../licence.md', to: './licence.md' },
+					{ from: '../license.md', to: './license.md' },
 					{ from: './readme.md', to: './readme.md' },
 				],
 			}),
 		],
 	};
-	/** @type {Configuration} */
-	const copyWorklet = {
-		plugins: [
-			new CopyPlugin({
-				patterns: [
-					{ from: './dist/musetricRecorder.js', to: './musetricRecorder.js' },
-					{ from: './dist/musetricRecorder.js.map', to: './musetricRecorder.js.map' },
-				],
-			}),
-		],
-	};
-	if (process.env.WORKLET) {
-		return [worklet];
-	}
-	if (process.env.DEV) {
-		return [merge(musetric, copyWorklet), others];
-	}
-	return [worklet, musetric, others];
+	return createConfigs(env, [others, musetric]);
 };
 
-module.exports = createConfigs(create());
+module.exports = create;

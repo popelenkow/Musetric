@@ -7,13 +7,13 @@ import { getStorageThemeId, setStorageThemeId } from 'musetric/AppBase/Theme';
 import { LocaleProvider, LocaleProviderProps } from 'musetric/AppContexts/Locale';
 import { CssProvider, CssProviderProps } from 'musetric/AppContexts/Css';
 import { IconProvider, IconProviderProps } from 'musetric/AppContexts/Icon';
-import { WorkerProvider, WorkerProviderProps } from 'musetric/AppContexts/Worker';
+import { WorkerProvider } from 'musetric/AppContexts/Worker';
 import { Button } from 'musetric/Controls/Button';
 import { SoundWorkshop } from 'musetric/Workshop';
 import { CreateMusetricApp } from './types/musetricApp';
 
 export const createMusetricApp: CreateMusetricApp = async (options) => {
-	const { elementId, allLocaleEntries, allThemeEntries, icons } = options;
+	const { elementId, allLocaleEntries, allThemeEntries, icons, workers } = options;
 
 	const initLocaleId = getStorageLocaleId() || 'en';
 	const i18n = await createI18n(initLocaleId, allLocaleEntries);
@@ -50,20 +50,8 @@ export const createMusetricApp: CreateMusetricApp = async (options) => {
 	const AppWorkerProvider: FC = (props) => {
 		const { children } = props;
 
-		const createSpectrumWorker = () => new Worker(new URL('./musetricSpectrum.ts', import.meta.url), {
-			name: 'musetricSpectrum',
-		});
-		const createWavConverterWorker = () => new Worker(new URL('./musetricWavConverter.ts', import.meta.url), {
-			name: 'musetricWavConverter',
-		});
-		const workerProviderProps: WorkerProviderProps = {
-			workers: {
-				createSpectrumWorker,
-				createWavConverterWorker,
-			},
-		};
 		return (
-			<WorkerProvider {...workerProviderProps}>
+			<WorkerProvider workers={workers}>
 				{children}
 			</WorkerProvider>
 		);

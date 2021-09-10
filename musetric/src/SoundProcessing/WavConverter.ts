@@ -5,8 +5,8 @@ export type WavConverter = {
 };
 const allTypes: (keyof WavConverter)[] = ['encode'];
 
-export const createWavConverter = (createWorker: () => Worker): WavConverter => {
-	const worker = createWorker();
+export const createWavConverter = (workerUrl: URL | string): WavConverter => {
+	const worker = new Worker(workerUrl);
 	const api = createPromiseWorkerApi(worker, allTypes);
 	const { encode } = api;
 	return { encode };

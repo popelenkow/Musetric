@@ -1,4 +1,4 @@
 import { runWavConverterWorker } from 'musetric/SoundProcessing/WavConverterWorker';
 
-// eslint-disable-next-line no-eval
-runWavConverterWorker(eval('this'));
+declare const self: Worker;
+runWavConverterWorker(self);

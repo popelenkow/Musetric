@@ -4,7 +4,7 @@ import { SoundBuffer } from '../Sounds/SoundBuffer';
 import { createWavConverter } from '../SoundProcessing/WavConverter';
 
 export const useSoundConverter = (soundBuffer: SoundBuffer) => {
-	const { createWavConverterWorker } = useWorkerContext();
+	const { wavConverterUrl } = useWorkerContext();
 
 	const [audioContextState, setAudioContext] = useState<AudioContext>();
 	const getAudioContext = useCallback(() => {
@@ -18,8 +18,8 @@ export const useSoundConverter = (soundBuffer: SoundBuffer) => {
 	}, [soundBuffer, audioContextState]);
 
 	const wavConverter = useMemo(
-		() => createWavConverter(createWavConverterWorker),
-		[createWavConverterWorker],
+		() => createWavConverter(wavConverterUrl),
+		[wavConverterUrl],
 	);
 	const getBlob = useCallback(async (): Promise<Blob> => {
 		const { buffers, sampleRate } = soundBuffer;
