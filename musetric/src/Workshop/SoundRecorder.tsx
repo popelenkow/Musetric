@@ -3,6 +3,7 @@ import { Checkbox, CheckboxProps } from '../Controls/Checkbox';
 import { SoundBuffer, SoundCircularBuffer } from '../Sounds';
 import { createRecorder, Recorder, RecorderProcessOptions } from '../SoundProcessing';
 import { useIconContext } from '../AppContexts/Icon';
+import { useWorkerContext } from '../AppContexts/Worker';
 
 export type UseSoundRecorderProps = {
 	soundBuffer: SoundBuffer;
@@ -13,6 +14,7 @@ export type UseSoundRecorderProps = {
 export const useSoundRecorder = (props: UseSoundRecorderProps) => {
 	const { soundBuffer, soundCircularBuffer, refreshSound } = props;
 	const { RecordIcon } = useIconContext();
+	const { recorderUrl } = useWorkerContext();
 
 	const getRecorder = useMemo(() => {
 		let recorder: Recorder | undefined;
@@ -24,11 +26,11 @@ export const useSoundRecorder = (props: UseSoundRecorderProps) => {
 					soundCircularBuffer.push(chunk);
 				};
 				const { channelCount } = soundBuffer;
-				recorder = await createRecorder({ channelCount, process });
+				recorder = await createRecorder(recorderUrl, channelCount, process);
 			}
 			return recorder;
 		};
-	}, [soundBuffer, soundCircularBuffer]);
+	}, [recorderUrl, soundBuffer, soundCircularBuffer]);
 
 	const [isRecording, setIsRecording] = useState<boolean>(false);
 	const startRecording = async () => {

@@ -5,7 +5,7 @@ import { PromiseAudioWorkletRequest, PromiseAudioWorkletResponse } from './Promi
 
 export const createPromiseAudioWorklet = async (
 	audioNode: AudioNode,
-	workletUrl: string,
+	workletUrl: URL | string,
 	processorName: string,
 ): Promise<AudioWorkletNode> => {
 	await audioNode.context.audioWorklet.addModule(workletUrl);

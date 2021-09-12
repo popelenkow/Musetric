@@ -9,8 +9,8 @@ export type Spectrum = {
 };
 const allTypes: (keyof Spectrum)[] = ['setup', 'start', 'stop', 'setSoundBuffer'];
 
-export const createSpectrum = (createWorker: () => Worker): Spectrum => {
-	const worker = createWorker();
+export const createSpectrum = (workerUrl: URL | string): Spectrum => {
+	const worker = new Worker(workerUrl);
 	const api = createPromiseWorkerApi(worker, allTypes);
 	const { setup, start, stop, setSoundBuffer } = api;
 	return { setup, start, stop, setSoundBuffer };

@@ -1,4 +1,5 @@
 export type Workers = {
-	createSpectrumWorker: () => Worker;
-	createWavConverterWorker: () => Worker;
+	recorderUrl: URL | string;
+	spectrumUrl: URL | string;
+	wavConverterUrl: URL | string;
 };

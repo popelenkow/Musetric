@@ -29,5 +29,5 @@ jobs:
         git config --global user.name "Vladlen Popelenkov"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - run: yarn release
+    - run: yarn deploy
       if: ${{ github.event_name == 'push' }}

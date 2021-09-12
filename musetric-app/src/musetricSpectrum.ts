@@ -1,4 +1,4 @@
 import { runSpectrumWorker } from 'musetric/SoundProcessing/SpectrumWorker';
 
-// eslint-disable-next-line no-eval
-runSpectrumWorker(eval('this'));
+declare const self: Worker;
+runSpectrumWorker(self);

@@ -1,7 +1,7 @@
 {
 	"name": "musetric-app",
 	"description": "Musetric is javascript music application",
-	"version": "0.0.23",
+	"version": "0.0.25",
 	"license": "MIT",
 	"main": "musetricApp.js",
 	"types": "musetricApp.d.ts",
@@ -17,7 +17,7 @@
 		"musetric-app"
 	],
 	"scripts": {
-		"dev": "rimraf dist && cross-env DEV=1 WORKLET=1 webpack --progress && cross-env DEV=1 webpack-dev-server --progress",
+		"dev": "webpack-dev-server --env dev",
 		"build": "rimraf dist && webpack",
 		"lint": "eslint \"{src/**/*.{js,ts,tsx}, webpack.config.js}\""
 	},
@@ -28,7 +28,7 @@
 	"devDependencies": {
 		"@types/color": "3.0.2",
 		"@types/file-saver": "2.0.3",
-		"@types/react": "17.0.19",
+		"@types/react": "17.0.20",
 		"@types/react-dom": "17.0.9",
 		"@types/uuid": "8.3.1",
 		"chart.js": "3.5.1",
@@ -36,23 +36,23 @@
 		"color": "4.0.1",
 		"copy-webpack-plugin": "9.0.1",
 		"copyfiles": "2.4.1",
-		"cross-env": "7.0.3",
 		"dts-bundle-generator": "5.9.0",
 		"eslint-config-musetric": "0.0.31",
 		"fft.js": "4.0.4",
 		"file-saver": "2.0.5",
-		"i18next": "20.6.0",
+		"i18next": "20.6.1",
 		"react": "17.0.2",
 		"react-dom": "17.0.2",
 		"react-icons": "4.2.0",
 		"react-jss": "10.7.1",
 		"rimraf": "3.0.2",
 		"ts-loader": "9.2.5",
-		"typescript": "4.4.2",
+		"typescript": "4.4.3",
 		"uuid": "8.3.2",
-		"webpack": "5.52.0",
+		"webpack": "5.52.1",
 		"webpack-cli": "4.8.0",
 		"webpack-dev-server": "4.0.0-rc.1",
-		"webpack-merge": "5.8.0"
+		"webpack-merge": "5.8.0",
+		"worker-url": "1.0.1"
 	}
 }
