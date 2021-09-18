@@ -16,7 +16,6 @@ export type FrequencyProps = {
 	size: Size2D;
 	pause?: boolean;
 };
-
 export const useFrequency = (props: FrequencyProps) => {
 	const {
 		soundBuffer, soundCircularBuffer, isLive, size, pause,

@@ -10,7 +10,6 @@ export type UseSoundRecorderProps = {
 	soundCircularBuffer: SoundCircularBuffer;
 	refreshSound: () => Promise<void>;
 };
-
 export const useSoundRecorder = (props: UseSoundRecorderProps) => {
 	const { soundBuffer, soundCircularBuffer, refreshSound } = props;
 	const { RecordIcon } = useIconContext();

@@ -2,9 +2,6 @@ import React, { useState, FC } from 'react';
 import { useIconContext } from '../AppContexts/Icon';
 import { Checkbox, CheckboxProps } from '../Controls/Checkbox';
 
-export type UseSoundLiveProps = {
-};
-
 export const useSoundLive = () => {
 	const { LiveIcon } = useIconContext();
 

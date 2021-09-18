@@ -3,28 +3,31 @@ import className from 'classnames';
 import { createUseClasses, Css } from '../AppContexts/Css';
 import { getButtonClasses } from './Button';
 
-export const getRadioClasses = (css: Css) => ({
-	root: {
-		...getButtonClasses(css).root,
-	},
-	disabled: {
-		...getButtonClasses(css).disabled,
-	},
-	checked: {
-		color: css.theme.active,
-		'& path, rect, polygon': {
-			fill: css.theme.active,
+export const getRadioClasses = (css: Css) => {
+	const buttonClasses = getButtonClasses(css);
+	const { active } = css.theme;
+	return {
+		root: {
+			...buttonClasses.root,
 		},
-	},
-	input: {
-		position: 'absolute',
-		opacity: '0',
-		top: '0',
-		left: '0',
-	},
-});
-
-export const useRadioClasses = createUseClasses('Radio', getRadioClasses);
+		disabled: {
+			...buttonClasses.disabled,
+		},
+		checked: {
+			color: active,
+			'& path, rect, polygon': {
+				fill: active,
+			},
+		},
+		input: {
+			position: 'absolute',
+			opacity: '0',
+			top: '0',
+			left: '0',
+		},
+	};
+};
+const useClasses = createUseClasses('Radio', getRadioClasses);
 
 export type RadioProps<T extends string> = {
 	onSelected: (value: T) => void;
@@ -45,7 +48,7 @@ export const Radio = <T extends string>(props: Props<T>): JSX.Element => {
 		children, classNames, onSelected,
 		disabled, label, value, checkedValue,
 	} = props;
-	const classes = useRadioClasses();
+	const classes = useClasses();
 
 	const checked = checkedValue === value;
 	const rootName = className({

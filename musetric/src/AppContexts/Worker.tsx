@@ -2,11 +2,8 @@ import React, { useContext, createContext, FC } from 'react';
 import { Workers } from '../AppBase/Worker';
 
 export type WorkerStore = Workers;
-const defaultWorkerStore: WorkerStore = {
-	recorderUrl: '',
-	spectrumUrl: '',
-	wavConverterUrl: '',
-};
+// eslint-disable-next-line
+const defaultWorkerStore: WorkerStore = undefined as any;
 export const WorkerContext = createContext<WorkerStore>(defaultWorkerStore);
 
 export const WorkerConsumer = WorkerContext.Consumer;

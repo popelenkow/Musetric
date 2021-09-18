@@ -2,26 +2,29 @@ import React, { ReactNode, FC } from 'react';
 import { createUseClasses, Css } from '../AppContexts/Css';
 import { getFieldClasses } from '../Controls/Field';
 
-export const getAboutInfoClasses = (css: Css) => ({
-	root: {
-		...getFieldClasses(css).root,
-		width: '100%',
-		height: '100%',
-		'background-color': css.theme.app,
-	},
-	container: {
-		width: 'auto',
-		height: 'auto',
-		display: 'flex',
-		'flex-direction': 'column',
-	},
-	links: {
-		display: 'flex',
-		'flex-direction': 'row',
-	},
-});
-
-export const useAboutInfoClasses = createUseClasses('AppAboutInfo', getAboutInfoClasses);
+export const getAboutInfoClasses = (css: Css) => {
+	const fieldClasses = getFieldClasses(css);
+	const { app } = css.theme;
+	return {
+		root: {
+			...fieldClasses.root,
+			width: '100%',
+			height: '100%',
+			'background-color': app,
+		},
+		container: {
+			width: 'auto',
+			height: 'auto',
+			display: 'flex',
+			'flex-direction': 'column',
+		},
+		links: {
+			display: 'flex',
+			'flex-direction': 'row',
+		},
+	};
+};
+const useClasses = createUseClasses('AppAboutInfo', getAboutInfoClasses);
 
 export type AppAboutInfoProps = {
 	appVersion: string;
@@ -30,7 +33,7 @@ export type AppAboutInfoProps = {
 
 export const AppAboutInfo: FC<AppAboutInfoProps> = (props) => {
 	const { appVersion, links } = props;
-	const classes = useAboutInfoClasses();
+	const classes = useClasses();
 
 	const Links: FC = () => {
 		if (!links || links.length === 0) return null;

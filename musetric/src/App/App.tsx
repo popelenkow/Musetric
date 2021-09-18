@@ -8,23 +8,26 @@ import { getButtonClasses } from '../Controls/Button';
 import { Switch, SwitchProps } from '../Controls/Switch';
 import { AppTitlebar } from './AppTitlebar';
 
-export const getAppClasses = (css: Css) => ({
-	root: {
-		'box-sizing': 'border-box',
-		width: css.platform.width,
-		height: css.platform.height,
-		display: 'grid',
-		'grid-template-rows': '48px 1fr',
-		'grid-template-columns': '1fr',
-	},
-	textButton: {
-		...getButtonClasses(css).root,
-		width: 'auto',
-		padding: '0 6px',
-	},
-});
-
-export const useAppClasses = createUseClasses('App', getAppClasses);
+export const getAppClasses = (css: Css) => {
+	const buttonClasses = getButtonClasses(css);
+	const { width, height } = css.platform;
+	return {
+		root: {
+			'box-sizing': 'border-box',
+			width,
+			height,
+			display: 'grid',
+			'grid-template-rows': '48px 1fr',
+			'grid-template-columns': '1fr',
+		},
+		textButton: {
+			...buttonClasses.root,
+			width: 'auto',
+			padding: '0 6px',
+		},
+	};
+};
+const useClasses = createUseClasses('App', getAppClasses);
 
 export type AppViewEntry<ViewId> = {
 	viewId: ViewId;
@@ -37,7 +40,7 @@ type RootProps<ViewId> = {
 };
 function Root<ViewId>(props: RootProps<ViewId>): JSX.Element {
 	const { initViewId, allViewEntries } = props;
-	const classes = useAppClasses();
+	const classes = useClasses();
 
 	const { localeId, setLocaleId, allLocaleIds } = useLocaleContext();
 	const { themeId, setThemeId, allThemeIds } = useCssContext();

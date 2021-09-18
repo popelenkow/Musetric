@@ -16,7 +16,6 @@ export type SpectrogramProps = {
 	size: Size2D;
 	pause?: boolean;
 };
-
 export const useSpectrogram = (props: SpectrogramProps) => {
 	const {
 		soundBuffer, soundCircularBuffer, isLive, size, pause,

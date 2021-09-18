@@ -4,7 +4,6 @@ import { Size2D } from '../Rendering/Layout';
 export type UsePixelCanvasProps = {
 	size: Size2D;
 };
-
 export const usePixelCanvas = (props: UsePixelCanvasProps) => {
 	const { size } = props;
 	const info = useMemo(() => {

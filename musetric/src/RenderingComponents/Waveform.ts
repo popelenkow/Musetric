@@ -14,7 +14,6 @@ export type WaveformProps = {
 	size: Size2D;
 	pause?: boolean;
 };
-
 export const useWaveform = (props: WaveformProps) => {
 	const {
 		soundBuffer, soundCircularBuffer, isLive, size, pause,

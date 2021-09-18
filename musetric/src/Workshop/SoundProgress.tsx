@@ -5,18 +5,20 @@ import { SoundBuffer } from '../Sounds/SoundBuffer';
 import { useAnimation } from '../RenderingComponents/Animation';
 import { getFieldClasses } from '../Controls/Field';
 
-export const getSoundProgressClasses = (css: Css) => ({
-	root: {
-		...getFieldClasses(css).root,
-		width: '118px',
-		height: '42px',
-		position: 'relative',
-		'border-radius': '21px',
-		'user-select': 'none',
-	},
-});
-
-export const useSoundProgressClasses = createUseClasses('SoundProgress', getSoundProgressClasses);
+export const getSoundProgressClasses = (css: Css) => {
+	const fieldClasses = getFieldClasses(css);
+	return {
+		root: {
+			...fieldClasses.root,
+			width: '118px',
+			height: '42px',
+			position: 'relative',
+			'border-radius': '21px',
+			'user-select': 'none',
+		},
+	};
+};
+const useClasses = createUseClasses('SoundProgress', getSoundProgressClasses);
 
 export type SoundProgressProps = {
 	soundBuffer: SoundBuffer;
@@ -24,10 +26,9 @@ export type SoundProgressProps = {
 		root?: string;
 	};
 };
-
 export const SoundProgress: FC<SoundProgressProps> = (props) => {
 	const { soundBuffer, classNames } = props;
-	const classes = useSoundProgressClasses();
+	const classes = useClasses();
 
 	const rootName = className({
 		[classNames?.root || classes.root]: true,

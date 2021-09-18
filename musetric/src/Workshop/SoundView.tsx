@@ -9,17 +9,14 @@ import { useFrequency } from '../RenderingComponents/Frequency';
 import { useSpectrogram } from '../RenderingComponents/Spectrogram';
 
 type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
-
 export type UseSoundViewProps = {
 	soundBuffer: SoundBuffer;
 	soundCircularBuffer: SoundCircularBuffer;
 	isLive: boolean;
 };
-
 type UseItemProps = UseSoundViewProps & {
 	soundViewId: SoundViewId;
 };
-
 const useWaveformItem = (props: UseItemProps) => {
 	const layout = useMemo<Layout2D>(() => {
 		const size: Size2D = { width: 1024, height: 512 };

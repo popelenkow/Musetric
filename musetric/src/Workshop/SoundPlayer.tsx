@@ -4,10 +4,6 @@ import { useIconContext } from '../AppContexts/Icon';
 import { Button } from '../Controls/Button';
 import { useAnimation } from '../RenderingComponents/Animation';
 
-export type UseSoundPlayerProps = {
-	soundBuffer: SoundBuffer;
-};
-
 export const useSoundPlayer = (soundBuffer: SoundBuffer, soundBlob?: Blob) => {
 	const { PlayIcon, StopIcon } = useIconContext();
 

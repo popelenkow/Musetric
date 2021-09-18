@@ -3,35 +3,39 @@ import className from 'classnames';
 import { createUseClasses, Css } from '../AppContexts/Css';
 import { getFieldClasses } from './Field';
 
-export const getButtonClasses = (css: Css) => ({
-	root: {
-		...getFieldClasses(css).root,
-		margin: '0',
-		padding: '0',
-		border: '0',
-		outline: '0',
-		width: '42px',
-		height: '42px',
-		'user-select': 'none',
-		position: 'relative',
-		'border-radius': '10px',
-		background: 'transparent',
-		[css.platform.platformId === 'mobile' ? '&:active' : '&:hover']: {
-			background: css.theme.hover,
-		},
-	},
-	disabled: {
-		[css.platform.platformId === 'mobile' ? '&:active' : '&:hover']: {
+export const getButtonClasses = (css: Css) => {
+	const fieldClasses = getFieldClasses(css);
+	const { platformId } = css.platform;
+	const { hover, disabled } = css.theme;
+	return {
+		root: {
+			...fieldClasses.root,
+			margin: '0',
+			padding: '0',
+			border: '0',
+			outline: '0',
+			width: '42px',
+			height: '42px',
+			'user-select': 'none',
+			position: 'relative',
+			'border-radius': '10px',
 			background: 'transparent',
+			[platformId === 'mobile' ? '&:active' : '&:hover']: {
+				background: hover,
+			},
 		},
-		color: css.theme.disabled,
-		'& path, rect, polygon': {
-			fill: css.theme.disabled,
+		disabled: {
+			[platformId === 'mobile' ? '&:active' : '&:hover']: {
+				background: 'transparent',
+			},
+			color: disabled,
+			'& path, rect, polygon': {
+				fill: disabled,
+			},
 		},
-	},
-});
-
-export const useButtonClasses = createUseClasses('Button', getButtonClasses);
+	};
+};
+const useClasses = createUseClasses('Button', getButtonClasses);
 
 export type ButtonProps = {
 	onClick: () => void;
@@ -41,10 +45,9 @@ export type ButtonProps = {
 		disabled?: string;
 	};
 };
-
 export const Button: FC<ButtonProps> = (props) => {
 	const { children, classNames, onClick, disabled } = props;
-	const classes = useButtonClasses();
+	const classes = useClasses();
 
 	const rootName = className({
 		[classNames?.root || classes.root]: true,
