@@ -4,10 +4,8 @@ export type RootElementStore = {
 	rootElement: HTMLElement;
 	setRootElement: (element: HTMLElement) => void;
 };
-const defaultRootElementStore: RootElementStore = {
-	rootElement: document.body,
-	setRootElement: () => {},
-};
+// eslint-disable-next-line
+const defaultRootElementStore: RootElementStore = undefined as any;
 export const RootElementContext = createContext<RootElementStore>(defaultRootElementStore);
 
 export const RootElementConsumer = RootElementContext.Consumer;

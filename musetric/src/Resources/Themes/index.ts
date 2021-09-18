@@ -1,8 +1,8 @@
 import { ThemeEntry } from '../../AppBase/Theme';
-import white from './white';
 import dark from './dark';
+import light from './light';
 
 export const allThemeEntries: ThemeEntry[] = [
-	{ themeId: 'white', theme: white },
+	{ themeId: 'light', theme: light },
 	{ themeId: 'dark', theme: dark },
 ];

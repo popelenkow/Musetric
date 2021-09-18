@@ -1,5 +1,5 @@
 import React, { useState, useContext, createContext, FC } from 'react';
-import i18next, { i18n as I18n, TFunction } from 'i18next';
+import { i18n as I18n, TFunction } from 'i18next';
 import { LocaleEntry } from '../AppBase/Locale';
 
 export type LocaleStore = {
@@ -8,13 +8,8 @@ export type LocaleStore = {
 	setLocaleId: (id: string) => Promise<void>;
 	allLocaleIds: string[];
 };
-
-const defaultLocaleStore: LocaleStore = {
-	t: (...args: Parameters<TFunction>) => i18next.t(...args),
-	localeId: 'en',
-	setLocaleId: async () => {},
-	allLocaleIds: [],
-};
+// eslint-disable-next-line
+const defaultLocaleStore: LocaleStore = undefined as any;
 
 export const LocaleContext = createContext<LocaleStore>(defaultLocaleStore);
 export const LocaleConsumer = LocaleContext.Consumer;

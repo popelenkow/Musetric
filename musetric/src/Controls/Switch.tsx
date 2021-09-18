@@ -4,13 +4,15 @@ import { Css, createUseClasses } from '../AppContexts/Css';
 import { useLocaleContext } from '../AppContexts/Locale';
 import { getButtonClasses } from './Button';
 
-export const getSwitchClasses = (css: Css) => ({
-	root: {
-		...getButtonClasses(css).root,
-	},
-});
-
-export const useSwitchClasses = createUseClasses('Switch', getSwitchClasses);
+export const getSwitchClasses = (css: Css) => {
+	const buttonClasses = getButtonClasses(css);
+	return {
+		root: {
+			...buttonClasses.root,
+		},
+	};
+};
+const useClasses = createUseClasses('Switch', getSwitchClasses);
 
 export type SwitchProps<T> = {
 	currentId: T;
@@ -20,10 +22,9 @@ export type SwitchProps<T> = {
 	className?: string;
 };
 type Props<T> = PropsWithChildren<SwitchProps<T>>;
-
 export function Switch<T>(props: Props<T>): JSX.Element {
 	const { currentId, ids, view, set, className } = props;
-	const classes = useSwitchClasses();
+	const classes = useClasses();
 	const { t } = useLocaleContext();
 
 	const [id, setId] = useState(currentId);

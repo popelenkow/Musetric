@@ -4,7 +4,7 @@
 import benchmark from 'benchmark';
 import { drawWaveform, evalWaves, Waves, createWaveformColors } from '../src/Rendering/Waveform';
 import { Size2D } from '../src/Rendering/Layout';
-import theme from '../src/Resources/Themes/white';
+import theme from '../src/Resources/Themes/light';
 
 export const performanceWaveform = () => {
 	const suite = new benchmark.Suite();

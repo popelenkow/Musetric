@@ -1,26 +1,27 @@
-import { createUseClasses, Css } from '../AppContexts/Css';
+import { Css } from '../AppContexts/Css';
 
-export const getScrollbarClasses = (css: Css) => ({
-	root: {
-		'& ::-webkit-scrollbar': {
-			width: '15px',
-		},
-		'& ::-webkit-scrollbar-track': {
-			background: css.theme.content,
-		},
-		'& ::-webkit-scrollbar-corner': {
-			background: css.theme.content,
-		},
-		'& ::-webkit-scrollbar-thumb': {
-			background: css.theme.content,
-			'&:hover': {
-				background: css.theme.content,
+export const getScrollbarClasses = (css: Css) => {
+	const { content } = css.theme;
+	return {
+		root: {
+			'& ::-webkit-scrollbar': {
+				width: '15px',
 			},
-			'&:active': {
-				background: css.theme.content,
+			'& ::-webkit-scrollbar-track': {
+				background: content,
+			},
+			'& ::-webkit-scrollbar-corner': {
+				background: content,
+			},
+			'& ::-webkit-scrollbar-thumb': {
+				background: content,
+				'&:hover': {
+					background: content,
+				},
+				'&:active': {
+					background: content,
+				},
 			},
 		},
-	},
-});
-
-export const useScrollbarClasses = createUseClasses('Scrollbar', getScrollbarClasses);
+	};
+};

@@ -3,22 +3,24 @@ import { createUseClasses, Css } from '../AppContexts/Css';
 import { useAnimation } from './Animation';
 import { rotatePosition2D, Size2D, Layout2D, Position2D, getCanvasCursorPosition2D, drawImage } from '../Rendering/Layout';
 
-export const getMasterCanvasClasses = (css: Css) => ({
-	root: {
-		display: 'block',
-		background: css.theme.app,
-		width: '100%',
-		height: '100%',
-	},
-});
-
-export const useMasterCanvasClasses = createUseClasses('MasterCanvas', getMasterCanvasClasses);
+export const getMasterCanvasClasses = (css: Css) => {
+	const { app } = css.theme;
+	return {
+		root: {
+			display: 'block',
+			background: app,
+			width: '100%',
+			height: '100%',
+		},
+	};
+};
+const useClasses = createUseClasses('MasterCanvas', getMasterCanvasClasses);
 
 const useScreen = (
 	size: Size2D,
 	onClick: (e: MouseEvent<HTMLCanvasElement>) => void,
 ) => {
-	const classes = useMasterCanvasClasses();
+	const classes = useClasses();
 	const [canvas, setCanvas] = useState<HTMLCanvasElement>();
 
 	const context = useMemo(() => {

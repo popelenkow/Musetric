@@ -8,26 +8,12 @@ export type Css = {
 	theme: Theme;
 	platform: Platform;
 };
-const defaultCss: Css = {
-	theme: {
-		app: '',
-		sidebar: '',
-		content: '',
-		disabled: '',
-		hover: '',
-		active: '',
-		splitter: '',
-	},
-	platform: {
-		platformId: 'desktop',
-		height: '100vh',
-		width: '100vw',
-	},
-};
+// eslint-disable-next-line
+const defaultCss: Css = undefined as any;
 export const ThemingContext = createContext<Css>(defaultCss);
 export const theming = createTheming(ThemingContext);
 
-export const createUseClasses = <C extends string = string, Props = unknown>(
+export const createUseClasses = <C extends string, Props>(
 	name: string,
 	styles: Styles<C, Props, Css> | ((theme: Css) => Styles<C, Props, undefined>),
 ): (data?: Props & { theme?: Css }) => Classes<C> => {
@@ -40,14 +26,9 @@ export type CssStore = {
 	setThemeId: (id: string) => void;
 	allThemeIds: string[];
 };
-const defaultLocaleStore: CssStore = {
-	css: defaultCss,
-	themeId: '',
-	setThemeId: () => {},
-	allThemeIds: [],
-};
-export const CssContext = createContext<CssStore>(defaultLocaleStore);
-export const CssConsumer = CssContext.Consumer;
+// eslint-disable-next-line
+const defaultCssStore: CssStore = undefined as any;
+export const CssContext = createContext<CssStore>(defaultCssStore);
 
 const usePlatform = (): Platform => {
 	const platformId = useMemo(() => getPlatformId(), []);
