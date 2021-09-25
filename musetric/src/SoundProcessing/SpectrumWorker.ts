@@ -1,13 +1,13 @@
 import { createFftRadix4 } from '../Sounds/FftRadix4';
 import { Spectrometer, SpectrometerFrequenciesOptions } from '../Sounds/Spectrometer';
-import { startAnimation, AnimationSubscription } from '../Rendering/Animation';
+import { createAnimation } from '../Rendering/Animation';
 import { runPromiseWorker } from '../Workers/PromiseWorker';
 
 export const createFrequenciesView = (
 	buffer: ArrayBufferLike,
 	windowSize: number,
 	count: number,
-) => {
+): Uint8Array[] => {
 	const fftSize = windowSize / 2;
 	const fftStep = fftSize * Uint8Array.BYTES_PER_ELEMENT;
 	const result: Uint8Array[] = [];
@@ -24,7 +24,13 @@ export type SpectrumOptions = {
 	windowSize: number;
 	count: number;
 };
-export const createSpectrumHandlers = () => {
+export type SpectrumHandlers = {
+	setup: (options: SpectrumOptions) => SharedArrayBuffer;
+	start: () => void;
+	stop: () => void;
+	setSoundBuffer: (value: SharedArrayBuffer) => void;
+};
+export const createSpectrumHandlers = (): SpectrumHandlers => {
 	type SpectrumState = SpectrumOptions & {
 		spectrometer: Spectrometer;
 		frequencies: Uint8Array[];
@@ -68,15 +74,11 @@ export const createSpectrumHandlers = () => {
 		copy();
 	};
 
-	let subscription: AnimationSubscription | undefined;
-	const start = () => {
-		subscription && subscription.stop();
-		subscription = startAnimation(() => calc);
-	};
-	const stop = () => {
-		subscription && subscription.stop();
-		subscription = undefined;
-	};
+	const { start, stop } = createAnimation(() => {
+		return {
+			onIteration: calc,
+		};
+	});
 
 	return {
 		setup,
@@ -86,6 +88,6 @@ export const createSpectrumHandlers = () => {
 	};
 };
 
-export const runSpectrumWorker = (worker: Worker) => {
+export const runSpectrumWorker = (worker: Worker): void => {
 	runPromiseWorker(worker, createSpectrumHandlers);
 };

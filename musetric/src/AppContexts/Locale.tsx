@@ -33,7 +33,7 @@ export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
 			setLocaleId(id);
 			onSetLocaleId(id);
 		},
-		allLocaleIds: allLocaleEntries.map(x => x.localeId),
+		allLocaleIds: allLocaleEntries.map((x) => x.localeId),
 	};
 
 	return (
@@ -43,4 +43,4 @@ export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
 	);
 };
 
-export const useLocaleContext = () => useContext(LocaleContext);
+export const useLocaleContext = (): LocaleStore => useContext(LocaleContext);

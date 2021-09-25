@@ -15,7 +15,7 @@ export const run = async (): Promise<void> => {
 	const root = document.getElementById('root');
 	if (!root) throw new Error();
 	const themeId = getStorageThemeId() || 'dark';
-	const { theme } = allThemeEntries.find(x => x.themeId === themeId) || {};
+	const { theme } = allThemeEntries.find((x) => x.themeId === themeId) || {};
 	if (!theme) throw new Error();
 	root.style.backgroundColor = theme.app;
 	root.style.display = 'flex';
@@ -169,7 +169,7 @@ export const run = async (): Promise<void> => {
 			showLine: true,
 			data: fft4OData,
 		}];
-		text = arr.map(x => {
+		text = arr.map((x) => {
 			let value = '';
 			value += `forward ${x.windowSize}\n`;
 			value += `fft2R ${(x.fft2R).toFixed(0)}\n`;

@@ -6,7 +6,7 @@ export type SpectrogramColors = {
 	gradient: Uint32Array;
 	active: number;
 };
-export const createSpectrogramColors = (theme: Theme) => {
+export const createSpectrogramColors = (theme: Theme): SpectrogramColors => {
 	const { active } = parseThemeUint32Color(theme);
 	const { content, background } = parseThemeRgbColor(theme);
 	const gradient = gradientUint32ByRgb(background, content, 256);

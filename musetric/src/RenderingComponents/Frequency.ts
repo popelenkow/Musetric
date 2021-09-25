@@ -6,7 +6,7 @@ import { viewRealArray } from '../Sounds/ComplexArray';
 import { createFftRadix4 } from '../Sounds/FftRadix4';
 import { Size2D } from '../Rendering/Layout';
 import { createFrequencyColors, drawFrequency } from '../Rendering/Frequency';
-import { useAnimation } from './Animation';
+import { useAnimation } from '../Hooks/Animation';
 import { usePixelCanvas } from './PixelCanvas';
 
 export type FrequencyProps = {
@@ -16,7 +16,10 @@ export type FrequencyProps = {
 	size: Size2D;
 	pause?: boolean;
 };
-export const useFrequency = (props: FrequencyProps) => {
+export type Frequency = {
+	image: HTMLCanvasElement;
+};
+export const useFrequency = (props: FrequencyProps): Frequency => {
 	const {
 		soundBuffer, soundCircularBuffer, isLive, size, pause,
 	} = props;
@@ -35,14 +38,14 @@ export const useFrequency = (props: FrequencyProps) => {
 			const { windowSize, fft, result } = info;
 
 			const getBuffer = () => {
-				if (isLive) return { ...soundCircularBuffer, cursor: soundCircularBuffer.memorySize };
+				if (isLive) return { ...soundCircularBuffer, cursor: soundCircularBuffer.length };
 				return soundBuffer;
 			};
-			const { cursor, memorySize, buffers } = getBuffer();
-			let offset = cursor < memorySize ? cursor - windowSize : memorySize - windowSize;
+			const { cursor, length, buffers } = getBuffer();
+			let offset = cursor < length ? cursor - windowSize : length - windowSize;
 			offset = offset < 0 ? 0 : offset;
 			const view = viewRealArray(buffers[0], Math.floor(offset), windowSize);
-			fft.frequency(view, result, { });
+			fft.frequency(view, result, {});
 			drawFrequency(result, output, frame, colors);
 		};
 	}, [soundBuffer, soundCircularBuffer, isLive, info, colors]);

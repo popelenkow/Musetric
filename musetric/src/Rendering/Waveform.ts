@@ -11,7 +11,7 @@ export const evalWaves = (
 	input: Float32Array,
 	output: Waves,
 	frame: Size2D,
-) => {
+): void => {
 	const { minArray, maxArray } = output;
 	const window = input.length / frame.height;
 	const step = Math.max(1, Math.round(window / 20));

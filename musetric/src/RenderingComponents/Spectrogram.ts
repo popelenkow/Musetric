@@ -7,7 +7,7 @@ import { createFrequenciesView, createSpectrum } from '../SoundProcessing';
 import { Size2D, Position2D } from '../Rendering/Layout';
 import { createSpectrogramColors, drawSpectrogram } from '../Rendering/Spectrogram';
 import { usePixelCanvas } from './PixelCanvas';
-import { useAnimation } from './Animation';
+import { useAnimation } from '../Hooks/Animation';
 
 export type SpectrogramProps = {
 	soundBuffer: SoundBuffer;
@@ -16,12 +16,16 @@ export type SpectrogramProps = {
 	size: Size2D;
 	pause?: boolean;
 };
-export const useSpectrogram = (props: SpectrogramProps) => {
+export type Spectrogram = {
+	image: HTMLCanvasElement;
+	onClick: (cursorPosition: Position2D) => void;
+};
+export const useSpectrogram = (props: SpectrogramProps): Spectrogram => {
 	const {
 		soundBuffer, soundCircularBuffer, isLive, size, pause,
 	} = props;
-	const { css } = useCssContext();
-	const colors = useMemo(() => createSpectrogramColors(css.theme), [css.theme]);
+	const { theme } = useCssContext().css;
+	const colors = useMemo(() => createSpectrogramColors(theme), [theme]);
 	const { spectrumUrl } = useWorkerContext();
 
 	const windowSize = useMemo(() => size.width * 2, [size]);
@@ -29,8 +33,8 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 
 	useEffect(() => {
 		if (pause) return undefined;
-		spectrum.start().finally(() => {});
-		return () => { spectrum.stop().finally(() => {}); };
+		spectrum.start().finally(() => { });
+		return () => { spectrum.stop().finally(() => { }); };
 	}, [spectrum, pause]);
 
 	const count = useMemo(() => 128, []);
@@ -41,7 +45,7 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 			const result = createFrequenciesView(raw, windowSize, count);
 			setFrequencies(result);
 		};
-		run().finally(() => {});
+		run().finally(() => { });
 	}, [spectrum, windowSize, count]);
 
 	const [buffer, setBuffer] = useState<SharedArrayBuffer>();
@@ -58,12 +62,12 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 
 	useEffect(() => {
 		if (!buffer) return;
-		spectrum.setSoundBuffer(buffer).finally(() => {});
+		spectrum.setSoundBuffer(buffer).finally(() => { });
 	}, [spectrum, buffer]);
 
 	const onClick = useCallback((cursorPosition: Position2D) => {
 		if (isLive) return;
-		const value = Math.round(cursorPosition.y * (soundBuffer.memorySize - 1));
+		const value = Math.round(cursorPosition.y * (soundBuffer.length - 1));
 		soundBuffer.setCursor(value);
 	}, [soundBuffer, isLive]);
 
@@ -72,7 +76,7 @@ export const useSpectrogram = (props: SpectrogramProps) => {
 	useAnimation(() => {
 		if (pause) return;
 		if (!frequencies) return;
-		const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
+		const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.length - 1);
 		drawSpectrogram(frequencies, pixelCanvas.image.data, size, colors, cursor);
 		pixelCanvas.context.putImageData(pixelCanvas.image, 0, 0);
 	}, [

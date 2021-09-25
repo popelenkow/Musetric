@@ -1,6 +1,6 @@
-import { Css } from '../AppContexts/Css';
+import { createClasses } from '../AppContexts/Css';
 
-export const getScrollbarClasses = (css: Css) => {
+export const getScrollbarClasses = createClasses((css) => {
 	const { content } = css.theme;
 	return {
 		root: {
@@ -24,4 +24,4 @@ export const getScrollbarClasses = (css: Css) => {
 			},
 		},
 	};
-};
+});

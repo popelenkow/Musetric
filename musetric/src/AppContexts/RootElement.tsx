@@ -30,4 +30,4 @@ export const RootElementProvider: FC<RootElementProviderProps> = (props) => {
 	);
 };
 
-export const useRootElementContext = () => useContext(RootElementContext);
+export const useRootElementContext = (): RootElementStore => useContext(RootElementContext);

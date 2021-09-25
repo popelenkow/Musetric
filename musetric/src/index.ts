@@ -2,6 +2,7 @@ export * from './App';
 export * from './AppBase';
 export * from './AppContexts';
 export * from './Controls';
+export * from './Hooks';
 export * from './Rendering';
 export * from './RenderingComponents';
 export * from './Resources';

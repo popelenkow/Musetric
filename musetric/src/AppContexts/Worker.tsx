@@ -24,4 +24,4 @@ export const WorkerProvider: FC<WorkerProviderProps> = (props) => {
 	);
 };
 
-export const useWorkerContext = () => useContext(WorkerContext);
+export const useWorkerContext = (): WorkerStore => useContext(WorkerContext);

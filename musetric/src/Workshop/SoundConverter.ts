@@ -1,21 +1,20 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useWorkerContext } from '../AppContexts/Worker';
 import { SoundBuffer } from '../Sounds/SoundBuffer';
 import { createWavConverter } from '../SoundProcessing/WavConverter';
+import { useCache } from '../Hooks/Cache';
 
-export const useSoundConverter = (soundBuffer: SoundBuffer) => {
+export type SoundConverter = {
+	getBlob: () => Promise<Blob>;
+	pushFile: (file: File) => Promise<void>;
+};
+export const useSoundConverter = (soundBuffer: SoundBuffer): SoundConverter => {
 	const { wavConverterUrl } = useWorkerContext();
 
-	const [audioContextState, setAudioContext] = useState<AudioContext>();
-	const getAudioContext = useCallback(() => {
+	const [getAudioContext, getAudioContextState] = useCache<AudioContext>(() => {
 		const { sampleRate } = soundBuffer;
-		let audioContext = audioContextState;
-		if (!audioContext || (sampleRate !== audioContext.sampleRate)) {
-			audioContext = new AudioContext({ sampleRate });
-			setAudioContext(audioContext);
-		}
-		return audioContext;
-	}, [soundBuffer, audioContextState]);
+		return new AudioContext({ sampleRate });
+	}, [soundBuffer]);
 
 	const wavConverter = useMemo(
 		() => createWavConverter(wavConverterUrl),
@@ -28,7 +27,15 @@ export const useSoundConverter = (soundBuffer: SoundBuffer) => {
 	}, [wavConverter, soundBuffer]);
 
 	const pushFile = useCallback(async (file: File) => {
-		const audioContext = getAudioContext();
+		const { sampleRate } = soundBuffer;
+		const needRefresh = () => {
+			const prevState = getAudioContextState();
+			if (!prevState.value) return true;
+			const prevSampleRate = prevState.value.sampleRate;
+			const result = prevSampleRate !== sampleRate;
+			return result;
+		};
+		const audioContext = getAudioContext(needRefresh());
 		const arrayBuffer = await file.arrayBuffer();
 		const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 		const buffers: Float32Array[] = [];
@@ -36,7 +43,7 @@ export const useSoundConverter = (soundBuffer: SoundBuffer) => {
 			buffers[i] = audioBuffer.getChannelData(i);
 		}
 		soundBuffer.push(buffers);
-	}, [soundBuffer, getAudioContext]);
+	}, [soundBuffer, getAudioContext, getAudioContextState]);
 
 	return {
 		getBlob,

@@ -1,57 +1,43 @@
-import React, { useState, useMemo, FC } from 'react';
+import React, { useState, FC } from 'react';
 import { SoundBuffer } from '../Sounds';
 import { useIconContext } from '../AppContexts/Icon';
 import { Button } from '../Controls/Button';
-import { useAnimation } from '../RenderingComponents/Animation';
+import { useCache } from '../Hooks/Cache';
+import { createPlayer } from '../SoundProcessing/Player';
 
-export const useSoundPlayer = (soundBuffer: SoundBuffer, soundBlob?: Blob) => {
+export type PlayerButtonProps = {
+	disabled: boolean;
+};
+export type SoundPlayer = {
+	isPlaying: boolean;
+	PlayerButton: FC<PlayerButtonProps>;
+};
+export const useSoundPlayer = (soundBuffer: SoundBuffer): SoundPlayer => {
 	const { PlayIcon, StopIcon } = useIconContext();
 
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
-	const player = useMemo(() => {
-		if (!soundBlob) return undefined;
-		const url = URL.createObjectURL(soundBlob);
-		const element = document.createElement('audio');
-		element.src = url;
-		element.onended = () => {
-			setIsPlaying(false);
-			soundBuffer.setCursor(0);
-		};
-		const { cursor, sampleRate } = soundBuffer;
-		element.currentTime = cursor / sampleRate;
-		return {
-			prevCursor: soundBuffer.cursor,
-			element,
-		};
-	}, [soundBlob, soundBuffer]);
+	const [getPlayer] = useCache(() => {
+		const { sampleRate, channelCount } = soundBuffer;
+		return createPlayer({
+			sampleRate,
+			channelCount,
+			onStopped: () => {
+				setIsPlaying(false);
+			},
+		});
+	}, [soundBuffer]);
 
-	useAnimation(() => {
-		if (!player) return;
-		if (!isPlaying) return;
-		const { sampleRate, cursor } = soundBuffer;
-		const { element, prevCursor } = player;
-		if (prevCursor !== cursor) {
-			element.currentTime = cursor / sampleRate;
-		} else {
-			const value = Math.floor(element.currentTime * sampleRate);
-			soundBuffer.setCursor(value);
-		}
-		player.prevCursor = soundBuffer.cursor;
-	}, [player, soundBuffer, isPlaying]);
-
-	const startPlaying = async () => {
-		await player?.element?.play();
+	const startPlaying = () => {
+		const player = getPlayer();
+		player.start(soundBuffer);
 		setIsPlaying(true);
 	};
 
 	const stopPlaying = () => {
-		player?.element?.pause();
-		setIsPlaying(false);
+		const player = getPlayer();
+		player.stop();
 	};
 
-	type PlayerButtonProps = {
-		disabled: boolean;
-	};
 	const PlayerButton: FC<PlayerButtonProps> = (props) => {
 		const { disabled } = props;
 		return !isPlaying

@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { createUseClasses, Css } from '../AppContexts/Css';
+import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useIconContext } from '../AppContexts/Icon';
 import { getFieldClasses } from '../Controls/Field';
 
-export const getAppTitlebarClasses = (css: Css) => {
+export const getAppTitlebarClasses = createClasses((css) => {
 	const fieldClasses = getFieldClasses(css);
 	const { splitter, sidebar } = css.theme;
 	return {
@@ -35,7 +35,7 @@ export const getAppTitlebarClasses = (css: Css) => {
 			width: 'auto',
 		},
 	};
-};
+});
 const useClasses = createUseClasses('AppTitlebar', getAppTitlebarClasses);
 
 export type AppTitlebarProps = {

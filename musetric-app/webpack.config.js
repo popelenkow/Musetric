@@ -62,7 +62,6 @@ const createConfig = (env, options) => {
 		devtool: 'source-map',
 		/** @type {DevServerConfiguration} */
 		devServer: {
-			hot: 'only',
 			port: 3000,
 			https: true,
 			headers: {
@@ -81,11 +80,9 @@ const createConfig = (env, options) => {
 };
 
 const createConfigs = (env, args) => {
-	const configs = [];
-	for (let i = 0; i < args.length; i++) {
-		const result = createConfig(env, args[i]);
-		if (i !== 0) delete result.devServer;
-		configs.push(result);
+	const configs = args.map(x => createConfig(env, x));
+	for (let i = 0; i < configs.length; i++) {
+		if (i !== 0) delete configs[i].devServer;
 	}
 	return configs;
 };

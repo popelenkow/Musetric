@@ -2,7 +2,11 @@ import React, { useState, FC } from 'react';
 import { useIconContext } from '../AppContexts/Icon';
 import { Checkbox, CheckboxProps } from '../Controls/Checkbox';
 
-export const useSoundLive = () => {
+export type SoundLive = {
+	isLive: boolean;
+	LiveCheckbox: FC;
+};
+export const useSoundLive = (): SoundLive => {
 	const { LiveIcon } = useIconContext();
 
 	const [isLive, setIsLive] = useState<boolean>(false);

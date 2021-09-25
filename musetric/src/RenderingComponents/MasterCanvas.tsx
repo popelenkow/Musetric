@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useCallback, MouseEvent, FC } from 'react';
-import { createUseClasses, Css } from '../AppContexts/Css';
-import { useAnimation } from './Animation';
+import { createUseClasses, createClasses } from '../AppContexts/Css';
+import { useAnimation } from '../Hooks/Animation';
 import { rotatePosition2D, Size2D, Layout2D, Position2D, getCanvasCursorPosition2D, drawImage } from '../Rendering/Layout';
 
-export const getMasterCanvasClasses = (css: Css) => {
+export const getMasterCanvasClasses = createClasses((css) => {
 	const { app } = css.theme;
 	return {
 		root: {
@@ -13,7 +13,7 @@ export const getMasterCanvasClasses = (css: Css) => {
 			height: '100%',
 		},
 	};
-};
+});
 const useClasses = createUseClasses('MasterCanvas', getMasterCanvasClasses);
 
 const useScreen = (
@@ -60,7 +60,7 @@ export const MasterCanvas: FC<MasterCanvasProps> = (props) => {
 	const { items, size } = props;
 
 	const click = useCallback((e: MouseEvent<HTMLCanvasElement>) => {
-		const item = items.filter(x => x.onClick)[0];
+		const item = items.filter((x) => x.onClick)[0];
 		if (!item.onClick) return;
 		const position = getCanvasCursorPosition2D(e.currentTarget, e.nativeEvent);
 		const result = rotatePosition2D(position, item.layout.direction);

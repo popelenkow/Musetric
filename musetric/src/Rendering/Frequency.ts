@@ -6,8 +6,7 @@ export type FrequencyColors = {
 	content: number;
 	background: number;
 };
-
-export const createFrequencyColors = (theme: Theme) => {
+export const createFrequencyColors = (theme: Theme): FrequencyColors => {
 	const { content, background } = parseThemeUint32Color(theme);
 	return { content, background };
 };
