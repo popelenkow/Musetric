@@ -6,7 +6,7 @@ export type LocaleEntry = {
 	locale: Locale;
 };
 
-export const createLocaleResources = (localeEntries: LocaleEntry[]) => (
+export const createLocaleResources = (localeEntries: LocaleEntry[]): Resource => (
 	localeEntries.reduce<Resource>((acc, x) => ({ ...acc, [x.localeId]: x.locale }), {})
 );
 
@@ -21,7 +21,7 @@ export const createI18n = async (
 		lng: initLocaleId,
 		fallbackLng: initLocaleId,
 		defaultNS: 'musetric',
-		supportedLngs: localeEntries.map(x => x.localeId),
+		supportedLngs: localeEntries.map((x) => x.localeId),
 		resources,
 		debug: false,
 	});
@@ -33,7 +33,7 @@ export const getStorageLocaleId = (): string | undefined => {
 	const localeId = localStorage.getItem('locale') || undefined;
 	return localeId;
 };
-export const setStorageLocaleId = (localeId: string) => {
+export const setStorageLocaleId = (localeId: string): void => {
 	localStorage.setItem('locale', localeId);
 };
 

@@ -67,7 +67,7 @@ export const drawImage = (
 	context: CanvasRenderingContext2D,
 	image: CanvasImageSource,
 	layout: Layout2D,
-) => {
+): void => {
 	const { size, direction } = layout;
 	const { rotation = 'none', reflection = false } = direction || {};
 	context.save();

@@ -4,7 +4,13 @@ import { Size2D } from '../Rendering/Layout';
 export type UsePixelCanvasProps = {
 	size: Size2D;
 };
-export const usePixelCanvas = (props: UsePixelCanvasProps) => {
+export type PixelCanvas = {
+	canvas: HTMLCanvasElement;
+	context: CanvasRenderingContext2D;
+	image: ImageData;
+	size: Size2D;
+};
+export const usePixelCanvas = (props: UsePixelCanvasProps): PixelCanvas => {
 	const { size } = props;
 	const info = useMemo(() => {
 		const canvas = document.createElement('canvas');

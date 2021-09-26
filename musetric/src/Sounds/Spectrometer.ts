@@ -18,7 +18,18 @@ export type SpectrometerFrequenciesOptions = {
 	convert?: (amplitudes: RealArray) => void;
 };
 
-export const createSpectrometer = (windowSize: number, base: SpectrometerBase) => {
+export type Spectrometer = {
+	forward: (input: ComplexArray, output: ComplexArray) => void;
+	inverse: (input: ComplexArray, output: ComplexArray) => void;
+	frequency: (input: RealArray, output: RealArray, options: SpectrometerFrequencyOptions) => void;
+	frequencies: (
+		input: Float32Array, output: Float32Array[], options: SpectrometerFrequenciesOptions,
+	) => void;
+	byteFrequencies: (
+		input: Float32Array, output: Uint8Array[], options: SpectrometerFrequenciesOptions,
+	) => void;
+};
+export const createSpectrometer = (windowSize: number, base: SpectrometerBase): Spectrometer => {
 	const { forward, inverse } = base;
 	const window = createComplexArray(windowSize, 'float64');
 	const buf = createRealArray(windowSize / 2, 'float64');
@@ -74,4 +85,3 @@ export const createSpectrometer = (windowSize: number, base: SpectrometerBase) =
 	};
 	return api;
 };
-export type Spectrometer = ReturnType<typeof createSpectrometer>;

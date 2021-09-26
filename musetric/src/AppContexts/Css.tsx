@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useMemo, createContext, FC } from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Classes } from 'jss';
 import { JssProvider, createTheming, createUseStyles, Styles } from 'react-jss';
 import { Platform, getPlatformId } from '../AppBase/Platform';
@@ -13,6 +14,9 @@ const defaultCss: Css = undefined as any;
 export const ThemingContext = createContext<Css>(defaultCss);
 export const theming = createTheming(ThemingContext);
 
+export function createClasses<T>(create: (css: Css) => T): ((css: Css) => T) {
+	return (css: Css) => create(css);
+}
 export const createUseClasses = <C extends string, Props>(
 	name: string,
 	styles: Styles<C, Props, Css> | ((theme: Css) => Styles<C, Props, undefined>),
@@ -63,9 +67,9 @@ export type CssProviderProps = {
 export const CssProvider: FC<CssProviderProps> = (props) => {
 	const { children, initThemeId, allThemeEntries, onSetThemeId } = props;
 
-	const allThemeIds = allThemeEntries.map(x => x.themeId);
+	const allThemeIds = allThemeEntries.map((x) => x.themeId);
 	const [themeId, setThemeId] = useState<string>(initThemeId || allThemeIds[0]);
-	const themeEntry = allThemeEntries.find(x => x.themeId === themeId);
+	const themeEntry = allThemeEntries.find((x) => x.themeId === themeId);
 	const { theme = allThemeEntries[0].theme } = themeEntry || { };
 	const platform = usePlatform();
 
@@ -74,7 +78,7 @@ export const CssProvider: FC<CssProviderProps> = (props) => {
 		themeId,
 		setThemeId: (id: string) => {
 			setThemeId(id);
-			onSetThemeId && onSetThemeId(id);
+			if (onSetThemeId) onSetThemeId(id);
 		},
 		allThemeIds,
 	};
@@ -90,4 +94,4 @@ export const CssProvider: FC<CssProviderProps> = (props) => {
 	);
 };
 
-export const useCssContext = () => useContext(CssContext);
+export const useCssContext = (): CssStore => useContext(CssContext);

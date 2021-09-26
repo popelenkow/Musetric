@@ -1,4 +1,3 @@
-export * from './Animation';
 export * from './Frequency';
 export * from './MasterCanvas';
 export * from './PixelCanvas';

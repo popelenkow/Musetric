@@ -1,7 +1,7 @@
 import { RealArray } from './ComplexArray';
 
 /** Pseudo conversion. Rendering only */
-export const convertAmplitudeToBel = (amplitudes: RealArray) => {
+export const convertAmplitudeToBel = (amplitudes: RealArray): void => {
 	for (let i = 0; i < amplitudes.length; i++) {
 		const amplitude = amplitudes[i];
 		const value = Math.log10(amplitude) / 5;

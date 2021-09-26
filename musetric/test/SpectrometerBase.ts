@@ -7,7 +7,7 @@ import { createFftRadix2Base } from '../src/Sounds/FftRadix2';
 import { createFftRadix4Base } from '../src/Sounds/FftRadix4';
 
 const toStringArray = (input: ArrayLike<number>) => {
-	const arr = Array.from<number>(input).map(x => (x % 1 ? x.toFixed(2) : x));
+	const arr = Array.from<number>(input).map((x) => (x % 1 ? x.toFixed(2) : x));
 	if (arr.length < 9) return `[${arr.join(', ')}]`;
 	return `[${arr.slice(0, 6).join(', ')}, ...(${arr.length})]`;
 };

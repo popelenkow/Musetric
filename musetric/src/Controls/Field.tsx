@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { createUseClasses, Css } from '../AppContexts/Css';
+import { createUseClasses, createClasses } from '../AppContexts/Css';
 
-export const getFieldClasses = (css: Css) => {
+export const getFieldClasses = createClasses((css) => {
 	const { content } = css.theme;
 	return {
 		root: {
@@ -15,7 +15,7 @@ export const getFieldClasses = (css: Css) => {
 			},
 		},
 	};
-};
+});
 const useClasses = createUseClasses('Field', getFieldClasses);
 
 export type FieldProps = {

@@ -1,17 +1,17 @@
 import React, { useState, ReactNode, PropsWithChildren } from 'react';
 import { TFunction } from 'i18next';
-import { Css, createUseClasses } from '../AppContexts/Css';
+import { createClasses, createUseClasses } from '../AppContexts/Css';
 import { useLocaleContext } from '../AppContexts/Locale';
 import { getButtonClasses } from './Button';
 
-export const getSwitchClasses = (css: Css) => {
+export const getSwitchClasses = createClasses((css) => {
 	const buttonClasses = getButtonClasses(css);
 	return {
 		root: {
 			...buttonClasses.root,
 		},
 	};
-};
+});
 const useClasses = createUseClasses('Switch', getSwitchClasses);
 
 export type SwitchProps<T> = {

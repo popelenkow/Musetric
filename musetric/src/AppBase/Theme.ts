@@ -16,6 +16,6 @@ export const getStorageThemeId = (): string | undefined => {
 	const themeId = localStorage.getItem('theme') || undefined;
 	return themeId;
 };
-export const setStorageThemeId = (themeId: string) => {
+export const setStorageThemeId = (themeId: string): void => {
 	localStorage.setItem('theme', themeId);
 };

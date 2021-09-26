@@ -1,8 +1,8 @@
 import React, { ReactNode, FC } from 'react';
-import { createUseClasses, Css } from '../AppContexts/Css';
+import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { getFieldClasses } from '../Controls/Field';
 
-export const getAboutInfoClasses = (css: Css) => {
+export const getAboutInfoClasses = createClasses((css) => {
 	const fieldClasses = getFieldClasses(css);
 	const { app } = css.theme;
 	return {
@@ -23,7 +23,7 @@ export const getAboutInfoClasses = (css: Css) => {
 			'flex-direction': 'row',
 		},
 	};
-};
+});
 const useClasses = createUseClasses('AppAboutInfo', getAboutInfoClasses);
 
 export type AppAboutInfoProps = {
@@ -35,8 +35,10 @@ export const AppAboutInfo: FC<AppAboutInfoProps> = (props) => {
 	const { appVersion, links } = props;
 	const classes = useClasses();
 
+	const noLinks = !links || links.length === 0;
 	const Links: FC = () => {
-		if (!links || links.length === 0) return null;
+		if (noLinks) return null;
+
 		return (
 			<div className={classes.links}>
 				{links}

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { v4 as uuid } from 'uuid';
-import { PromiseAudioWorkletRequest, PromiseAudioWorkletResponse } from './PromiseAudioWorkletTypes';
+import { PromiseAudioWorkletRequest, PromiseAudioWorkletResponse, PromiseAudioWorkletApi } from './PromiseAudioWorkletTypes';
 
 export const createPromiseAudioWorklet = async (
 	audioNode: AudioNode,
@@ -23,7 +23,7 @@ export const createPromiseAudioWorkletApi = (
 	worklet: AudioWorkletNode,
 	process: (options: any) => void,
 	allTypes: string[],
-) => {
+): PromiseAudioWorkletApi => {
 	const massagePort = worklet.port;
 	const postMessage = (message: PromiseAudioWorkletRequest): void => {
 		massagePort.postMessage(message);
@@ -41,8 +41,8 @@ export const createPromiseAudioWorkletApi = (
 		callback(result);
 	};
 
-	const api: Record<string, (...args: any[]) => Promise<any>> = {};
-	allTypes.forEach(type => {
+	const api: PromiseAudioWorkletApi = {};
+	allTypes.forEach((type) => {
 		api[type] = (...args) => {
 			return new Promise((resolve) => {
 				const id = uuid();

@@ -41,7 +41,7 @@ export type DftFrequenciesOptions = {
 	count: number;
 };
 
-export const createDftBase = (windowSize: number) => {
+export const createDftBase = (windowSize: number): SpectrometerBase => {
 	const api: SpectrometerBase = {
 		forward: (input: ComplexArray, output: ComplexArray) => {
 			transform(input, output, windowSize, false);
@@ -53,7 +53,7 @@ export const createDftBase = (windowSize: number) => {
 	return api;
 };
 
-export const createDft = (windowSize: number) => {
+export const createDft = (windowSize: number): Spectrometer => {
 	const base = createDftBase(windowSize);
 	const api: Spectrometer = createSpectrometer(windowSize, base);
 	return api;

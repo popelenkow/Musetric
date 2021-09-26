@@ -5,7 +5,7 @@ import { SoundCircularBuffer } from '../Sounds/SoundCircularBuffer';
 import { Size2D, Position2D } from '../Rendering/Layout';
 import { Waves, drawWaveform, createWaveformColors, evalWaves } from '../Rendering/Waveform';
 import { usePixelCanvas } from './PixelCanvas';
-import { useAnimation } from './Animation';
+import { useAnimation } from '../Hooks/Animation';
 
 export type WaveformProps = {
 	soundBuffer: SoundBuffer;
@@ -14,7 +14,11 @@ export type WaveformProps = {
 	size: Size2D;
 	pause?: boolean;
 };
-export const useWaveform = (props: WaveformProps) => {
+export type Waveform = {
+	image: HTMLCanvasElement;
+	onClick: (cursorPosition: Position2D) => void;
+};
+export const useWaveform = (props: WaveformProps): Waveform => {
 	const {
 		soundBuffer, soundCircularBuffer, isLive, size, pause,
 	} = props;
@@ -35,7 +39,7 @@ export const useWaveform = (props: WaveformProps) => {
 	}, []);
 	const draw = useCallback((output: Uint8ClampedArray, frame: Size2D) => {
 		const buffer = isLive ? soundCircularBuffer.buffers[0] : soundBuffer.buffers[0];
-		const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.memorySize - 1);
+		const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.length - 1);
 		const waves = getWaves(frame);
 		evalWaves(buffer, waves, frame);
 		drawWaveform(waves, output, frame, colors, cursor);
@@ -43,7 +47,7 @@ export const useWaveform = (props: WaveformProps) => {
 
 	const onClick = useCallback((cursorPosition: Position2D) => {
 		if (isLive) return;
-		const value = Math.floor(cursorPosition.y * (soundBuffer.memorySize - 1));
+		const value = Math.floor(cursorPosition.y * (soundBuffer.length - 1));
 		soundBuffer.setCursor(value);
 	}, [soundBuffer, isLive]);
 

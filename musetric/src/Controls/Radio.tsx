@@ -1,9 +1,9 @@
 import React, { PropsWithChildren } from 'react';
 import className from 'classnames';
-import { createUseClasses, Css } from '../AppContexts/Css';
+import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { getButtonClasses } from './Button';
 
-export const getRadioClasses = (css: Css) => {
+export const getRadioClasses = createClasses((css) => {
 	const buttonClasses = getButtonClasses(css);
 	const { active } = css.theme;
 	return {
@@ -26,7 +26,7 @@ export const getRadioClasses = (css: Css) => {
 			left: '0',
 		},
 	};
-};
+});
 const useClasses = createUseClasses('Radio', getRadioClasses);
 
 export type RadioProps<T extends string> = {

@@ -21,4 +21,4 @@ export const IconProvider: FC<IconProviderProps> = (props) => {
 	);
 };
 
-export const useIconContext = () => useContext(IconContext);
+export const useIconContext = (): IconStore => useContext(IconContext);

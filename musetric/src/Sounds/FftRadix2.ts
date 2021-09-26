@@ -67,7 +67,7 @@ const transform = (
 	}
 };
 
-export const createFftRadix2Base = (windowSize: number) => {
+export const createFftRadix2Base = (windowSize: number): SpectrometerBase => {
 	const arr = createComplexArray(windowSize, 'float64');
 	const reverseTable = createReverseTable(windowSize);
 	const table = createTable(windowSize, 'float64');
@@ -99,7 +99,7 @@ export const createFftRadix2Base = (windowSize: number) => {
 	return api;
 };
 
-export const createFftRadix2 = (windowSize: number) => {
+export const createFftRadix2 = (windowSize: number): Spectrometer => {
 	const base = createFftRadix2Base(windowSize);
 	const api: Spectrometer = createSpectrometer(windowSize, base);
 	return api;

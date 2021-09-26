@@ -6,7 +6,12 @@ export type RecorderProcessOptions = {
 	isRecording: boolean;
 };
 
-export const createRecorderHandlers = (options: PromiseAudioWorkletOptions) => {
+export type RecorderHandlers = {
+	process: (input: Float32Array[]) => void;
+	start: () => void;
+	stop: () => void;
+};
+export const createRecorderHandlers = (options: PromiseAudioWorkletOptions): RecorderHandlers => {
 	const { post, sampleRate } = options;
 
 	let isRecording = false;
@@ -29,10 +34,10 @@ export const createRecorderHandlers = (options: PromiseAudioWorkletOptions) => {
 		};
 		push();
 		if (length < offset + step) {
-			const chunk = buffer.map(x => x.slice(0, offset));
+			const chunk = buffer.map((x) => x.slice(0, offset));
 			const id = '';
 			const type = 'process';
-			const result : RecorderProcessOptions = {
+			const result: RecorderProcessOptions = {
 				chunk,
 				isRecording,
 			};
@@ -54,6 +59,6 @@ export const createRecorderHandlers = (options: PromiseAudioWorkletOptions) => {
 	return handlers;
 };
 
-export const runRecorderWorklet = () => {
+export const runRecorderWorklet = (): void => {
 	runPromiseAudioWorklet('recorder-worklet', createRecorderHandlers);
 };

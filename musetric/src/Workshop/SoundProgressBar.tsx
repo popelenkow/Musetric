@@ -4,10 +4,13 @@ import { MasterCanvas, MasterCanvasProps, MasterCanvasItem } from '../RenderingC
 import { Size2D, Direction2D, rotateSize2D } from '../Rendering/Layout';
 import { useWaveform } from '../RenderingComponents/Waveform';
 
+export type SoundProgressBar = {
+	ProgressBarView: FC;
+};
 export const useSoundProgressBar = (
 	soundBuffer: SoundBuffer,
 	soundCircularBuffer: SoundCircularBuffer,
-) => {
+): SoundProgressBar => {
 	const waveformLayout = useMemo(() => {
 		const size: Size2D = { width: 32, height: 256 };
 		const direction: Direction2D = { rotation: 'left', reflection: false };

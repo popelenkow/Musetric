@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, FC } from 'react';
-import { Css, createUseClasses } from '../AppContexts/Css';
+import { createClasses, createUseClasses } from '../AppContexts/Css';
 import { SoundProgress } from './SoundProgress';
 import { createSoundBuffer, createSoundCircularBuffer } from '../Sounds';
 import { useSoundFile } from './SoundFile';
@@ -9,7 +9,7 @@ import { useSoundProgressBar } from './SoundProgressBar';
 import { useSoundRecorder } from './SoundRecorder';
 import { useSoundView } from './SoundView';
 
-export const getSoundWorkshopClasses = (css: Css) => {
+export const getSoundWorkshopClasses = createClasses((css) => {
 	const { app, splitter, sidebar } = css.theme;
 	return {
 		root: {
@@ -78,7 +78,7 @@ export const getSoundWorkshopClasses = (css: Css) => {
 			'border-left': `1px solid ${splitter}`,
 		},
 	};
-};
+});
 const useClasses = createUseClasses('SoundWorkshop', getSoundWorkshopClasses);
 
 export const SoundWorkshop: FC = () => {
@@ -95,17 +95,16 @@ export const SoundWorkshop: FC = () => {
 		() => createSoundCircularBuffer(sampleRate, channelCount),
 		[sampleRate, channelCount],
 	);
-	const { soundBlob, refreshSound, OpenFileButton, SaveFileButton } = useSoundFile(soundBuffer);
+	const { OpenFileButton, SaveFileButton } = useSoundFile(soundBuffer);
 
-	const { isPlaying, PlayerButton } = useSoundPlayer(soundBuffer, soundBlob);
+	const { isPlaying, PlayerButton } = useSoundPlayer(soundBuffer);
 	const { isRecording, initRecorder, RecorderCheckbox } = useSoundRecorder({
 		soundBuffer,
 		soundCircularBuffer,
-		refreshSound,
 	});
 
 	useEffect(() => {
-		isLive && initRecorder();
+		if (isLive) initRecorder().finally(() => {});
 	}, [isLive, initRecorder]);
 
 	const { SoundView, WaveformRadio, FrequencyRadio, SpectrogramRadio } = useSoundView({

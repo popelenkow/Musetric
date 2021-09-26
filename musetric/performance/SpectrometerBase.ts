@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -7,7 +9,7 @@ import { createComplexArray } from '../src/Sounds/ComplexArray';
 import { createFftRadix2Base } from '../src/Sounds/FftRadix2';
 import { createFftRadix4Base } from '../src/Sounds/FftRadix4';
 
-export const performanceFft = () => {
+export const performanceFft = (): void => {
 	const windowSize = 16384;
 	const input = createComplexArray(windowSize, 'float32');
 	const output = createComplexArray(windowSize, 'list');
@@ -41,8 +43,7 @@ export const performanceFft = () => {
 		suite.on('cycle', (event: any) => {
 			console.log(String(event.target));
 		});
-		suite.on('complete', (ev: any) => {
-			ev;
+		suite.on('complete', () => {
 		});
 		console.log('');
 		console.log(`forward ${i}`);

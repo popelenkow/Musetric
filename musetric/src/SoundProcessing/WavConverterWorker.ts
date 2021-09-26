@@ -1,6 +1,9 @@
 import { runPromiseWorker } from '../Workers/PromiseWorker';
 
-export const createWavConverterHandlers = () => {
+export type WavConverterHandlers = {
+	encode: (buffers: Float32Array[], sampleRate: number) => Blob;
+};
+export const createWavConverterHandlers = (): WavConverterHandlers => {
 	const floatTo16BitPCM = (view: DataView, offset: number, buffer: Float32Array) => {
 		let arrayOffset = 0;
 		for (let i = 0; i < buffer.length; i++) {
@@ -85,6 +88,6 @@ export const createWavConverterHandlers = () => {
 	};
 };
 
-export const runWavConverterWorker = (worker: Worker) => {
+export const runWavConverterWorker = (worker: Worker): void => {
 	runPromiseWorker(worker, createWavConverterHandlers);
 };

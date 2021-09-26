@@ -1,8 +1,8 @@
 import React, { FC, ChangeEvent } from 'react';
-import { createUseClasses, Css } from '../AppContexts/Css';
+import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { getButtonClasses } from './Button';
 
-export const getSelectFileClasses = (css: Css) => {
+export const getSelectFileClasses = createClasses((css) => {
 	const buttonClasses = getButtonClasses(css);
 	return {
 		root: {
@@ -17,7 +17,7 @@ export const getSelectFileClasses = (css: Css) => {
 			height: '100%',
 		},
 	};
-};
+});
 const useClasses = createUseClasses('SelectFile', getSelectFileClasses);
 
 export type SelectFileProps = {

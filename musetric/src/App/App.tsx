@@ -1,6 +1,6 @@
 import React, { useState, ReactNode, FC } from 'react';
 import { localizeLocaleId, localizeThemeId } from '../AppBase/Locale';
-import { createUseClasses, useCssContext, Css } from '../AppContexts/Css';
+import { createUseClasses, useCssContext, createClasses } from '../AppContexts/Css';
 import { useIconContext } from '../AppContexts/Icon';
 import { useLocaleContext } from '../AppContexts/Locale';
 import { RootElementProvider, useRootElementContext } from '../AppContexts/RootElement';
@@ -8,7 +8,7 @@ import { getButtonClasses } from '../Controls/Button';
 import { Switch, SwitchProps } from '../Controls/Switch';
 import { AppTitlebar } from './AppTitlebar';
 
-export const getAppClasses = (css: Css) => {
+export const getAppClasses = createClasses((css) => {
 	const buttonClasses = getButtonClasses(css);
 	const { width, height } = css.platform;
 	return {
@@ -26,7 +26,7 @@ export const getAppClasses = (css: Css) => {
 			padding: '0 6px',
 		},
 	};
-};
+});
 const useClasses = createUseClasses('App', getAppClasses);
 
 export type AppViewEntry<ViewId> = {
@@ -46,7 +46,7 @@ function Root<ViewId>(props: RootProps<ViewId>): JSX.Element {
 	const { themeId, setThemeId, allThemeIds } = useCssContext();
 	const { MenuIcon } = useIconContext();
 
-	const allViewIds = allViewEntries.map(x => x.viewId);
+	const allViewIds = allViewEntries.map((x) => x.viewId);
 	const [viewId, setViewId] = useState<ViewId>(initViewId);
 
 	const themeSwitchProps: SwitchProps<string> = {
@@ -74,7 +74,7 @@ function Root<ViewId>(props: RootProps<ViewId>): JSX.Element {
 		view: MenuIcon,
 	};
 
-	const { viewElement } = allViewEntries.find(x => x.viewId === viewId) || {};
+	const { viewElement } = allViewEntries.find((x) => x.viewId === viewId) || {};
 
 	const { setRootElement } = useRootElementContext();
 	return (

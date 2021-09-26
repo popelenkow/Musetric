@@ -237,7 +237,7 @@ const getWidth = (windowSize: number) => {
 	return width - 1;
 };
 
-export const createFftRadix4Base = (windowSize: number) => {
+export const createFftRadix4Base = (windowSize: number): SpectrometerBase => {
 	if (windowSize <= 1 || (windowSize & (windowSize - 1)) !== 0) {
 		throw new Error('FFT size must be a power of two and bigger than 1');
 	}
@@ -280,7 +280,7 @@ export const createFftRadix4Base = (windowSize: number) => {
 	return api;
 };
 
-export const createFftRadix4 = (windowSize: number) => {
+export const createFftRadix4 = (windowSize: number): Spectrometer => {
 	const base = createFftRadix4Base(windowSize);
 	const api: Spectrometer = createSpectrometer(windowSize, base);
 	return api;

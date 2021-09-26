@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -6,7 +9,7 @@ import { drawWaveform, evalWaves, Waves, createWaveformColors } from '../src/Ren
 import { Size2D } from '../src/Rendering/Layout';
 import theme from '../src/Resources/Themes/light';
 
-export const performanceWaveform = () => {
+export const performanceWaveform = (): void => {
 	const suite = new benchmark.Suite();
 	const colors = createWaveformColors(theme);
 	const run = (width: number, height: number, sec: number) => {

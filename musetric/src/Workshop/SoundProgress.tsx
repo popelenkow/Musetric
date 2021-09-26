@@ -1,11 +1,11 @@
 import React, { useMemo, useState, FC } from 'react';
 import className from 'classnames';
-import { createUseClasses, Css } from '../AppContexts/Css';
+import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { SoundBuffer } from '../Sounds/SoundBuffer';
-import { useAnimation } from '../RenderingComponents/Animation';
+import { useAnimation } from '../Hooks/Animation';
 import { getFieldClasses } from '../Controls/Field';
 
-export const getSoundProgressClasses = (css: Css) => {
+export const getSoundProgressClasses = createClasses((css) => {
 	const fieldClasses = getFieldClasses(css);
 	return {
 		root: {
@@ -17,7 +17,7 @@ export const getSoundProgressClasses = (css: Css) => {
 			'user-select': 'none',
 		},
 	};
-};
+});
 const useClasses = createUseClasses('SoundProgress', getSoundProgressClasses);
 
 export type SoundProgressProps = {
@@ -36,11 +36,11 @@ export const SoundProgress: FC<SoundProgressProps> = (props) => {
 
 	type State = {
 		cursor: number,
-		memorySize: number;
+		length: number;
 		sampleRate: number;
 	};
 
-	const [state, setState] = useState<State>({ cursor: 0, memorySize: 0, sampleRate: 1 });
+	const [state, setState] = useState<State>({ cursor: 0, length: 0, sampleRate: 1 });
 
 	const cursorString = useMemo(() => {
 		const { cursor, sampleRate } = state;
@@ -50,8 +50,8 @@ export const SoundProgress: FC<SoundProgressProps> = (props) => {
 	}, [state]);
 
 	const memorySizeString = useMemo(() => {
-		const { memorySize, sampleRate } = state;
-		const value = memorySize / sampleRate;
+		const { length, sampleRate } = state;
+		const value = length / sampleRate;
 		const cursorValue = new Date(value * 1000);
 		return cursorValue.toISOString().substr(14, 5);
 	}, [state]);
@@ -59,12 +59,12 @@ export const SoundProgress: FC<SoundProgressProps> = (props) => {
 	useAnimation(() => {
 		const newState = {
 			cursor: soundBuffer.cursor,
-			memorySize: soundBuffer.memorySize,
+			length: soundBuffer.length,
 			sampleRate: soundBuffer.sampleRate,
 		};
 		const isEqual = () => {
 			if (state.cursor !== newState.cursor) return false;
-			if (state.memorySize !== newState.memorySize) return false;
+			if (state.length !== newState.length) return false;
 			if (state.sampleRate !== newState.sampleRate) return false;
 			return true;
 		};

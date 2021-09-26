@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import className from 'classnames';
-import { createUseClasses, Css } from '../AppContexts/Css';
+import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { getFieldClasses } from './Field';
 
-export const getButtonClasses = (css: Css) => {
+export const getButtonClasses = createClasses((css) => {
 	const fieldClasses = getFieldClasses(css);
 	const { platformId } = css.platform;
 	const { hover, disabled } = css.theme;
@@ -34,7 +34,7 @@ export const getButtonClasses = (css: Css) => {
 			},
 		},
 	};
-};
+});
 const useClasses = createUseClasses('Button', getButtonClasses);
 
 export type ButtonProps = {

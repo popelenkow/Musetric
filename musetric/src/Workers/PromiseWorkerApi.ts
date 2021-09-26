@@ -20,7 +20,7 @@ export const createPromiseWorkerApi = (
 	};
 
 	const api: Record<string, (...args: any[]) => Promise<any>> = {};
-	allTypes.forEach(type => {
+	allTypes.forEach((type) => {
 		api[type] = (...args) => {
 			return new Promise((resolve) => {
 				const id = uuid();

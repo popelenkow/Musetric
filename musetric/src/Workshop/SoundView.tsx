@@ -84,7 +84,13 @@ const useSpectrogramItem = (props: UseItemProps) => {
 	return result;
 };
 
-export const useSoundView = (props: UseSoundViewProps) => {
+export type SoundView = {
+	SoundView: FC;
+	WaveformRadio: FC;
+	FrequencyRadio: FC;
+	SpectrogramRadio: FC;
+};
+export const useSoundView = (props: UseSoundViewProps): SoundView => {
 	const { WaveformIcon, FrequencyIcon, SpectrogramIcon } = useIconContext();
 
 	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');

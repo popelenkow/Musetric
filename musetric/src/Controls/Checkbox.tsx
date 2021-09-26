@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import className from 'classnames';
-import { createUseClasses, Css } from '../AppContexts/Css';
+import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { getButtonClasses } from './Button';
 
-export const getCheckboxClasses = (css: Css) => {
+export const getCheckboxClasses = createClasses((css) => {
 	const buttonClasses = getButtonClasses(css);
 	const { active } = css.theme;
 	return {
@@ -26,7 +26,7 @@ export const getCheckboxClasses = (css: Css) => {
 			left: '0',
 		},
 	};
-};
+});
 const useClasses = createUseClasses('Checkbox', getCheckboxClasses);
 
 export type CheckboxProps = {
