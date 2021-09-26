@@ -58,7 +58,7 @@ export const SoundProgress: FC<SoundProgressProps> = (props) => {
 
 	useAnimation(() => {
 		const newState = {
-			cursor: soundBuffer.cursor,
+			cursor: soundBuffer.cursor.get(),
 			length: soundBuffer.length,
 			sampleRate: soundBuffer.sampleRate,
 		};

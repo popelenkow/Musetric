@@ -277,10 +277,10 @@ mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-musetric-app@0.0.25:
-  version "0.0.25"
-  resolved "https://registry.yarnpkg.com/musetric-app/-/musetric-app-0.0.25.tgz#32c167b5b4e1a90c78bf8b36c2c4a907453c1f50"
-  integrity sha512-sO/2ogvdamy0cpoFnxDmOTN72NMCZ4ikTnMt8PPxq85yz8swVmx+Vl5egZObxPp6pqut3AHYyvLlR3d+aBqVBw==
+musetric-app@0.0.26:
+  version "0.0.26"
+  resolved "https://registry.yarnpkg.com/musetric-app/-/musetric-app-0.0.26.tgz#5520cf5a8152e28daa654beae8e2c3ff148ee816"
+  integrity sha512-EqozglclERJLYnbf3WIDWU+tKiPsRsj7Q3GEaoHBH3kslY66hYTccEjCdqfWE8x0zdvHcXQpz29xvcA/rDXxJQ==
 
 noms@0.0.0:
   version "0.0.0"

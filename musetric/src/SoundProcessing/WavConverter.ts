@@ -1,13 +1,15 @@
+import type { UndefinedObject } from '../Typescript/UndefinedObject';
+import type { PromiseObjectApi } from '../Typescript/PromiseObjectApi';
 import { createPromiseWorkerApi } from '../Workers/PromiseWorkerApi';
+import type { WavConverterWorker } from './WavConverterWorker';
 
-export type WavConverter = {
-	encode: (buffers: Float32Array[], sampleRate: number) => Promise<Blob>;
+export type WavConverter = PromiseObjectApi<WavConverterWorker>;
+const wavConverterTemplate: UndefinedObject<WavConverterWorker> = {
+	encode: undefined,
 };
-const allTypes: (keyof WavConverter)[] = ['encode'];
 
 export const createWavConverter = (workerUrl: URL | string): WavConverter => {
 	const worker = new Worker(workerUrl);
-	const api = createPromiseWorkerApi(worker, allTypes);
-	const { encode } = api;
-	return { encode };
+	const api = createPromiseWorkerApi<WavConverterWorker>(worker, wavConverterTemplate);
+	return api;
 };

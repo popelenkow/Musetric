@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { PromiseAudioWorkletRequest, PromiseAudioWorkletOptions, PostPromiseAudioWorklet, PromiseAudioWorkletHandlers } from './PromiseAudioWorkletTypes';
+import type { UndefinedObject } from '../Typescript/UndefinedObject';
+import type { PromiseWorkerRequest, PromiseWorkerOptions, PromiseWorkerEvents, PromiseWorkerResponse, PromiseWorker } from './PromiseWorker';
 
 /*
 https://github.com/microsoft/TypeScript/issues/28308
@@ -8,8 +8,11 @@ https://www.html5rocks.com/en/tutorials/getusermedia/intro/#toc-webaudio-api
 */
 type AudioWorkletProcessorType = {
 	readonly port: MessagePort;
-	// eslint-disable-next-line max-len
-	process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>): boolean;
+	process(
+		inputs: Float32Array[][],
+		outputs: Float32Array[][],
+		parameters: Record<string, Float32Array>,
+	): boolean;
 };
 declare const AudioWorkletProcessor: {
 	prototype: AudioWorkletProcessorType;
@@ -18,36 +21,69 @@ declare const AudioWorkletProcessor: {
 type ProcessorCtor = (new (options?: AudioWorkletNodeOptions) => AudioWorkletProcessorType);
 declare function registerProcessor(name: string, processorCtor: ProcessorCtor): void;
 declare const sampleRate: number;
+declare const currentTime: number;
 
-export function runPromiseAudioWorklet(
+export type PromiseAudioWorkletState = {
+	sampleRate: number;
+	currentTime: number;
+};
+export type PromiseAudioWorkletOptions<Events extends PromiseWorkerEvents> =
+	& PromiseWorkerOptions<Events>
+	& {
+		getWorkletState: () => PromiseAudioWorkletState;
+	};
+export type PromiseAudioWorkletOnProcess = {
+	process: (
+		input: Float32Array[],
+		outputs: Float32Array[],
+		parameters: Record<string, Float32Array>,
+	) => void;
+};
+export type PromiseAudioWorklet = PromiseWorker & PromiseAudioWorkletOnProcess;
+
+export const runPromiseAudioWorklet = <Events extends PromiseWorkerEvents>(
 	processorName: string,
-	createHandlers: (options: PromiseAudioWorkletOptions) => PromiseAudioWorkletHandlers,
-): void {
-	const initHandlers = (messagePort: MessagePort) => {
-		const post: PostPromiseAudioWorklet = (message) => {
+	createWorklet: (options: PromiseAudioWorkletOptions<Events>) => PromiseAudioWorklet,
+	templateEvents: UndefinedObject<PromiseWorkerEvents>,
+): void => {
+	const initWorklet = (messagePort: MessagePort) => {
+		const post = (message: PromiseWorkerResponse) => {
 			messagePort.postMessage(message);
 		};
+		const getWorkletState = () => ({ sampleRate, currentTime });
 
-		const handlers = createHandlers({
-			post,
-			sampleRate,
+		const events: PromiseWorkerEvents = {};
+		Object.keys(templateEvents).forEach((type) => {
+			events[type] = (result: unknown) => {
+				const id = '';
+				post({ id, type, result });
+			};
 		});
-		messagePort.onmessage = (e: MessageEvent<PromiseAudioWorkletRequest>) => {
+
+		const worklet = createWorklet({
+			events: events as Events,
+			getWorkletState,
+		});
+		messagePort.onmessage = (e: MessageEvent<PromiseWorkerRequest>) => {
 			const { id, type, args } = e.data;
-			const result = handlers[type](...args);
+			const result = worklet[type](...args);
 			post({ id, type, result });
 		};
-		return handlers;
+		return worklet;
 	};
 
-	class RecorderProcessor extends AudioWorkletProcessor {
-		handlers = initHandlers(this.port);
+	class PromiseAudioWorkletProcessor extends AudioWorkletProcessor {
+		worklet = initWorklet(this.port);
 
-		process([inputRaw]: Float32Array[][]): boolean {
-			this.handlers.process(inputRaw);
+		process(
+			[input]: Float32Array[][],
+			[output]: Float32Array[][],
+			parameters: Record<string, Float32Array>,
+		): boolean {
+			this.worklet.process(input, output, parameters);
 			return true;
 		}
 	}
 
-	registerProcessor(processorName, RecorderProcessor);
-}
+	registerProcessor(processorName, PromiseAudioWorkletProcessor);
+};

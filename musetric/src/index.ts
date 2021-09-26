@@ -7,5 +7,7 @@ export * from './Rendering';
 export * from './RenderingComponents';
 export * from './Resources';
 export * from './Sounds';
+export * from './Typed';
+export * from './Typescript';
 export * from './Workshop';
 export * from './Workers';

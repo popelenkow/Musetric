@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import FFT from 'fft.js';
 import Chart, { ChartConfiguration, ChartData, ScatterDataPoint } from 'chart.js/auto';
-import { createComplexArray } from 'musetric/Sounds/ComplexArray';
+import { createComplexArray } from 'musetric/Typed/ComplexArray';
+import { createComplexIndexable } from 'musetric/Typed/ComplexIndexable';
 import { createFftRadix2Base } from 'musetric/Sounds/FftRadix2';
 import { createFftRadix4Base } from 'musetric/Sounds/FftRadix4';
 import { getStorageThemeId } from 'musetric/AppBase/Theme';
@@ -31,8 +32,8 @@ export const run = async (): Promise<void> => {
 
 	let text = '';
 	const windowSize = 16384;
-	const input = createComplexArray(windowSize, 'float32');
-	const output = createComplexArray(windowSize, 'list');
+	const input = createComplexArray('float32', windowSize);
+	const output = createComplexIndexable('list', windowSize);
 	for (let i = 0; i < windowSize; i++) {
 		input.real[i] = 0;
 		input.imag[i] = 0;

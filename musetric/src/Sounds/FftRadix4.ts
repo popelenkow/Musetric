@@ -1,10 +1,14 @@
-import { RealArray, ComplexArray, createRealArray, RealArrayType } from './ComplexArray';
+import { RealIndexableType } from '../Typed/RealType';
+import { createRealIndexable, RealIndexable } from '../Typed/RealIndexable';
+import { ComplexArray } from '../Typed/ComplexArray';
 import { SpectrometerBase, Spectrometer, createSpectrometer } from './Spectrometer';
+import { ComplexIndexable } from '../Typed/ComplexIndexable';
 
-/** Licensed by MIT. Based on https://github.com/indutny/fft.js/tree/4a18cf88fcdbd4ad5acca6eaea06a0b462047835 */
+/* Licensed by MIT. Based on https://github.com/indutny/fft.js/tree/4a18cf88fcdbd4ad5acca6eaea06a0b462047835 */
+
 type SingleTransform2Options = {
 	input: ComplexArray;
-	output: ComplexArray;
+	output: ComplexIndexable;
 	outOff: number;
 	off: number;
 	step: number;
@@ -31,7 +35,7 @@ const singleTransform2 = (options: SingleTransform2Options) => {
 
 type SingleTransform4Options = {
 	input: ComplexArray;
-	output: ComplexArray;
+	output: ComplexIndexable;
 	inv: boolean;
 	outOff: number;
 	off: number;
@@ -89,12 +93,12 @@ const singleTransform4 = (options: SingleTransform4Options) => {
 
 type Transform4Options = {
 	input: ComplexArray;
-	output: ComplexArray;
+	output: ComplexIndexable;
 	inv: boolean;
 	windowSize: number;
 	width: number;
 	reverseTable: Uint32Array;
-	table: RealArray;
+	table: RealIndexable;
 };
 /** radix-4 implementation */
 const transform4 = (options: Transform4Options) => {
@@ -104,7 +108,6 @@ const transform4 = (options: Transform4Options) => {
 	let step = 1 << width;
 	let len = windowSize >>> width;
 
-	// console.log({ len, step, windowSize, width });
 	let outOff: number;
 	let t: number;
 	if (len === 2) {
@@ -149,18 +152,18 @@ const transform4 = (options: Transform4Options) => {
 				const MAr = Ar;
 				const MAi = Ai;
 
-				const tableBr = table[k];
-				const tableBi = sign * table[k + 1];
+				const tableBr = table.real[k];
+				const tableBi = sign * table.real[k + 1];
 				const MBr = Br * tableBr - Bi * tableBi;
 				const MBi = Br * tableBi + Bi * tableBr;
 
-				const tableCr = table[2 * k];
-				const tableCi = sign * table[2 * k + 1];
+				const tableCr = table.real[2 * k];
+				const tableCi = sign * table.real[2 * k + 1];
 				const MCr = Cr * tableCr - Ci * tableCi;
 				const MCi = Cr * tableCi + Ci * tableCr;
 
-				const tableDr = table[3 * k];
-				const tableDi = sign * table[3 * k + 1];
+				const tableDr = table.real[3 * k];
+				const tableDi = sign * table.real[3 * k + 1];
 				const MDr = Dr * tableDr - Di * tableDi;
 				const MDi = Dr * tableDi + Di * tableDr;
 
@@ -213,12 +216,15 @@ const createReverseTable = (width: number) => {
 	return reverseTable;
 };
 
-const createTable = <K extends RealArrayType>(windowSize: number, type: K): RealArray<K> => {
-	const table = createRealArray(2 * windowSize, type);
-	for (let i = 0; i < table.length; i += 2) {
+const createTable = <K extends RealIndexableType>(
+	type: K,
+	windowSize: number,
+): RealIndexable<K> => {
+	const table = createRealIndexable(type, 2 * windowSize);
+	for (let i = 0; i < table.real.length; i += 2) {
 		const angle = (Math.PI * i) / windowSize;
-		table[i] = Math.cos(angle);
-		table[i + 1] = -Math.sin(angle);
+		table.real[i] = Math.cos(angle);
+		table.real[i + 1] = -Math.sin(angle);
 	}
 	return table;
 };
@@ -242,7 +248,7 @@ export const createFftRadix4Base = (windowSize: number): SpectrometerBase => {
 		throw new Error('FFT size must be a power of two and bigger than 1');
 	}
 
-	const table = createTable(windowSize, 'list');
+	const table = createTable('list', windowSize);
 
 	const width = getWidth(windowSize);
 
@@ -250,7 +256,7 @@ export const createFftRadix4Base = (windowSize: number): SpectrometerBase => {
 	const reverseTable = createReverseTable(width);
 
 	const api: SpectrometerBase = {
-		forward: (input: ComplexArray, output: ComplexArray) => {
+		forward: (input: ComplexArray, output: ComplexIndexable) => {
 			transform4({
 				input,
 				output,
@@ -261,7 +267,7 @@ export const createFftRadix4Base = (windowSize: number): SpectrometerBase => {
 				table,
 			});
 		},
-		inverse: (input: ComplexArray, output: ComplexArray) => {
+		inverse: (input: ComplexArray, output: ComplexIndexable) => {
 			transform4({
 				input,
 				output,

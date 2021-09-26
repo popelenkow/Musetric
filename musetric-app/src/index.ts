@@ -6,6 +6,9 @@ declare const getMusetricLocaleEntries: () => CreateMusetricAppOptions['allLocal
 declare const getMusetricThemeEntries: () => CreateMusetricAppOptions['allThemeEntries'];
 declare const getMusetricIcons: () => CreateMusetricAppOptions['icons'];
 const getMusetricWorkers = (): CreateMusetricAppOptions['workers'] => {
+	const playerUrl = new WorkerUrl(new URL('./musetricPlayer.ts', import.meta.url), {
+		name: 'musetricPlayer',
+	});
 	const recorderUrl = new WorkerUrl(new URL('./musetricRecorder.ts', import.meta.url), {
 		name: 'musetricRecorder',
 	});
@@ -16,6 +19,7 @@ const getMusetricWorkers = (): CreateMusetricAppOptions['workers'] => {
 		name: 'musetricWavConverter',
 	});
 	return {
+		playerUrl,
 		recorderUrl,
 		spectrumUrl,
 		wavConverterUrl,

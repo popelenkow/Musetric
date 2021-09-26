@@ -1,3 +1,4 @@
+import { RealArray } from '../Typed/RealArray';
 import { Theme } from '../AppBase/Theme';
 import { parseThemeRgbColor, parseThemeUint32Color, gradientUint32ByRgb } from './Color';
 import { Size2D } from './Layout';
@@ -14,7 +15,7 @@ export const createSpectrogramColors = (theme: Theme): SpectrogramColors => {
 };
 
 export const drawSpectrogram = (
-	input: Uint8Array[],
+	input: RealArray<'uint8'>[],
 	output: Uint8ClampedArray,
 	frame: Size2D,
 	colors: SpectrogramColors,
@@ -27,7 +28,7 @@ export const drawSpectrogram = (
 	let index = 0;
 	for (let y = 0; y < frame.height; y++) {
 		const offset = Math.floor(y * step);
-		const spectrum = input[offset];
+		const spectrum = input[offset].real;
 		for (let x = 0; x < frame.width; x++) {
 			const colorIndex = spectrum[x];
 			out[index] = gradient[colorIndex];
