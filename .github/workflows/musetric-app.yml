@@ -34,7 +34,7 @@ jobs:
       env:
         npmPublishTag: ${{ github.event.inputs.npmPublishTag }}
         buildNumber: ${{ github.run_number }}
-    - name: Run yarn musetric
+    - name: Run musetric yarn
       run: yarn
       working-directory: ./musetric
     - run: yarn

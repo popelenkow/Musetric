@@ -5,14 +5,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Suite } from 'benchmark';
 import FFT from 'fft.js';
-import { createComplexArray } from '../src/Sounds/ComplexArray';
+import { createComplexIndexable } from '../src/Typed/ComplexIndexable';
 import { createFftRadix2Base } from '../src/Sounds/FftRadix2';
 import { createFftRadix4Base } from '../src/Sounds/FftRadix4';
 
 export const performanceFft = (): void => {
 	const windowSize = 16384;
-	const input = createComplexArray(windowSize, 'float32');
-	const output = createComplexArray(windowSize, 'list');
+	const input = createComplexIndexable('float32', windowSize);
+	const output = createComplexIndexable('list', windowSize);
 	const arr: number[] = [];
 	for (let i = 0; i < windowSize; i++) {
 		arr[i] = 0;

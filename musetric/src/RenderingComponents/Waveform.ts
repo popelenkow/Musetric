@@ -39,16 +39,16 @@ export const useWaveform = (props: WaveformProps): Waveform => {
 	}, []);
 	const draw = useCallback((output: Uint8ClampedArray, frame: Size2D) => {
 		const buffer = isLive ? soundCircularBuffer.buffers[0] : soundBuffer.buffers[0];
-		const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.length - 1);
+		const cursor = isLive ? undefined : soundBuffer.cursor.get() / (soundBuffer.length - 1);
 		const waves = getWaves(frame);
-		evalWaves(buffer, waves, frame);
+		evalWaves(buffer.real, waves, frame);
 		drawWaveform(waves, output, frame, colors, cursor);
 	}, [soundBuffer, soundCircularBuffer, isLive, colors, getWaves]);
 
 	const onClick = useCallback((cursorPosition: Position2D) => {
 		if (isLive) return;
 		const value = Math.floor(cursorPosition.y * (soundBuffer.length - 1));
-		soundBuffer.setCursor(value);
+		soundBuffer.cursor.set(value, 'user');
 	}, [soundBuffer, isLive]);
 
 	const pixelCanvas = usePixelCanvas({ size });

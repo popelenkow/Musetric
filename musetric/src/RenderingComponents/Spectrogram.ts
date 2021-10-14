@@ -8,6 +8,7 @@ import { Size2D, Position2D } from '../Rendering/Layout';
 import { createSpectrogramColors, drawSpectrogram } from '../Rendering/Spectrogram';
 import { usePixelCanvas } from './PixelCanvas';
 import { useAnimation } from '../Hooks/Animation';
+import { RealArray } from '../Typed/RealArray';
 
 export type SpectrogramProps = {
 	soundBuffer: SoundBuffer;
@@ -38,7 +39,7 @@ export const useSpectrogram = (props: SpectrogramProps): Spectrogram => {
 	}, [spectrum, pause]);
 
 	const count = useMemo(() => 128, []);
-	const [frequencies, setFrequencies] = useState<Uint8Array[]>();
+	const [frequencies, setFrequencies] = useState<RealArray<'uint8'>[]>();
 	useEffect(() => {
 		const run = async () => {
 			const raw = await spectrum.setup({ windowSize, count });
@@ -52,7 +53,7 @@ export const useSpectrogram = (props: SpectrogramProps): Spectrogram => {
 
 	useAnimation(() => {
 		if (pause) return;
-		const buf = isLive ? soundCircularBuffer.rawBuffers[0] : soundBuffer.rawBuffers[0];
+		const buf = isLive ? soundCircularBuffer.buffers[0].realRaw : soundBuffer.buffers[0].realRaw;
 		if (buf !== buffer) {
 			setBuffer(buf);
 		}
@@ -68,7 +69,7 @@ export const useSpectrogram = (props: SpectrogramProps): Spectrogram => {
 	const onClick = useCallback((cursorPosition: Position2D) => {
 		if (isLive) return;
 		const value = Math.round(cursorPosition.y * (soundBuffer.length - 1));
-		soundBuffer.setCursor(value);
+		soundBuffer.cursor.set(value, 'user');
 	}, [soundBuffer, isLive]);
 
 	const pixelCanvas = usePixelCanvas({ size });
@@ -76,7 +77,7 @@ export const useSpectrogram = (props: SpectrogramProps): Spectrogram => {
 	useAnimation(() => {
 		if (pause) return;
 		if (!frequencies) return;
-		const cursor = isLive ? undefined : soundBuffer.cursor / (soundBuffer.length - 1);
+		const cursor = isLive ? undefined : soundBuffer.cursor.get() / (soundBuffer.length - 1);
 		drawSpectrogram(frequencies, pixelCanvas.image.data, size, colors, cursor);
 		pixelCanvas.context.putImageData(pixelCanvas.image, 0, 0);
 	}, [

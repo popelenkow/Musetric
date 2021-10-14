@@ -1,18 +1,47 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { PromiseWorkerRequest, PromiseWorkerHandlers, PostPromiseWorker } from './PromiseWorkerTypes';
+import { UndefinedObject } from '../Typescript/UndefinedObject';
 
-export const runPromiseWorker = (
-	worker: Worker,
-	createHandlers: (post: PostPromiseWorker) => PromiseWorkerHandlers,
+export type PromiseWorkerRequest = {
+	id: string;
+	type: string;
+	args: unknown[];
+};
+export type PromiseWorkerResponse = {
+	id: string;
+	type: string;
+	result: unknown;
+};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type PromiseWorker = Record<string, (...args: any[]) => unknown>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type PromiseWorkerEvents = Record<string, (result: any) => void>;
+
+export type PromiseWorkerOptions<Events extends PromiseWorkerEvents> = {
+	events: Events;
+};
+export const runPromiseWorker = <Events extends PromiseWorkerEvents>(
+	host: Worker,
+	createWorker: (options: PromiseWorkerOptions<Events>) => PromiseWorker,
+	templateEvents?: UndefinedObject<Events>,
 ): void => {
-	const post: PostPromiseWorker = (message) => {
-		worker.postMessage(message);
+	const post = (message: PromiseWorkerResponse) => {
+		host.postMessage(message);
 	};
 
-	const handlers = createHandlers(post);
-	worker.onmessage = (e: MessageEvent<PromiseWorkerRequest>) => {
+	const events: PromiseWorkerEvents = {};
+	Object.keys(templateEvents || {}).forEach((type) => {
+		events[type] = (result: unknown) => {
+			const id = '';
+			post({ id, type, result });
+		};
+	});
+
+	const options: PromiseWorkerOptions<Events> = {
+		events: events as Events,
+	};
+	const worker = createWorker(options);
+	host.onmessage = (e: MessageEvent<PromiseWorkerRequest>) => {
 		const { id, type, args } = e.data;
-		const result = handlers[type](...args);
+		const result = worker[type](...args);
 		post({ id, type, result });
 	};
 };

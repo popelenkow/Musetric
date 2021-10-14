@@ -1,57 +1,47 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { v4 as uuid } from 'uuid';
-import { PromiseAudioWorkletRequest, PromiseAudioWorkletResponse, PromiseAudioWorkletApi } from './PromiseAudioWorkletTypes';
+import type { UndefinedObject } from '../Typescript/UndefinedObject';
+import type { PromiseObjectApi } from '../Typescript/PromiseObjectApi';
+import type { PromiseWorker, PromiseWorkerResponse, PromiseWorkerRequest } from './PromiseWorker';
 
-export const createPromiseAudioWorklet = async (
-	audioNode: AudioNode,
-	workletUrl: URL | string,
-	processorName: string,
-): Promise<AudioWorkletNode> => {
-	await audioNode.context.audioWorklet.addModule(workletUrl);
-	const options: AudioWorkletNodeOptions = {
-		channelCount: audioNode.channelCount,
-		numberOfOutputs: 0,
-		numberOfInputs: 1,
-	};
-	const worklet = new AudioWorkletNode(audioNode.context, processorName, options);
-	audioNode.connect(worklet);
-	return worklet;
-};
-
-export const createPromiseAudioWorkletApi = (
+export const createPromiseAudioWorkletApi = <TWorklet extends PromiseWorker>(
 	worklet: AudioWorkletNode,
-	process: (options: any) => void,
-	allTypes: string[],
-): PromiseAudioWorkletApi => {
+	templateApi: UndefinedObject<TWorklet>,
+): PromiseObjectApi<TWorklet> => {
 	const massagePort = worklet.port;
-	const postMessage = (message: PromiseAudioWorkletRequest): void => {
+	const postMessage = (message: PromiseWorkerRequest): void => {
 		massagePort.postMessage(message);
 	};
-	const callbacks: Record<string, (result: any) => void> = {};
+	const callbacks: Record<string, (result: unknown) => void> = {};
 
-	massagePort.onmessage = (e: MessageEvent<PromiseAudioWorkletResponse>) => {
+	const api: PromiseObjectApi<PromiseWorker> = {};
+	massagePort.onmessage = (e: MessageEvent<PromiseWorkerResponse>) => {
 		const { id, type, result } = e.data;
-		if (type === 'process') {
-			process(result);
+		const isResponse = Object.keys(templateApi).some((x) => x === type);
+		if (isResponse) {
+			const callback = callbacks[id];
+			delete callbacks[id];
+			callback(result);
 			return;
 		}
-		const callback = callbacks[id];
-		delete callbacks[id];
-		callback(result);
+
+		const isEvent = Object.keys(api).filter((x) => x).some((x) => x === type);
+		if (isEvent) {
+			// eslint-disable-next-line @typescript-eslint/no-floating-promises
+			api[type](result);
+		}
 	};
 
-	const api: PromiseAudioWorkletApi = {};
-	allTypes.forEach((type) => {
+	Object.keys(templateApi).forEach((type) => {
 		api[type] = (...args) => {
 			return new Promise((resolve) => {
 				const id = uuid();
-				const callback = (result: any) => { resolve(result); };
+				const callback = (result: unknown) => { resolve(result); };
 				callbacks[id] = callback;
 				postMessage({ id, type, args });
 			});
 		};
 	});
 
-	return api;
+	return api as PromiseObjectApi<TWorklet>;
 };

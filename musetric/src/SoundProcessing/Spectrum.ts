@@ -1,17 +1,18 @@
+import type { UndefinedObject } from '../Typescript/UndefinedObject';
+import type { PromiseObjectApi } from '../Typescript/PromiseObjectApi';
 import { createPromiseWorkerApi } from '../Workers/PromiseWorkerApi';
-import { SpectrumOptions } from './SpectrumWorker';
+import type { SpectrumWorker } from './SpectrumWorker';
 
-export type Spectrum = {
-	setup: (options: SpectrumOptions) => Promise<SharedArrayBuffer>;
-	start: () => Promise<void>;
-	stop: () => Promise<void>
-	setSoundBuffer: (buffer: SharedArrayBuffer) => Promise<void>
+export type Spectrum = PromiseObjectApi<SpectrumWorker>;
+const spectrumTemplate: UndefinedObject<SpectrumWorker> = {
+	setup: undefined,
+	start: undefined,
+	stop: undefined,
+	setSoundBuffer: undefined,
 };
-const allTypes: (keyof Spectrum)[] = ['setup', 'start', 'stop', 'setSoundBuffer'];
 
 export const createSpectrum = (workerUrl: URL | string): Spectrum => {
 	const worker = new Worker(workerUrl);
-	const api = createPromiseWorkerApi(worker, allTypes);
-	const { setup, start, stop, setSoundBuffer } = api;
-	return { setup, start, stop, setSoundBuffer };
+	const api = createPromiseWorkerApi<SpectrumWorker>(worker, spectrumTemplate);
+	return api;
 };

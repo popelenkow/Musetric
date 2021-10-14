@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useCssContext } from '../AppContexts/Css';
 import { SoundBuffer } from '../Sounds/SoundBuffer';
 import { SoundCircularBuffer } from '../Sounds/SoundCircularBuffer';
-import { viewRealArray } from '../Sounds/ComplexArray';
+import { viewRealArray, createRealArray } from '../Typed/RealArray';
 import { createFftRadix4 } from '../Sounds/FftRadix4';
 import { Size2D } from '../Rendering/Layout';
 import { createFrequencyColors, drawFrequency } from '../Rendering/Frequency';
@@ -29,7 +29,7 @@ export const useFrequency = (props: FrequencyProps): Frequency => {
 	const info = useMemo(() => {
 		const windowSize = size.width * 2;
 		const fft = createFftRadix4(windowSize);
-		const result = new Float32Array(size.width);
+		const result = createRealArray('float32', size.width);
 		return { windowSize, fft, result };
 	}, [size]);
 
@@ -38,8 +38,8 @@ export const useFrequency = (props: FrequencyProps): Frequency => {
 			const { windowSize, fft, result } = info;
 
 			const getBuffer = () => {
-				if (isLive) return { ...soundCircularBuffer, cursor: soundCircularBuffer.length };
-				return soundBuffer;
+				const cur = isLive ? soundBuffer.cursor.get() : soundCircularBuffer.length;
+				return { ...soundBuffer, cursor: cur };
 			};
 			const { cursor, length, buffers } = getBuffer();
 			let offset = cursor < length ? cursor - windowSize : length - windowSize;

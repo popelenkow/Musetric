@@ -22,7 +22,7 @@ export const useSoundConverter = (soundBuffer: SoundBuffer): SoundConverter => {
 	);
 	const getBlob = useCallback(async (): Promise<Blob> => {
 		const { buffers, sampleRate } = soundBuffer;
-		const blob = await wavConverter.encode(buffers, sampleRate);
+		const blob = await wavConverter.encode(buffers.map((x) => x.real), sampleRate);
 		return blob;
 	}, [wavConverter, soundBuffer]);
 

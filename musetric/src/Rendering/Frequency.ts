@@ -1,3 +1,4 @@
+import { RealArray } from '../Typed/RealArray';
 import { Theme } from '../AppBase/Theme';
 import { parseThemeUint32Color } from './Color';
 import { Size2D } from './Layout';
@@ -12,7 +13,7 @@ export const createFrequencyColors = (theme: Theme): FrequencyColors => {
 };
 
 export const drawFrequency = (
-	input: Float32Array,
+	input: RealArray,
 	output: Uint8ClampedArray,
 	frame: Size2D,
 	colors: FrequencyColors,
@@ -20,11 +21,11 @@ export const drawFrequency = (
 	const { content, background } = colors;
 	const out = new Uint32Array(output.buffer);
 
-	const step = (1.0 * input.length) / frame.height;
+	const step = (1.0 * input.real.length) / frame.height;
 
 	for (let y = 0; y < frame.height; y++) {
 		const offset = Math.floor(y * step);
-		const magnitude = input[offset];
+		const magnitude = input.real[offset];
 		const index = y * frame.width;
 		const limit = Math.ceil(magnitude * frame.width);
 

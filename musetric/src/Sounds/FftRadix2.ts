@@ -1,17 +1,21 @@
-import { ComplexArray, createComplexArray, RealArray, RealArrayType, createRealArray } from './ComplexArray';
+import { RealType } from '../Typed/RealType';
+import { RealArray, createRealArray } from '../Typed/RealArray';
+import { ComplexArray, createComplexArray } from '../Typed/ComplexArray';
+import { ComplexIndexable } from '../Typed/ComplexIndexable';
 import { SpectrometerBase, createSpectrometer, Spectrometer } from './Spectrometer';
 
-/** Licensed by MIT. Based on https://github.com/corbanbrook/dsp.js/tree/c6144fcd75b65f72eac4791ab9f7268a814f44a8 */
-type Table<K extends RealArrayType = RealArrayType> = {
+/* Licensed by MIT. Based on https://github.com/corbanbrook/dsp.js/tree/c6144fcd75b65f72eac4791ab9f7268a814f44a8 */
+
+type Table<K extends RealType = RealType> = {
 	cos: RealArray<K>;
 	sin: RealArray<K>;
 };
-const createTable = <K extends RealArrayType>(size: number, type: K): Table<K> => {
-	const cos = createRealArray(size, type);
-	const sin = createRealArray(size, type);
-	for (let i = 0; i < size; i++) {
-		cos[i] = Math.cos(-Math.PI / i);
-		sin[i] = Math.sin(-Math.PI / i);
+const createTable = <K extends RealType>(type: K, length: number): Table<K> => {
+	const cos = createRealArray(type, length);
+	const sin = createRealArray(type, length);
+	for (let i = 0; i < length; i++) {
+		cos.real[i] = Math.cos(-Math.PI / i);
+		sin.real[i] = Math.sin(-Math.PI / i);
 	}
 	return { cos, sin };
 };
@@ -35,8 +39,8 @@ const transform = (
 ) => {
 	let halfSize = 1;
 	while (halfSize < windowSize) {
-		const cos = table.cos[halfSize];
-		const sin = table.sin[halfSize];
+		const cos = table.cos.real[halfSize];
+		const sin = table.sin.real[halfSize];
 
 		let real = 1;
 		let imag = 0;
@@ -68,12 +72,12 @@ const transform = (
 };
 
 export const createFftRadix2Base = (windowSize: number): SpectrometerBase => {
-	const arr = createComplexArray(windowSize, 'float64');
+	const arr = createComplexArray('float64', windowSize);
 	const reverseTable = createReverseTable(windowSize);
-	const table = createTable(windowSize, 'float64');
+	const table = createTable('float64', windowSize);
 
 	const api: SpectrometerBase = {
-		forward: (input: ComplexArray, output: ComplexArray) => {
+		forward: (input: ComplexArray, output: ComplexIndexable) => {
 			for (let i = 0; i < windowSize; i++) {
 				arr.real[i] = input.real[reverseTable[i]];
 				arr.imag[i] = input.imag[reverseTable[i]];
@@ -84,7 +88,7 @@ export const createFftRadix2Base = (windowSize: number): SpectrometerBase => {
 				output.imag[i] = arr.imag[i];
 			}
 		},
-		inverse: (input: ComplexArray, output: ComplexArray) => {
+		inverse: (input: ComplexArray, output: ComplexIndexable) => {
 			for (let i = 0; i < windowSize; i++) {
 				arr.real[i] = input.real[reverseTable[i]];
 				arr.imag[i] = -input.imag[reverseTable[i]];

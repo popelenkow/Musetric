@@ -1,11 +1,12 @@
+import { SharedRealArray, createSharedRealArray } from '../Typed/RealArray';
+import { createCursor, Cursor } from './Cursor';
+
 export type SoundBuffer = {
 	readonly sampleRate: number;
 	readonly channelCount: number;
 	readonly length: number;
-	readonly cursor: number;
-	readonly setCursor: (value: number) => void;
-	readonly buffers: Float32Array[];
-	readonly rawBuffers: SharedArrayBuffer[];
+	readonly cursor: Cursor;
+	readonly buffers: SharedRealArray<'float32'>[];
 	readonly push: (chunk: Float32Array[]) => void;
 };
 export const createSoundBuffer = (
@@ -13,42 +14,35 @@ export const createSoundBuffer = (
 	channelCount: number,
 	initLength = sampleRate * 2,
 ): SoundBuffer => {
-	const rawBuffers: SharedArrayBuffer[] = [];
-	const buffers: Float32Array[] = [];
+	const buffers: SharedRealArray<'float32'>[] = [];
 	for (let i = 0; i < channelCount; i++) {
-		const raw = new SharedArrayBuffer(initLength * Float32Array.BYTES_PER_ELEMENT);
-		rawBuffers[i] = raw;
-		buffers[i] = new Float32Array(raw);
+		buffers[i] = createSharedRealArray('float32', initLength);
 	}
+	const cursor = createCursor();
+
 	const soundBuffer = {
 		sampleRate,
 		channelCount,
 		length: initLength,
-		cursor: 0,
-		setCursor: (value: number) => {
-			soundBuffer.cursor = value;
-		},
+		cursor,
 		buffers,
-		rawBuffers,
 		push: (chunk: Float32Array[]) => {
-			let { cursor, length } = soundBuffer;
+			let { length } = soundBuffer;
 			const chunkSize = chunk[0].length;
-			const newSize = cursor + chunkSize;
+			const cur = cursor.get();
+			const newSize = cur + chunkSize;
 			if (newSize > length) {
 				length = 2 ** Math.ceil(Math.log2(newSize));
 				for (let i = 0; i < channelCount; i++) {
-					const raw = new SharedArrayBuffer(length * Float32Array.BYTES_PER_ELEMENT);
-					const buffer = new Float32Array(raw);
-					buffer.set(buffers[i]);
-					rawBuffers[i] = raw;
+					const buffer = createSharedRealArray('float32', length);
+					buffer.real.set(buffers[i].real);
 					buffers[i] = buffer;
 				}
 			}
 			for (let i = 0; i < channelCount; i++) {
-				buffers[i].set(chunk[i], cursor);
+				buffers[i].real.set(chunk[i], cur);
 			}
-			cursor += chunkSize;
-			soundBuffer.cursor = cursor;
+			cursor.set(cur + chunkSize, 'process');
 			soundBuffer.length = length;
 		},
 	};

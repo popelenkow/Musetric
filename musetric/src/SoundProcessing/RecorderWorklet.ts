@@ -1,18 +1,31 @@
-import { runPromiseAudioWorklet } from '../Workers/PromiseAudioWorklet';
-import { PromiseAudioWorkletOptions } from '../Workers/PromiseAudioWorkletTypes';
+import { runPromiseAudioWorklet, PromiseAudioWorkletOnProcess } from '../Workers/PromiseAudioWorklet';
+import type { PromiseAudioWorkletOptions } from '../Workers/PromiseAudioWorklet';
+import type { UndefinedObject } from '../Typescript/UndefinedObject';
 
 export type RecorderProcessOptions = {
 	chunk: Float32Array[];
 	isRecording: boolean;
 };
 
-export type RecorderHandlers = {
-	process: (input: Float32Array[]) => void;
+export type RecorderWorklet = {
 	start: () => void;
 	stop: () => void;
 };
-export const createRecorderHandlers = (options: PromiseAudioWorkletOptions): RecorderHandlers => {
-	const { post, sampleRate } = options;
+
+export type RecorderWorkletEvents = {
+	onProcess: (options: RecorderProcessOptions) => void;
+};
+const templateEvents: UndefinedObject<RecorderWorkletEvents> = {
+	onProcess: undefined,
+};
+type RecorderWorkletOptions = PromiseAudioWorkletOptions<RecorderWorkletEvents>;
+
+export const createRecorderWorklet = (
+	options: RecorderWorkletOptions,
+): RecorderWorklet & PromiseAudioWorkletOnProcess => {
+	const { events, getWorkletState } = options;
+	const { onProcess } = events;
+	const { sampleRate } = getWorkletState();
 
 	let isRecording = false;
 	const length = Math.floor(sampleRate / 30);
@@ -35,13 +48,11 @@ export const createRecorderHandlers = (options: PromiseAudioWorkletOptions): Rec
 		push();
 		if (length < offset + step) {
 			const chunk = buffer.map((x) => x.slice(0, offset));
-			const id = '';
-			const type = 'process';
 			const result: RecorderProcessOptions = {
 				chunk,
 				isRecording,
 			};
-			post({ id, type, result });
+			onProcess(result);
 			offset = 0;
 		}
 	};
@@ -60,5 +71,5 @@ export const createRecorderHandlers = (options: PromiseAudioWorkletOptions): Rec
 };
 
 export const runRecorderWorklet = (): void => {
-	runPromiseAudioWorklet('recorder-worklet', createRecorderHandlers);
+	runPromiseAudioWorklet('RecorderWorklet', createRecorderWorklet, templateEvents);
 };
