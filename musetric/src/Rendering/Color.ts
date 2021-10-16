@@ -56,13 +56,18 @@ export const parseUint32Color = (color: Color): number => {
 	return result[0];
 };
 
-export const gradientUint32ByRgb = (from: Rgb, to: Rgb, count: number): Uint32Array => {
+export const gradientUint32ByRgb = (
+	from: Rgb,
+	to: Rgb,
+	count: number,
+	map: (value: number) => number = (value) => value,
+): Uint32Array => {
 	const buffer = new ArrayBuffer(4 * count);
 	const rgba = new Uint8Array(buffer);
 	const result = new Uint32Array(buffer);
 	let offset = 0;
 	for (let i = 0; i < count; i++) {
-		const value = i / (count - 1);
+		const value = map(i / (count - 1));
 		rgba[offset] = (to.r * value + from.r * (1 - value));
 		rgba[offset + 1] = (to.g * value + from.g * (1 - value));
 		rgba[offset + 2] = (to.b * value + from.b * (1 - value));

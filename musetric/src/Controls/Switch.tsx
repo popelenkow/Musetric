@@ -22,7 +22,7 @@ export type SwitchProps<T> = {
 	className?: string;
 };
 type Props<T> = PropsWithChildren<SwitchProps<T>>;
-export function Switch<T>(props: Props<T>): JSX.Element {
+export function Switch<T>(props: Props<T>): React.ReactElement | null {
 	const { currentId, ids, view, set, className } = props;
 	const classes = useClasses();
 	const { t } = useLocaleContext();

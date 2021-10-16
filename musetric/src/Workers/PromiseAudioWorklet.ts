@@ -19,7 +19,7 @@ declare const AudioWorkletProcessor: {
 	new(options?: AudioWorkletNodeOptions): AudioWorkletProcessorType;
 };
 type ProcessorCtor = (new (options?: AudioWorkletNodeOptions) => AudioWorkletProcessorType);
-declare function registerProcessor(name: string, processorCtor: ProcessorCtor): void;
+declare const registerProcessor: (name: string, processorCtor: ProcessorCtor) => void;
 declare const sampleRate: number;
 declare const currentTime: number;
 

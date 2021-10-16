@@ -9,7 +9,7 @@ export type SpectrogramColors = {
 };
 export const createSpectrogramColors = (theme: Theme): SpectrogramColors => {
 	const { active } = parseThemeUint32Color(theme);
-	const { content, background } = parseThemeRgbColor(theme);
+	const { background, content } = parseThemeRgbColor(theme);
 	const gradient = gradientUint32ByRgb(background, content, 256);
 	return { gradient, active };
 };
@@ -24,16 +24,20 @@ export const drawSpectrogram = (
 	const { gradient, active } = colors;
 	const out = new Uint32Array(output.buffer);
 
-	const step = input.length / frame.height;
+	const stepY = input.length / frame.height;
 	let index = 0;
+	let offsetY = 0;
 	for (let y = 0; y < frame.height; y++) {
-		const offset = Math.floor(y * step);
-		const spectrum = input[offset].real;
+		const spectrum = input[Math.floor(offsetY)].real;
+		const stepX = spectrum.length / frame.width;
+		let offsetX = 0;
 		for (let x = 0; x < frame.width; x++) {
-			const colorIndex = spectrum[x];
+			const colorIndex = spectrum[Math.floor(offsetX)];
 			out[index] = gradient[colorIndex];
 			index++;
+			offsetX += stepX;
 		}
+		offsetY += stepY;
 	}
 
 	if (typeof cursor === 'number') {

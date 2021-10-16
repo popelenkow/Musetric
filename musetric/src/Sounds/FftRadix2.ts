@@ -77,7 +77,7 @@ export const createFftRadix2Base = (windowSize: number): SpectrometerBase => {
 	const table = createTable('float64', windowSize);
 
 	const api: SpectrometerBase = {
-		forward: (input: ComplexArray, output: ComplexIndexable) => {
+		forward: (input: ComplexIndexable, output: ComplexIndexable) => {
 			for (let i = 0; i < windowSize; i++) {
 				arr.real[i] = input.real[reverseTable[i]];
 				arr.imag[i] = input.imag[reverseTable[i]];
@@ -88,7 +88,7 @@ export const createFftRadix2Base = (windowSize: number): SpectrometerBase => {
 				output.imag[i] = arr.imag[i];
 			}
 		},
-		inverse: (input: ComplexArray, output: ComplexIndexable) => {
+		inverse: (input: ComplexIndexable, output: ComplexIndexable) => {
 			for (let i = 0; i < windowSize; i++) {
 				arr.real[i] = input.real[reverseTable[i]];
 				arr.imag[i] = -input.imag[reverseTable[i]];

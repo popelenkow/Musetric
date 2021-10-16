@@ -1,4 +1,4 @@
-export * from './AmplitudeConverter';
+export * from './AmplitudeToDecibel';
 export * from './Cursor';
 export * from './Dft';
 export * from './EventEmitter';

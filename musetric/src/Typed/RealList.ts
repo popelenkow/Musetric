@@ -1,8 +1,8 @@
 import { RealListType } from './RealType';
 
 export type RealList = {
-	readonly real: number[];
 	readonly type: RealListType;
+	readonly real: number[];
 };
 export type RealListMap = {
 	list: RealList;

@@ -1,13 +1,12 @@
 import { RealIndexableType } from '../Typed/RealType';
 import { createRealIndexable, RealIndexable } from '../Typed/RealIndexable';
-import { ComplexArray } from '../Typed/ComplexArray';
 import { SpectrometerBase, Spectrometer, createSpectrometer } from './Spectrometer';
 import { ComplexIndexable } from '../Typed/ComplexIndexable';
 
 /* Licensed by MIT. Based on https://github.com/indutny/fft.js/tree/4a18cf88fcdbd4ad5acca6eaea06a0b462047835 */
 
 type SingleTransform2Options = {
-	input: ComplexArray;
+	input: ComplexIndexable;
 	output: ComplexIndexable;
 	outOff: number;
 	off: number;
@@ -34,7 +33,7 @@ const singleTransform2 = (options: SingleTransform2Options) => {
 };
 
 type SingleTransform4Options = {
-	input: ComplexArray;
+	input: ComplexIndexable;
 	output: ComplexIndexable;
 	inv: boolean;
 	outOff: number;
@@ -92,7 +91,7 @@ const singleTransform4 = (options: SingleTransform4Options) => {
 };
 
 type Transform4Options = {
-	input: ComplexArray;
+	input: ComplexIndexable;
 	output: ComplexIndexable;
 	inv: boolean;
 	windowSize: number;
@@ -256,7 +255,7 @@ export const createFftRadix4Base = (windowSize: number): SpectrometerBase => {
 	const reverseTable = createReverseTable(width);
 
 	const api: SpectrometerBase = {
-		forward: (input: ComplexArray, output: ComplexIndexable) => {
+		forward: (input: ComplexIndexable, output: ComplexIndexable) => {
 			transform4({
 				input,
 				output,
@@ -267,7 +266,7 @@ export const createFftRadix4Base = (windowSize: number): SpectrometerBase => {
 				table,
 			});
 		},
-		inverse: (input: ComplexArray, output: ComplexIndexable) => {
+		inverse: (input: ComplexIndexable, output: ComplexIndexable) => {
 			transform4({
 				input,
 				output,

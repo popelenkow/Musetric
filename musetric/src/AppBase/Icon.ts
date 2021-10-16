@@ -3,9 +3,11 @@ import { FC } from 'react';
 export type Icons = {
 	AppIcon: FC;
 	CloseIcon: FC;
+	DarkIcon: FC;
 	FrequencyIcon: FC;
 	GithubIcon: FC;
 	InfoIcon: FC;
+	LightIcon: FC;
 	LiveIcon: FC;
 	MenuIcon: FC;
 	OpenFileIcon: FC;
