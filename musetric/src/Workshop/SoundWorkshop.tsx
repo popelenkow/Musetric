@@ -54,7 +54,8 @@ export const getSoundWorkshopClasses = createClasses((css) => {
 			height: '100%',
 			padding: '3px',
 			display: 'flex',
-			'flex-direction': 'row-reverse',
+			'flex-direction': 'row',
+			'justify-content': 'center',
 			'column-gap': '4px',
 			'align-items': 'center',
 			'background-color': sidebar,
@@ -124,17 +125,17 @@ export const SoundWorkshop: FC = () => {
 				<ProgressBarView />
 			</div>
 			<div className={classes.toolbar}>
-				<SaveFileButton />
-				<OpenFileButton />
+				<PlayerButton disabled={isRecording} />
 				<SoundProgress soundBuffer={soundBuffer} />
+				<RecorderCheckbox disabled={isPlaying} />
 			</div>
 			<div className={classes.sidebar}>
-				<PlayerButton disabled={isRecording} />
-				<RecorderCheckbox disabled={isPlaying} />
 				<LiveCheckbox />
 				<WaveformRadio />
 				<FrequencyRadio />
 				<SpectrogramRadio />
+				<OpenFileButton />
+				<SaveFileButton />
 			</div>
 		</div>
 	);

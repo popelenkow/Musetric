@@ -3,12 +3,13 @@ import { useCssContext } from '../AppContexts/Css';
 import { useWorkerContext } from '../AppContexts/Worker';
 import { SoundBuffer } from '../Sounds/SoundBuffer';
 import { SoundCircularBuffer } from '../Sounds/SoundCircularBuffer';
-import { createFrequenciesView, createSpectrum } from '../SoundProcessing';
+import { createSpectrum } from '../SoundProcessing';
 import { Size2D, Position2D } from '../Rendering/Layout';
 import { createSpectrogramColors, drawSpectrogram } from '../Rendering/Spectrogram';
 import { usePixelCanvas } from './PixelCanvas';
 import { useAnimation } from '../Hooks/Animation';
 import { RealArray } from '../Typed/RealArray';
+import { viewRealArrays } from '../Typed/RealArrays';
 
 export type SpectrogramProps = {
 	soundBuffer: SoundBuffer;
@@ -38,12 +39,18 @@ export const useSpectrogram = (props: SpectrogramProps): Spectrogram => {
 		return () => { spectrum.stop().finally(() => { }); };
 	}, [spectrum, pause]);
 
-	const count = useMemo(() => 128, []);
+	const count = useMemo(() => size.height, [size]);
 	const [frequencies, setFrequencies] = useState<RealArray<'uint8'>[]>();
 	useEffect(() => {
 		const run = async () => {
 			const raw = await spectrum.setup({ windowSize, count });
-			const result = createFrequenciesView(raw, windowSize, count);
+			const fftSize = windowSize / 2;
+			const result = viewRealArrays('uint8', raw, {
+				offset: 0,
+				step: fftSize,
+				size: fftSize,
+				count,
+			});
 			setFrequencies(result);
 		};
 		run().finally(() => { });

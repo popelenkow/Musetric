@@ -38,13 +38,15 @@ export const useFrequency = (props: FrequencyProps): Frequency => {
 			const { windowSize, fft, result } = info;
 
 			const getBuffer = () => {
-				const cur = isLive ? soundBuffer.cursor.get() : soundCircularBuffer.length;
-				return { ...soundBuffer, cursor: cur };
+				const cur = isLive ? soundCircularBuffer.length : soundBuffer.cursor.get();
+				const buf = isLive ? soundCircularBuffer : soundBuffer;
+				return { ...buf, cursor: cur };
 			};
 			const { cursor, length, buffers } = getBuffer();
 			let offset = cursor < length ? cursor - windowSize : length - windowSize;
 			offset = offset < 0 ? 0 : offset;
-			const view = viewRealArray(buffers[0], Math.floor(offset), windowSize);
+			const { type, realRaw } = buffers[0];
+			const view = viewRealArray(type, realRaw, Math.floor(offset), windowSize);
 			fft.frequency(view, result, {});
 			drawFrequency(result, output, frame, colors);
 		};

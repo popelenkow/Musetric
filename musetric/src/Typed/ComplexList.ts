@@ -4,9 +4,9 @@ export type ComplexListMap = {
 	list: ComplexList;
 };
 export type ComplexList = {
+	readonly type: RealListType;
 	readonly real: number[];
 	readonly imag: number[];
-	readonly type: RealListType;
 };
 
 export const createComplexList = (length: number): ComplexList => {

@@ -1,6 +1,6 @@
 import type { UndefinedObject } from '../Typescript/UndefinedObject';
 import { runPromiseAudioWorklet, PromiseAudioWorkletOptions, PromiseAudioWorkletOnProcess } from '../Workers/PromiseAudioWorklet';
-import { viewRealArrayFromBuffer, RealArray } from '../Typed/RealArray';
+import { viewRealArray, RealArray } from '../Typed/RealArray';
 
 export type PlayerOptions = {
 	soundBuffer: SharedArrayBuffer;
@@ -60,11 +60,10 @@ const createPlayerWorklet = (
 				cursor,
 			};
 		}
-		const { length } = soundBuffer;
 		const delta = Math.floor((currentTime - started.time) * sampleRate);
 		const currentCursor = started.cursor + delta;
 		const size = output[0].length;
-		if (length < currentCursor + size) {
+		if (soundBuffer.real.length < currentCursor + size) {
 			stop(true);
 			return;
 		}
@@ -77,7 +76,7 @@ const createPlayerWorklet = (
 	};
 	const setup = (options: PlayerOptions) => {
 		const { cursor } = options;
-		const soundBuffer = viewRealArrayFromBuffer('float32', options.soundBuffer);
+		const soundBuffer = viewRealArray('float32', options.soundBuffer);
 		state = { soundBuffer, cursor };
 		started = undefined;
 	};

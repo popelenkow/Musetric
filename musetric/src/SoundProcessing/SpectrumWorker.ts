@@ -1,25 +1,9 @@
 import { createFftRadix4 } from '../Sounds/FftRadix4';
-import { Spectrometer, SpectrometerFrequenciesOptions } from '../Sounds/Spectrometer';
+import { Spectrometer } from '../Sounds/Spectrometer';
 import { createAnimation } from '../Rendering/Animation';
 import { runPromiseWorker } from '../Workers/PromiseWorker';
-import { viewRealArrayFromBuffer, RealArray, createSharedRealArray, SharedRealArray, createRealArray } from '../Typed/RealArray';
-
-export const createFrequenciesView = (
-	buffer: ArrayBufferLike,
-	windowSize: number,
-	count: number,
-): RealArray<'uint8'>[] => {
-	const fftSize = windowSize / 2;
-	const fftStep = fftSize * Uint8Array.BYTES_PER_ELEMENT;
-	const result: RealArray<'uint8'>[] = [];
-	let byteOffset = 0;
-	for (let i = 0; i < count; i++) {
-		const array = viewRealArrayFromBuffer('uint8', buffer, byteOffset, fftSize);
-		result.push(array);
-		byteOffset += fftStep;
-	}
-	return result;
-};
+import { viewRealArray, RealArray, createSharedRealArray, SharedRealArray, createRealArray } from '../Typed/RealArray';
+import { viewRealArrays } from '../Typed/RealArrays';
 
 export type SpectrumOptions = {
 	windowSize: number;
@@ -45,39 +29,54 @@ export const createSpectrumWorker = (): SpectrumWorker => {
 		const spectrometer = createFftRadix4(windowSize);
 		const result = createSharedRealArray('uint8', count * spectrometerSize);
 		const raw = createRealArray('uint8', count * spectrometerSize);
-		const frequencies = createFrequenciesView(raw.realRaw, windowSize, count);
+		const type = 'uint8';
+		const fftSize = windowSize / 2;
+		const frequencies = viewRealArrays(type, raw.realRaw, {
+			offset: 0,
+			step: fftSize,
+			size: fftSize,
+			count,
+		});
 		state = { windowSize, count, spectrometer, frequencies, raw, result };
 		return result.realRaw;
 	};
 
 	let buffer: RealArray<'float32'> | undefined;
 	const setSoundBuffer = (value: SharedArrayBuffer) => {
-		buffer = viewRealArrayFromBuffer('float32', value);
+		buffer = viewRealArray('float32', value);
 	};
 
-	const copy = () => {
+	let index = 0;
+	const onIteration = (): void => {
 		if (!state || !buffer) return;
-		const { raw, result } = state;
-		result.real.set(raw.real);
-	};
-	const calc = (): void => {
-		if (!state || !buffer) return;
-		const { windowSize, count, spectrometer, frequencies } = state;
+		const { result, raw, windowSize, count, spectrometer, frequencies } = state;
 		const step = (buffer.real.length - windowSize) / (count - 1);
-		const options: SpectrometerFrequenciesOptions = {
+		const inputs = viewRealArrays(buffer.type, buffer.realRaw, {
 			offset: 0,
 			step,
+			size: windowSize,
 			count,
+		});
+		const startAt = new Date().getTime();
+		let isEnded = false;
+		const canNext = () => {
+			if (isEnded) return false;
+			const elapsed = new Date().getTime() - startAt;
+			isEnded = elapsed > 10;
+			return !isEnded;
 		};
-		spectrometer.byteFrequencies(buffer, frequencies, options);
-		copy();
+		let i = index;
+		while (i < count && canNext()) {
+			spectrometer.byteFrequency(inputs[i], frequencies[i], {});
+			i++;
+		}
+		if (i === count) result.real.set(raw.real);
+		index = i % count;
 	};
 
-	const { start, stop } = createAnimation(() => {
-		return {
-			onIteration: calc,
-		};
-	});
+	const { start, stop } = createAnimation(() => ({
+		onIteration,
+	}));
 
 	return {
 		setup,
