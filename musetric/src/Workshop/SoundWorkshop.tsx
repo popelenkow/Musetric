@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, FC } from 'react';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
 import { SoundProgress } from './SoundProgress';
-import { createSoundBuffer, createSoundCircularBuffer } from '../Sounds';
+import { createSoundBufferManager } from '../Sounds/SoundBufferManager';
 import { useSoundFile } from './SoundFile';
 import { useSoundLive } from './SoundLive';
 import { useSoundPlayer } from './SoundPlayer';
@@ -88,33 +88,26 @@ export const SoundWorkshop: FC = () => {
 	const { isLive, LiveCheckbox } = useSoundLive();
 
 	const [sampleRate, channelCount] = useMemo(() => [48000, 2], []);
-	const soundBuffer = useMemo(
-		() => createSoundBuffer(sampleRate, channelCount),
+	const soundBufferManager = useMemo(
+		() => createSoundBufferManager(sampleRate, channelCount),
 		[sampleRate, channelCount],
 	);
-	const soundCircularBuffer = useMemo(
-		() => createSoundCircularBuffer(sampleRate, channelCount),
-		[sampleRate, channelCount],
-	);
-	const { OpenFileButton, SaveFileButton } = useSoundFile(soundBuffer);
 
-	const { isPlaying, PlayerButton } = useSoundPlayer(soundBuffer);
-	const { isRecording, initRecorder, RecorderCheckbox } = useSoundRecorder({
-		soundBuffer,
-		soundCircularBuffer,
-	});
+	const { OpenFileButton, SaveFileButton } = useSoundFile(soundBufferManager);
+
+	const { isPlaying, PlayerButton } = useSoundPlayer(soundBufferManager);
+	const { isRecording, initRecorder, RecorderCheckbox } = useSoundRecorder(soundBufferManager);
 
 	useEffect(() => {
 		if (isLive) initRecorder().finally(() => {});
 	}, [isLive, initRecorder]);
 
 	const { SoundView, WaveformRadio, FrequencyRadio, SpectrogramRadio } = useSoundView({
-		soundBuffer,
-		soundCircularBuffer,
+		soundBufferManager,
 		isLive,
 	});
 
-	const { ProgressBarView } = useSoundProgressBar(soundBuffer, soundCircularBuffer);
+	const { ProgressBarView } = useSoundProgressBar(soundBufferManager);
 
 	return (
 		<div className={classes.root}>
@@ -126,7 +119,7 @@ export const SoundWorkshop: FC = () => {
 			</div>
 			<div className={classes.toolbar}>
 				<PlayerButton disabled={isRecording} />
-				<SoundProgress soundBuffer={soundBuffer} />
+				<SoundProgress soundBufferManager={soundBufferManager} />
 				<RecorderCheckbox disabled={isPlaying} />
 			</div>
 			<div className={classes.sidebar}>

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, FC } from 'react';
-import { SoundBuffer, SoundCircularBuffer } from '../Sounds';
+import { SoundBufferManager } from '../Sounds';
 import { useIconContext } from '../AppContexts/Icon';
 import { MasterCanvas, MasterCanvasProps, MasterCanvasItem } from '../RenderingComponents/MasterCanvas';
 import { Radio } from '../Controls/Radio';
@@ -10,8 +10,7 @@ import { useSpectrogram } from '../RenderingComponents/Spectrogram';
 
 type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
 export type UseSoundViewProps = {
-	soundBuffer: SoundBuffer;
-	soundCircularBuffer: SoundCircularBuffer;
+	soundBufferManager: SoundBufferManager;
 	isLive: boolean;
 };
 type UseItemProps = UseSoundViewProps & {

@@ -1,14 +1,10 @@
 import React, { useState, useMemo, FC } from 'react';
 import { Checkbox, CheckboxProps } from '../Controls/Checkbox';
-import { SoundBuffer, SoundCircularBuffer } from '../Sounds';
+import { SoundBufferManager } from '../Sounds';
 import { createRecorder, Recorder } from '../SoundProcessing/Recorder';
 import { useIconContext } from '../AppContexts/Icon';
 import { useWorkerContext } from '../AppContexts/Worker';
 
-export type UseSoundRecorderProps = {
-	soundBuffer: SoundBuffer;
-	soundCircularBuffer: SoundCircularBuffer;
-};
 export type RecorderCheckboxProps = {
 	disabled: boolean;
 };
@@ -17,8 +13,7 @@ export type SoundRecorder = {
 	initRecorder: () => Promise<Recorder>;
 	RecorderCheckbox: FC<RecorderCheckboxProps>;
 };
-export const useSoundRecorder = (props: UseSoundRecorderProps): SoundRecorder => {
-	const { soundBuffer, soundCircularBuffer } = props;
+export const useSoundRecorder = (soundBufferManager: SoundBufferManager): SoundRecorder => {
 	const { RecordIcon } = useIconContext();
 	const { recorderUrl } = useWorkerContext();
 
@@ -26,17 +21,17 @@ export const useSoundRecorder = (props: UseSoundRecorderProps): SoundRecorder =>
 		let recorder: Recorder | undefined;
 		return async () => {
 			if (!recorder) {
+				const { soundBuffer } = soundBufferManager;
 				const { channelCount } = soundBuffer;
 				recorder = await createRecorder(recorderUrl, channelCount);
 				recorder.onProcess = (options): void => {
 					const { chunk, isRecording } = options;
-					if (isRecording) soundBuffer.push(chunk);
-					soundCircularBuffer.push(chunk);
+					soundBufferManager.push(chunk, isRecording ? 'recording' : 'live');
 				};
 			}
 			return recorder;
 		};
-	}, [recorderUrl, soundBuffer, soundCircularBuffer]);
+	}, [recorderUrl, soundBufferManager]);
 
 	const [isRecording, setIsRecording] = useState<boolean>(false);
 	const startRecording = async () => {

@@ -1,7 +1,7 @@
 export type EventEmitterCallback<TEvent> = (event: TEvent) => Promise<void> | void;
 export type EventEmitterUnsubscribe = () => void;
 export type EventEmitter<TEvent> = {
-	subscribe: (callback: EventEmitterCallback<TEvent>) => void;
+	subscribe: (callback: EventEmitterCallback<TEvent>) => EventEmitterUnsubscribe;
 	emit: (event: TEvent) => void;
 };
 export const createEventEmitter = <TEvent>(): EventEmitter<TEvent> => {
@@ -17,9 +17,12 @@ export const createEventEmitter = <TEvent>(): EventEmitter<TEvent> => {
 	};
 	const emit = (event: TEvent) => {
 		Object.keys(callbacks).forEach((i) => {
+			const callback = callbacks[i];
+			const run = async () => {
+				await callback(event);
+			};
 			setTimeout(() => {
-				// eslint-disable-next-line @typescript-eslint/no-floating-promises
-				callbacks[i](event);
+				run().finally(() => {});
 			});
 		});
 	};

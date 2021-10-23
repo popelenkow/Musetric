@@ -8,7 +8,7 @@ const spectrumTemplate: UndefinedObject<SpectrumWorker> = {
 	setup: undefined,
 	start: undefined,
 	stop: undefined,
-	setSoundBuffer: undefined,
+	emitBufferEvent: undefined,
 };
 
 export const createSpectrum = (workerUrl: URL | string): Spectrum => {

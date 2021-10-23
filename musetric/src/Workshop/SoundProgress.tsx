@@ -1,7 +1,7 @@
 import React, { useMemo, useState, FC } from 'react';
 import className from 'classnames';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
-import { SoundBuffer } from '../Sounds/SoundBuffer';
+import { SoundBufferManager } from '../Sounds/SoundBufferManager';
 import { useAnimation } from '../Hooks/Animation';
 import { getFieldClasses } from '../Controls/Field';
 
@@ -21,13 +21,13 @@ export const getSoundProgressClasses = createClasses((css) => {
 const useClasses = createUseClasses('SoundProgress', getSoundProgressClasses);
 
 export type SoundProgressProps = {
-	soundBuffer: SoundBuffer;
+	soundBufferManager: SoundBufferManager;
 	classNames?: {
 		root?: string;
 	};
 };
 export const SoundProgress: FC<SoundProgressProps> = (props) => {
-	const { soundBuffer, classNames } = props;
+	const { soundBufferManager, classNames } = props;
 	const classes = useClasses();
 
 	const rootName = className({
@@ -57,8 +57,9 @@ export const SoundProgress: FC<SoundProgressProps> = (props) => {
 	}, [state]);
 
 	useAnimation(() => {
+		const { soundBuffer, cursor } = soundBufferManager;
 		const newState = {
-			cursor: soundBuffer.cursor.get(),
+			cursor: cursor.get(),
 			length: soundBuffer.length,
 			sampleRate: soundBuffer.sampleRate,
 		};
@@ -71,7 +72,7 @@ export const SoundProgress: FC<SoundProgressProps> = (props) => {
 		if (!isEqual()) {
 			setState(newState);
 		}
-	}, [soundBuffer, state]);
+	}, [soundBufferManager, state]);
 
 	return (
 		<div className={rootName}>
