@@ -28,7 +28,7 @@ export const createRecorderWorklet = (
 	const { sampleRate } = getWorkletState();
 
 	let isRecording = false;
-	const length = Math.floor(sampleRate / 30);
+	const length = Math.floor(sampleRate / 60);
 	let offset = 0;
 	const buffer = [
 		new Float32Array(length),

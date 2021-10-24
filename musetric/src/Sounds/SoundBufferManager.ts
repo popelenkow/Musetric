@@ -5,7 +5,7 @@ import { createEventEmitter, EventEmitter } from './EventEmitter';
 export type SoundBufferEvent =
 	| { type: 'newBuffer'; }
 	| { type: 'invalidate'; from: number; to: number; }
-	| { type: 'shift'; from: number; to: number; offset: number; };
+	| { type: 'shift'; offset: number; };
 
 const add = (
 	soundBuffer: SoundBuffer,
@@ -44,7 +44,7 @@ const overwrite = (
 			buffers[i].real.copyWithin(0, newSize);
 			buffers[i].real.set(chunk[i], oldSize);
 		}
-		on.emit({ type: 'shift', from: newSize, to: length, offset: -newSize });
+		on.emit({ type: 'shift', offset: -newSize });
 	}
 };
 
