@@ -1,5 +1,5 @@
 import React, { useState, FC } from 'react';
-import { SoundBuffer } from '../Sounds';
+import { SoundBufferManager } from '../Sounds/SoundBufferManager';
 import { useIconContext } from '../AppContexts/Icon';
 import { Button } from '../Controls/Button';
 import { useCacheAsync } from '../Hooks/Cache';
@@ -13,30 +13,32 @@ export type SoundPlayer = {
 	isPlaying: boolean;
 	PlayerButton: FC<PlayerButtonProps>;
 };
-export const useSoundPlayer = (soundBuffer: SoundBuffer): SoundPlayer => {
+export const useSoundPlayer = (soundBufferManager: SoundBufferManager): SoundPlayer => {
 	const { PlayIcon, StopIcon } = useIconContext();
 	const { playerUrl } = useWorkerContext();
 
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
 	const [getPlayer] = useCacheAsync(async () => {
+		const { soundBuffer, cursor } = soundBufferManager;
 		const { channelCount } = soundBuffer;
 		const player = await createPlayer(playerUrl, channelCount);
 		player.onStopped = (reset) => {
 			setIsPlaying(false);
-			if (reset) soundBuffer.cursor.set(0, 'process');
+			if (reset) cursor.set(0, 'process');
 		};
 		player.onCursor = (value) => {
-			soundBuffer.cursor.set(value, 'process');
+			cursor.set(value, 'process');
 		};
-		soundBuffer.cursor.on.subscribe(async (event) => {
+		cursor.on.subscribe(async (event) => {
 			const { inputType, value } = event;
 			if (inputType === 'user') await player.setCursor(value);
 		});
 		return player;
-	}, [soundBuffer, playerUrl]);
+	}, [soundBufferManager, playerUrl]);
 
 	const startPlaying = async () => {
-		const { buffers, cursor } = soundBuffer;
+		const { soundBuffer, cursor } = soundBufferManager;
+		const { buffers } = soundBuffer;
 		const player = await getPlayer();
 		await player.setup({
 			cursor: cursor.get(),

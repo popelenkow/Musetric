@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { saveAs } from 'file-saver';
 import { useIconContext } from '../AppContexts/Icon';
-import { SoundBuffer } from '../Sounds/SoundBuffer';
+import { SoundBufferManager } from '../Sounds/SoundBufferManager';
 import { Button } from '../Controls/Button';
 import { SelectFile } from '../Controls/SelectFile';
 import { useSoundConverter } from './SoundConverter';
@@ -10,10 +10,10 @@ export type SoundFile = {
 	SaveFileButton: FC;
 	OpenFileButton: FC;
 };
-export const useSoundFile = (soundBuffer: SoundBuffer): SoundFile => {
+export const useSoundFile = (soundBufferManager: SoundBufferManager): SoundFile => {
 	const { OpenFileIcon, SaveIcon } = useIconContext();
 
-	const { getBlob, pushFile } = useSoundConverter(soundBuffer);
+	const { getBlob, pushFile } = useSoundConverter(soundBufferManager);
 
 	const saveFile = async (name: string) => {
 		const blob = await getBlob();

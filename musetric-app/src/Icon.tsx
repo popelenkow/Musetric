@@ -1,4 +1,4 @@
-import { Icons } from 'musetric/AppBase/Icon';
+import type { Icons } from 'musetric/AppBase/Icon';
 import {
 	AppIcon,
 	CloseIcon,

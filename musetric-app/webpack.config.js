@@ -42,8 +42,8 @@ const createConfig = (env, options) => {
 			filename: '[name].js',
 		},
 		performance: {
-			maxEntrypointSize: 2000000,
-			maxAssetSize: 2000000,
+			maxEntrypointSize: 3 * 1024 * 1024,
+			maxAssetSize: 3 * 1024 * 1024,
 		},
 		stats: { modules: false, children: false, entrypoints: false },
 		plugins: [
@@ -80,7 +80,7 @@ const createConfig = (env, options) => {
 };
 
 const createConfigs = (env, args) => {
-	const configs = args.map(x => createConfig(env, x));
+	const configs = args.map((x) => createConfig(env, x));
 	for (let i = 0; i < configs.length; i++) {
 		if (i !== 0) delete configs[i].devServer;
 	}
@@ -91,10 +91,10 @@ const create = (env) => {
 	/** @type {Configuration} */
 	const musetric = {
 		entry: {
-			musetricTheme: './src/musetricTheme.ts',
-			musetricLocale: './src/musetricLocale.ts',
-			musetricIcon: './src/musetricIcon.tsx',
-			musetricApp: './src/musetricApp.tsx',
+			MusetricTheme: './src/Theme.ts',
+			MusetricLocale: './src/Locale.ts',
+			MusetricIcon: './src/Icon.tsx',
+			MusetricApp: './src/App.tsx',
 		},
 		output: {
 			library: {
@@ -108,7 +108,7 @@ const create = (env) => {
 	/** @type {Configuration} */
 	const others = {
 		entry: {
-			musetricSplashScreen: './src/musetricSplashScreen.ts',
+			MusetricSplashScreen: './src/SplashScreen.ts',
 			perf: './src/perf.ts',
 			index: './src/index.ts',
 		},

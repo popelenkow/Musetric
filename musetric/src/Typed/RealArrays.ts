@@ -5,21 +5,21 @@ export type RealArraysOptions = {
 	offset: number;
 	step: number;
 	count: number;
-	size: number;
+	length: number;
 };
 
 export const createRealArrays = <K extends RealType>(
 	type: K,
-	length: number,
+	commonLength: number,
 	options: RealArraysOptions,
 ): RealArray<K>[] => {
-	const { step, count, size } = options;
+	const { step, count, length } = options;
 	const bytes = realBytesMap[type];
-	const realRaw = new ArrayBuffer(bytes * length);
+	const realRaw = new ArrayBuffer(bytes * commonLength);
 	let { offset } = options;
 	const arrays: RealArray<K>[] = [];
 	for (let i = 0; i < count; i++) {
-		const view = viewRealArray(type, realRaw, Math.floor(offset), size);
+		const view = viewRealArray(type, realRaw, Math.floor(offset), length);
 		arrays.push(view);
 		offset += step;
 	}
@@ -28,16 +28,16 @@ export const createRealArrays = <K extends RealType>(
 
 export const createSharedRealArray = <K extends RealType>(
 	type: K,
-	length: number,
+	commonLength: number,
 	options: RealArraysOptions,
 ): SharedRealArray<K>[] => {
-	const { step, count, size } = options;
+	const { step, count, length } = options;
 	const bytes = realBytesMap[type];
-	const realRaw = new SharedArrayBuffer(bytes * length);
+	const realRaw = new SharedArrayBuffer(bytes * commonLength);
 	let { offset } = options;
 	const arrays: SharedRealArray<K>[] = [];
 	for (let i = 0; i < count; i++) {
-		const view = viewRealArray(type, realRaw, Math.floor(offset), size);
+		const view = viewRealArray(type, realRaw, Math.floor(offset), length);
 		arrays.push(view);
 		offset += step;
 	}
@@ -49,12 +49,12 @@ export const viewRealArrays = <K extends RealType, B extends ArrayBufferLike>(
 	buffer: B,
 	options: RealArraysOptions,
 ): RealArrayLike<K, B>[] => {
-	const { step, count, size } = options;
+	const { step, count, length } = options;
 	const realRaw = buffer;
 	let { offset } = options;
 	const arrays: RealArrayLike<K, B>[] = [];
 	for (let i = 0; i < count; i++) {
-		const view = viewRealArray(type, realRaw, Math.floor(offset), size);
+		const view = viewRealArray(type, realRaw, Math.floor(offset), length);
 		arrays.push(view);
 		offset += step;
 	}

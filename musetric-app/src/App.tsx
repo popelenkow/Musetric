@@ -2,68 +2,28 @@ import React, { FC } from 'react';
 import ReactDOM from 'react-dom';
 import { App, AppProps, AppViewEntry } from 'musetric/App/App';
 import { AppAboutInfo, AppAboutInfoProps } from 'musetric/App/AppAboutInfo';
-import { getStorageLocaleId, setStorageLocaleId, createI18n, localizeLocaleId, localizeThemeId } from 'musetric/AppBase/Locale';
+import { getStorageLocaleId, setStorageLocaleId, createI18n } from 'musetric/AppBase/Locale';
 import { getStorageThemeId, setStorageThemeId } from 'musetric/AppBase/Theme';
-import { useLocaleContext, LocaleProvider, LocaleProviderProps } from 'musetric/AppContexts/Locale';
-import { useCssContext, createClasses, createUseClasses, CssProvider, CssProviderProps } from 'musetric/AppContexts/Css';
-import { useIconContext, IconProvider, IconProviderProps } from 'musetric/AppContexts/Icon';
+import { LocaleProvider, LocaleProviderProps } from 'musetric/AppContexts/Locale';
+import { CssProvider, CssProviderProps } from 'musetric/AppContexts/Css';
+import { IconProvider, IconProviderProps } from 'musetric/AppContexts/Icon';
 import { WorkerProvider } from 'musetric/AppContexts/Worker';
-import { Button, getButtonClasses } from 'musetric/Controls/Button';
-import { Switch, SwitchProps } from 'musetric/Controls/Switch';
+import { Button } from 'musetric/Controls/Button';
 import { SoundWorkshop } from 'musetric/Workshop';
-import { CreateMusetricApp } from './types/musetricApp';
+import type { LocaleEntry } from 'musetric/AppBase/Locale';
+import type { ThemeEntry } from 'musetric/AppBase/Theme';
+import type { Icons } from 'musetric/AppBase/Icon';
+import type { Workers } from 'musetric/AppBase/Worker';
+import { TitlebarButtons } from './common/TitlebarButtons';
 
-export const getTitlebarButtonsClasses = createClasses((css) => {
-	const buttonClasses = getButtonClasses(css);
-	return {
-		text: {
-			...buttonClasses.root,
-			width: 'auto',
-			padding: '0 6px',
-		},
-	};
-});
-const useClasses = createUseClasses('App', getTitlebarButtonsClasses);
-
-const TitlebarButtons: FC = () => {
-	const { localeId, setLocaleId, allLocaleIds } = useLocaleContext();
-	const { themeId, setThemeId, allThemeIds } = useCssContext();
-	const { DarkIcon, LightIcon } = useIconContext();
-	const themeMap: Record<string, FC> = {
-		light: LightIcon,
-		dark: DarkIcon,
-	};
-	const classes = useClasses();
-
-	const localeSwitchProps: SwitchProps<string> = {
-		currentId: localeId,
-		ids: allLocaleIds,
-		set: setLocaleId,
-		view: (id, t) => localizeLocaleId(id, t) || id,
-		className: classes.text,
-	};
-
-	const themeSwitchProps: SwitchProps<string> = {
-		currentId: themeId,
-		ids: allThemeIds,
-		set: (id) => {
-			setThemeId(id);
-		},
-		view: (id, t) => {
-			const Icon = themeMap[id];
-			if (Icon) return <Icon />;
-			return localizeThemeId(id, t) || id;
-		},
-	};
-
-	return (
-		<>
-			<Switch {...localeSwitchProps} />
-			<Switch {...themeSwitchProps} />
-		</>
-	);
+export type CreateMusetricAppOptions = {
+	elementId: string;
+	allLocaleEntries: LocaleEntry[];
+	allThemeEntries: ThemeEntry[];
+	icons: Icons;
+	workers: Workers;
 };
-
+export type CreateMusetricApp = (options: CreateMusetricAppOptions) => Promise<void>;
 export const createMusetricApp: CreateMusetricApp = async (options) => {
 	const { elementId, allLocaleEntries, allThemeEntries, icons, workers } = options;
 

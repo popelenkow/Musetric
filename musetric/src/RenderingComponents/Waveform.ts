@@ -1,15 +1,13 @@
 import { useMemo, useCallback } from 'react';
 import { useCssContext } from '../AppContexts/Css';
-import { SoundBuffer } from '../Sounds/SoundBuffer';
-import { SoundCircularBuffer } from '../Sounds/SoundCircularBuffer';
+import { SoundBufferManager } from '../Sounds/SoundBufferManager';
 import { Size2D, Position2D } from '../Rendering/Layout';
 import { Waves, drawWaveform, createWaveformColors, evalWaves } from '../Rendering/Waveform';
 import { usePixelCanvas } from './PixelCanvas';
 import { useAnimation } from '../Hooks/Animation';
 
 export type WaveformProps = {
-	soundBuffer: SoundBuffer;
-	soundCircularBuffer: SoundCircularBuffer;
+	soundBufferManager: SoundBufferManager;
 	isLive?: boolean;
 	size: Size2D;
 	pause?: boolean;
@@ -20,7 +18,7 @@ export type Waveform = {
 };
 export const useWaveform = (props: WaveformProps): Waveform => {
 	const {
-		soundBuffer, soundCircularBuffer, isLive, size, pause,
+		soundBufferManager, isLive, size, pause,
 	} = props;
 	const { css } = useCssContext();
 	const colors = useMemo(() => createWaveformColors(css.theme), [css.theme]);
@@ -38,18 +36,20 @@ export const useWaveform = (props: WaveformProps): Waveform => {
 		};
 	}, []);
 	const draw = useCallback((output: Uint8ClampedArray, frame: Size2D) => {
+		const { soundBuffer, soundCircularBuffer, cursor } = soundBufferManager;
 		const buffer = isLive ? soundCircularBuffer.buffers[0] : soundBuffer.buffers[0];
-		const cursor = isLive ? undefined : soundBuffer.cursor.get() / (soundBuffer.length - 1);
+		const cursorValue = isLive ? undefined : cursor.get() / (soundBuffer.length - 1);
 		const waves = getWaves(frame);
 		evalWaves(buffer.real, waves, frame);
-		drawWaveform(waves, output, frame, colors, cursor);
-	}, [soundBuffer, soundCircularBuffer, isLive, colors, getWaves]);
+		drawWaveform(waves, output, frame, colors, cursorValue);
+	}, [soundBufferManager, isLive, colors, getWaves]);
 
 	const onClick = useCallback((cursorPosition: Position2D) => {
 		if (isLive) return;
+		const { soundBuffer, cursor } = soundBufferManager;
 		const value = Math.floor(cursorPosition.y * (soundBuffer.length - 1));
-		soundBuffer.cursor.set(value, 'user');
-	}, [soundBuffer, isLive]);
+		cursor.set(value, 'user');
+	}, [soundBufferManager, isLive]);
 
 	const pixelCanvas = usePixelCanvas({ size });
 

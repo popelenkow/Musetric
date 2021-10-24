@@ -1,9 +1,8 @@
 import { useMemo, useCallback, useEffect, useState } from 'react';
 import { useCssContext } from '../AppContexts/Css';
 import { useWorkerContext } from '../AppContexts/Worker';
-import { SoundBuffer } from '../Sounds/SoundBuffer';
-import { SoundCircularBuffer } from '../Sounds/SoundCircularBuffer';
-import { createSpectrum } from '../SoundProcessing';
+import { SoundBufferManager } from '../Sounds/SoundBufferManager';
+import { createSpectrum, SpectrumBufferEvent } from '../SoundProcessing';
 import { Size2D, Position2D } from '../Rendering/Layout';
 import { createSpectrogramColors, drawSpectrogram } from '../Rendering/Spectrogram';
 import { usePixelCanvas } from './PixelCanvas';
@@ -12,8 +11,7 @@ import { RealArray } from '../Typed/RealArray';
 import { viewRealArrays } from '../Typed/RealArrays';
 
 export type SpectrogramProps = {
-	soundBuffer: SoundBuffer;
-	soundCircularBuffer: SoundCircularBuffer;
+	soundBufferManager: SoundBufferManager;
 	isLive?: boolean;
 	size: Size2D;
 	pause?: boolean;
@@ -24,7 +22,7 @@ export type Spectrogram = {
 };
 export const useSpectrogram = (props: SpectrogramProps): Spectrogram => {
 	const {
-		soundBuffer, soundCircularBuffer, isLive, size, pause,
+		soundBufferManager, isLive, size, pause,
 	} = props;
 	const { theme } = useCssContext().css;
 	const colors = useMemo(() => createSpectrogramColors(theme), [theme]);
@@ -48,7 +46,7 @@ export const useSpectrogram = (props: SpectrogramProps): Spectrogram => {
 			const result = viewRealArrays('uint8', raw, {
 				offset: 0,
 				step: fftSize,
-				size: fftSize,
+				length: fftSize,
 				count,
 			});
 			setFrequencies(result);
@@ -56,39 +54,53 @@ export const useSpectrogram = (props: SpectrogramProps): Spectrogram => {
 		run().finally(() => { });
 	}, [spectrum, windowSize, count]);
 
-	const [buffer, setBuffer] = useState<SharedArrayBuffer>();
-
-	useAnimation(() => {
-		if (pause) return;
-		const buf = isLive ? soundCircularBuffer.buffers[0].realRaw : soundBuffer.buffers[0].realRaw;
-		if (buf !== buffer) {
-			setBuffer(buf);
-		}
-	}, [
-		pause, buffer, soundBuffer, soundCircularBuffer, isLive,
-	]);
-
 	useEffect(() => {
-		if (!buffer) return;
-		spectrum.setSoundBuffer(buffer).finally(() => { });
-	}, [spectrum, buffer]);
+		const { soundBuffer, soundCircularBuffer } = soundBufferManager;
+		const buffer = isLive ? soundCircularBuffer : soundBuffer;
+		const on = isLive ? soundBufferManager.onCircular : soundBufferManager.on;
+		const unsubscribe = on.subscribe(async (event) => {
+			const createBufferEvent = (): SpectrumBufferEvent | undefined => {
+				if (event.type === 'newBuffer') {
+					const value = buffer.buffers[0].realRaw;
+					return { type: 'newBuffer', value };
+				}
+				if (event.type === 'invalidate') {
+					const { from, to } = event;
+					return { type: 'invalidate', from, to };
+				}
+				if (event.type === 'shift') {
+					const { from, to, offset } = event;
+					return { type: 'shift', from, to, offset };
+				}
+				return undefined;
+			};
+			const bufferEvent = createBufferEvent();
+			if (bufferEvent) await spectrum.emitBufferEvent(bufferEvent);
+		});
+		spectrum.emitBufferEvent({ type: 'newBuffer', value: buffer.buffers[0].realRaw }).finally(() => {});
+		return unsubscribe;
+	}, [
+		pause, soundBufferManager, isLive, spectrum,
+	]);
 
 	const onClick = useCallback((cursorPosition: Position2D) => {
 		if (isLive) return;
+		const { soundBuffer, cursor } = soundBufferManager;
 		const value = Math.round(cursorPosition.y * (soundBuffer.length - 1));
-		soundBuffer.cursor.set(value, 'user');
-	}, [soundBuffer, isLive]);
+		cursor.set(value, 'user');
+	}, [soundBufferManager, isLive]);
 
 	const pixelCanvas = usePixelCanvas({ size });
 
 	useAnimation(() => {
 		if (pause) return;
 		if (!frequencies) return;
-		const cursor = isLive ? undefined : soundBuffer.cursor.get() / (soundBuffer.length - 1);
-		drawSpectrogram(frequencies, pixelCanvas.image.data, size, colors, cursor);
+		const { soundBuffer, cursor } = soundBufferManager;
+		const cursorValue = isLive ? undefined : cursor.get() / (soundBuffer.length - 1);
+		drawSpectrogram(frequencies, pixelCanvas.image.data, size, colors, cursorValue);
 		pixelCanvas.context.putImageData(pixelCanvas.image, 0, 0);
 	}, [
-		soundBuffer, frequencies,
+		soundBufferManager, frequencies,
 		pixelCanvas, colors,
 		isLive, size, pause,
 	]);

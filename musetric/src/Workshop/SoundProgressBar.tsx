@@ -1,5 +1,5 @@
 import React, { useMemo, FC } from 'react';
-import { SoundBuffer, SoundCircularBuffer } from '../Sounds';
+import { SoundBufferManager } from '../Sounds';
 import { MasterCanvas, MasterCanvasProps, MasterCanvasItem } from '../RenderingComponents/MasterCanvas';
 import { Size2D, Direction2D, rotateSize2D } from '../Rendering/Layout';
 import { useWaveform } from '../RenderingComponents/Waveform';
@@ -8,17 +8,15 @@ export type SoundProgressBar = {
 	ProgressBarView: FC;
 };
 export const useSoundProgressBar = (
-	soundBuffer: SoundBuffer,
-	soundCircularBuffer: SoundCircularBuffer,
+	soundBufferManager: SoundBufferManager,
 ): SoundProgressBar => {
 	const waveformLayout = useMemo(() => {
-		const size: Size2D = { width: 32, height: 256 };
+		const size: Size2D = { width: 128, height: 1024 };
 		const direction: Direction2D = { rotation: 'left', reflection: false };
 		return { size, direction };
 	}, []);
 	const waveform = useWaveform({
-		soundBuffer,
-		soundCircularBuffer,
+		soundBufferManager,
 		size: waveformLayout.size,
 	});
 	const waveformItem: MasterCanvasItem = {
