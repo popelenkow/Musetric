@@ -69,8 +69,8 @@ export const useSpectrogram = (props: SpectrogramProps): Spectrogram => {
 					return { type: 'invalidate', from, to };
 				}
 				if (event.type === 'shift') {
-					const { from, to, offset } = event;
-					return { type: 'shift', from, to, offset };
+					const { offset } = event;
+					return { type: 'shift', offset };
 				}
 				return undefined;
 			};
