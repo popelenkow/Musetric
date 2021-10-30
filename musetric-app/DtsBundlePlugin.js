@@ -41,7 +41,7 @@ module.exports.createDtsBundlePlugin = () => {
 	 */
 	return (compiler) => {
 		compiler.hooks.entryOption.tap('dts-bundle', (_, entry) => {
-			const arr = Object.keys(entry).map(name => {
+			const arr = Object.keys(entry).map((name) => {
 				const paths = entry[name].import;
 				return { name, paths };
 			});
