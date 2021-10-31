@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo, createContext, FC } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Classes } from 'jss';
+import { Classes, GenerateId } from 'jss';
 import { JssProvider, createTheming, createUseStyles, Styles } from 'react-jss';
 import { Platform, getPlatformId } from '../AppBase/Platform';
 import { Theme, ThemeEntry } from '../AppBase/Theme';
@@ -83,9 +83,14 @@ export const CssProvider: FC<CssProviderProps> = (props) => {
 		allThemeIds,
 	};
 
+	const generateId: GenerateId = (rule, sheet) => {
+		const prefix = sheet?.options?.classNamePrefix || '';
+		if (prefix && rule.key === 'root') return prefix.slice(0, prefix.length - 1);
+		return `${prefix}${rule.key}`;
+	};
 	return (
 		<CssContext.Provider value={value}>
-			<JssProvider generateId={(rule, sheet) => (sheet?.options?.classNamePrefix || '') + rule.key}>
+			<JssProvider generateId={generateId}>
 				<theming.ThemeProvider theme={{ theme, platform }}>
 					{children}
 				</theming.ThemeProvider>

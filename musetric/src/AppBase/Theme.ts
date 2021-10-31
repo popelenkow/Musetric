@@ -1,11 +1,12 @@
 export type Theme = {
-	app: string,
-	sidebar: string,
-	content: string,
-	disabled: string,
-	hover: string,
-	active: string,
-	splitter: string,
+	app: string;
+	sidebar: string;
+	content: string;
+	disabled: string;
+	hover: string;
+	primary: string;
+	divider: string;
+	shadow: string;
 };
 export type ThemeEntry = {
 	themeId: string;

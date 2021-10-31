@@ -1,11 +1,11 @@
-import React, { useMemo, FC } from 'react';
+import React, { useMemo, ReactElement } from 'react';
 import { SoundBufferManager } from '../Sounds';
 import { MasterCanvas, MasterCanvasProps, MasterCanvasItem } from '../RenderingComponents/MasterCanvas';
 import { Size2D, Direction2D, rotateSize2D } from '../Rendering/Layout';
 import { useWaveform } from '../RenderingComponents/Waveform';
 
 export type SoundProgressBar = {
-	ProgressBarView: FC;
+	renderProgressBarView: () => ReactElement;
 };
 export const useSoundProgressBar = (
 	soundBufferManager: SoundBufferManager,
@@ -33,7 +33,8 @@ export const useSoundProgressBar = (
 		items: [waveformItem],
 		size: masterCanvasSize,
 	};
-	const ProgressBarView: FC = () => <MasterCanvas {...masterCanvasProps} />;
 
-	return { ProgressBarView };
+	return {
+		renderProgressBarView: () => <MasterCanvas {...masterCanvasProps} />,
+	};
 };

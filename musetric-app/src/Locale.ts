@@ -1,4 +1,4 @@
-import { allLocaleEntries } from 'musetric/Resources/Locales';
+import { allLocaleEntries } from './Resources/Locales';
 import type { CreateMusetricAppOptions } from './App';
 
 export const getMusetricLocaleEntries = (): CreateMusetricAppOptions['allLocaleEntries'] => {

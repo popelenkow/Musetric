@@ -1,7 +1,7 @@
-import React, { useState, FC } from 'react';
+import React, { useState, ReactElement } from 'react';
 import { SoundBufferManager } from '../Sounds/SoundBufferManager';
 import { useIconContext } from '../AppContexts/Icon';
-import { Button } from '../Controls/Button';
+import { Button, ButtonProps } from '../Controls/Button';
 import { useCacheAsync } from '../Hooks/Cache';
 import { createPlayer } from '../SoundProcessing/Player';
 import { useWorkerContext } from '../AppContexts/Worker';
@@ -11,7 +11,7 @@ export type PlayerButtonProps = {
 };
 export type SoundPlayer = {
 	isPlaying: boolean;
-	PlayerButton: FC<PlayerButtonProps>;
+	renderPlayerButton: (props: PlayerButtonProps) => ReactElement;
 };
 export const useSoundPlayer = (soundBufferManager: SoundBufferManager): SoundPlayer => {
 	const { PlayIcon, StopIcon } = useIconContext();
@@ -36,32 +36,39 @@ export const useSoundPlayer = (soundBufferManager: SoundBufferManager): SoundPla
 		return player;
 	}, [soundBufferManager, playerUrl]);
 
-	const startPlaying = async () => {
-		const { soundBuffer, cursor } = soundBufferManager;
-		const { buffers } = soundBuffer;
-		const player = await getPlayer();
-		await player.setup({
-			cursor: cursor.get(),
-			soundBuffer: buffers[0].realRaw,
-		});
-		await player.start();
-		setIsPlaying(true);
-	};
-
-	const stopPlaying = async () => {
-		const player = await getPlayer();
-		await player.stop();
-	};
-
-	const PlayerButton: FC<PlayerButtonProps> = (props) => {
+	const renderPlayerButton: SoundPlayer['renderPlayerButton'] = (props) => {
 		const { disabled } = props;
-		return !isPlaying
-			? <Button disabled={disabled} onClick={startPlaying}><PlayIcon /></Button>
-			: <Button onClick={stopPlaying}><StopIcon /></Button>;
+		const startPlaying = async () => {
+			const { soundBuffer, cursor } = soundBufferManager;
+			const { buffers } = soundBuffer;
+			const player = await getPlayer();
+			await player.setup({
+				cursor: cursor.get(),
+				soundBuffer: buffers[0].realRaw,
+			});
+			await player.start();
+			setIsPlaying(true);
+		};
+		const stopPlaying = async () => {
+			const player = await getPlayer();
+			await player.stop();
+		};
+		const buttonProps: ButtonProps = {
+			kind: 'icon',
+			onClick: isPlaying ? stopPlaying : startPlaying,
+			disabled,
+			primary: isPlaying,
+			rounded: true,
+		};
+		return (
+			<Button key='player' {...buttonProps}>
+				{isPlaying ? <StopIcon /> : <PlayIcon />}
+			</Button>
+		);
 	};
 
 	return {
 		isPlaying,
-		PlayerButton,
+		renderPlayerButton,
 	};
 };

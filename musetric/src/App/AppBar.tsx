@@ -3,9 +3,9 @@ import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useIconContext } from '../AppContexts/Icon';
 import { getFieldClasses } from '../Controls/Field';
 
-export const getAppTitlebarClasses = createClasses((css) => {
+export const getAppBarClasses = createClasses((css) => {
 	const fieldClasses = getFieldClasses(css);
-	const { splitter, sidebar } = css.theme;
+	const { divider: splitter, sidebar } = css.theme;
 	return {
 		root: {
 			display: 'flex',
@@ -21,9 +21,10 @@ export const getAppTitlebarClasses = createClasses((css) => {
 		},
 		icon: {
 			...fieldClasses.root,
-			'flex-grow': '1',
+			...fieldClasses.root['&.icon'],
 			'max-width': '42px',
 			'max-height': '42px',
+			'flex-grow': '1',
 		},
 		text: {
 			...fieldClasses.root,
@@ -36,11 +37,11 @@ export const getAppTitlebarClasses = createClasses((css) => {
 		},
 	};
 });
-const useClasses = createUseClasses('AppTitlebar', getAppTitlebarClasses);
+const useClasses = createUseClasses('AppBar', getAppBarClasses);
 
-export type AppTitlebarProps = {
+export type AppBarProps = {
 };
-export const AppTitlebar: FC<AppTitlebarProps> = (props) => {
+export const AppBar: FC<AppBarProps> = (props) => {
 	const { children } = props;
 	const classes = useClasses();
 	const { AppIcon } = useIconContext();

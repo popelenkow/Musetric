@@ -10,7 +10,7 @@ import { useSoundRecorder } from './SoundRecorder';
 import { useSoundView } from './SoundView';
 
 export const getSoundWorkshopClasses = createClasses((css) => {
-	const { app, splitter, sidebar } = css.theme;
+	const { app, divider: splitter, sidebar } = css.theme;
 	return {
 		root: {
 			width: '100%',
@@ -85,7 +85,7 @@ const useClasses = createUseClasses('SoundWorkshop', getSoundWorkshopClasses);
 export const SoundWorkshop: FC = () => {
 	const classes = useClasses();
 
-	const { isLive, LiveCheckbox } = useSoundLive();
+	const { isLive, renderLiveCheckbox } = useSoundLive();
 
 	const [sampleRate, channelCount] = useMemo(() => [48000, 2], []);
 	const soundBufferManager = useMemo(
@@ -93,42 +93,47 @@ export const SoundWorkshop: FC = () => {
 		[sampleRate, channelCount],
 	);
 
-	const { OpenFileButton, SaveFileButton } = useSoundFile(soundBufferManager);
+	const { renderOpenFileButton, renderSaveFileButton } = useSoundFile(soundBufferManager);
 
-	const { isPlaying, PlayerButton } = useSoundPlayer(soundBufferManager);
-	const { isRecording, initRecorder, RecorderCheckbox } = useSoundRecorder(soundBufferManager);
+	const { isPlaying, renderPlayerButton } = useSoundPlayer(soundBufferManager);
+	const {
+		isRecording, initRecorder, renderRecorderCheckbox,
+	} = useSoundRecorder(soundBufferManager);
 
 	useEffect(() => {
 		if (isLive) initRecorder().finally(() => {});
 	}, [isLive, initRecorder]);
 
-	const { SoundView, WaveformRadio, FrequencyRadio, SpectrogramRadio } = useSoundView({
+	const {
+		renderSoundView,
+		renderWaveformRadio, renderFrequencyRadio, renderSpectrogramRadio,
+	} = useSoundView({
 		soundBufferManager,
 		isLive,
 	});
 
-	const { ProgressBarView } = useSoundProgressBar(soundBufferManager);
+	const { renderProgressBarView } = useSoundProgressBar(soundBufferManager);
 
 	return (
 		<div className={classes.root}>
 			<div className={classes.view}>
-				<SoundView />
+				{renderSoundView()}
 			</div>
 			<div className={classes.progressBar}>
-				<ProgressBarView />
+				{renderProgressBarView()}
 			</div>
 			<div className={classes.toolbar}>
-				<PlayerButton disabled={isRecording} />
+				{renderPlayerButton({ disabled: isRecording })}
 				<SoundProgress soundBufferManager={soundBufferManager} />
-				<RecorderCheckbox disabled={isPlaying} />
+				{renderRecorderCheckbox({ disabled: isPlaying })}
 			</div>
 			<div className={classes.sidebar}>
-				<LiveCheckbox />
-				<WaveformRadio />
-				<FrequencyRadio />
-				<SpectrogramRadio />
-				<OpenFileButton />
-				<SaveFileButton />
+				{renderLiveCheckbox()}
+				{renderWaveformRadio()}
+				{renderFrequencyRadio()}
+				{renderSpectrogramRadio()}
+				{renderOpenFileButton()}
+				{renderSaveFileButton()}
 			</div>
 		</div>
 	);

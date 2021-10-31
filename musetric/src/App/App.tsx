@@ -1,9 +1,10 @@
-import React, { useState, ReactNode, FC, useEffect } from 'react';
+import React, { useState, FC, ReactElement } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useIconContext } from '../AppContexts/Icon';
 import { RootElementProvider, useRootElementContext } from '../AppContexts/RootElement';
-import { Switch, SwitchProps } from '../Controls/Switch';
-import { AppTitlebar } from './AppTitlebar';
+import { useDisabledZoom } from '../Hooks/DisabledZoom';
+import { AppBar } from './AppBar';
+import { AppDropdown, AppDropdownProps, AppViewEntry, AppViewElement } from './AppDropdown';
 
 export const getAppClasses = createClasses((css) => {
 	const { width, height } = css.platform;
@@ -20,74 +21,49 @@ export const getAppClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('App', getAppClasses);
 
-export type AppViewEntry<ViewId> = {
-	viewId: ViewId;
-	viewElement: ReactNode;
-};
-
-type RootProps<ViewId> = {
+type RootProps<ViewId extends string> = {
 	initViewId: ViewId;
-	allViewEntries: AppViewEntry<ViewId>[];
-	TitlebarButtons: FC;
+	useViewEntries: () => AppViewEntry<ViewId>[];
+	AppBarButtons: FC;
 };
-function Root<ViewId>(props: RootProps<ViewId>): React.ReactElement | null {
-	const { initViewId, allViewEntries, TitlebarButtons } = props;
+function Root<ViewId extends string>(props: RootProps<ViewId>): ReactElement | null {
+	const { initViewId, useViewEntries, AppBarButtons } = props;
 	const classes = useClasses();
-
 	const { MenuIcon } = useIconContext();
 
-	const allViewIds = allViewEntries.map((x) => x.viewId);
-	const [viewId, setViewId] = useState<ViewId>(initViewId);
+	const allViewEntries = useViewEntries();
+	const { rootElement, setRootElement } = useRootElementContext();
+	useDisabledZoom(rootElement);
 
-	const menuSwitchProps: SwitchProps<ViewId> = {
-		currentId: viewId,
-		ids: allViewIds,
-		set: setViewId,
-		view: MenuIcon,
+	const [viewId, setViewId] = useState<ViewId>(initViewId);
+	const appDropdownProps: AppDropdownProps<ViewId> = {
+		viewId,
+		setViewId,
+		allViewEntries,
 	};
 
-	const { viewElement } = allViewEntries.find((x) => x.viewId === viewId) || {};
-
-	const { rootElement, setRootElement } = useRootElementContext();
-	useEffect(() => {
-		if (!rootElement) return undefined;
-		const keydownListener = (event: KeyboardEvent) => {
-			const keys = ['-', '+', '=', '_'];
-			if (event.ctrlKey === true && keys.some((x) => event.key === x)) {
-				event.preventDefault();
-			}
-		};
-		const wheelListener = (event: WheelEvent) => {
-			if (event.ctrlKey === true) {
-				event.preventDefault();
-			}
-		};
-		document.body.addEventListener('keydown', keydownListener);
-		rootElement.addEventListener('wheel', wheelListener);
-		return () => {
-			document.body.removeEventListener('keydown', keydownListener);
-			rootElement.removeEventListener('wheel', wheelListener);
-		};
-	}, [rootElement]);
+	const { element } = allViewEntries
+		.filter((x): x is AppViewElement<ViewId> => x.type === 'view')
+		.find((view) => view.id === viewId) || {};
 
 	return (
 		<div ref={(elem) => elem && setRootElement(elem)} className={classes.root}>
-			<AppTitlebar>
-				<TitlebarButtons />
-				<Switch {...menuSwitchProps} />
-			</AppTitlebar>
-			{viewElement}
+			<AppBar>
+				<AppBarButtons />
+				<AppDropdown {...appDropdownProps}><MenuIcon /></AppDropdown>
+			</AppBar>
+			{element}
 		</div>
 	);
 }
 
-export type AppProps<ViewId> = {
+export type AppProps<ViewId extends string> = {
 	LocaleProvider: FC;
 	CssProvider: FC;
 	IconProvider: FC;
 	WorkerProvider: FC;
 } & RootProps<ViewId>;
-export function App<ViewId>(props: AppProps<ViewId>): React.ReactElement | null {
+export function App<ViewId extends string>(props: AppProps<ViewId>): ReactElement | null {
 	const { LocaleProvider, CssProvider, IconProvider, WorkerProvider } = props;
 
 	return (
