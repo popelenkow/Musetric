@@ -1,8 +1,9 @@
 import React, { ReactNode, FC } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
+import { useLocaleContext } from '../AppContexts/Locale';
 import { getFieldClasses } from '../Controls/Field';
 
-export const getAboutInfoClasses = createClasses((css) => {
+export const getAppAboutClasses = createClasses((css) => {
 	const fieldClasses = getFieldClasses(css);
 	const { app } = css.theme;
 	return {
@@ -13,7 +14,7 @@ export const getAboutInfoClasses = createClasses((css) => {
 			'background-color': app,
 		},
 		container: {
-			width: 'auto',
+			width: '240px',
 			height: 'auto',
 			display: 'flex',
 			'flex-direction': 'column',
@@ -24,16 +25,17 @@ export const getAboutInfoClasses = createClasses((css) => {
 		},
 	};
 });
-const useClasses = createUseClasses('AppAboutInfo', getAboutInfoClasses);
+const useClasses = createUseClasses('AppAbout', getAppAboutClasses);
 
-export type AppAboutInfoProps = {
+export type AppAboutProps = {
 	appVersion: string;
 	links?: ReactNode[];
 };
 
-export const AppAboutInfo: FC<AppAboutInfoProps> = (props) => {
+export const AppAbout: FC<AppAboutProps> = (props) => {
 	const { appVersion, links } = props;
 	const classes = useClasses();
+	const { t } = useLocaleContext();
 
 	const noLinks = !links || links.length === 0;
 	const Links: FC = () => {
@@ -45,12 +47,13 @@ export const AppAboutInfo: FC<AppAboutInfoProps> = (props) => {
 			</div>
 		);
 	};
+
 	return (
 		<div className={classes.root}>
 			<div className={classes.container}>
 				<div>Musetric</div>
-				<div>{`Version ${appVersion}`}</div>
-				<div>This software is MIT licensed</div>
+				<div>{`${t('Musetric:version')} ${appVersion}`}</div>
+				<div>{`${t('Musetric:licensed')}`}</div>
 				<Links />
 			</div>
 		</div>

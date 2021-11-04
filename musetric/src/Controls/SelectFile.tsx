@@ -1,6 +1,6 @@
-import React, { FC, ChangeEvent } from 'react';
+import React, { FC, useMemo, useEffect } from 'react';
+import { Button, ButtonProps, getButtonClasses } from './Button';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
-import { getButtonClasses } from './Button';
 
 export const getSelectFileClasses = createClasses((css) => {
 	const buttonClasses = getButtonClasses(css);
@@ -8,37 +8,50 @@ export const getSelectFileClasses = createClasses((css) => {
 		root: {
 			...buttonClasses.root,
 		},
-		input: {
-			opacity: '0',
-			position: 'absolute',
-			top: '0',
-			left: '0',
-			width: '100%',
-			height: '100%',
-		},
 	};
 });
 const useClasses = createUseClasses('SelectFile', getSelectFileClasses);
 
 export type SelectFileProps = {
+	disabled?: boolean;
+	primary?: boolean;
+	rounded?: boolean;
 	onChangeFile: (file: File) => void;
-	className?: string;
 };
 export const SelectFile: FC<SelectFileProps> = (props) => {
-	const { children, onChangeFile, className } = props;
+	const {
+		children, onChangeFile,
+		disabled, primary, rounded,
+	} = props;
 	const classes = useClasses();
 
-	const onChange = (input: ChangeEvent<HTMLInputElement>) => {
-		const file = input.target.files?.item(0);
-		if (file) {
+	const input = useMemo(() => {
+		const result = document.createElement('input');
+		result.type = 'file';
+		return result;
+	}, []);
+
+	useEffect(() => {
+		input.onchange = (event) => {
+			const target = event.target as HTMLInputElement | null;
+			const file = target?.files?.item(0);
+			if (!file) return;
 			onChangeFile(file);
-		}
+		};
+	});
+
+	const buttonProps: ButtonProps = {
+		kind: 'icon',
+		disabled,
+		primary,
+		rounded,
+		onClick: () => input.click(),
+		classNames: { root: classes.root },
 	};
 
 	return (
-		<div className={className || classes.root}>
+		<Button {...buttonProps}>
 			{children}
-			<input type='file' className={classes.input} onChange={onChange} />
-		</div>
+		</Button>
 	);
 };

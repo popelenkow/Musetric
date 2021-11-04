@@ -15,7 +15,7 @@ export type ThemeColor = {
 export const parseThemeColor = (theme: Theme): ThemeColor => {
 	const background = new Color(theme.app);
 	const content = new Color(theme.content);
-	const active = new Color(theme.active);
+	const active = new Color(theme.primary);
 	const colors = {
 		background,
 		content,
@@ -36,7 +36,7 @@ export type ThemeRgbColor = {
 export const parseThemeRgbColor = (theme: Theme): ThemeRgbColor => {
 	const background = parseRgbColor(new Color(theme.app));
 	const content = parseRgbColor(new Color(theme.content));
-	const active = parseRgbColor(new Color(theme.active));
+	const active = parseRgbColor(new Color(theme.primary));
 	const colors = {
 		background,
 		content,
@@ -89,7 +89,7 @@ export type ThemeUint32Color = {
 export const parseThemeUint32Color = (theme: Theme): ThemeUint32Color => {
 	const background = parseUint32Color(new Color(theme.app));
 	const content = parseUint32Color(new Color(theme.content));
-	const active = parseUint32Color(new Color(theme.active));
+	const active = parseUint32Color(new Color(theme.primary));
 	const colors = {
 		background,
 		content,
@@ -105,7 +105,7 @@ export type ThemeHexColor = {
 export const parseThemeHexColor = (theme: Theme): ThemeHexColor => {
 	const background = new Color(theme.app).hex();
 	const content = new Color(theme.content).hex();
-	const active = new Color(theme.active).hex();
+	const active = new Color(theme.primary).hex();
 	const colors = {
 		background,
 		content,

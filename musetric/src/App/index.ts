@@ -1,3 +1,4 @@
 export * from './App';
-export * from './AppAboutInfo';
-export * from './AppTitlebar';
+export * from './AppAbout';
+export * from './AppBar';
+export * from './AppDropdown';

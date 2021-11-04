@@ -101,7 +101,7 @@ export const run = async (): Promise<void> => {
 						color: theme.content,
 					},
 					grid: {
-						color: theme.splitter,
+						color: theme.divider,
 					},
 				},
 				y: {
@@ -109,7 +109,7 @@ export const run = async (): Promise<void> => {
 						color: theme.content,
 					},
 					grid: {
-						color: theme.splitter,
+						color: theme.divider,
 					},
 				},
 			},

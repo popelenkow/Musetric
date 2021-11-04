@@ -4,6 +4,7 @@ export default {
 	content: 'rgb(255, 255, 255)',
 	disabled: 'rgb(150, 150, 150)',
 	hover: 'rgba(255, 255, 255, 0.2)',
-	active: 'rgb(255, 0, 0)',
-	splitter: 'rgb(128, 128, 128)',
+	primary: 'rgb(255, 0, 0)',
+	divider: 'rgb(128, 128, 128)',
+	shadow: 'rgba(255, 255, 255, 0.3)',
 };

@@ -1,7 +1,9 @@
 {
+	"licensed": "This software is MIT licensed",
 	"locale": "english",
 	"theme": {
 		"dark": "dark",
 		"white": "white"
-	}
+	},
+	"version": "Version"
 }

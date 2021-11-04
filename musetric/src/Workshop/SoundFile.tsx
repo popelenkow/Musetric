@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { saveAs } from 'file-saver';
 import { useIconContext } from '../AppContexts/Icon';
 import { SoundBufferManager } from '../Sounds/SoundBufferManager';
@@ -7,8 +7,8 @@ import { SelectFile } from '../Controls/SelectFile';
 import { useSoundConverter } from './SoundConverter';
 
 export type SoundFile = {
-	SaveFileButton: FC;
-	OpenFileButton: FC;
+	renderSaveFileButton: () => ReactElement;
+	renderOpenFileButton: () => ReactElement;
 };
 export const useSoundFile = (soundBufferManager: SoundBufferManager): SoundFile => {
 	const { OpenFileIcon, SaveIcon } = useIconContext();
@@ -24,15 +24,16 @@ export const useSoundFile = (soundBufferManager: SoundBufferManager): SoundFile 
 		await pushFile(file);
 	};
 
-	const SaveFileButton: FC = () => <Button onClick={() => saveFile('myRecording.wav')}><SaveIcon /></Button>;
-	const OpenFileButton: FC = () => (
-		<SelectFile onChangeFile={pushSoundFile}>
-			<OpenFileIcon />
-		</SelectFile>
-	);
-
 	return {
-		SaveFileButton,
-		OpenFileButton,
+		renderSaveFileButton: () => (
+			<Button kind='icon' onClick={() => saveFile('myRecording.wav')} rounded>
+				<SaveIcon />
+			</Button>
+		),
+		renderOpenFileButton: () => (
+			<SelectFile onChangeFile={pushSoundFile} rounded>
+				<OpenFileIcon />
+			</SelectFile>
+		),
 	};
 };

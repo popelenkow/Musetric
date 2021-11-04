@@ -1,20 +1,21 @@
 import React, { FC } from 'react';
 import ReactDOM from 'react-dom';
-import { App, AppProps, AppViewEntry } from 'musetric/App/App';
-import { AppAboutInfo, AppAboutInfoProps } from 'musetric/App/AppAboutInfo';
+import { App, AppProps } from 'musetric/App/App';
+import { AppViewEntry } from 'musetric/App/AppDropdown';
+import { AppAbout, AppAboutProps } from 'musetric/App/AppAbout';
 import { getStorageLocaleId, setStorageLocaleId, createI18n } from 'musetric/AppBase/Locale';
 import { getStorageThemeId, setStorageThemeId } from 'musetric/AppBase/Theme';
-import { LocaleProvider, LocaleProviderProps } from 'musetric/AppContexts/Locale';
+import { LocaleProvider, LocaleProviderProps, useLocaleContext } from 'musetric/AppContexts/Locale';
 import { CssProvider, CssProviderProps } from 'musetric/AppContexts/Css';
 import { IconProvider, IconProviderProps } from 'musetric/AppContexts/Icon';
 import { WorkerProvider } from 'musetric/AppContexts/Worker';
-import { Button } from 'musetric/Controls/Button';
+import { Button, ButtonProps } from 'musetric/Controls/Button';
 import { SoundWorkshop } from 'musetric/Workshop';
 import type { LocaleEntry } from 'musetric/AppBase/Locale';
 import type { ThemeEntry } from 'musetric/AppBase/Theme';
 import type { Icons } from 'musetric/AppBase/Icon';
 import type { Workers } from 'musetric/AppBase/Worker';
-import { TitlebarButtons } from './common/TitlebarButtons';
+import { AppBarButtons } from './common/AppBarButtons';
 
 export type CreateMusetricAppOptions = {
 	elementId: string;
@@ -82,35 +83,46 @@ export const createMusetricApp: CreateMusetricApp = async (options) => {
 		);
 	};
 
-	type ViewId = 'soundWorkshop' | 'aboutInfo';
-	const createViewEntries = (): AppViewEntry<ViewId>[] => {
+	type ViewId = 'soundWorkshop' | 'about';
+	const useViewEntries = (): AppViewEntry<ViewId>[] => {
 		const { GithubIcon, PerformanceIcon } = icons;
+		const { t } = useLocaleContext();
 
 		const soundWorkshop = <SoundWorkshop />;
-		const aboutInfoProps: AppAboutInfoProps = {
+		const githubProps: ButtonProps = {
+			kind: 'icon',
+			rounded: true,
+			onClick: () => { window.location.href = 'https://github.com/popelenkow/Musetric'; },
+		};
+		const performanceProps: ButtonProps = {
+			kind: 'icon',
+			rounded: true,
+			onClick: () => { window.location.href = `${window.location.origin}/perf.html`; },
+		};
+		const aboutInfoProps: AppAboutProps = {
 			appVersion: process.env.APP_VERSION || '???',
 			links: [
-				<Button key='links_0' onClick={() => { window.location.href = 'https://github.com/popelenkow/Musetric'; }}><GithubIcon /></Button>,
-				<Button key='links_1' onClick={() => { window.location.href = `${window.location.origin}/perf.html`; }}><PerformanceIcon /></Button>,
+				<Button key='links_0' {...githubProps}><GithubIcon /></Button>,
+				<Button key='links_1' {...performanceProps}><PerformanceIcon /></Button>,
 			],
 		};
-		const aboutInfo = <AppAboutInfo {...aboutInfoProps} />;
+		const aboutInfo = <AppAbout {...aboutInfoProps} />;
 
 		return [
-			{ viewId: 'soundWorkshop', viewElement: soundWorkshop },
-			{ viewId: 'aboutInfo', viewElement: aboutInfo },
+			{ type: 'view', id: 'soundWorkshop', name: t('MusetricApp:soundWorkshop'), element: soundWorkshop },
+			{ type: 'divider' },
+			{ type: 'view', id: 'about', name: t('MusetricApp:about'), element: aboutInfo },
 		];
 	};
-	const allViewEntries = createViewEntries();
 
 	const appProps: AppProps<ViewId> = {
 		LocaleProvider: AppLocaleProvider,
 		CssProvider: AppCssProvider,
 		IconProvider: AppIconProvider,
 		WorkerProvider: AppWorkerProvider,
-		TitlebarButtons,
+		AppBarButtons,
 		initViewId: 'soundWorkshop',
-		allViewEntries,
+		useViewEntries,
 	};
 
 	const app = <App {...appProps} />;

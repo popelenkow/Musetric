@@ -1,4 +1,4 @@
-import React, { useState, useMemo, FC } from 'react';
+import React, { useState, useMemo, ReactElement } from 'react';
 import { SoundBufferManager } from '../Sounds';
 import { useIconContext } from '../AppContexts/Icon';
 import { MasterCanvas, MasterCanvasProps, MasterCanvasItem } from '../RenderingComponents/MasterCanvas';
@@ -84,10 +84,10 @@ const useSpectrogramItem = (props: UseItemProps) => {
 };
 
 export type SoundView = {
-	SoundView: FC;
-	WaveformRadio: FC;
-	FrequencyRadio: FC;
-	SpectrogramRadio: FC;
+	renderSoundView: () => ReactElement;
+	renderWaveformRadio: () => ReactElement;
+	renderFrequencyRadio: () => ReactElement;
+	renderSpectrogramRadio: () => ReactElement;
 };
 export const useSoundView = (props: UseSoundViewProps): SoundView => {
 	const { WaveformIcon, FrequencyIcon, SpectrogramIcon } = useIconContext();
@@ -106,11 +106,23 @@ export const useSoundView = (props: UseSoundViewProps): SoundView => {
 		const items: MasterCanvasItem[] = [];
 		return { size, items };
 	}, [soundViewId, waveform, frequency, spectrogram]);
-	const SoundView: FC = () => <MasterCanvas {...masterCanvasProps} />;
 
-	const WaveformRadio: FC = () => <Radio label='soundView' value='Waveform' onSelected={setSoundViewId} checkedValue={soundViewId}><WaveformIcon /></Radio>;
-	const FrequencyRadio: FC = () => <Radio label='soundView' value='Frequency' onSelected={setSoundViewId} checkedValue={soundViewId}><FrequencyIcon /></Radio>;
-	const SpectrogramRadio: FC = () => <Radio label='soundView' value='Spectrogram' onSelected={setSoundViewId} checkedValue={soundViewId}><SpectrogramIcon /></Radio>;
-
-	return { SoundView, WaveformRadio, FrequencyRadio, SpectrogramRadio };
+	return {
+		renderSoundView: () => <MasterCanvas {...masterCanvasProps} />,
+		renderWaveformRadio: () => (
+			<Radio label='soundView' value='Waveform' onSelected={setSoundViewId} checkedValue={soundViewId} rounded>
+				<WaveformIcon />
+			</Radio>
+		),
+		renderFrequencyRadio: () => (
+			<Radio label='soundView' value='Frequency' onSelected={setSoundViewId} checkedValue={soundViewId} rounded>
+				<FrequencyIcon />
+			</Radio>
+		),
+		renderSpectrogramRadio: () => (
+			<Radio label='soundView' value='Spectrogram' onSelected={setSoundViewId} checkedValue={soundViewId} rounded>
+				<SpectrogramIcon />
+			</Radio>
+		),
+	};
 };

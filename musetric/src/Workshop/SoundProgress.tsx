@@ -10,11 +10,9 @@ export const getSoundProgressClasses = createClasses((css) => {
 	return {
 		root: {
 			...fieldClasses.root,
-			width: '118px',
+			width: '120px',
 			height: '42px',
 			position: 'relative',
-			'border-radius': '21px',
-			'user-select': 'none',
 		},
 	};
 });
