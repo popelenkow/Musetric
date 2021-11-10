@@ -1,5 +1,7 @@
-import Musetric from './Musetric.json';
+import AppBase from './AppBase.json';
+import Workshop from './Workshop.json';
 
 export default {
-	Musetric,
+	AppBase,
+	Workshop,
 };

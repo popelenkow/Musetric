@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import FFT from 'fft.js';
 import Chart, { ChartConfiguration, ChartData, ScatterDataPoint } from 'chart.js/auto';
-import { createComplexArray } from 'musetric/Typed/ComplexArray';
-import { createComplexIndexable } from 'musetric/Typed/ComplexIndexable';
+import { createComplexArray } from 'musetric/TypedArray/ComplexArray';
+import { createComplexIndexable } from 'musetric/TypedArray/ComplexIndexable';
 import { createFftRadix2Base } from 'musetric/Sounds/FftRadix2';
 import { createFftRadix4Base } from 'musetric/Sounds/FftRadix4';
 import { getStorageThemeId } from 'musetric/AppBase/Theme';
@@ -18,7 +18,7 @@ export const run = async (): Promise<void> => {
 	const themeId = getStorageThemeId() || 'dark';
 	const { theme } = allThemeEntries.find((x) => x.themeId === themeId) || {};
 	if (!theme) throw new Error();
-	root.style.backgroundColor = theme.app;
+	root.style.backgroundColor = theme.background;
 	root.style.display = 'flex';
 	root.style.flexDirection = 'column';
 	root.style.minHeight = `${window.innerHeight}px`;
@@ -91,14 +91,14 @@ export const run = async (): Promise<void> => {
 				legend: {
 					display: true,
 					labels: {
-						color: theme.content,
+						color: theme.activeContent,
 					},
 				},
 			},
 			scales: {
 				x: {
 					ticks: {
-						color: theme.content,
+						color: theme.activeContent,
 					},
 					grid: {
 						color: theme.divider,
@@ -106,7 +106,7 @@ export const run = async (): Promise<void> => {
 				},
 				y: {
 					ticks: {
-						color: theme.content,
+						color: theme.activeContent,
 					},
 					grid: {
 						color: theme.divider,
@@ -137,7 +137,7 @@ export const run = async (): Promise<void> => {
 	links.appendChild(app);
 
 	const textDiv = document.createElement('div');
-	textDiv.style.color = theme.content;
+	textDiv.style.color = theme.activeContent;
 
 	root.innerHTML = '';
 	root.appendChild(links);

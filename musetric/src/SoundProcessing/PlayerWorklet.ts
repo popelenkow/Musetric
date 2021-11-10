@@ -1,6 +1,5 @@
-import type { UndefinedObject } from '../Typescript/UndefinedObject';
 import { runPromiseAudioWorklet, PromiseAudioWorkletOptions, PromiseAudioWorkletOnProcess } from '../Workers/PromiseAudioWorklet';
-import { viewRealArray, RealArray } from '../Typed/RealArray';
+import { viewRealArray, RealArray } from '../TypedArray/RealArray';
 
 export type PlayerOptions = {
 	soundBuffer: SharedArrayBuffer;
@@ -13,21 +12,15 @@ export type PlayerWorklet = {
 	setCursor: (value: number) => void;
 };
 
-export type PlayerWorkletEvents = {
-	onCursor: (value: number) => void;
-	onStopped: (reset: boolean) => void;
+export type PlayerEvents = {
+	onCursor: { value: number };
+	onStopped: { reset: boolean };
 };
-const playerEvents: UndefinedObject<PlayerWorkletEvents> = {
-	onCursor: undefined,
-	onStopped: undefined,
-};
-type PlayerWorkletOptions = PromiseAudioWorkletOptions<PlayerWorkletEvents>;
 
 const createPlayerWorklet = (
-	workletOptions: PlayerWorkletOptions,
+	options: PromiseAudioWorkletOptions<PlayerEvents>,
 ): PlayerWorklet & PromiseAudioWorkletOnProcess => {
-	const { getWorkletState, events } = workletOptions;
-	const { onStopped, onCursor } = events;
+	const { pushEvent, getWorkletState } = options;
 
 	type Started = {
 		time: number;
@@ -38,10 +31,10 @@ const createPlayerWorklet = (
 	const start = () => {
 		isPlaying = true;
 	};
-	const stop = (reset?: boolean) => {
+	const stop = (reset = false) => {
 		isPlaying = false;
 		started = undefined;
-		onStopped(reset || false);
+		pushEvent('onStopped', { reset });
 	};
 
 	type State = {
@@ -72,11 +65,11 @@ const createPlayerWorklet = (
 				output[i][j] = soundBuffer.real[currentCursor + j];
 			}
 		}
-		onCursor(currentCursor + size);
+		pushEvent('onCursor', { value: currentCursor + size });
 	};
-	const setup = (options: PlayerOptions) => {
-		const { cursor } = options;
-		const soundBuffer = viewRealArray('float32', options.soundBuffer);
+	const setup = (playerOptions: PlayerOptions) => {
+		const { cursor } = playerOptions;
+		const soundBuffer = viewRealArray('float32', playerOptions.soundBuffer);
 		state = { soundBuffer, cursor };
 		started = undefined;
 	};
@@ -95,5 +88,5 @@ const createPlayerWorklet = (
 };
 
 export const runPlayerWorklet = (): void => {
-	runPromiseAudioWorklet('PlayerWorklet', createPlayerWorklet, playerEvents);
+	runPromiseAudioWorklet('PlayerWorklet', createPlayerWorklet);
 };

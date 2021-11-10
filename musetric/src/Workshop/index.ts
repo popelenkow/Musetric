@@ -6,4 +6,5 @@ export * from './SoundProgress';
 export * from './SoundProgressBar';
 export * from './SoundRecorder';
 export * from './SoundView';
+export * from './SoundParameters';
 export * from './SoundWorkshop';

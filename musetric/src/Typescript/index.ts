@@ -1,4 +1,5 @@
+export * from './Events';
 export * from './OverloadedConstructorParameters';
 export * from './OverloadedParameters';
 export * from './PromiseObjectApi';
-export * from './UndefinedObject';
+export * from './ValueObject';

@@ -1,47 +1,60 @@
 import React, { FC } from 'react';
-import className from 'classnames';
-import { createUseClasses, createClasses } from '../AppContexts/Css';
+import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 
 export const getFieldClasses = createClasses((css) => {
+	const { theme } = css;
 	const { platformId } = css.platform;
-	const { primary: active, content, disabled, divider: splitter } = css.theme;
 	return {
 		root: {
-			font: '18px/24px "Segoe UI", Arial, sans-serif',
 			display: 'flex',
-			height: '42px',
-			'justify-content': 'center',
-			'align-items': 'center',
-			color: content,
 			margin: '0',
-			padding: '0 6px',
-			border: '1px solid transparent',
+			outline: 'none',
+			'font-family': 'Verdana, Arial, sans-serif',
 			'box-sizing': 'border-box',
+			'align-items': 'center',
+			padding: '0 6px',
+			'background-color': 'transparent',
+			height: '42px',
+			'min-height': '42px',
+			'font-size': '18px',
+			'justify-content': 'center',
+			border: '1px solid',
+			'border-color': 'transparent',
+			color: theme.activeContent,
 			'& path, rect, polygon': {
-				fill: content,
+				fill: theme.activeContent,
+			},
+			'&:focus-visible': {
+				'border-color': theme.divider,
 			},
 			'&.rounded': {
 				'border-radius': '10px',
 			},
 			'&.icon': {
+				padding: '0',
 				width: '42px',
+				'min-width': '42px',
 			},
-			'&:focus-visible': {
-				border: `1px solid ${splitter}`,
+			'&.full': {
+				padding: '0 6px',
+				width: '100%',
+			},
+			'&.left': {
+				'justify-content': 'left',
+			},
+			'&.right': {
+				'justify-content': 'right',
 			},
 			'&.disabled': {
 				[platformId === 'mobile' ? '&:active' : '&:hover']: {
-					background: 'transparent',
+					'background-color': theme.hover,
 				},
-				color: disabled,
-				'& path, rect, polygon': {
-					fill: disabled,
-				},
+				opacity: '0.4',
 			},
 			'&.primary': {
-				color: active,
+				color: theme.primary,
 				'& path, rect, polygon': {
-					fill: active,
+					fill: theme.primary,
 				},
 			},
 		},
@@ -50,7 +63,8 @@ export const getFieldClasses = createClasses((css) => {
 const useClasses = createUseClasses('Field', getFieldClasses);
 
 export type FieldProps = {
-	kind?: 'simple' | 'icon';
+	kind?: 'simple' | 'icon' | 'full';
+	align?: 'left' | 'center' | 'right';
 	disabled?: boolean;
 	primary?: boolean;
 	rounded?: boolean;
@@ -61,17 +75,16 @@ export type FieldProps = {
 export const Field: FC<FieldProps> = (props) => {
 	const {
 		disabled, primary, rounded,
-		kind, children, classNames,
+		kind, align, children, classNames,
 	} = props;
 
 	const classes = useClasses();
-	const rootName = className({
-		[classNames?.root || classes.root]: true,
-		icon: kind === 'icon',
-		disabled,
-		primary,
-		rounded,
-	});
+	const rootName = className(
+		classNames?.root || classes.root,
+		{ value: kind, default: 'simple' },
+		{ value: align, default: 'center' },
+		{ value: { disabled, primary, rounded } },
+	);
 
 	return (
 		<div className={rootName}>

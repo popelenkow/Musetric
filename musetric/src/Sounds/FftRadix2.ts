@@ -1,7 +1,7 @@
-import { RealType } from '../Typed/RealType';
-import { RealArray, createRealArray } from '../Typed/RealArray';
-import { ComplexArray, createComplexArray } from '../Typed/ComplexArray';
-import { ComplexIndexable } from '../Typed/ComplexIndexable';
+import { RealType } from '../TypedArray/RealType';
+import { RealArray, createRealArray } from '../TypedArray/RealArray';
+import { ComplexArray, createComplexArray } from '../TypedArray/ComplexArray';
+import { ComplexIndexable } from '../TypedArray/ComplexIndexable';
 import { SpectrometerBase, createSpectrometer, Spectrometer } from './Spectrometer';
 
 /* Licensed by MIT. Based on https://github.com/corbanbrook/dsp.js/tree/c6144fcd75b65f72eac4791ab9f7268a814f44a8 */
@@ -35,7 +35,9 @@ const createReverseTable = (size: number) => {
 };
 
 const transform = (
-	arr: ComplexArray, windowSize: number, table: Table,
+	arr: ComplexArray,
+	windowSize: number,
+	table: Table,
 ) => {
 	let halfSize = 1;
 	while (halfSize < windowSize) {

@@ -4,8 +4,8 @@ import { useIconContext } from '../AppContexts/Icon';
 import { getFieldClasses } from '../Controls/Field';
 
 export const getAppBarClasses = createClasses((css) => {
+	const { theme } = css;
 	const fieldClasses = getFieldClasses(css);
-	const { divider: splitter, sidebar } = css.theme;
 	return {
 		root: {
 			display: 'flex',
@@ -13,11 +13,11 @@ export const getAppBarClasses = createClasses((css) => {
 			width: '100%',
 			height: '100%',
 			'column-gap': '4px',
-			background: sidebar,
-			padding: '3px',
-			cursor: 'default',
+			background: theme.activeBackground,
+			padding: '0px 4px',
 			'align-items': 'center',
-			'border-bottom': `1px solid ${splitter}`,
+			'justify-content': 'center',
+			'border-bottom': `1px solid ${theme.divider}`,
 		},
 		icon: {
 			...fieldClasses.root,
@@ -32,16 +32,13 @@ export const getAppBarClasses = createClasses((css) => {
 			'flex-grow': '2',
 			'user-select': 'none',
 			'max-height': '42px',
-			'text-indent': '10px',
 			width: 'auto',
 		},
 	};
 });
 const useClasses = createUseClasses('AppBar', getAppBarClasses);
 
-export type AppBarProps = {
-};
-export const AppBar: FC<AppBarProps> = (props) => {
+export const AppBar: FC = (props) => {
 	const { children } = props;
 	const classes = useClasses();
 	const { AppIcon } = useIconContext();

@@ -1,6 +1,7 @@
 import React, { useState, ReactElement } from 'react';
 import { SoundBufferManager } from '../Sounds/SoundBufferManager';
 import { useIconContext } from '../AppContexts/Icon';
+import { useLocaleContext } from '../AppContexts/Locale';
 import { Button, ButtonProps } from '../Controls/Button';
 import { useCacheAsync } from '../Hooks/Cache';
 import { createPlayer } from '../SoundProcessing/Player';
@@ -15,20 +16,24 @@ export type SoundPlayer = {
 };
 export const useSoundPlayer = (soundBufferManager: SoundBufferManager): SoundPlayer => {
 	const { PlayIcon, StopIcon } = useIconContext();
+	const { t } = useLocaleContext();
 	const { playerUrl } = useWorkerContext();
 
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
 	const [getPlayer] = useCacheAsync(async () => {
 		const { soundBuffer, cursor } = soundBufferManager;
 		const { channelCount } = soundBuffer;
-		const player = await createPlayer(playerUrl, channelCount);
-		player.onStopped = (reset) => {
-			setIsPlaying(false);
-			if (reset) cursor.set(0, 'process');
-		};
-		player.onCursor = (value) => {
-			cursor.set(value, 'process');
-		};
+		const player = await createPlayer(playerUrl, channelCount, {
+			onStopped: (event) => {
+				const { reset } = event;
+				setIsPlaying(false);
+				if (reset) cursor.set(0, 'process');
+			},
+			onCursor: (event) => {
+				const { value } = event;
+				cursor.set(value, 'process');
+			},
+		});
 		cursor.on.subscribe(async (event) => {
 			const { inputType, value } = event;
 			if (inputType === 'user') await player.setCursor(value);
@@ -55,13 +60,15 @@ export const useSoundPlayer = (soundBufferManager: SoundBufferManager): SoundPla
 		};
 		const buttonProps: ButtonProps = {
 			kind: 'icon',
-			onClick: isPlaying ? stopPlaying : startPlaying,
 			disabled,
+			active: isPlaying,
 			primary: isPlaying,
 			rounded: true,
+			title: isPlaying ? t('Workshop:stop') : t('Workshop:play'),
+			onClick: isPlaying ? stopPlaying : startPlaying,
 		};
 		return (
-			<Button key='player' {...buttonProps}>
+			<Button {...buttonProps}>
 				{isPlaying ? <StopIcon /> : <PlayIcon />}
 			</Button>
 		);

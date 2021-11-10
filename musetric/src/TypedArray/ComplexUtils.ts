@@ -2,7 +2,9 @@ import { RealIndexable } from './RealIndexable';
 import { ComplexIndexable } from './ComplexIndexable';
 
 export const normComplexIndexable = (
-	input: ComplexIndexable, output: RealIndexable, factor: number,
+	input: ComplexIndexable,
+	output: RealIndexable,
+	factor: number,
 ): void => {
 	const size = output.real.length;
 	for (let i = 0; i < size; i++) {

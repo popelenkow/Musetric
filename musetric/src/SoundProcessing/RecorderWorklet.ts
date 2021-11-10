@@ -1,30 +1,22 @@
 import { runPromiseAudioWorklet, PromiseAudioWorkletOnProcess } from '../Workers/PromiseAudioWorklet';
 import type { PromiseAudioWorkletOptions } from '../Workers/PromiseAudioWorklet';
-import type { UndefinedObject } from '../Typescript/UndefinedObject';
-
-export type RecorderProcessOptions = {
-	chunk: Float32Array[];
-	isRecording: boolean;
-};
 
 export type RecorderWorklet = {
 	start: () => void;
 	stop: () => void;
 };
 
-export type RecorderWorkletEvents = {
-	onProcess: (options: RecorderProcessOptions) => void;
+export type RecorderEvents = {
+	onProcess: {
+		chunk: Float32Array[];
+		isRecording: boolean;
+	};
 };
-const templateEvents: UndefinedObject<RecorderWorkletEvents> = {
-	onProcess: undefined,
-};
-type RecorderWorkletOptions = PromiseAudioWorkletOptions<RecorderWorkletEvents>;
 
 export const createRecorderWorklet = (
-	options: RecorderWorkletOptions,
+	options: PromiseAudioWorkletOptions<RecorderEvents>,
 ): RecorderWorklet & PromiseAudioWorkletOnProcess => {
-	const { events, getWorkletState } = options;
-	const { onProcess } = events;
+	const { pushEvent, getWorkletState } = options;
 	const { sampleRate } = getWorkletState();
 
 	let isRecording = false;
@@ -48,11 +40,11 @@ export const createRecorderWorklet = (
 		push();
 		if (length < offset + step) {
 			const chunk = buffer.map((x) => x.slice(0, offset));
-			const result: RecorderProcessOptions = {
+			const result: RecorderEvents['onProcess'] = {
 				chunk,
 				isRecording,
 			};
-			onProcess(result);
+			pushEvent('onProcess', result);
 			offset = 0;
 		}
 	};
@@ -71,5 +63,5 @@ export const createRecorderWorklet = (
 };
 
 export const runRecorderWorklet = (): void => {
-	runPromiseAudioWorklet('RecorderWorklet', createRecorderWorklet, templateEvents);
+	runPromiseAudioWorklet<RecorderEvents>('RecorderWorklet', createRecorderWorklet);
 };

@@ -10,7 +10,7 @@ export const getSoundProgressClasses = createClasses((css) => {
 	return {
 		root: {
 			...fieldClasses.root,
-			width: '120px',
+			width: 'auto',
 			height: '42px',
 			position: 'relative',
 		},

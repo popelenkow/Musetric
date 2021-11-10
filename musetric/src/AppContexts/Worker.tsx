@@ -1,10 +1,9 @@
-import React, { useContext, createContext, FC } from 'react';
+import React, { useContext, FC } from 'react';
 import { Workers } from '../AppBase/Worker';
+import { createContext } from './Context';
 
 export type WorkerStore = Workers;
-// eslint-disable-next-line
-const defaultWorkerStore: WorkerStore = undefined as any;
-export const WorkerContext = createContext<WorkerStore>(defaultWorkerStore);
+export const WorkerContext = createContext<WorkerStore>();
 
 export const WorkerConsumer = WorkerContext.Consumer;
 
@@ -15,7 +14,7 @@ export type WorkerProviderProps = {
 export const WorkerProvider: FC<WorkerProviderProps> = (props) => {
 	const { children, workers } = props;
 
-	const store: WorkerStore = { ...workers };
+	const store: WorkerStore = workers;
 
 	return (
 		<WorkerContext.Provider value={store}>

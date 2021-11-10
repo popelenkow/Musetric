@@ -21,7 +21,7 @@
 	},
 	"scripts": {
 		"build": "rimraf dist && node build.js && tsc",
-		"lint": "eslint \"{src,test,performance}/**/*.{js,ts,tsx}\" ",
+		"lint": "eslint **/*.{js,ts,tsx}",
 		"parse-locale": "i18next -c ./i18next.parser.config.js",
 		"test": "jest",
 		"perf": "ts-node performance/index.ts"
@@ -31,33 +31,33 @@
 	},
 	"dependencies": {
 		"classnames": "^2.3.1",
-		"color": "^4.0.1",
+		"color": "^4.1.0",
 		"file-saver": "^2.0.5",
-		"i18next": "^21.4.0",
+		"i18next": "^21.6.4",
 		"react": "^17.0.2",
 		"react-dom": "^17.0.2",
 		"react-icons": "^4.3.1",
-		"react-jss": "^10.8.2",
+		"react-jss": "^10.9.0",
 		"uuid": "^8.3.2"
 	},
 	"devDependencies": {
 		"@types/benchmark": "2.1.1",
 		"@types/color": "3.0.2",
-		"@types/file-saver": "2.0.3",
-		"@types/jest": "27.0.2",
-		"@types/node": "16.11.6",
-		"@types/react": "17.0.34",
+		"@types/file-saver": "2.0.4",
+		"@types/jest": "27.4.0",
+		"@types/node": "17.0.7",
+		"@types/react": "17.0.38",
 		"@types/react-dom": "17.0.11",
-		"@types/uuid": "8.3.1",
+		"@types/uuid": "8.3.3",
 		"benchmark": "2.1.4",
 		"copyfiles": "2.4.1",
-		"eslint-config-musetric": "0.0.36",
+		"eslint-config-musetric": "0.0.39",
 		"fft.js": "4.0.4",
-		"i18next-parser": "5.0.0",
-		"jest": "27.3.1",
+		"i18next-parser": "5.3.0",
+		"jest": "27.4.5",
 		"rimraf": "3.0.2",
-		"ts-jest": "27.0.7",
+		"ts-jest": "27.1.2",
 		"ts-node": "10.4.0",
-		"typescript": "4.4.4"
+		"typescript": "4.5.4"
 	}
 }

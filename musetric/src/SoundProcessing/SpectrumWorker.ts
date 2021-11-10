@@ -3,8 +3,8 @@ import { Spectrometer } from '../Sounds/Spectrometer';
 import { createAnimation } from '../Rendering/Animation';
 import { createTimer } from '../Rendering/Timer';
 import { runPromiseWorker } from '../Workers/PromiseWorker';
-import { viewRealArray, RealArray, createSharedRealArray, createRealArray } from '../Typed/RealArray';
-import { viewRealArrays } from '../Typed/RealArrays';
+import { viewRealArray, RealArray, createSharedRealArray, createRealArray } from '../TypedArray/RealArray';
+import { viewRealArrays } from '../TypedArray/RealArrays';
 
 const flags = {
 	invalid: 0,

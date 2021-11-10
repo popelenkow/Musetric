@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Suite } from 'benchmark';
 import FFT from 'fft.js';
-import { createComplexIndexable } from '../src/Typed/ComplexIndexable';
+import { createComplexIndexable } from '../src/TypedArray/ComplexIndexable';
 import { createFftRadix2Base } from '../src/Sounds/FftRadix2';
 import { createFftRadix4Base } from '../src/Sounds/FftRadix4';
 

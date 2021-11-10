@@ -1,5 +1,5 @@
-import type { UndefinedObject } from '../Typescript/UndefinedObject';
-import type { PromiseWorkerRequest, PromiseWorkerOptions, PromiseWorkerEvents, PromiseWorkerResponse, PromiseWorker } from './PromiseWorker';
+import type { PushEvent } from '../Typescript/Events';
+import type { PromiseWorkerRequest, PromiseWorkerResponse, PromiseWorker } from './PromiseWorker';
 
 /*
 https://github.com/microsoft/TypeScript/issues/28308
@@ -27,11 +27,10 @@ export type PromiseAudioWorkletState = {
 	sampleRate: number;
 	currentTime: number;
 };
-export type PromiseAudioWorkletOptions<Events extends PromiseWorkerEvents> =
-	& PromiseWorkerOptions<Events>
-	& {
-		getWorkletState: () => PromiseAudioWorkletState;
-	};
+export type PromiseAudioWorkletOptions<Events> = {
+	pushEvent: PushEvent<Events>;
+	getWorkletState: () => PromiseAudioWorkletState;
+};
 export type PromiseAudioWorkletOnProcess = {
 	process: (
 		input: Float32Array[],
@@ -41,10 +40,9 @@ export type PromiseAudioWorkletOnProcess = {
 };
 export type PromiseAudioWorklet = PromiseWorker & PromiseAudioWorkletOnProcess;
 
-export const runPromiseAudioWorklet = <Events extends PromiseWorkerEvents>(
+export const runPromiseAudioWorklet = <Events>(
 	processorName: string,
 	createWorklet: (options: PromiseAudioWorkletOptions<Events>) => PromiseAudioWorklet,
-	templateEvents: UndefinedObject<PromiseWorkerEvents>,
 ): void => {
 	const initWorklet = (messagePort: MessagePort) => {
 		const post = (message: PromiseWorkerResponse) => {
@@ -52,20 +50,15 @@ export const runPromiseAudioWorklet = <Events extends PromiseWorkerEvents>(
 		};
 		const getWorkletState = () => ({ sampleRate, currentTime });
 
-		const events: PromiseWorkerEvents = {};
-		Object.keys(templateEvents).forEach((type) => {
-			events[type] = (result: unknown) => {
+		const worklet = createWorklet({
+			pushEvent: (type, result) => {
 				const id = '';
 				post({ id, type, result });
-			};
-		});
-
-		const worklet = createWorklet({
-			events: events as Events,
+			},
 			getWorkletState,
 		});
-		messagePort.onmessage = (e: MessageEvent<PromiseWorkerRequest>) => {
-			const { id, type, args } = e.data;
+		messagePort.onmessage = (event: MessageEvent<PromiseWorkerRequest>) => {
+			const { id, type, args } = event.data;
 			const result = worklet[type](...args);
 			post({ id, type, result });
 		};

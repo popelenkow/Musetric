@@ -11,6 +11,7 @@ export type Icons = {
 	LiveIcon: FC;
 	MenuIcon: FC;
 	OpenFileIcon: FC;
+	ParametersIcon: FC;
 	PerformanceIcon: FC;
 	PlayIcon: FC;
 	RecordIcon: FC;

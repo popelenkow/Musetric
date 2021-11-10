@@ -1,11 +1,10 @@
 import React, { FC, SetStateAction, Dispatch, ReactElement, useEffect, useRef } from 'react';
-import className from 'classnames';
 import { useRootElementContext } from '../AppContexts/RootElement';
-import { createUseClasses, createClasses } from '../AppContexts/Css';
+import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 import { Button, ButtonProps } from './Button';
 
 export const getDropdownClasses = createClasses((css) => {
-	const { sidebar, shadow } = css.theme;
+	const { theme } = css;
 	return {
 		root: {
 			position: 'relative',
@@ -14,17 +13,12 @@ export const getDropdownClasses = createClasses((css) => {
 		menu: {
 			display: 'none',
 			position: 'absolute',
+			'z-index': '2',
 			right: '0',
 			'margin-top': '3px',
-			'background-color': sidebar,
+			'background-color': theme.activeBackground,
 			'min-width': '140px',
-			'box-shadow': `0px 0px 5px 1px ${shadow}`,
-			'z-index': '1',
-			padding: '3px',
-			'& *': {
-				width: '100%',
-				'justify-content': 'left',
-			},
+			'box-shadow': `0px 0px 5px 1px ${theme.shadow}`,
 			'&.open': {
 				display: 'block',
 			},
@@ -34,19 +28,24 @@ export const getDropdownClasses = createClasses((css) => {
 const useClasses = createUseClasses('Dropdown', getDropdownClasses);
 
 export type DropdownProps = {
-	isOpen: boolean;
-	setIsOpen: Dispatch<SetStateAction<boolean>>
-	kind?: 'simple' | 'icon';
+	kind?: 'simple' | 'icon' | 'full';
+	align?: 'left' | 'center' | 'right';
 	disabled?: boolean;
+	active?: boolean;
 	primary?: boolean;
 	rounded?: boolean;
-	menuWidth?: string;
-	renderMenu: () => ReactElement;
+	title?: string;
+	isOpen: boolean;
+	setIsOpen: Dispatch<SetStateAction<boolean>>;
+	menu: {
+		render: () => ReactElement;
+		width?: string;
+	};
 };
 export const Dropdown: FC<DropdownProps> = (props) => {
 	const {
-		children, isOpen, setIsOpen, menuWidth, renderMenu,
-		kind, disabled, primary, rounded,
+		kind, disabled, active, primary, rounded,
+		title, isOpen, setIsOpen, menu, children,
 	} = props;
 	const classes = useClasses();
 
@@ -84,19 +83,21 @@ export const Dropdown: FC<DropdownProps> = (props) => {
 		};
 	}, [rootElement, setIsOpen]);
 
-	const menuName = className({
-		[classes.menu]: true,
-		open: isOpen,
-	});
+	const menuName = className(
+		classes.menu,
+		{ value: { open: isOpen } },
+	);
 	const click = () => {
 		setIsOpen(!isOpen);
 	};
 
 	const buttonProps: ButtonProps = {
 		kind,
+		active,
 		disabled,
 		primary,
 		rounded,
+		title,
 		onClick: () => click(),
 	};
 
@@ -105,8 +106,8 @@ export const Dropdown: FC<DropdownProps> = (props) => {
 			<Button {...buttonProps}>
 				{children}
 			</Button>
-			<div className={menuName} style={{ width: menuWidth }}>
-				{renderMenu()}
+			<div className={menuName} style={{ width: menu.width }}>
+				{menu.render()}
 			</div>
 		</div>
 	);

@@ -1,4 +1,4 @@
-import { SharedRealArray, createSharedRealArray, viewRealArray } from '../Typed/RealArray';
+import { SharedRealArray, createSharedRealArray, viewRealArray } from '../TypedArray/RealArray';
 
 export type SoundBuffer = {
 	readonly sampleRate: number;

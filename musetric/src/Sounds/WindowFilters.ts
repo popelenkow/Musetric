@@ -1,5 +1,5 @@
-import { RealType } from '../Typed/RealType';
-import { RealArray, createRealArray } from '../Typed/RealArray';
+import { RealType } from '../TypedArray/RealType';
+import { RealArray, createRealArray } from '../TypedArray/RealArray';
 
 /* Licensed by MIT. Based on https://github.com/corbanbrook/dsp.js/tree/c6144fcd75b65f72eac4791ab9f7268a814f44a8 */
 

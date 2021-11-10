@@ -1,11 +1,13 @@
-import React, { FC } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import { App, AppProps } from 'musetric/App/App';
+import { App, AppProps, AppProviders } from 'musetric/App/App';
 import { AppViewEntry } from 'musetric/App/AppDropdown';
 import { AppAbout, AppAboutProps } from 'musetric/App/AppAbout';
 import { getStorageLocaleId, setStorageLocaleId, createI18n } from 'musetric/AppBase/Locale';
+import { createConsoleLog } from 'musetric/AppBase/Log';
 import { getStorageThemeId, setStorageThemeId } from 'musetric/AppBase/Theme';
 import { LocaleProvider, LocaleProviderProps, useLocaleContext } from 'musetric/AppContexts/Locale';
+import { LogProvider, LogProviderProps } from 'musetric/AppContexts/Log';
 import { CssProvider, CssProviderProps } from 'musetric/AppContexts/Css';
 import { IconProvider, IconProviderProps } from 'musetric/AppContexts/Icon';
 import { WorkerProvider } from 'musetric/AppContexts/Worker';
@@ -15,7 +17,7 @@ import type { LocaleEntry } from 'musetric/AppBase/Locale';
 import type { ThemeEntry } from 'musetric/AppBase/Theme';
 import type { Icons } from 'musetric/AppBase/Icon';
 import type { Workers } from 'musetric/AppBase/Worker';
-import { AppBarButtons } from './common/AppBarButtons';
+import { useAppBarButtons } from './common/AppBarButtons';
 
 export type CreateMusetricAppOptions = {
 	elementId: string;
@@ -30,58 +32,6 @@ export const createMusetricApp: CreateMusetricApp = async (options) => {
 
 	const initLocaleId = getStorageLocaleId() || 'en';
 	const i18n = await createI18n(initLocaleId, allLocaleEntries);
-	const AppLocaleProvider: FC = (props) => {
-		const { children } = props;
-		const localeProviderProps: LocaleProviderProps = {
-			i18n,
-			allLocaleEntries,
-			onSetLocaleId: setStorageLocaleId,
-		};
-		return (
-			<LocaleProvider {...localeProviderProps}>
-				{children}
-			</LocaleProvider>
-		);
-	};
-
-	const AppCssProvider: FC = (props) => {
-		const { children } = props;
-		const initThemeId = getStorageThemeId() || 'dark';
-
-		const cssProviderProps: CssProviderProps = {
-			initThemeId,
-			allThemeEntries,
-			onSetThemeId: setStorageThemeId,
-		};
-		return (
-			<CssProvider {...cssProviderProps}>
-				{children}
-			</CssProvider>
-		);
-	};
-
-	const AppWorkerProvider: FC = (props) => {
-		const { children } = props;
-
-		return (
-			<WorkerProvider workers={workers}>
-				{children}
-			</WorkerProvider>
-		);
-	};
-
-	const AppIconProvider: FC = (props) => {
-		const { children } = props;
-
-		const iconProviderProps: IconProviderProps = {
-			icons,
-		};
-		return (
-			<IconProvider {...iconProviderProps}>
-				{children}
-			</IconProvider>
-		);
-	};
 
 	type ViewId = 'soundWorkshop' | 'about';
 	const useViewEntries = (): AppViewEntry<ViewId>[] => {
@@ -92,11 +42,13 @@ export const createMusetricApp: CreateMusetricApp = async (options) => {
 		const githubProps: ButtonProps = {
 			kind: 'icon',
 			rounded: true,
+			primary: true,
 			onClick: () => { window.location.href = 'https://github.com/popelenkow/Musetric'; },
 		};
 		const performanceProps: ButtonProps = {
 			kind: 'icon',
 			rounded: true,
+			primary: true,
 			onClick: () => { window.location.href = `${window.location.origin}/perf.html`; },
 		};
 		const aboutInfoProps: AppAboutProps = {
@@ -109,25 +61,76 @@ export const createMusetricApp: CreateMusetricApp = async (options) => {
 		const aboutInfo = <AppAbout {...aboutInfoProps} />;
 
 		return [
-			{ type: 'view', id: 'soundWorkshop', name: t('MusetricApp:soundWorkshop'), element: soundWorkshop },
+			{ type: 'view', id: 'soundWorkshop', name: t('App:soundWorkshop'), element: soundWorkshop },
 			{ type: 'divider' },
-			{ type: 'view', id: 'about', name: t('MusetricApp:about'), element: aboutInfo },
+			{ type: 'view', id: 'about', name: t('App:about'), element: aboutInfo },
 		];
 	};
 
+	const providers: AppProviders = {
+		locale: (children) => {
+			const localeProviderProps: LocaleProviderProps = {
+				i18n,
+				allLocaleEntries,
+				onLocaleId: setStorageLocaleId,
+			};
+			return (
+				<LocaleProvider {...localeProviderProps}>
+					{children}
+				</LocaleProvider>
+			);
+		},
+		log: (children) => {
+			const log = createConsoleLog();
+			const logProviderProps: LogProviderProps = {
+				log,
+			};
+			return (
+				<LogProvider {...logProviderProps}>
+					{children}
+				</LogProvider>
+			);
+		},
+		css: (children) => {
+			const initThemeId = getStorageThemeId() || 'dark';
+
+			const cssProviderProps: CssProviderProps = {
+				initThemeId,
+				allThemeEntries,
+				onSetThemeId: setStorageThemeId,
+			};
+			return (
+				<CssProvider {...cssProviderProps}>
+					{children}
+				</CssProvider>
+			);
+		},
+		icon: (children) => {
+			const iconProviderProps: IconProviderProps = {
+				icons,
+			};
+			return (
+				<IconProvider {...iconProviderProps}>
+					{children}
+				</IconProvider>
+			);
+		},
+		worker: (children) => {
+			return (
+				<WorkerProvider workers={workers}>
+					{children}
+				</WorkerProvider>
+			);
+		},
+	};
 	const appProps: AppProps<ViewId> = {
-		LocaleProvider: AppLocaleProvider,
-		CssProvider: AppCssProvider,
-		IconProvider: AppIconProvider,
-		WorkerProvider: AppWorkerProvider,
-		AppBarButtons,
+		providers,
+		useAppBarButtons,
 		initViewId: 'soundWorkshop',
 		useViewEntries,
 	};
 
-	const app = <App {...appProps} />;
-
 	const root = document.getElementById(elementId);
 	if (!root) throw new Error();
-	ReactDOM.render(app, root);
+	ReactDOM.render(<App {...appProps} />, root);
 };

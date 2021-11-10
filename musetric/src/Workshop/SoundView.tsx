@@ -1,128 +1,127 @@
 import React, { useState, useMemo, ReactElement } from 'react';
 import { SoundBufferManager } from '../Sounds';
 import { useIconContext } from '../AppContexts/Icon';
-import { MasterCanvas, MasterCanvasProps, MasterCanvasItem } from '../RenderingComponents/MasterCanvas';
-import { Radio } from '../Controls/Radio';
-import { Size2D, Direction2D, Layout2D, rotateSize2D } from '../Rendering/Layout';
-import { useWaveform } from '../RenderingComponents/Waveform';
-import { useFrequency } from '../RenderingComponents/Frequency';
-import { useSpectrogram } from '../RenderingComponents/Spectrogram';
+import { useLocaleContext } from '../AppContexts/Locale';
+import { Button, ButtonProps } from '../Controls/Button';
+import { Size2D, Direction2D, Layout2D } from '../Rendering/Layout';
+import { Waveform, WaveformProps } from '../Controls/Waveform';
+import { Frequency, FrequencyProps } from '../Controls/Frequency';
+import { Spectrogram, SpectrogramProps } from '../Controls/Spectrogram';
+import type { SoundParameters } from './SoundParameters';
 
 type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
 export type UseSoundViewProps = {
 	soundBufferManager: SoundBufferManager;
+	soundParameters: SoundParameters;
 	isLive: boolean;
 };
-type UseItemProps = UseSoundViewProps & {
-	soundViewId: SoundViewId;
-};
-const useWaveformItem = (props: UseItemProps) => {
-	const layout = useMemo<Layout2D>(() => {
+const useWaveformItem = (props: UseSoundViewProps) => {
+	const waveformLayout = useMemo<Layout2D>(() => {
 		const size: Size2D = { width: 1024, height: 512 };
 		const direction: Direction2D = { rotation: 'left', reflection: false };
 		return { size, direction };
 	}, []);
-	const { image, onClick } = useWaveform({
+	const waveformProps: WaveformProps = {
 		...props,
-		size: layout.size,
-		pause: props.soundViewId !== 'Waveform',
-	});
-	const result = useMemo(() => {
-		const size = rotateSize2D(layout.size, layout.direction);
-		const item: MasterCanvasItem = { image, layout, onClick };
-		const items = [item];
-		return { size, items };
-	}, [image, layout, onClick]);
-
-	return result;
+		layout: waveformLayout,
+	};
+	return <Waveform {...waveformProps} />;
 };
 
-const useFrequencyItem = (props: UseItemProps) => {
-	const layout = useMemo<Layout2D>(() => {
+const useFrequencyItem = (props: UseSoundViewProps) => {
+	const frequencyLayout = useMemo<Layout2D>(() => {
 		const size: Size2D = { width: 512, height: 1024 };
 		const direction: Direction2D = { rotation: 'twice', reflection: true };
 		return { size, direction };
 	}, []);
-	const { image } = useFrequency({
+	const frequencyProps: FrequencyProps = {
 		...props,
-		size: layout.size,
-		pause: props.soundViewId !== 'Frequency',
-	});
-	const result = useMemo(() => {
-		const size = rotateSize2D(layout.size, layout.direction);
-		const item: MasterCanvasItem = { image, layout };
-		const items = [item];
-		return { size, items };
-	}, [image, layout]);
-
-	return result;
+		layout: frequencyLayout,
+	};
+	return <Frequency {...frequencyProps} />;
 };
 
-const useSpectrogramItem = (props: UseItemProps) => {
-	const layout = useMemo<Layout2D>(() => {
+const useSpectrogramItem = (props: UseSoundViewProps) => {
+	const spectrogramLayout = useMemo<Layout2D>(() => {
 		const size: Size2D = { width: 1024, height: 512 };
 		const direction: Direction2D = { rotation: 'left', reflection: false };
 		return { size, direction };
 	}, []);
-	const { image, onClick } = useSpectrogram({
+	const spectrogramProps: SpectrogramProps = {
 		...props,
-		size: layout.size,
-		pause: props.soundViewId !== 'Spectrogram',
-	});
-	const result = useMemo(() => {
-		const size = rotateSize2D(layout.size, layout.direction);
-		const item: MasterCanvasItem = {
-			image,
-			layout,
-			onClick,
-		};
-		const items = [item];
-		return { size, items };
-	}, [image, layout, onClick]);
-
-	return result;
+		layout: spectrogramLayout,
+	};
+	return <Spectrogram {...spectrogramProps} />;
 };
 
 export type SoundView = {
-	renderSoundView: () => ReactElement;
-	renderWaveformRadio: () => ReactElement;
-	renderFrequencyRadio: () => ReactElement;
-	renderSpectrogramRadio: () => ReactElement;
+	renderSoundView: () => ReactElement | null;
+	renderWaveformButton: () => ReactElement;
+	renderFrequencyButton: () => ReactElement;
+	renderSpectrogramButton: () => ReactElement;
 };
 export const useSoundView = (props: UseSoundViewProps): SoundView => {
 	const { WaveformIcon, FrequencyIcon, SpectrogramIcon } = useIconContext();
+	const { t } = useLocaleContext();
 
 	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
 
-	const waveform = useWaveformItem({ ...props, soundViewId });
-	const frequency = useFrequencyItem({ ...props, soundViewId });
-	const spectrogram = useSpectrogramItem({ ...props, soundViewId });
+	const waveform = useWaveformItem({ ...props });
+	const frequency = useFrequencyItem({ ...props });
+	const spectrogram = useSpectrogramItem({ ...props });
 
-	const masterCanvasProps = useMemo<MasterCanvasProps>(() => {
+	const renderSoundView = () => {
 		if (soundViewId === 'Waveform') return waveform;
 		if (soundViewId === 'Frequency') return frequency;
 		if (soundViewId === 'Spectrogram') return spectrogram;
-		const size: Size2D = { width: 0, height: 0 };
-		const items: MasterCanvasItem[] = [];
-		return { size, items };
-	}, [soundViewId, waveform, frequency, spectrogram]);
-
-	return {
-		renderSoundView: () => <MasterCanvas {...masterCanvasProps} />,
-		renderWaveformRadio: () => (
-			<Radio label='soundView' value='Waveform' onSelected={setSoundViewId} checkedValue={soundViewId} rounded>
+		return null;
+	};
+	const renderWaveformButton = () => {
+		const waveformButtonProps: ButtonProps = {
+			kind: 'icon',
+			rounded: true,
+			title: t('Workshop:waveform'),
+			primary: soundViewId === 'Waveform',
+			onClick: () => setSoundViewId('Waveform'),
+		};
+		return (
+			<Button {...waveformButtonProps}>
 				<WaveformIcon />
-			</Radio>
-		),
-		renderFrequencyRadio: () => (
-			<Radio label='soundView' value='Frequency' onSelected={setSoundViewId} checkedValue={soundViewId} rounded>
+			</Button>
+		);
+	};
+	const renderFrequencyButton = () => {
+		const frequencyButtonProps: ButtonProps = {
+			kind: 'icon',
+			rounded: true,
+			title: t('Workshop:frequency'),
+			primary: soundViewId === 'Frequency',
+			onClick: () => setSoundViewId('Frequency'),
+		};
+		return (
+			<Button {...frequencyButtonProps}>
 				<FrequencyIcon />
-			</Radio>
-		),
-		renderSpectrogramRadio: () => (
-			<Radio label='soundView' value='Spectrogram' onSelected={setSoundViewId} checkedValue={soundViewId} rounded>
+			</Button>
+		);
+	};
+	const renderSpectrogramButton = () => {
+		const spectrogramButtonProps: ButtonProps = {
+			kind: 'icon',
+			rounded: true,
+			title: t('Workshop:spectrogram'),
+			primary: soundViewId === 'Spectrogram',
+			onClick: () => setSoundViewId('Spectrogram'),
+		};
+		return (
+			<Button {...spectrogramButtonProps}>
 				<SpectrogramIcon />
-			</Radio>
-		),
+			</Button>
+		);
+	};
+	return {
+		renderSoundView,
+		renderWaveformButton,
+		renderFrequencyButton,
+		renderSpectrogramButton,
 	};
 };

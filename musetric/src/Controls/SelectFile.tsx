@@ -13,15 +13,18 @@ export const getSelectFileClasses = createClasses((css) => {
 const useClasses = createUseClasses('SelectFile', getSelectFileClasses);
 
 export type SelectFileProps = {
+	kind?: 'simple' | 'icon' | 'full';
+	align?: 'left' | 'center' | 'right';
 	disabled?: boolean;
 	primary?: boolean;
 	rounded?: boolean;
+	title?: string;
 	onChangeFile: (file: File) => void;
 };
 export const SelectFile: FC<SelectFileProps> = (props) => {
 	const {
-		children, onChangeFile,
-		disabled, primary, rounded,
+		kind, disabled, primary, rounded,
+		title, onChangeFile, children,
 	} = props;
 	const classes = useClasses();
 
@@ -41,10 +44,11 @@ export const SelectFile: FC<SelectFileProps> = (props) => {
 	});
 
 	const buttonProps: ButtonProps = {
-		kind: 'icon',
+		kind,
 		disabled,
 		primary,
 		rounded,
+		title,
 		onClick: () => input.click(),
 		classNames: { root: classes.root },
 	};

@@ -1,43 +1,44 @@
-import { useMemo, useCallback, useEffect, useState } from 'react';
+import React, { FC, useMemo, useCallback, useEffect, useState } from 'react';
 import { useCssContext } from '../AppContexts/Css';
 import { useWorkerContext } from '../AppContexts/Worker';
 import { SoundBufferManager } from '../Sounds/SoundBufferManager';
 import { createSpectrum, SpectrumBufferEvent } from '../SoundProcessing';
-import { Size2D, Position2D } from '../Rendering/Layout';
+import { Layout2D, Position2D } from '../Rendering/Layout';
 import { createSpectrogramColors, drawSpectrogram } from '../Rendering/Spectrogram';
-import { usePixelCanvas } from './PixelCanvas';
-import { useAnimation } from '../Hooks/Animation';
-import { RealArray } from '../Typed/RealArray';
-import { viewRealArrays } from '../Typed/RealArrays';
+import { RealArray } from '../TypedArray/RealArray';
+import { viewRealArrays } from '../TypedArray/RealArrays';
+import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
+import type { SoundParameters } from '../Workshop/SoundParameters';
 
 export type SpectrogramProps = {
 	soundBufferManager: SoundBufferManager;
+	soundParameters: SoundParameters;
 	isLive?: boolean;
-	size: Size2D;
-	pause?: boolean;
+	layout: Layout2D;
 };
-export type Spectrogram = {
-	image: HTMLCanvasElement;
-	onClick: (cursorPosition: Position2D) => void;
-};
-export const useSpectrogram = (props: SpectrogramProps): Spectrogram => {
+export const Spectrogram: FC<SpectrogramProps> = (props) => {
 	const {
-		soundBufferManager, isLive, size, pause,
+		soundBufferManager, soundParameters, isLive, layout,
 	} = props;
 	const { theme } = useCssContext().css;
 	const colors = useMemo(() => createSpectrogramColors(theme), [theme]);
 	const { spectrumUrl } = useWorkerContext();
 
-	const windowSize = useMemo(() => size.width * 2, [size]);
+	const windowSize = useMemo(() => 4096, []);
 	const spectrum = useMemo(() => createSpectrum(spectrumUrl), [spectrumUrl]);
 
 	useEffect(() => {
-		if (pause) return undefined;
+		return () => {
+			spectrum.destroy();
+		};
+	}, [spectrum]);
+
+	useEffect(() => {
 		spectrum.start().finally(() => { });
 		return () => { spectrum.stop().finally(() => { }); };
-	}, [spectrum, pause]);
+	}, [spectrum]);
 
-	const count = useMemo(() => size.height, [size]);
+	const count = useMemo(() => layout.size.height, [layout]);
 	const [frequencies, setFrequencies] = useState<RealArray<'uint8'>[]>();
 	useEffect(() => {
 		const run = async () => {
@@ -79,9 +80,7 @@ export const useSpectrogram = (props: SpectrogramProps): Spectrogram => {
 		});
 		spectrum.emitBufferEvent({ type: 'newBuffer', value: buffer.buffers[0].realRaw }).finally(() => {});
 		return unsubscribe;
-	}, [
-		pause, soundBufferManager, isLive, spectrum,
-	]);
+	}, [soundBufferManager, isLive, spectrum]);
 
 	const onClick = useCallback((cursorPosition: Position2D) => {
 		if (isLive) return;
@@ -90,25 +89,29 @@ export const useSpectrogram = (props: SpectrogramProps): Spectrogram => {
 		cursor.set(value, 'user');
 	}, [soundBufferManager, isLive]);
 
-	const pixelCanvas = usePixelCanvas({ size });
-
-	useAnimation(() => {
-		if (pause) return;
+	const draw = useCallback((output: ImageData) => {
 		if (!frequencies) return;
 		const { soundBuffer, cursor } = soundBufferManager;
 		const cursorValue = isLive ? undefined : cursor.get() / (soundBuffer.length - 1);
-		drawSpectrogram(frequencies, pixelCanvas.image.data, size, colors, cursorValue);
-		pixelCanvas.context.putImageData(pixelCanvas.image, 0, 0);
+		drawSpectrogram({
+			input: frequencies,
+			output: output.data,
+			frame: layout.size,
+			colors,
+			soundParameters,
+			cursor: cursorValue,
+		});
 	}, [
-		soundBufferManager, frequencies,
-		pixelCanvas, colors,
-		isLive, size, pause,
+		soundBufferManager, soundParameters,
+		frequencies, colors,
+		isLive, layout,
 	]);
 
-	const result = useMemo(() => {
-		return {
-			image: pixelCanvas.canvas, onClick,
-		};
-	}, [pixelCanvas.canvas, onClick]);
-	return result;
+	const canvasProps: PixelCanvasProps = {
+		layout,
+		onClick,
+		onDraw: draw,
+	};
+
+	return <PixelCanvas {...canvasProps} />;
 };

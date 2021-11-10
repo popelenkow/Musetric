@@ -1,5 +1,6 @@
 import React, { ReactNode, SetStateAction, Dispatch, useState, ReactElement } from 'react';
 import { useIconContext } from '../AppContexts/Icon';
+import { useLocaleContext } from '../AppContexts/Locale';
 import { Button, ButtonProps } from '../Controls/Button';
 import { Divider } from '../Controls/Divider';
 import { Dropdown, DropdownProps } from '../Controls/Dropdown';
@@ -25,24 +26,29 @@ export function AppDropdown<ViewId extends string>(
 ): ReactElement | null {
 	const { viewId, setViewId, allViewEntries } = props;
 	const { MenuIcon } = useIconContext();
+	const { t } = useLocaleContext();
 
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const mapMenu = (view: AppViewEntry<ViewId>, index: number): ReactElement | null => {
 		if (view.type === 'divider') {
-			return <Divider key={`app-${index}`} />;
+			return <Divider key={`app-divider-${index}`} />;
 		}
 		if (view.type === 'view') {
 			const onClick = () => {
 				setViewId(view.id);
 				setIsOpen(false);
 			};
+			const key = `app-${view.id}`;
+			const active = viewId === view.id;
 			const buttonProps: ButtonProps = {
 				onClick,
-				primary: viewId === view.id,
-				rounded: true,
+				kind: 'full',
+				align: 'left',
+				active,
+				primary: active,
 			};
 			return (
-				<Button key={`app-${index}`} {...buttonProps}>
+				<Button key={key} {...buttonProps}>
 					{view.name}
 				</Button>
 			);
@@ -50,16 +56,20 @@ export function AppDropdown<ViewId extends string>(
 		return null;
 	};
 	const renderMenu = () => <>{allViewEntries.map(mapMenu)}</>;
-	const menuSwitchProps: DropdownProps = {
+	const dropdownProps: DropdownProps = {
+		kind: 'icon',
+		active: isOpen,
+		rounded: true,
+		title: t('AppBase:dropdown'),
 		isOpen,
 		setIsOpen,
-		kind: 'icon',
-		rounded: true,
-		menuWidth: '200px',
-		renderMenu,
+		menu: {
+			render: renderMenu,
+			width: '200px',
+		},
 	};
 
 	return (
-		<Dropdown {...menuSwitchProps}><MenuIcon /></Dropdown>
+		<Dropdown {...dropdownProps}><MenuIcon /></Dropdown>
 	);
 }
