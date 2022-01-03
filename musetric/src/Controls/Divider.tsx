@@ -2,20 +2,18 @@ import React, { FC } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 
 export const getDividerClasses = createClasses((css) => {
-	const { divider: splitter } = css.theme;
+	const { theme } = css;
 	return {
 		root: {
 			width: '100%',
 			margin: '4px 0',
-			'border-top': `1px solid ${splitter}`,
+			'border-top': `1px solid ${theme.divider}`,
 		},
 	};
 });
 const useClasses = createUseClasses('Divider', getDividerClasses);
 
-export type DividerProps = {
-};
-export const Divider: FC<DividerProps> = () => {
+export const Divider: FC = () => {
 	const classes = useClasses();
 
 	return (

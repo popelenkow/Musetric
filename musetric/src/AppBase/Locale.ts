@@ -38,12 +38,12 @@ export const setStorageLocaleId = (localeId: string): void => {
 };
 
 export const localizeLocaleId = (lng: string, t: TFunction): string | undefined => {
-	const res = t('Musetric:locale', { lng });
+	const res = t('AppBase:locale', { lng });
 	return res;
 };
 
 export const localizeThemeId = (theme: string, t: TFunction): string | undefined => {
-	if (theme === 'white') return t('Musetric:theme.white');
-	if (theme === 'dark') return t('Musetric:theme.dark');
+	if (theme === 'white') return t('AppBase:theme.white');
+	if (theme === 'dark') return t('AppBase:theme.dark');
 	return undefined;
 };

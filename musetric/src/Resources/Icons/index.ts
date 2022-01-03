@@ -8,6 +8,7 @@ export * from './Light';
 export * from './Live';
 export * from './Menu';
 export * from './OpenFile';
+export * from './Parameters';
 export * from './Performance';
 export * from './Play';
 export * from './Record';

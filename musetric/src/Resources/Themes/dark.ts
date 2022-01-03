@@ -1,10 +1,12 @@
 export default {
-	app: 'rgb(33, 33, 33)',
-	sidebar: 'rgb(61, 61, 61)',
-	content: 'rgb(255, 255, 255)',
-	disabled: 'rgb(150, 150, 150)',
+	background: 'rgb(33, 33, 33)',
+	activeBackground: 'rgb(61, 61, 61)',
+	content: 'rgba(255, 255, 255, 0.6)',
+	activeContent: 'rgb(255, 255, 255)',
 	hover: 'rgba(255, 255, 255, 0.2)',
-	primary: 'rgb(255, 0, 0)',
+	primaryHover: 'rgba(100, 180, 255, 0.2)',
+	primary: 'rgb(100, 200, 255, 0.6)',
+	activePrimary: 'rgb(100, 200, 255)',
 	divider: 'rgb(128, 128, 128)',
 	shadow: 'rgba(255, 255, 255, 0.3)',
 };

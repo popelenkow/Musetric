@@ -1,24 +1,18 @@
-import { useMemo, useCallback } from 'react';
+import React, { FC, useMemo, useCallback } from 'react';
 import { useCssContext } from '../AppContexts/Css';
 import { SoundBufferManager } from '../Sounds/SoundBufferManager';
-import { Size2D, Position2D } from '../Rendering/Layout';
+import { Layout2D, Size2D, Position2D } from '../Rendering/Layout';
 import { Waves, drawWaveform, createWaveformColors, evalWaves } from '../Rendering/Waveform';
-import { usePixelCanvas } from './PixelCanvas';
-import { useAnimation } from '../Hooks/Animation';
+import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 
 export type WaveformProps = {
 	soundBufferManager: SoundBufferManager;
 	isLive?: boolean;
-	size: Size2D;
-	pause?: boolean;
+	layout: Layout2D;
 };
-export type Waveform = {
-	image: HTMLCanvasElement;
-	onClick: (cursorPosition: Position2D) => void;
-};
-export const useWaveform = (props: WaveformProps): Waveform => {
+export const Waveform: FC<WaveformProps> = (props) => {
 	const {
-		soundBufferManager, isLive, size, pause,
+		soundBufferManager, isLive, layout,
 	} = props;
 	const { css } = useCssContext();
 	const colors = useMemo(() => createWaveformColors(css.theme), [css.theme]);
@@ -35,14 +29,14 @@ export const useWaveform = (props: WaveformProps): Waveform => {
 			return waves;
 		};
 	}, []);
-	const draw = useCallback((output: Uint8ClampedArray, frame: Size2D) => {
+	const draw = useCallback((output: ImageData) => {
 		const { soundBuffer, soundCircularBuffer, cursor } = soundBufferManager;
 		const buffer = isLive ? soundCircularBuffer.buffers[0] : soundBuffer.buffers[0];
 		const cursorValue = isLive ? undefined : cursor.get() / (soundBuffer.length - 1);
-		const waves = getWaves(frame);
-		evalWaves(buffer.real, waves, frame);
-		drawWaveform(waves, output, frame, colors, cursorValue);
-	}, [soundBufferManager, isLive, colors, getWaves]);
+		const waves = getWaves(layout.size);
+		evalWaves(buffer.real, waves, layout.size);
+		drawWaveform(waves, output.data, layout.size, colors, cursorValue);
+	}, [soundBufferManager, isLive, colors, getWaves, layout]);
 
 	const onClick = useCallback((cursorPosition: Position2D) => {
 		if (isLive) return;
@@ -51,15 +45,11 @@ export const useWaveform = (props: WaveformProps): Waveform => {
 		cursor.set(value, 'user');
 	}, [soundBufferManager, isLive]);
 
-	const pixelCanvas = usePixelCanvas({ size });
-
-	useAnimation(() => {
-		if (pause) return;
-		draw(pixelCanvas.image.data, pixelCanvas.size);
-		pixelCanvas.context.putImageData(pixelCanvas.image, 0, 0);
-	}, [draw, pixelCanvas, pause]);
-
-	return {
-		image: pixelCanvas.canvas, onClick,
+	const canvasProps: PixelCanvasProps = {
+		layout,
+		onClick,
+		onDraw: draw,
 	};
+
+	return <PixelCanvas {...canvasProps} />;
 };

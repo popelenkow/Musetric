@@ -1,12 +1,11 @@
 import React, { FC } from 'react';
-import className from 'classnames';
-import { createUseClasses, createClasses } from '../AppContexts/Css';
+import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 import { getButtonClasses } from './Button';
 import { Field, FieldProps } from './Field';
 
 export const getCheckboxClasses = createClasses((css) => {
+	const { theme } = css;
 	const buttonClasses = getButtonClasses(css);
-	const { divider: splitter } = css.theme;
 	return {
 		root: {
 			display: 'block',
@@ -15,7 +14,7 @@ export const getCheckboxClasses = createClasses((css) => {
 			position: 'absolute',
 			opacity: '0',
 			'&:focus-visible + *': {
-				border: `1px solid ${splitter}`,
+				border: `1px solid ${theme.divider}`,
 			},
 		},
 		button: {
@@ -26,27 +25,37 @@ export const getCheckboxClasses = createClasses((css) => {
 const useClasses = createUseClasses('Checkbox', getCheckboxClasses);
 
 export type CheckboxProps = {
+	kind?: 'simple' | 'icon' | 'full';
+	align?: 'left' | 'center' | 'right';
+	disabled?: boolean;
+	primary?: boolean;
+	rounded?: boolean;
+	title?: string;
 	onToggle: () => void;
 	checked?: boolean;
-	disabled?: boolean;
-	rounded?: boolean;
 	classNames?: {
 		root?: string;
 	};
 };
 export const Checkbox: FC<CheckboxProps> = (props) => {
 	const {
-		children, classNames, onToggle,
-		disabled, checked, rounded,
+		kind,
+		disabled,
+		rounded,
+		title,
+		onToggle,
+		checked,
+		classNames,
+		children,
 	} = props;
 	const classes = useClasses();
 
-	const rootName = className({
-		[classNames?.root || classes.root]: true,
-	});
+	const rootName = className(
+		classNames?.root || classes.root,
+	);
 
 	const fieldProps: FieldProps = {
-		kind: 'icon',
+		kind,
 		disabled,
 		rounded,
 		primary: checked,
@@ -54,7 +63,7 @@ export const Checkbox: FC<CheckboxProps> = (props) => {
 	};
 
 	return (
-		<label className={rootName}>
+		<label className={rootName} title={title}>
 			<input
 				className={classes.input}
 				type='checkbox'

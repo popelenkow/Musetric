@@ -1,5 +1,5 @@
 import { Theme } from '../AppBase/Theme';
-import { parseThemeUint32Color } from './Color';
+import { parseTheme } from './Color';
 import { Size2D } from './Layout';
 
 export type Waves = {
@@ -35,13 +35,13 @@ export const evalWaves = (
 };
 
 export type WaveformColors = {
-	content: number;
+	activeContent: number;
 	background: number;
-	active: number;
+	activePrimary: number;
 };
 export const createWaveformColors = (theme: Theme): WaveformColors => {
-	const { content, background, active } = parseThemeUint32Color(theme);
-	return { content, background, active };
+	const { activeContent, background, activePrimary } = parseTheme('uint32', theme);
+	return { activeContent, background, activePrimary };
 };
 
 export const drawWaveform = (
@@ -51,7 +51,7 @@ export const drawWaveform = (
 	colors: WaveformColors,
 	cursor?: number,
 ): void => {
-	const { content, background, active } = colors;
+	const { activeContent, background, activePrimary } = colors;
 	const { minArray, maxArray } = input;
 	const out = new Uint32Array(output.buffer);
 
@@ -60,13 +60,13 @@ export const drawWaveform = (
 		const max = Math.ceil(maxArray[y]);
 		const index = y * frame.width;
 		out.fill(background, index, index + min);
-		out.fill(content, index + min, index + max);
+		out.fill(activeContent, index + min, index + max);
 		out.fill(background, index + max, index + frame.width);
 	}
 
 	if (typeof cursor === 'number') {
 		const y = Math.round(cursor * (frame.height - 1));
 		const index = y * frame.width;
-		out.fill(active, index, index + frame.width);
+		out.fill(activePrimary, index, index + frame.width);
 	}
 };

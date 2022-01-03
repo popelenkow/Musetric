@@ -1,4 +1,4 @@
-import { OverloadedConstructorParameters } from '../Typescript/OverloadedConstructorParameters';
+import type { OverloadedConstructorParameters } from '../Typescript/OverloadedConstructorParameters';
 
 export type RealTypeMap = {
 	float32: Float32Array;

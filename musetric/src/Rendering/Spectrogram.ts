@@ -1,27 +1,32 @@
-import { RealArray } from '../Typed/RealArray';
+import { RealArray } from '../TypedArray/RealArray';
 import { Theme } from '../AppBase/Theme';
-import { parseThemeRgbColor, parseThemeUint32Color, gradientUint32ByRgb } from './Color';
+import type { SoundParameters } from '../Workshop/SoundParameters';
+import { parseTheme, gradientUint32ByRgb } from './Color';
 import { Size2D } from './Layout';
 
 export type SpectrogramColors = {
 	gradient: Uint32Array;
-	active: number;
+	activePrimary: number;
 };
 export const createSpectrogramColors = (theme: Theme): SpectrogramColors => {
-	const { active } = parseThemeUint32Color(theme);
-	const { background, content } = parseThemeRgbColor(theme);
-	const gradient = gradientUint32ByRgb(background, content, 256);
-	return { gradient, active };
+	const colors = parseTheme('uint32', theme);
+	const { background, activeContent } = parseTheme('rgb', theme);
+	const gradient = gradientUint32ByRgb(background, activeContent, 256);
+	return { gradient, activePrimary: colors.activePrimary };
 };
 
-export const drawSpectrogram = (
-	input: RealArray<'uint8'>[],
-	output: Uint8ClampedArray,
-	frame: Size2D,
-	colors: SpectrogramColors,
-	cursor?: number,
-): void => {
-	const { gradient, active } = colors;
+export type DrawSpectrogramOptions = {
+	input: RealArray<'uint8'>[];
+	output: Uint8ClampedArray;
+	frame: Size2D;
+	colors: SpectrogramColors;
+	soundParameters: SoundParameters;
+	cursor?: number;
+};
+export const drawSpectrogram = (options: DrawSpectrogramOptions): void => {
+	const { input, output, frame, colors, soundParameters, cursor } = options;
+	const { frequencyRange, sampleRate } = soundParameters;
+	const { gradient, activePrimary } = colors;
 	const out = new Uint32Array(output.buffer);
 
 	const stepY = input.length / frame.height;
@@ -29,8 +34,10 @@ export const drawSpectrogram = (
 	let offsetY = 0;
 	for (let y = 0; y < frame.height; y++) {
 		const spectrum = input[Math.floor(offsetY)].real;
-		const stepX = spectrum.length / frame.width;
-		let offsetX = 0;
+		const fromX = (frequencyRange.from / sampleRate) * 2 * spectrum.length;
+		const toX = (frequencyRange.to / sampleRate) * 2 * spectrum.length;
+		const stepX = (toX - fromX) / frame.width;
+		let offsetX = fromX;
 		for (let x = 0; x < frame.width; x++) {
 			const colorIndex = spectrum[Math.floor(offsetX)];
 			out[index] = gradient[colorIndex];
@@ -43,6 +50,6 @@ export const drawSpectrogram = (
 	if (typeof cursor === 'number') {
 		const y = Math.round(cursor * (frame.height - 1));
 		index = y * frame.width;
-		out.fill(active, index, index + frame.width);
+		out.fill(activePrimary, index, index + frame.width);
 	}
 };

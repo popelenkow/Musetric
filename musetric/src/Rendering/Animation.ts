@@ -1,7 +1,7 @@
 export type AnimationCallback = (delta: number) => void;
-export type AnimationSubscription = { stop: () => void };
+export type StopAnimation = () => void;
 
-export const startAnimation = (callback: AnimationCallback): AnimationSubscription => {
+export const startAnimation = (callback: AnimationCallback): StopAnimation => {
 	let next = true;
 	let time = 0;
 	const loop = (curTime: number) => {
@@ -11,7 +11,9 @@ export const startAnimation = (callback: AnimationCallback): AnimationSubscripti
 		requestAnimationFrame(loop);
 	};
 	requestAnimationFrame(loop);
-	return { stop: () => { next = false; } };
+	return () => {
+		next = false;
+	};
 };
 
 export type AnimationState = {
@@ -26,22 +28,22 @@ export type Animation<T extends unknown[]> = {
 };
 export const createAnimation = <T extends unknown[]>(onStart: OnStart<T>): Animation<T> => {
 	type State = Omit<AnimationState, 'onIteration'> & {
-		subscription: AnimationSubscription;
+		stopAnimation: StopAnimation;
 	};
 	let state: State | undefined;
 	const stop = () => {
 		if (!state) return;
-		const { subscription, onStop, onStopped } = state;
+		const { stopAnimation, onStop, onStopped } = state;
 		state = undefined;
 		if (onStop) onStop();
-		subscription.stop();
+		stopAnimation();
 		if (onStopped) onStopped();
 	};
 	const start = (...args: T) => {
 		stop();
 		const { onIteration, onStop, onStopped } = onStart(...args);
-		const subscription = startAnimation(onIteration);
-		state = { subscription, onStop, onStopped };
+		const stopAnimation = startAnimation(onIteration);
+		state = { stopAnimation, onStop, onStopped };
 	};
 	return { start, stop };
 };

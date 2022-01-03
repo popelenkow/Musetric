@@ -1,12 +1,11 @@
-import React, { useContext, useState, createContext, FC } from 'react';
+import React, { useContext, useState, useMemo, FC } from 'react';
+import { createContext } from './Context';
 
 export type RootElementStore = {
 	rootElement: HTMLElement;
 	setRootElement: (element: HTMLElement) => void;
 };
-// eslint-disable-next-line
-const defaultRootElementStore: RootElementStore = undefined as any;
-export const RootElementContext = createContext<RootElementStore>(defaultRootElementStore);
+export const RootElementContext = createContext<RootElementStore>();
 
 export const RootElementConsumer = RootElementContext.Consumer;
 
@@ -19,9 +18,9 @@ export const RootElementProvider: FC<RootElementProviderProps> = (props) => {
 
 	const [rootElement, setRootElement] = useState<HTMLElement>(initRootElement || document.body);
 
-	const store: RootElementStore = {
+	const store: RootElementStore = useMemo(() => ({
 		rootElement, setRootElement,
-	};
+	}), [rootElement]);
 
 	return (
 		<RootElementContext.Provider value={store}>

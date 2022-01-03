@@ -1,4 +1,4 @@
-import React, { useState, FC, ReactElement } from 'react';
+import React, { useState, ReactElement, ReactNode } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useIconContext } from '../AppContexts/Icon';
 import { RootElementProvider, useRootElementContext } from '../AppContexts/RootElement';
@@ -14,7 +14,7 @@ export const getAppClasses = createClasses((css) => {
 			width,
 			height,
 			display: 'grid',
-			'grid-template-rows': '48px 1fr',
+			'grid-template-rows': '50px 1fr',
 			'grid-template-columns': '1fr',
 		},
 	};
@@ -24,10 +24,10 @@ const useClasses = createUseClasses('App', getAppClasses);
 type RootProps<ViewId extends string> = {
 	initViewId: ViewId;
 	useViewEntries: () => AppViewEntry<ViewId>[];
-	AppBarButtons: FC;
+	useAppBarButtons: () => ReactElement;
 };
 function Root<ViewId extends string>(props: RootProps<ViewId>): ReactElement | null {
-	const { initViewId, useViewEntries, AppBarButtons } = props;
+	const { initViewId, useViewEntries, useAppBarButtons } = props;
 	const classes = useClasses();
 	const { MenuIcon } = useIconContext();
 
@@ -46,10 +46,11 @@ function Root<ViewId extends string>(props: RootProps<ViewId>): ReactElement | n
 		.filter((x): x is AppViewElement<ViewId> => x.type === 'view')
 		.find((view) => view.id === viewId) || {};
 
+	const buttons = useAppBarButtons();
 	return (
 		<div ref={(elem) => elem && setRootElement(elem)} className={classes.root}>
 			<AppBar>
-				<AppBarButtons />
+				{buttons}
 				<AppDropdown {...appDropdownProps}><MenuIcon /></AppDropdown>
 			</AppBar>
 			{element}
@@ -57,26 +58,30 @@ function Root<ViewId extends string>(props: RootProps<ViewId>): ReactElement | n
 	);
 }
 
+export type AppProvider = (children?: ReactNode) => ReactElement | null;
+export type AppProviders = {
+	locale: AppProvider;
+	log: AppProvider;
+	css: AppProvider;
+	icon: AppProvider;
+	worker: AppProvider;
+};
 export type AppProps<ViewId extends string> = {
-	LocaleProvider: FC;
-	CssProvider: FC;
-	IconProvider: FC;
-	WorkerProvider: FC;
+	providers: AppProviders;
 } & RootProps<ViewId>;
 export function App<ViewId extends string>(props: AppProps<ViewId>): ReactElement | null {
-	const { LocaleProvider, CssProvider, IconProvider, WorkerProvider } = props;
-
-	return (
-		<LocaleProvider>
-			<CssProvider>
-				<IconProvider>
-					<WorkerProvider>
-						<RootElementProvider>
-							<Root {...props} />
-						</RootElementProvider>
-					</WorkerProvider>
-				</IconProvider>
-			</CssProvider>
-		</LocaleProvider>
+	const { providers } = props;
+	const root = (
+		<RootElementProvider>
+			<Root {...props} />
+		</RootElementProvider>
 	);
+	const arr = [
+		providers.locale,
+		providers.log,
+		providers.css,
+		providers.icon,
+		providers.worker,
+	];
+	return arr.reduce<ReactElement | null>((acc, provider) => provider(acc), root);
 }

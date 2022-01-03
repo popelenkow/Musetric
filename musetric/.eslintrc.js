@@ -1,32 +1,15 @@
-const path = require('path');
+const { getIgnorePatterns, getTsPaths } = require('eslint-config-musetric/utils');
 
 module.exports = {
 	extends: [
 		'musetric',
 	],
 	rules: {
+		'react/function-component-definition': 0,
 		'react-hooks/exhaustive-deps': ['error', {
 			additionalHooks: '(useAnimation|useCache)',
 		}],
 	},
-	overrides: [
-		{
-			files: ['src/**/*.js', 'src/**/*.ts', 'src/**/*.tsx'],
-			parserOptions: {
-				tsconfigRootDir: __dirname,
-			},
-		},
-		{
-			files: ['test/**/*.js', 'test/**/*.ts', 'test/**/*.tsx'],
-			parserOptions: {
-				tsconfigRootDir: path.join(__dirname, 'test'),
-			},
-		},
-		{
-			files: ['performance/**/*.js', 'performance/**/*.ts', 'performance/**/*.tsx'],
-			parserOptions: {
-				tsconfigRootDir: path.join(__dirname, 'performance'),
-			},
-		},
-	],
+	ignorePatterns: getIgnorePatterns(['dist'], ['build.js']),
+	overrides: getTsPaths(__dirname, ['.', 'test', 'performance']),
 };

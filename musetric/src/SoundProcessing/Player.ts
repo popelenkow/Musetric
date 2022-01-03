@@ -1,24 +1,18 @@
-import type { UndefinedObject } from '../Typescript/UndefinedObject';
 import type { PromiseObjectApi } from '../Typescript/PromiseObjectApi';
-import { createPromiseAudioWorkletApi } from '../Workers/PromiseAudioWorkletApi';
-import type { PlayerWorklet, PlayerWorkletEvents } from './PlayerWorklet';
+import type { EventHandlers } from '../Typescript/Events';
+import { createPromiseWorkerApi } from '../Workers/PromiseWorkerApi';
+import type { PlayerWorklet, PlayerEvents } from './PlayerWorklet';
 
 export type Player =
 	& PromiseObjectApi<PlayerWorklet>
-	& PlayerWorkletEvents
 	& {
 		mediaStream: MediaStream;
 	};
-const playerTemplate: UndefinedObject<PlayerWorklet> = {
-	setup: undefined,
-	start: undefined,
-	stop: undefined,
-	setCursor: undefined,
-};
 
 export const createPlayer = async (
 	workletUrl: URL | string,
 	channelCount: number,
+	handlers: EventHandlers<PlayerEvents>,
 ): Promise<Player> => {
 	const audioContext = new AudioContext();
 	const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount } });
@@ -32,8 +26,12 @@ export const createPlayer = async (
 	await audioContext.audioWorklet.addModule(workletUrl);
 	const worklet = new AudioWorkletNode(audioContext, 'PlayerWorklet', options);
 	worklet.connect(audioContext.destination);
-	const api = createPromiseAudioWorkletApi<PlayerWorklet>(worklet, playerTemplate);
-	const result = api as Player;
-	result.mediaStream = mediaStream;
-	return result;
+	const request = createPromiseWorkerApi<PlayerWorklet, PlayerEvents>(worklet.port, handlers);
+	return {
+		setup: (...args) => request('setup', args),
+		start: (...args) => request('start', args),
+		stop: (...args) => request('stop', args),
+		setCursor: (...args) => request('setCursor', args),
+		mediaStream,
+	};
 };

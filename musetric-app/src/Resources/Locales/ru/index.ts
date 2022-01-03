@@ -1,5 +1,5 @@
-import MusetricApp from './MusetricApp.json';
+import App from './App.json';
 
 export default {
-	MusetricApp,
+	App,
 };

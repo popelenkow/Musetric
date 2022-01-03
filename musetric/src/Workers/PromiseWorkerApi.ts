@@ -1,35 +1,45 @@
 import { v4 as uuid } from 'uuid';
-import type { UndefinedObject } from '../Typescript/UndefinedObject';
-import type { PromiseObjectApi } from '../Typescript/PromiseObjectApi';
-import type { PromiseWorkerRequest, PromiseWorkerResponse, PromiseWorker } from './PromiseWorker';
+import type { EventHandlers } from '../Typescript/Events';
+import type { PromiseWorker, PromiseWorkerResponse, PromiseWorkerRequest } from './PromiseWorker';
 
-export const createPromiseWorkerApi = <TWorker extends PromiseWorker>(
-	host: Worker,
-	templateApi: UndefinedObject<TWorker>,
-): PromiseObjectApi<TWorker> => {
+export const createPromiseWorkerApi = <TypedWorker extends PromiseWorker, Events>(
+	port: Worker | MessagePort,
+	handlers: EventHandlers<Events>,
+) => {
 	const postMessage = (message: PromiseWorkerRequest): void => {
-		host.postMessage(message);
+		port.postMessage(message);
+	};
+	const handleEvent = (type: string, event: unknown) => {
+		type Event = keyof Events;
+		const handle = handlers[type as Event];
+		if (handle) {
+			handle(event as Events[Event]);
+			return true;
+		}
+		return false;
 	};
 	const callbacks: Record<string, (result: unknown) => void> = {};
-
-	host.onmessage = (e: MessageEvent<PromiseWorkerResponse>) => {
-		const { id, result } = e.data;
+	port.onmessage = (event: MessageEvent<PromiseWorkerResponse>) => {
+		const { id, type, result } = event.data;
+		if (handleEvent(type, result)) return;
 		const callback = callbacks[id];
 		delete callbacks[id];
 		callback(result);
 	};
 
-	const api: PromiseObjectApi<PromiseWorker> = {};
-	Object.keys(templateApi).forEach((type) => {
-		api[type] = (...args) => {
-			return new Promise((resolve) => {
-				const id = uuid();
-				const callback = (result: unknown) => { resolve(result); };
-				callbacks[id] = callback;
-				postMessage({ id, type, args });
-			});
-		};
-	});
-
-	return api as PromiseObjectApi<TWorker>;
+	const request = <Type extends keyof TypedWorker & string>(
+		type: Type,
+		args: Parameters<TypedWorker[Type]>,
+	) => {
+		type ResultType = ReturnType<TypedWorker[Type]>;
+		return new Promise<ResultType>((resolve) => {
+			const id = uuid();
+			const callback = (result: unknown) => {
+				resolve(result as ResultType);
+			};
+			callbacks[id] = callback;
+			postMessage({ id, type, args });
+		});
+	};
+	return request;
 };

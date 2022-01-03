@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useContext, useMemo, createContext, FC } from 'react';
+import React, { useState, useEffect, useContext, useMemo, FC } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Classes, GenerateId } from 'jss';
 import { JssProvider, createTheming, createUseStyles, Styles } from 'react-jss';
+import classNames from 'classnames';
 import { Platform, getPlatformId } from '../AppBase/Platform';
 import { Theme, ThemeEntry } from '../AppBase/Theme';
+import { createContext } from './Context';
 
 export type Css = {
 	theme: Theme;
 	platform: Platform;
 };
-// eslint-disable-next-line
-const defaultCss: Css = undefined as any;
-export const ThemingContext = createContext<Css>(defaultCss);
+export const ThemingContext = createContext<Css>();
 export const theming = createTheming(ThemingContext);
 
 export function createClasses<T>(create: (css: Css) => T): ((css: Css) => T) {
@@ -30,9 +30,7 @@ export type CssStore = {
 	setThemeId: (id: string) => void;
 	allThemeIds: string[];
 };
-// eslint-disable-next-line
-const defaultCssStore: CssStore = undefined as any;
-export const CssContext = createContext<CssStore>(defaultCssStore);
+export const CssContext = createContext<CssStore>();
 
 const usePlatform = (): Platform => {
 	const platformId = useMemo(() => getPlatformId(), []);
@@ -73,7 +71,7 @@ export const CssProvider: FC<CssProviderProps> = (props) => {
 	const { theme = allThemeEntries[0].theme } = themeEntry || { };
 	const platform = usePlatform();
 
-	const value: CssStore = {
+	const value: CssStore = useMemo(() => ({
 		css: { theme, platform },
 		themeId,
 		setThemeId: (id: string) => {
@@ -81,7 +79,7 @@ export const CssProvider: FC<CssProviderProps> = (props) => {
 			if (onSetThemeId) onSetThemeId(id);
 		},
 		allThemeIds,
-	};
+	}), [allThemeIds, onSetThemeId, platform, theme, themeId]);
 
 	const generateId: GenerateId = (rule, sheet) => {
 		const prefix = sheet?.options?.classNamePrefix || '';
@@ -100,3 +98,24 @@ export const CssProvider: FC<CssProviderProps> = (props) => {
 };
 
 export const useCssContext = (): CssStore => useContext(CssContext);
+
+export type ClassNameArg = string | {
+	value?: string | Record<string, boolean | undefined>;
+	default?: string;
+};
+export const className = (...args: ClassNameArg[]) => {
+	const resultArr = args.map<Record<string, boolean | undefined>>((arg) => {
+		if (typeof arg === 'string') return { [arg]: true };
+		if (!arg.value) return {};
+		if (arg.value === arg.default) return {};
+		if (typeof arg.value === 'object') return arg.value;
+		return {
+			[arg.value]: true,
+		};
+	});
+	let resultObj = {};
+	resultArr.forEach((obj) => {
+		resultObj = { ...resultObj, ...obj };
+	});
+	return classNames(resultObj);
+};

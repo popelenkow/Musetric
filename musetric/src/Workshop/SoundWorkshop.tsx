@@ -1,82 +1,90 @@
 import React, { useEffect, useMemo, FC } from 'react';
+import className from 'classnames';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
-import { SoundProgress } from './SoundProgress';
+import { useRootElementContext } from '../AppContexts/RootElement';
 import { createSoundBufferManager } from '../Sounds/SoundBufferManager';
+import { SoundProgress } from './SoundProgress';
 import { useSoundFile } from './SoundFile';
 import { useSoundLive } from './SoundLive';
 import { useSoundPlayer } from './SoundPlayer';
 import { useSoundProgressBar } from './SoundProgressBar';
 import { useSoundRecorder } from './SoundRecorder';
 import { useSoundView } from './SoundView';
+import { useSoundParameters } from './SoundParameters';
 
 export const getSoundWorkshopClasses = createClasses((css) => {
-	const { app, divider: splitter, sidebar } = css.theme;
+	const { theme } = css;
 	return {
 		root: {
-			width: '100%',
-			height: '100%',
-			overflow: 'hidden',
 			display: 'grid',
-			'grid-template-rows': '1fr  56px 48px',
-			'grid-template-columns': '1fr 48px',
+			overflow: 'hidden',
+			'&.default': {
+				'grid-template-rows': '1fr 56px 50px',
+				'grid-template-columns': '1fr 50px',
+				'grid-template-areas': `
+					"view sidebar"
+					"progressBar sidebar"
+					"toolbar sidebar"
+				`,
+			},
+			'&.withParameters': {
+				'grid-template-rows': '1fr 1fr 56px 50px',
+				'grid-template-columns': '1fr 50px',
+				'grid-template-areas': `
+					"parameters sidebar"
+					"view sidebar"
+					"progressBar sidebar"
+					"toolbar sidebar"
+				`,
+			},
 		},
 		view: {
-			'grid-column-start': '1',
-			'grid-column-end': '2',
-			'grid-row-start': '1',
-			'grid-row-end': '2',
-			width: '100%',
-			height: '100%',
+			'grid-area': 'view',
 			overflow: 'hidden',
-			background: app,
+			'background-color': theme.background,
 			display: 'flex',
 			position: 'relative',
 		},
 		progressBar: {
-			'grid-column-start': '1',
-			'grid-column-end': '2',
-			'grid-row-start': '2',
-			'grid-row-end': '3',
+			'grid-area': 'progressBar',
 			'box-sizing': 'border-box',
-			width: '100%',
-			height: '100%',
 			overflow: 'hidden',
-			background: app,
-			'border-top': `1px solid ${splitter}`,
+			'background-color': theme.background,
+			'border-top': `1px solid ${theme.divider}`,
 		},
 		toolbar: {
-			'grid-column-start': '1',
-			'grid-column-end': '2',
-			'grid-row-start': '3',
-			'grid-row-end': '4',
+			'grid-area': 'toolbar',
 			'box-sizing': 'border-box',
-			width: '100%',
-			height: '100%',
-			padding: '3px',
+			padding: '0px 4px',
 			display: 'flex',
 			'flex-direction': 'row',
 			'justify-content': 'center',
-			'column-gap': '4px',
 			'align-items': 'center',
-			'background-color': sidebar,
-			'border-top': `1px solid ${splitter}`,
+			'column-gap': '4px',
+			'background-color': theme.activeBackground,
+			'border-top': `1px solid ${theme.divider}`,
 		},
 		sidebar: {
-			'grid-column-start': '2',
-			'grid-column-end': '3',
-			'grid-row-start': '1',
-			'grid-row-end': '4',
+			'grid-area': 'sidebar',
 			'box-sizing': 'border-box',
-			width: '100%',
-			height: '100%',
-			padding: '3px',
+			padding: '4px 0px',
 			display: 'flex',
 			'flex-direction': 'column',
 			'justify-content': 'center',
-			'row-gap': '4px',
 			'align-items': 'center',
-			'background-color': sidebar,
-			'border-left': `1px solid ${splitter}`,
+			'row-gap': '4px',
+			'background-color': theme.activeBackground,
+			'border-left': `1px solid ${theme.divider}`,
+		},
+		sidebarTop: {
+			display: 'flex',
+			'flex-direction': 'column',
+		},
+		sidebarMiddle: {
+			height: '100%',
+			display: 'flex',
+			'flex-direction': 'column',
+			'justify-content': 'center',
 		},
 	};
 });
@@ -85,7 +93,7 @@ const useClasses = createUseClasses('SoundWorkshop', getSoundWorkshopClasses);
 export const SoundWorkshop: FC = () => {
 	const classes = useClasses();
 
-	const { isLive, renderLiveCheckbox } = useSoundLive();
+	const { isLive, renderLiveButton } = useSoundLive();
 
 	const [sampleRate, channelCount] = useMemo(() => [48000, 2], []);
 	const soundBufferManager = useMemo(
@@ -97,25 +105,46 @@ export const SoundWorkshop: FC = () => {
 
 	const { isPlaying, renderPlayerButton } = useSoundPlayer(soundBufferManager);
 	const {
-		isRecording, initRecorder, renderRecorderCheckbox,
+		isRecording, initRecorder, renderRecorderButton,
 	} = useSoundRecorder(soundBufferManager);
 
 	useEffect(() => {
 		if (isLive) initRecorder().finally(() => {});
 	}, [isLive, initRecorder]);
 
+	const { rootElement } = useRootElementContext();
+	const soundParameters = useSoundParameters({
+		element: rootElement,
+		soundBufferManager,
+	});
+	const {
+		isOpenParameters,
+		renderParametersButton,
+		renderParametersPanel,
+	} = soundParameters;
 	const {
 		renderSoundView,
-		renderWaveformRadio, renderFrequencyRadio, renderSpectrogramRadio,
+		renderWaveformButton, renderFrequencyButton, renderSpectrogramButton,
 	} = useSoundView({
 		soundBufferManager,
+		soundParameters,
 		isLive,
 	});
 
 	const { renderProgressBarView } = useSoundProgressBar(soundBufferManager);
 
+	const getRootStateName = () => {
+		if (isOpenParameters) return 'withParameters';
+		return 'default';
+	};
+	const rootName = className({
+		[classes.root]: true,
+		[getRootStateName()]: true,
+	});
+
 	return (
-		<div className={classes.root}>
+		<div className={rootName}>
+			{isOpenParameters && renderParametersPanel()}
 			<div className={classes.view}>
 				{renderSoundView()}
 			</div>
@@ -125,15 +154,20 @@ export const SoundWorkshop: FC = () => {
 			<div className={classes.toolbar}>
 				{renderPlayerButton({ disabled: isRecording })}
 				<SoundProgress soundBufferManager={soundBufferManager} />
-				{renderRecorderCheckbox({ disabled: isPlaying })}
+				{renderRecorderButton({ disabled: isPlaying })}
 			</div>
 			<div className={classes.sidebar}>
-				{renderLiveCheckbox()}
-				{renderWaveformRadio()}
-				{renderFrequencyRadio()}
-				{renderSpectrogramRadio()}
-				{renderOpenFileButton()}
-				{renderSaveFileButton()}
+				<div className={classes.sidebarTop}>
+					{renderParametersButton()}
+				</div>
+				<div className={classes.sidebarMiddle}>
+					{renderLiveButton()}
+					{renderWaveformButton()}
+					{renderFrequencyButton()}
+					{renderSpectrogramButton()}
+					{renderOpenFileButton()}
+					{renderSaveFileButton()}
+				</div>
 			</div>
 		</div>
 	);

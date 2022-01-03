@@ -1,22 +1,18 @@
-import type { UndefinedObject } from '../Typescript/UndefinedObject';
 import type { PromiseObjectApi } from '../Typescript/PromiseObjectApi';
-import { createPromiseAudioWorkletApi } from '../Workers/PromiseAudioWorkletApi';
-import type { RecorderWorklet, RecorderWorkletEvents } from './RecorderWorklet';
+import type { EventHandlers } from '../Typescript/Events';
+import { createPromiseWorkerApi } from '../Workers/PromiseWorkerApi';
+import type { RecorderWorklet, RecorderEvents } from './RecorderWorklet';
 
 export type Recorder =
 	& PromiseObjectApi<RecorderWorklet>
-	& RecorderWorkletEvents
 	& {
 		mediaStream: MediaStream;
 	};
-const recorderTemplate: UndefinedObject<RecorderWorklet> = {
-	start: undefined,
-	stop: undefined,
-};
 
 export const createRecorder = async (
 	workletUrl: URL | string,
 	channelCount: number,
+	handlers: EventHandlers<RecorderEvents>,
 ): Promise<Recorder> => {
 	const audioContext = new AudioContext();
 	const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount } });
@@ -30,8 +26,10 @@ export const createRecorder = async (
 	await source.context.audioWorklet.addModule(workletUrl);
 	const worklet = new AudioWorkletNode(source.context, 'RecorderWorklet', options);
 	source.connect(worklet);
-	const api = createPromiseAudioWorkletApi<RecorderWorklet>(worklet, recorderTemplate);
-	const result = api as Recorder;
-	result.mediaStream = mediaStream;
-	return result;
+	const request = createPromiseWorkerApi<RecorderWorklet, RecorderEvents>(worklet.port, handlers);
+	return {
+		start: (...args) => request('start', args),
+		stop: (...args) => request('stop', args),
+		mediaStream,
+	};
 };

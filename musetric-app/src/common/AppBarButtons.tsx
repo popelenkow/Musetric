@@ -1,14 +1,15 @@
-import React, { FC } from 'react';
+import React, { FC, ReactElement } from 'react';
 import { localizeLocaleId, localizeThemeId } from 'musetric/AppBase/Locale';
 import { useLocaleContext } from 'musetric/AppContexts/Locale';
 import { useCssContext } from 'musetric/AppContexts/Css';
 import { useIconContext } from 'musetric/AppContexts/Icon';
 import { Switch, SwitchProps } from 'musetric/Controls/Switch';
 
-export const AppBarButtons: FC = () => {
-	const { localeId, setLocaleId, allLocaleIds } = useLocaleContext();
+export const useAppBarButtons = (): ReactElement => {
+	const { localeId, setLocaleId, allLocaleIds, t } = useLocaleContext();
 	const { themeId, setThemeId, allThemeIds } = useCssContext();
 	const { DarkIcon, LightIcon } = useIconContext();
+
 	const themeMap: Record<string, FC> = {
 		light: LightIcon,
 		dark: DarkIcon,
@@ -19,7 +20,9 @@ export const AppBarButtons: FC = () => {
 		currentId: localeId,
 		ids: allLocaleIds,
 		set: setLocaleId,
-		view: (id, t) => localizeLocaleId(id, t) || id,
+	};
+	const getLocale = () => {
+		return localizeLocaleId(localeId, t) || localeId;
 	};
 
 	const themeSwitchProps: SwitchProps<string> = {
@@ -30,17 +33,18 @@ export const AppBarButtons: FC = () => {
 		set: (id) => {
 			setThemeId(id);
 		},
-		view: (id, t) => {
-			const Icon = themeMap[id];
-			if (Icon) return <Icon />;
-			return localizeThemeId(id, t) || id;
-		},
+		title: localizeThemeId(themeId, t) || themeId,
+	};
+	const getTheme = () => {
+		const Icon = themeMap[themeId];
+		if (Icon) return <Icon />;
+		return localizeThemeId(themeId, t) || themeId;
 	};
 
 	return (
 		<>
-			<Switch {...localeSwitchProps} />
-			<Switch {...themeSwitchProps} />
+			<Switch {...localeSwitchProps}>{getLocale()}</Switch>
+			<Switch {...themeSwitchProps}>{getTheme()}</Switch>
 		</>
 	);
 };

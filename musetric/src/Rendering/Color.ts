@@ -1,4 +1,5 @@
 import Color from 'color';
+import type { ValueObject } from '../Typescript/ValueObject';
 import { Theme } from '../AppBase/Theme';
 
 export type Rgb = {
@@ -7,45 +8,10 @@ export type Rgb = {
 	b: number,
 };
 
-export type ThemeColor = {
-	background: Color<string>;
-	content: Color<string>;
-	active: Color<string>;
-};
-export const parseThemeColor = (theme: Theme): ThemeColor => {
-	const background = new Color(theme.app);
-	const content = new Color(theme.content);
-	const active = new Color(theme.primary);
-	const colors = {
-		background,
-		content,
-		active,
-	};
-	return colors;
-};
-
-export const parseRgbColor = (color: Color): Rgb => {
+export const parseColorToRgb = (color: Color): Rgb => {
 	return { r: color.red(), g: color.green(), b: color.blue() };
 };
-
-export type ThemeRgbColor = {
-	background: Rgb;
-	content: Rgb;
-	active: Rgb;
-};
-export const parseThemeRgbColor = (theme: Theme): ThemeRgbColor => {
-	const background = parseRgbColor(new Color(theme.app));
-	const content = parseRgbColor(new Color(theme.content));
-	const active = parseRgbColor(new Color(theme.primary));
-	const colors = {
-		background,
-		content,
-		active,
-	};
-	return colors;
-};
-
-export const parseUint32Color = (color: Color): number => {
+export const parseColorToUint32Color = (color: Color): number => {
 	const buffer = new ArrayBuffer(4);
 	const rgba = new Uint8Array(buffer);
 	const result = new Uint32Array(buffer);
@@ -54,6 +20,40 @@ export const parseUint32Color = (color: Color): number => {
 	rgba[2] = color.blue();
 	rgba[3] = 255;
 	return result[0];
+};
+type ColorTypeMap = {
+	color: Color<string>;
+	rgb: Rgb;
+	uint32: number;
+	hex: string;
+};
+export type ColorType = keyof ColorTypeMap;
+export type TypedTheme<Type extends ColorType> = ValueObject<Theme, ColorTypeMap[Type]>;
+
+export const colorMap = {
+	color: (value: Color) => value,
+	rgb: (value: Color) => parseColorToRgb(value),
+	uint32: (value: Color) => parseColorToUint32Color(value),
+	hex: (value: Color) => value.hex(),
+};
+export const parseColor = <Type extends ColorType>(
+	type: Type,
+	colorString: string,
+): ColorTypeMap[Type] => {
+	const color = new Color(colorString);
+	const map = colorMap[type];
+	return map(color) as ColorTypeMap[Type];
+};
+export const parseTheme = <Type extends ColorType>(
+	type: Type,
+	theme: Theme,
+): TypedTheme<Type> => {
+	const result = {} as TypedTheme<Type>;
+	const keys = Object.keys(theme) as (keyof Theme)[];
+	keys.forEach((key) => {
+		result[key] = parseColor(type, theme[key]);
+	});
+	return result;
 };
 
 export const gradientUint32ByRgb = (
@@ -78,38 +78,5 @@ export const gradientUint32ByRgb = (
 };
 
 export const gradientUint32Color = (from: Color, to: Color, count: number): Uint32Array => {
-	return gradientUint32ByRgb(parseRgbColor(from), parseRgbColor(to), count);
-};
-
-export type ThemeUint32Color = {
-	background: number;
-	content: number;
-	active: number;
-};
-export const parseThemeUint32Color = (theme: Theme): ThemeUint32Color => {
-	const background = parseUint32Color(new Color(theme.app));
-	const content = parseUint32Color(new Color(theme.content));
-	const active = parseUint32Color(new Color(theme.primary));
-	const colors = {
-		background,
-		content,
-		active,
-	};
-	return colors;
-};
-export type ThemeHexColor = {
-	background: string;
-	content: string;
-	active: string;
-};
-export const parseThemeHexColor = (theme: Theme): ThemeHexColor => {
-	const background = new Color(theme.app).hex();
-	const content = new Color(theme.content).hex();
-	const active = new Color(theme.primary).hex();
-	const colors = {
-		background,
-		content,
-		active,
-	};
-	return colors;
+	return gradientUint32ByRgb(parseColorToRgb(from), parseColorToRgb(to), count);
 };

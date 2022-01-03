@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
 /* eslint-disable max-len */
-import { createComplexArray } from '../src/Typed/ComplexArray';
+import { createComplexArray } from '../src/TypedArray/ComplexArray';
 import { SpectrometerBase } from '../src/Sounds/Spectrometer';
 import { createDftBase } from '../src/Sounds/Dft';
 import { createFftRadix2Base } from '../src/Sounds/FftRadix2';

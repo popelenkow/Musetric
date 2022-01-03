@@ -1,4 +1,4 @@
-import { ComplexIndexable } from '../Typed/ComplexIndexable';
+import { ComplexIndexable } from '../TypedArray/ComplexIndexable';
 import { SpectrometerBase, createSpectrometer, Spectrometer } from './Spectrometer';
 
 const transform = (

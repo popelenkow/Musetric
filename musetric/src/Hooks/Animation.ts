@@ -10,9 +10,9 @@ export const useAnimation = (callback: AnimationCallback, deps: DependencyList):
 	}, deps);
 
 	useEffect(() => {
-		const subscription = startAnimation((...args) => {
+		const stopAnimation = startAnimation((...args) => {
 			if (callbackRef.current) callbackRef.current(...args);
 		});
-		return () => subscription.stop();
+		return () => stopAnimation();
 	}, []);
 };

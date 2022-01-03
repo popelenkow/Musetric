@@ -1,28 +1,31 @@
-import React, { useState, ReactElement } from 'react';
+import React, { useState } from 'react';
 import { useIconContext } from '../AppContexts/Icon';
-import { Checkbox, CheckboxProps } from '../Controls/Checkbox';
+import { useLocaleContext } from '../AppContexts/Locale';
+import { Button, ButtonProps } from '../Controls/Button';
 
-export type SoundLive = {
-	isLive: boolean;
-	renderLiveCheckbox: () => ReactElement;
-};
-export const useSoundLive = (): SoundLive => {
+export const useSoundLive = () => {
 	const { LiveIcon } = useIconContext();
+	const { t } = useLocaleContext();
 
 	const [isLive, setIsLive] = useState<boolean>(false);
 
-	const liveProps: CheckboxProps = {
-		checked: isLive,
-		onToggle: () => setIsLive(!isLive),
-		rounded: true,
+	const renderLiveButton = () => {
+		const liveProps: ButtonProps = {
+			kind: 'icon',
+			rounded: true,
+			title: t('Workshop:live'),
+			primary: isLive,
+			onClick: () => setIsLive(!isLive),
+		};
+		return (
+			<Button {...liveProps}>
+				<LiveIcon />
+			</Button>
+		);
 	};
 
 	return {
 		isLive,
-		renderLiveCheckbox: () => (
-			<Checkbox {...liveProps}>
-				<LiveIcon />
-			</Checkbox>
-		),
+		renderLiveButton,
 	};
 };

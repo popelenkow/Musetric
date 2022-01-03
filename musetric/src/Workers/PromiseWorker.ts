@@ -1,4 +1,4 @@
-import { UndefinedObject } from '../Typescript/UndefinedObject';
+import type { PushEvent } from '../Typescript/Events';
 
 export type PromiseWorkerRequest = {
 	id: string;
@@ -12,35 +12,28 @@ export type PromiseWorkerResponse = {
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type PromiseWorker = Record<string, (...args: any[]) => unknown>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type PromiseWorkerEvents = Record<string, (result: any) => void>;
 
-export type PromiseWorkerOptions<Events extends PromiseWorkerEvents> = {
-	events: Events;
+export type PromiseWorkerOptions<Events> = {
+	pushEvent: PushEvent<Events>;
 };
-export const runPromiseWorker = <Events extends PromiseWorkerEvents>(
+
+export const runPromiseWorker = <Events>(
 	host: Worker,
 	createWorker: (options: PromiseWorkerOptions<Events>) => PromiseWorker,
-	templateEvents?: UndefinedObject<Events>,
 ): void => {
 	const post = (message: PromiseWorkerResponse) => {
 		host.postMessage(message);
 	};
 
-	const events: PromiseWorkerEvents = {};
-	Object.keys(templateEvents || {}).forEach((type) => {
-		events[type] = (result: unknown) => {
+	const options: PromiseWorkerOptions<Events> = {
+		pushEvent: (type, result) => {
 			const id = '';
 			post({ id, type, result });
-		};
-	});
-
-	const options: PromiseWorkerOptions<Events> = {
-		events: events as Events,
+		},
 	};
 	const worker = createWorker(options);
-	host.onmessage = (e: MessageEvent<PromiseWorkerRequest>) => {
-		const { id, type, args } = e.data;
+	host.onmessage = (event: MessageEvent<PromiseWorkerRequest>) => {
+		const { id, type, args } = event.data;
 		const result = worker[type](...args);
 		post({ id, type, result });
 	};

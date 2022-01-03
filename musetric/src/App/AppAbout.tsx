@@ -1,20 +1,20 @@
-import React, { ReactNode, FC } from 'react';
+import React, { ReactNode, FC, useCallback } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useLocaleContext } from '../AppContexts/Locale';
 import { getFieldClasses } from '../Controls/Field';
 
 export const getAppAboutClasses = createClasses((css) => {
+	const { theme } = css;
 	const fieldClasses = getFieldClasses(css);
-	const { app } = css.theme;
 	return {
 		root: {
 			...fieldClasses.root,
 			width: '100%',
 			height: '100%',
-			'background-color': app,
+			'background-color': theme.background,
 		},
 		container: {
-			width: '240px',
+			width: '280px',
 			height: 'auto',
 			display: 'flex',
 			'flex-direction': 'column',
@@ -38,7 +38,7 @@ export const AppAbout: FC<AppAboutProps> = (props) => {
 	const { t } = useLocaleContext();
 
 	const noLinks = !links || links.length === 0;
-	const Links: FC = () => {
+	const Links = useCallback<FC>(() => {
 		if (noLinks) return null;
 
 		return (
@@ -46,14 +46,14 @@ export const AppAbout: FC<AppAboutProps> = (props) => {
 				{links}
 			</div>
 		);
-	};
+	}, [classes, links, noLinks]);
 
 	return (
 		<div className={classes.root}>
 			<div className={classes.container}>
 				<div>Musetric</div>
-				<div>{`${t('Musetric:version')} ${appVersion}`}</div>
-				<div>{`${t('Musetric:licensed')}`}</div>
+				<div>{`${t('AppBase:version')} ${appVersion}`}</div>
+				<div>{`${t('AppBase:licensed')}`}</div>
 				<Links />
 			</div>
 		</div>

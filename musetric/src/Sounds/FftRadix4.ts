@@ -1,7 +1,7 @@
-import { RealIndexableType } from '../Typed/RealType';
-import { createRealIndexable, RealIndexable } from '../Typed/RealIndexable';
+import { RealIndexableType } from '../TypedArray/RealType';
+import { createRealIndexable, RealIndexable } from '../TypedArray/RealIndexable';
 import { SpectrometerBase, Spectrometer, createSpectrometer } from './Spectrometer';
-import { ComplexIndexable } from '../Typed/ComplexIndexable';
+import { ComplexIndexable } from '../TypedArray/ComplexIndexable';
 
 /* Licensed by MIT. Based on https://github.com/indutny/fft.js/tree/4a18cf88fcdbd4ad5acca6eaea06a0b462047835 */
 

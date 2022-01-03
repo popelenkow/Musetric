@@ -1,10 +1,9 @@
-import React, { useContext, createContext, FC } from 'react';
+import React, { useContext, FC } from 'react';
 import { Icons } from '../AppBase/Icon';
+import { createContext } from './Context';
 
 export type IconStore = Icons;
-// eslint-disable-next-line
-const defaultIconStore: IconStore = undefined as any;
-export const IconContext = createContext<IconStore>(defaultIconStore);
+export const IconContext = createContext<IconStore>();
 
 export type IconProviderProps = {
 	icons: Icons;
@@ -12,7 +11,7 @@ export type IconProviderProps = {
 export const IconProvider: FC<IconProviderProps> = (props) => {
 	const { children, icons } = props;
 
-	const store: IconStore = { ...icons };
+	const store: IconStore = icons;
 
 	return (
 		<IconContext.Provider value={store}>

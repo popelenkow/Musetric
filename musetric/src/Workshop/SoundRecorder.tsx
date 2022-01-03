@@ -1,21 +1,23 @@
 import React, { useState, useMemo, ReactElement } from 'react';
-import { Checkbox, CheckboxProps } from '../Controls/Checkbox';
-import { SoundBufferManager } from '../Sounds';
-import { createRecorder, Recorder } from '../SoundProcessing/Recorder';
+import { useLocaleContext } from '../AppContexts/Locale';
 import { useIconContext } from '../AppContexts/Icon';
 import { useWorkerContext } from '../AppContexts/Worker';
+import { Button, ButtonProps } from '../Controls/Button';
+import { SoundBufferManager } from '../Sounds';
+import { createRecorder, Recorder } from '../SoundProcessing/Recorder';
 
-export type RecorderCheckboxProps = {
+export type RecorderButtonProps = {
 	disabled: boolean;
 };
 export type SoundRecorder = {
 	isRecording: boolean;
 	initRecorder: () => Promise<Recorder>;
-	renderRecorderCheckbox: (props: RecorderCheckboxProps) => ReactElement;
+	renderRecorderButton: (props: RecorderButtonProps) => ReactElement;
 };
 export const useSoundRecorder = (soundBufferManager: SoundBufferManager): SoundRecorder => {
 	const { RecordIcon } = useIconContext();
 	const { recorderUrl } = useWorkerContext();
+	const { t } = useLocaleContext();
 
 	const getRecorder = useMemo(() => {
 		let recorder: Recorder | undefined;
@@ -23,11 +25,12 @@ export const useSoundRecorder = (soundBufferManager: SoundBufferManager): SoundR
 			if (!recorder) {
 				const { soundBuffer } = soundBufferManager;
 				const { channelCount } = soundBuffer;
-				recorder = await createRecorder(recorderUrl, channelCount);
-				recorder.onProcess = (options): void => {
-					const { chunk, isRecording } = options;
-					soundBufferManager.push(chunk, isRecording ? 'recording' : 'live');
-				};
+				recorder = await createRecorder(recorderUrl, channelCount, {
+					onProcess: (event): void => {
+						const { chunk, isRecording } = event;
+						soundBufferManager.push(chunk, isRecording ? 'recording' : 'live');
+					},
+				});
 			}
 			return recorder;
 		};
@@ -49,16 +52,23 @@ export const useSoundRecorder = (soundBufferManager: SoundBufferManager): SoundR
 	return {
 		isRecording,
 		initRecorder: getRecorder,
-		renderRecorderCheckbox: (recorderCheckboxProps) => {
+		renderRecorderButton: (recorderCheckboxProps) => {
 			const { disabled } = recorderCheckboxProps;
-			const recorderProps: CheckboxProps = {
+			const recorderProps: ButtonProps = {
+				kind: 'icon',
 				disabled,
 				rounded: true,
-				checked: isRecording,
-				onToggle: () => (isRecording ? stopRecording() : startRecording()),
+				title: t('Workshop:record'),
+				active: isRecording,
+				primary: isRecording,
+				onClick: () => (isRecording ? stopRecording() : startRecording()),
 			};
 
-			return <Checkbox {...recorderProps}><RecordIcon /></Checkbox>;
+			return (
+				<Button {...recorderProps}>
+					<RecordIcon />
+				</Button>
+			);
 		},
 	};
 };

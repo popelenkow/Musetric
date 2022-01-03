@@ -1,7 +1,5 @@
-import React, { useState, ReactNode, PropsWithChildren, ReactElement } from 'react';
-import { TFunction } from 'i18next';
+import React, { useState, PropsWithChildren, ReactElement } from 'react';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
-import { useLocaleContext } from '../AppContexts/Locale';
 import { getButtonClasses, Button, ButtonProps } from './Button';
 
 export const getSwitchClasses = createClasses((css) => {
@@ -15,23 +13,30 @@ export const getSwitchClasses = createClasses((css) => {
 const useClasses = createUseClasses('Switch', getSwitchClasses);
 
 export type SwitchProps<T> = {
-	currentId: T;
-	ids: T[];
-	set: (id: T) => void;
-	view?: (id: T, t: TFunction) => ReactNode;
-	kind?: 'simple' | 'icon';
+	kind?: 'simple' | 'icon' | 'full';
+	align?: 'left' | 'center' | 'right';
 	disabled?: boolean;
 	primary?: boolean;
 	rounded?: boolean;
+	title?: string;
+	currentId: T;
+	ids: T[];
+	set: (id: T) => void;
 };
 type Props<T> = PropsWithChildren<SwitchProps<T>>;
 export function Switch<T>(props: Props<T>): ReactElement | null {
 	const {
-		currentId, ids, view, set,
-		kind, disabled, primary, rounded,
+		kind,
+		disabled,
+		primary,
+		rounded,
+		title,
+		currentId,
+		ids,
+		set,
+		children,
 	} = props;
 	const classes = useClasses();
-	const { t } = useLocaleContext();
 
 	const [id, setId] = useState(currentId);
 
@@ -48,12 +53,13 @@ export function Switch<T>(props: Props<T>): ReactElement | null {
 		disabled,
 		primary,
 		rounded,
+		title,
 		onClick: next,
 		classNames: { root: classes.root },
 	};
 	return (
 		<Button {...buttonProps}>
-			{view ? view(id, t) : id}
+			{children}
 		</Button>
 	);
 }
