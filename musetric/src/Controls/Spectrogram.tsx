@@ -9,6 +9,7 @@ import { RealArray } from '../TypedArray/RealArray';
 import { viewRealArrays } from '../TypedArray/RealArrays';
 import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 import type { SoundParameters } from '../Workshop/SoundParameters';
+import { skipPromise } from '../Utils/SkipPromise';
 
 export type SpectrogramProps = {
 	soundBufferManager: SoundBufferManager;
@@ -34,8 +35,8 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
 	}, [spectrum]);
 
 	useEffect(() => {
-		spectrum.start().finally(() => { });
-		return () => { spectrum.stop().finally(() => { }); };
+		skipPromise(spectrum.start());
+		return () => skipPromise(spectrum.stop());
 	}, [spectrum]);
 
 	const count = useMemo(() => layout.size.height, [layout]);
@@ -52,7 +53,7 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
 			});
 			setFrequencies(result);
 		};
-		run().finally(() => { });
+		skipPromise(run());
 	}, [spectrum, windowSize, count]);
 
 	useEffect(() => {
@@ -78,7 +79,7 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
 			const bufferEvent = createBufferEvent();
 			if (bufferEvent) await spectrum.emitBufferEvent(bufferEvent);
 		});
-		spectrum.emitBufferEvent({ type: 'newBuffer', value: buffer.buffers[0].realRaw }).finally(() => {});
+		skipPromise(spectrum.emitBufferEvent({ type: 'newBuffer', value: buffer.buffers[0].realRaw }));
 		return unsubscribe;
 	}, [soundBufferManager, isLive, spectrum]);
 

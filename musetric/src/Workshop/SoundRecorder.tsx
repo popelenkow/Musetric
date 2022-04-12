@@ -5,6 +5,7 @@ import { useWorkerContext } from '../AppContexts/Worker';
 import { Button, ButtonProps } from '../Controls/Button';
 import { SoundBufferManager } from '../Sounds';
 import { createRecorder, Recorder } from '../SoundProcessing/Recorder';
+import { skipPromise } from '../Utils/SkipPromise';
 
 export type RecorderButtonProps = {
 	disabled: boolean;
@@ -61,7 +62,7 @@ export const useSoundRecorder = (soundBufferManager: SoundBufferManager): SoundR
 				title: t('Workshop:record'),
 				active: isRecording,
 				primary: isRecording,
-				onClick: () => (isRecording ? stopRecording() : startRecording()),
+				onClick: () => skipPromise(isRecording ? stopRecording() : startRecording()),
 			};
 
 			return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { App, AppProps, AppProviders } from 'musetric/App/App';
 import { AppViewEntry } from 'musetric/App/AppDropdown';
 import { AppAbout, AppAboutProps } from 'musetric/App/AppAbout';
@@ -130,7 +130,8 @@ export const createMusetricApp: CreateMusetricApp = async (options) => {
 		useViewEntries,
 	};
 
-	const root = document.getElementById(elementId);
-	if (!root) throw new Error();
-	ReactDOM.render(<App {...appProps} />, root);
+	const rootElement = document.getElementById(elementId);
+	if (!rootElement) throw new Error();
+	const root = createRoot(rootElement);
+	root.render(<App {...appProps} />);
 };

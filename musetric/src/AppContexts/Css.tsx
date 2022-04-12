@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { Platform, getPlatformId } from '../AppBase/Platform';
 import { Theme, ThemeEntry } from '../AppBase/Theme';
 import { createContext } from './Context';
+import { WithChildren } from '../Controls/utils';
 
 export type Css = {
 	theme: Theme;
@@ -62,7 +63,7 @@ export type CssProviderProps = {
 	allThemeEntries: ThemeEntry[];
 	onSetThemeId?: (themeId: string) => void;
 };
-export const CssProvider: FC<CssProviderProps> = (props) => {
+export const CssProvider: FC<WithChildren<CssProviderProps>> = (props) => {
 	const { children, initThemeId, allThemeEntries, onSetThemeId } = props;
 
 	const allThemeIds = allThemeEntries.map((x) => x.themeId);

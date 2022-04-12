@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
+import { WithChildren } from './utils';
 
 export const getButtonClasses = createClasses((css) => {
 	const { theme } = css;
@@ -138,7 +139,7 @@ export type ButtonProps = {
 		root?: string;
 	};
 };
-export const Button: FC<ButtonProps> = (props) => {
+export const Button: FC<WithChildren<ButtonProps>> = (props) => {
 	const {
 		kind, align, disabled, active, primary, rounded,
 		title, onClick, classNames, children,

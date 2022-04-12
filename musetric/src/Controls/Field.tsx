@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
+import { WithChildren } from './utils';
 
 export const getFieldClasses = createClasses((css) => {
 	const { theme } = css;
@@ -72,7 +73,7 @@ export type FieldProps = {
 		root?: string;
 	};
 };
-export const Field: FC<FieldProps> = (props) => {
+export const Field: FC<WithChildren<FieldProps>> = (props) => {
 	const {
 		disabled, primary, rounded,
 		kind, align, children, classNames,

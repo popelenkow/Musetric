@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useIconContext } from '../AppContexts/Icon';
 import { getFieldClasses } from '../Controls/Field';
+import { WithChildren } from '../Controls/utils';
 
 export const getAppBarClasses = createClasses((css) => {
 	const { theme } = css;
@@ -38,7 +39,7 @@ export const getAppBarClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('AppBar', getAppBarClasses);
 
-export const AppBar: FC = (props) => {
+export const AppBar: FC<WithChildren> = (props) => {
 	const { children } = props;
 	const classes = useClasses();
 	const { AppIcon } = useIconContext();
