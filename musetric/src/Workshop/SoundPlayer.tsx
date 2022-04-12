@@ -6,6 +6,7 @@ import { Button, ButtonProps } from '../Controls/Button';
 import { useCacheAsync } from '../Hooks/Cache';
 import { createPlayer } from '../SoundProcessing/Player';
 import { useWorkerContext } from '../AppContexts/Worker';
+import { skipPromise } from '../Utils/SkipPromise';
 
 export type PlayerButtonProps = {
 	disabled: boolean;
@@ -65,7 +66,7 @@ export const useSoundPlayer = (soundBufferManager: SoundBufferManager): SoundPla
 			primary: isPlaying,
 			rounded: true,
 			title: isPlaying ? t('Workshop:stop') : t('Workshop:play'),
-			onClick: isPlaying ? stopPlaying : startPlaying,
+			onClick: () => skipPromise(isPlaying ? stopPlaying() : startPlaying()),
 		};
 		return (
 			<Button {...buttonProps}>

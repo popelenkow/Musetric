@@ -1,5 +1,6 @@
-import React, { useContext, FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { Workers } from '../AppBase/Worker';
+import { WithChildren } from '../Controls/utils';
 import { createContext } from './Context';
 
 export type WorkerStore = Workers;
@@ -11,7 +12,7 @@ export type WorkerProviderProps = {
 	workers: Workers;
 };
 
-export const WorkerProvider: FC<WorkerProviderProps> = (props) => {
+export const WorkerProvider: FC<WithChildren<WorkerProviderProps>> = (props) => {
 	const { children, workers } = props;
 
 	const store: WorkerStore = workers;

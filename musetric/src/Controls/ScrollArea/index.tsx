@@ -13,6 +13,7 @@ import {
 	updateVerticalScrollPosition,
 	subscribeVerticalEvents,
 } from './VerticalScroll';
+import { WithChildren } from '../utils';
 
 export const getScrollAreaClasses = createClasses(() => {
 	return {
@@ -130,7 +131,7 @@ export type ScrollAreaProps = {
 		root?: string;
 	};
 };
-export const ScrollArea: FC<ScrollAreaProps> = (props) => {
+export const ScrollArea: FC<WithChildren<ScrollAreaProps>> = (props) => {
 	const { children, classNames } = props;
 	const classes = useClasses();
 

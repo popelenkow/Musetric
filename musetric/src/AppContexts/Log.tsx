@@ -1,5 +1,6 @@
 import React, { useContext, FC, useMemo } from 'react';
 import { Log } from '../AppBase/Log';
+import { WithChildren } from '../Controls/utils';
 import { createContext } from './Context';
 
 export type LogStore = {
@@ -11,7 +12,7 @@ export type LogProviderProps = {
 	log: Log;
 };
 
-export const LogProvider: FC<LogProviderProps> = (props) => {
+export const LogProvider: FC<WithChildren<LogProviderProps>> = (props) => {
 	const { children, log } = props;
 
 	const store: LogStore = useMemo(() => ({ log }), [log]);

@@ -11,6 +11,7 @@ import { useSoundProgressBar } from './SoundProgressBar';
 import { useSoundRecorder } from './SoundRecorder';
 import { useSoundView } from './SoundView';
 import { useSoundParameters } from './SoundParameters';
+import { skipPromise } from '../Utils/SkipPromise';
 
 export const getSoundWorkshopClasses = createClasses((css) => {
 	const { theme } = css;
@@ -109,7 +110,7 @@ export const SoundWorkshop: FC = () => {
 	} = useSoundRecorder(soundBufferManager);
 
 	useEffect(() => {
-		if (isLive) initRecorder().finally(() => {});
+		if (isLive) skipPromise(initRecorder());
 	}, [isLive, initRecorder]);
 
 	const { rootElement } = useRootElementContext();

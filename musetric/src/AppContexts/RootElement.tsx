@@ -1,4 +1,5 @@
-import React, { useContext, useState, useMemo, FC } from 'react';
+import React, { FC, useContext, useState, useMemo } from 'react';
+import { WithChildren } from '../Controls/utils';
 import { createContext } from './Context';
 
 export type RootElementStore = {
@@ -13,7 +14,7 @@ export type RootElementProviderProps = {
 	initRootElement?: HTMLElement;
 };
 
-export const RootElementProvider: FC<RootElementProviderProps> = (props) => {
+export const RootElementProvider: FC<WithChildren<RootElementProviderProps>> = (props) => {
 	const { children, initRootElement } = props;
 
 	const [rootElement, setRootElement] = useState<HTMLElement>(initRootElement || document.body);

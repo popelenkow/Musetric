@@ -2,6 +2,7 @@ import React, { useState, useContext, useMemo, FC } from 'react';
 import { i18n as I18n, TFunction } from 'i18next';
 import { LocaleEntry } from '../AppBase/Locale';
 import { createContext } from './Context';
+import { WithChildren } from '../Controls/utils';
 
 export type LocaleStore = {
 	t: TFunction;
@@ -18,7 +19,7 @@ export type LocaleProviderProps = {
 	onLocaleId: (localeId: string) => void;
 };
 
-export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
+export const LocaleProvider: FC<WithChildren<LocaleProviderProps>> = (props) => {
 	const { children, i18n, allLocaleEntries, onLocaleId } = props;
 
 	const [localeId, setLocaleId] = useState<string>(i18n.language);

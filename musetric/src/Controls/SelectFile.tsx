@@ -1,4 +1,5 @@
 import React, { FC, useMemo, useEffect } from 'react';
+import { WithChildren } from './utils';
 import { Button, ButtonProps, getButtonClasses } from './Button';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 
@@ -21,7 +22,7 @@ export type SelectFileProps = {
 	title?: string;
 	onChangeFile: (file: File) => void;
 };
-export const SelectFile: FC<SelectFileProps> = (props) => {
+export const SelectFile: FC<WithChildren<SelectFileProps>> = (props) => {
 	const {
 		kind, disabled, primary, rounded,
 		title, onChangeFile, children,

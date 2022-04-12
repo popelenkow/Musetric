@@ -4,6 +4,7 @@ import { useLocaleContext } from 'musetric/AppContexts/Locale';
 import { useCssContext } from 'musetric/AppContexts/Css';
 import { useIconContext } from 'musetric/AppContexts/Icon';
 import { Switch, SwitchProps } from 'musetric/Controls/Switch';
+import { skipPromise } from 'musetric/Utils/SkipPromise';
 
 export const useAppBarButtons = (): ReactElement => {
 	const { localeId, setLocaleId, allLocaleIds, t } = useLocaleContext();
@@ -19,7 +20,7 @@ export const useAppBarButtons = (): ReactElement => {
 		rounded: true,
 		currentId: localeId,
 		ids: allLocaleIds,
-		set: setLocaleId,
+		set: (id) => skipPromise(setLocaleId(id)),
 	};
 	const getLocale = () => {
 		return localizeLocaleId(localeId, t) || localeId;

@@ -1,3 +1,5 @@
+import { skipPromise } from '../Utils/SkipPromise';
+
 export type EventEmitterCallback<TEvent> = (event: TEvent) => Promise<void> | void;
 export type EventEmitterUnsubscribe = () => void;
 export type EventEmitter<TEvent> = {
@@ -22,7 +24,7 @@ export const createEventEmitter = <TEvent>(): EventEmitter<TEvent> => {
 				await callback(event);
 			};
 			setTimeout(() => {
-				run().finally(() => {});
+				skipPromise(run());
 			});
 		});
 	};

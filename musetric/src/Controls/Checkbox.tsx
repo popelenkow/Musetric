@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 import { getButtonClasses } from './Button';
 import { Field, FieldProps } from './Field';
+import { WithChildren } from './utils';
 
 export const getCheckboxClasses = createClasses((css) => {
 	const { theme } = css;
@@ -37,7 +38,7 @@ export type CheckboxProps = {
 		root?: string;
 	};
 };
-export const Checkbox: FC<CheckboxProps> = (props) => {
+export const Checkbox: FC<WithChildren<CheckboxProps>> = (props) => {
 	const {
 		kind,
 		disabled,

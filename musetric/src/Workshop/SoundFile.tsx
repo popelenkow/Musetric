@@ -6,6 +6,7 @@ import { SoundBufferManager } from '../Sounds/SoundBufferManager';
 import { Button, ButtonProps } from '../Controls/Button';
 import { SelectFile, SelectFileProps } from '../Controls/SelectFile';
 import { useSoundConverter } from './SoundConverter';
+import { skipPromise } from '../Utils/SkipPromise';
 
 export type SoundFile = {
 	renderSaveFileButton: () => ReactElement;
@@ -31,7 +32,7 @@ export const useSoundFile = (soundBufferManager: SoundBufferManager): SoundFile 
 			kind: 'icon',
 			rounded: true,
 			title: t('Workshop:save'),
-			onClick: () => saveFile('myRecording.wav'),
+			onClick: () => skipPromise(saveFile('myRecording.wav')),
 		};
 		return (
 			<Button {...saveFileProps}>
@@ -44,7 +45,7 @@ export const useSoundFile = (soundBufferManager: SoundBufferManager): SoundFile 
 			kind: 'icon',
 			rounded: true,
 			title: t('Workshop:open'),
-			onChangeFile: pushSoundFile,
+			onChangeFile: (file) => skipPromise(pushSoundFile(file)),
 		};
 		return (
 			<SelectFile {...openFileProps}>
