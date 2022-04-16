@@ -50,7 +50,7 @@ export const useSoundParameters = (
 ): SoundParameters => {
 	const { element, soundBufferManager } = options;
 	const classes = useClasses();
-	const { t } = useLocaleContext();
+	const { i18n } = useLocaleContext();
 	const { ParametersIcon } = useIconContext();
 
 	const { sampleRate } = soundBufferManager.soundBuffer;
@@ -90,7 +90,7 @@ export const useSoundParameters = (
 		const openProps: ButtonProps = {
 			kind: 'icon',
 			rounded: true,
-			title: t('Workshop:parameters'),
+			title: i18n.t('Workshop:parameters'),
 			active: isOpenParameters,
 			onClick: () => setIsOpenParameters(!isOpenParameters),
 		};
@@ -128,13 +128,13 @@ export const useSoundParameters = (
 		});
 		const frequencyToProps: NumberFieldProps = {
 			value: frequencyRange.to,
-			onValue: setFrequencyTo,
+			setValue: setFrequencyTo,
 			label: 'Frequency to',
 			rounded: true,
 		};
 		const frequencyFromProps: NumberFieldProps = {
 			value: frequencyRange.from,
-			onValue: setFrequencyFrom,
+			setValue: setFrequencyFrom,
 			label: 'Frequency from',
 			rounded: true,
 		};

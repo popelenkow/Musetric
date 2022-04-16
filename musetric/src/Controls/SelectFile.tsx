@@ -20,12 +20,12 @@ export type SelectFileProps = {
 	primary?: boolean;
 	rounded?: boolean;
 	title?: string;
-	onChangeFile: (file: File) => void;
+	changeFile: (file: File) => void;
 };
 export const SelectFile: FC<WithChildren<SelectFileProps>> = (props) => {
 	const {
 		kind, disabled, primary, rounded,
-		title, onChangeFile, children,
+		title, changeFile, children,
 	} = props;
 	const classes = useClasses();
 
@@ -40,7 +40,7 @@ export const SelectFile: FC<WithChildren<SelectFileProps>> = (props) => {
 			const target = event.target as HTMLInputElement | null;
 			const file = target?.files?.item(0);
 			if (!file) return;
-			onChangeFile(file);
+			changeFile(file);
 		};
 	});
 

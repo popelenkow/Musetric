@@ -5,7 +5,7 @@ import { Button, ButtonProps } from '../Controls/Button';
 
 export const useSoundLive = () => {
 	const { LiveIcon } = useIconContext();
-	const { t } = useLocaleContext();
+	const { i18n } = useLocaleContext();
 
 	const [isLive, setIsLive] = useState<boolean>(false);
 
@@ -13,7 +13,7 @@ export const useSoundLive = () => {
 		const liveProps: ButtonProps = {
 			kind: 'icon',
 			rounded: true,
-			title: t('Workshop:live'),
+			title: i18n.t('Workshop:live'),
 			primary: isLive,
 			onClick: () => setIsLive(!isLive),
 		};

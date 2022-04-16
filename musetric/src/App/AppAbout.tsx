@@ -35,7 +35,7 @@ export type AppAboutProps = {
 export const AppAbout: FC<AppAboutProps> = (props) => {
 	const { appVersion, links } = props;
 	const classes = useClasses();
-	const { t } = useLocaleContext();
+	const { i18n } = useLocaleContext();
 
 	const noLinks = !links || links.length === 0;
 	const Links = useCallback<FC>(() => {
@@ -52,8 +52,8 @@ export const AppAbout: FC<AppAboutProps> = (props) => {
 		<div className={classes.root}>
 			<div className={classes.container}>
 				<div>Musetric</div>
-				<div>{`${t('AppBase:version')} ${appVersion}`}</div>
-				<div>{`${t('AppBase:licensed')}`}</div>
+				<div>{`${i18n.t('AppBase:version')} ${appVersion}`}</div>
+				<div>{`${i18n.t('AppBase:licensed')}`}</div>
 				<Links />
 			</div>
 		</div>

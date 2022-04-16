@@ -18,7 +18,7 @@ export type SoundRecorder = {
 export const useSoundRecorder = (soundBufferManager: SoundBufferManager): SoundRecorder => {
 	const { RecordIcon } = useIconContext();
 	const { recorderUrl } = useWorkerContext();
-	const { t } = useLocaleContext();
+	const { i18n } = useLocaleContext();
 
 	const getRecorder = useMemo(() => {
 		let recorder: Recorder | undefined;
@@ -59,7 +59,7 @@ export const useSoundRecorder = (soundBufferManager: SoundBufferManager): SoundR
 				kind: 'icon',
 				disabled,
 				rounded: true,
-				title: t('Workshop:record'),
+				title: i18n.t('Workshop:record'),
 				active: isRecording,
 				primary: isRecording,
 				onClick: () => skipPromise(isRecording ? stopRecording() : startRecording()),

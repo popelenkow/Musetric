@@ -14,7 +14,7 @@ export type SoundFile = {
 };
 export const useSoundFile = (soundBufferManager: SoundBufferManager): SoundFile => {
 	const { OpenFileIcon, SaveIcon } = useIconContext();
-	const { t } = useLocaleContext();
+	const { i18n } = useLocaleContext();
 
 	const { getBlob, pushFile } = useSoundConverter(soundBufferManager);
 
@@ -31,7 +31,7 @@ export const useSoundFile = (soundBufferManager: SoundBufferManager): SoundFile 
 		const saveFileProps: ButtonProps = {
 			kind: 'icon',
 			rounded: true,
-			title: t('Workshop:save'),
+			title: i18n.t('Workshop:save'),
 			onClick: () => skipPromise(saveFile('myRecording.wav')),
 		};
 		return (
@@ -44,8 +44,8 @@ export const useSoundFile = (soundBufferManager: SoundBufferManager): SoundFile 
 		const openFileProps: SelectFileProps = {
 			kind: 'icon',
 			rounded: true,
-			title: t('Workshop:open'),
-			onChangeFile: (file) => skipPromise(pushSoundFile(file)),
+			title: i18n.t('Workshop:open'),
+			changeFile: (file) => skipPromise(pushSoundFile(file)),
 		};
 		return (
 			<SelectFile {...openFileProps}>

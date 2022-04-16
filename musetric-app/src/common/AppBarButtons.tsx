@@ -7,7 +7,7 @@ import { Switch, SwitchProps } from 'musetric/Controls/Switch';
 import { skipPromise } from 'musetric/Utils/SkipPromise';
 
 export const useAppBarButtons = (): ReactElement => {
-	const { localeId, setLocaleId, allLocaleIds, t } = useLocaleContext();
+	const { localeId, setLocaleId, allLocaleIds, i18n } = useLocaleContext();
 	const { themeId, setThemeId, allThemeIds } = useCssContext();
 	const { DarkIcon, LightIcon } = useIconContext();
 
@@ -23,7 +23,7 @@ export const useAppBarButtons = (): ReactElement => {
 		set: (id) => skipPromise(setLocaleId(id)),
 	};
 	const getLocale = () => {
-		return localizeLocaleId(localeId, t) || localeId;
+		return localizeLocaleId(localeId, i18n) || localeId;
 	};
 
 	const themeSwitchProps: SwitchProps<string> = {
@@ -34,12 +34,12 @@ export const useAppBarButtons = (): ReactElement => {
 		set: (id) => {
 			setThemeId(id);
 		},
-		title: localizeThemeId(themeId, t) || themeId,
+		title: localizeThemeId(themeId, i18n) || themeId,
 	};
 	const getTheme = () => {
 		const Icon = themeMap[themeId];
 		if (Icon) return <Icon />;
-		return localizeThemeId(themeId, t) || themeId;
+		return localizeThemeId(themeId, i18n) || themeId;
 	};
 
 	return (

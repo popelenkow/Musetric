@@ -1,4 +1,4 @@
-import i18n, { i18n as I18n, TFunction, ResourceLanguage, Resource } from 'i18next';
+import i18next, { i18n as I18n, WithT, ResourceLanguage, Resource } from 'i18next';
 
 export type Locale = ResourceLanguage;
 export type LocaleEntry = {
@@ -14,7 +14,7 @@ export const createI18n = async (
 	initLocaleId: string,
 	localeEntries: LocaleEntry[],
 ): Promise<I18n> => {
-	const result = i18n.createInstance();
+	const result = i18next.createInstance();
 	const resources = createLocaleResources(localeEntries);
 
 	await result.init({
@@ -37,13 +37,13 @@ export const setStorageLocaleId = (localeId: string): void => {
 	localStorage.setItem('locale', localeId);
 };
 
-export const localizeLocaleId = (lng: string, t: TFunction): string | undefined => {
-	const res = t('AppBase:locale', { lng });
+export const localizeLocaleId = (lng: string, i18n: WithT): string | undefined => {
+	const res = i18n.t('AppBase:locale', { lng });
 	return res;
 };
 
-export const localizeThemeId = (theme: string, t: TFunction): string | undefined => {
-	if (theme === 'white') return t('AppBase:theme.white');
-	if (theme === 'dark') return t('AppBase:theme.dark');
+export const localizeThemeId = (theme: string, i18n: WithT): string | undefined => {
+	if (theme === 'white') return i18n.t('AppBase:theme.white');
+	if (theme === 'dark') return i18n.t('AppBase:theme.dark');
 	return undefined;
 };

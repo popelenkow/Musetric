@@ -149,7 +149,7 @@ export const GroovedWheel: FC<GroovedWheelProps> = (props) => {
 
 	const pixelCanvasProps: PixelCanvasProps = {
 		layout,
-		onDraw: draw,
+		draw,
 	};
 	return (
 		<div ref={ref} style={{ width: '100%', height: '100%' }}>

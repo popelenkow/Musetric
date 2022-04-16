@@ -48,14 +48,14 @@ const useClasses = createUseClasses('NumberField', getNumberFieldClasses);
 
 export type NumberFieldProps = {
 	value: number;
-	onValue: (value: number) => number;
+	setValue: (value: number) => number;
 	label?: string;
 	disabled?: boolean;
 	rounded?: boolean;
 };
 export const NumberField: FC<NumberFieldProps> = (props) => {
 	const {
-		value, onValue, label,
+		value, setValue, label,
 		disabled, rounded,
 	} = props;
 
@@ -66,10 +66,10 @@ export const NumberField: FC<NumberFieldProps> = (props) => {
 	const [localValue, setLocalValue] = useState<string>(`${value}`);
 	useAnimation(() => {
 		if (!active) return;
-		const result = onValue(Math.round(valueRef.current * 1e1) / 1e1);
+		const result = setValue(Math.round(valueRef.current * 1e1) / 1e1);
 		setLocalValue(`${result}`);
 		valueRef.current = result;
-	}, [active, onValue]);
+	}, [active, setValue]);
 
 	const [groovedWheelColor, setGroovedWheelColor] = useState<number>(0);
 	const fieldsetRef = useRef<HTMLFieldSetElement>(null);
@@ -99,7 +99,7 @@ export const NumberField: FC<NumberFieldProps> = (props) => {
 			if (stopGroovedWheel) stopGroovedWheel();
 		},
 		onBlur: () => {
-			const newValue = onValue(Number.parseFloat(localValue));
+			const newValue = setValue(Number.parseFloat(localValue));
 			setLocalValue(`${newValue}`);
 			valueRef.current = newValue;
 		},
