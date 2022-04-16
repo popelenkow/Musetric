@@ -62,7 +62,7 @@ export type SoundView = {
 };
 export const useSoundView = (props: UseSoundViewProps): SoundView => {
 	const { WaveformIcon, FrequencyIcon, SpectrogramIcon } = useIconContext();
-	const { t } = useLocaleContext();
+	const { i18n } = useLocaleContext();
 
 	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
 
@@ -80,7 +80,7 @@ export const useSoundView = (props: UseSoundViewProps): SoundView => {
 		const waveformButtonProps: ButtonProps = {
 			kind: 'icon',
 			rounded: true,
-			title: t('Workshop:waveform'),
+			title: i18n.t('Workshop:waveform'),
 			primary: soundViewId === 'Waveform',
 			onClick: () => setSoundViewId('Waveform'),
 		};
@@ -94,7 +94,7 @@ export const useSoundView = (props: UseSoundViewProps): SoundView => {
 		const frequencyButtonProps: ButtonProps = {
 			kind: 'icon',
 			rounded: true,
-			title: t('Workshop:frequency'),
+			title: i18n.t('Workshop:frequency'),
 			primary: soundViewId === 'Frequency',
 			onClick: () => setSoundViewId('Frequency'),
 		};
@@ -108,7 +108,7 @@ export const useSoundView = (props: UseSoundViewProps): SoundView => {
 		const spectrogramButtonProps: ButtonProps = {
 			kind: 'icon',
 			rounded: true,
-			title: t('Workshop:spectrogram'),
+			title: i18n.t('Workshop:spectrogram'),
 			primary: soundViewId === 'Spectrogram',
 			onClick: () => setSoundViewId('Spectrogram'),
 		};

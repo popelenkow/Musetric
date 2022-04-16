@@ -26,7 +26,7 @@ export function AppDropdown<ViewId extends string>(
 ): ReactElement | null {
 	const { viewId, setViewId, allViewEntries } = props;
 	const { MenuIcon } = useIconContext();
-	const { t } = useLocaleContext();
+	const { i18n } = useLocaleContext();
 
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const mapMenu = (view: AppViewEntry<ViewId>, index: number): ReactElement | null => {
@@ -60,7 +60,7 @@ export function AppDropdown<ViewId extends string>(
 		kind: 'icon',
 		active: isOpen,
 		rounded: true,
-		title: t('AppBase:dropdown'),
+		title: i18n.t('AppBase:dropdown'),
 		isOpen,
 		setIsOpen,
 		menu: {

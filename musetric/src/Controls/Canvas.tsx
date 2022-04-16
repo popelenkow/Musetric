@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
+import { useLogContext } from '../AppContexts';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useLocaleContext } from '../AppContexts/Locale';
-import { ComponentStateProps } from '../Hooks/ComponentState';
 import { Size2D } from '../Rendering/Layout';
 
 export const getCanvasClasses = createClasses(() => {
@@ -20,31 +20,33 @@ export type CanvasState = {
 	context: CanvasRenderingContext2D;
 };
 
-export type CanvasProps = ComponentStateProps<CanvasState> & {
+export type CanvasProps = {
 	size: Size2D;
+	setState: (state: CanvasState) => void;
 };
 export const Canvas: React.FC<CanvasProps> = (props) => {
-	const { size, onState, onError } = props;
+	const { size, setState } = props;
 	const classes = useClasses();
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const { t } = useLocaleContext();
+	const { i18n } = useLocaleContext();
+	const { log } = useLogContext();
 
 	useEffect(() => {
 		const element = canvasRef.current;
 		if (!element) {
-			onError(t('Error:ref', { element: 'Canvas' }));
+			log.error(i18n.t('Error:ref', { element: 'Canvas' }));
 			return;
 		}
 		element.width = size.width;
 		element.height = size.height;
 		const context = element.getContext('2d');
 		if (!context) {
-			onError(t('Error:canvasContext2D'));
+			log.error(i18n.t('Error:canvasContext2D'));
 			return;
 		}
 		context.globalCompositeOperation = 'copy';
-		onState({ size, element, context });
-	}, [onState, onError, t, size]);
+		setState({ size, element, context });
+	}, [setState, log, i18n, size]);
 
 	const canvasProps: JSX.IntrinsicElements['canvas'] = {
 		className: classes.root,

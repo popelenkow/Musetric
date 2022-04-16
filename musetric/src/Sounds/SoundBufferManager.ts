@@ -51,8 +51,8 @@ const overwrite = (
 export type SoundBufferManager = {
 	readonly soundBuffer: SoundBuffer;
 	readonly soundCircularBuffer: SoundBuffer;
-	readonly on: EventEmitter<SoundBufferEvent>;
-	readonly onCircular: EventEmitter<SoundBufferEvent>;
+	readonly onBuffer: EventEmitter<SoundBufferEvent>;
+	readonly onCircularBuffer: EventEmitter<SoundBufferEvent>;
 	readonly cursor: Cursor;
 	readonly push: (chunk: Float32Array[], type: 'recording' | 'live' | 'file') => void;
 };
@@ -62,27 +62,27 @@ export const createSoundBufferManager = (
 ): SoundBufferManager => {
 	const soundBuffer = createSoundBuffer(sampleRate, channelCount);
 	const soundCircularBuffer = createSoundBuffer(sampleRate, channelCount, sampleRate * 5);
-	const on = createEventEmitter<SoundBufferEvent>();
-	const onCircular = createEventEmitter<SoundBufferEvent>();
+	const onBuffer = createEventEmitter<SoundBufferEvent>();
+	const onCircularBuffer = createEventEmitter<SoundBufferEvent>();
 	const cursor = createCursor();
 
 	const push: SoundBufferManager['push'] = (chunk, type) => {
 		const chunkSize = chunk[0].length;
 		if (type !== 'live') {
 			const cursorValue = cursor.get();
-			add(soundBuffer, on, chunk, cursorValue);
+			add(soundBuffer, onBuffer, chunk, cursorValue);
 			cursor.set(cursorValue + chunkSize, 'process');
 		}
 		if (type !== 'file') {
-			overwrite(soundCircularBuffer, onCircular, chunk);
+			overwrite(soundCircularBuffer, onCircularBuffer, chunk);
 		}
 	};
 
 	return {
 		soundBuffer,
 		soundCircularBuffer,
-		on,
-		onCircular,
+		onBuffer,
+		onCircularBuffer,
 		cursor,
 		push,
 	};

@@ -48,7 +48,7 @@ export const Waveform: FC<WaveformProps> = (props) => {
 	const canvasProps: PixelCanvasProps = {
 		layout,
 		onClick,
-		onDraw: draw,
+		draw,
 	};
 
 	return <PixelCanvas {...canvasProps} />;

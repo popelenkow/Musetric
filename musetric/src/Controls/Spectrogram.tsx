@@ -59,8 +59,8 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
 	useEffect(() => {
 		const { soundBuffer, soundCircularBuffer } = soundBufferManager;
 		const buffer = isLive ? soundCircularBuffer : soundBuffer;
-		const on = isLive ? soundBufferManager.onCircular : soundBufferManager.on;
-		const unsubscribe = on.subscribe(async (event) => {
+		const onBuffer = isLive ? soundBufferManager.onCircularBuffer : soundBufferManager.onBuffer;
+		const unsubscribe = onBuffer.subscribe(async (event) => {
 			const createBufferEvent = (): SpectrumBufferEvent | undefined => {
 				if (event.type === 'newBuffer') {
 					const value = buffer.buffers[0].realRaw;
@@ -111,7 +111,7 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
 	const canvasProps: PixelCanvasProps = {
 		layout,
 		onClick,
-		onDraw: draw,
+		draw,
 	};
 
 	return <PixelCanvas {...canvasProps} />;

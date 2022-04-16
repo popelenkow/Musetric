@@ -17,7 +17,7 @@ export type SoundPlayer = {
 };
 export const useSoundPlayer = (soundBufferManager: SoundBufferManager): SoundPlayer => {
 	const { PlayIcon, StopIcon } = useIconContext();
-	const { t } = useLocaleContext();
+	const { i18n } = useLocaleContext();
 	const { playerUrl } = useWorkerContext();
 
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -35,7 +35,7 @@ export const useSoundPlayer = (soundBufferManager: SoundBufferManager): SoundPla
 				cursor.set(value, 'process');
 			},
 		});
-		cursor.on.subscribe(async (event) => {
+		cursor.onCursor.subscribe(async (event) => {
 			const { inputType, value } = event;
 			if (inputType === 'user') await player.setCursor(value);
 		});
@@ -65,7 +65,7 @@ export const useSoundPlayer = (soundBufferManager: SoundBufferManager): SoundPla
 			active: isPlaying,
 			primary: isPlaying,
 			rounded: true,
-			title: isPlaying ? t('Workshop:stop') : t('Workshop:play'),
+			title: isPlaying ? i18n.t('Workshop:stop') : i18n.t('Workshop:play'),
 			onClick: () => skipPromise(isPlaying ? stopPlaying() : startPlaying()),
 		};
 		return (

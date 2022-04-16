@@ -6,7 +6,7 @@ import { AppAbout, AppAboutProps } from 'musetric/App/AppAbout';
 import { getStorageLocaleId, setStorageLocaleId, createI18n } from 'musetric/AppBase/Locale';
 import { createConsoleLog } from 'musetric/AppBase/Log';
 import { getStorageThemeId, setStorageThemeId } from 'musetric/AppBase/Theme';
-import { LocaleProvider, LocaleProviderProps, useLocaleContext } from 'musetric/AppContexts/Locale';
+import { LocaleProvider, LocaleProviderProps } from 'musetric/AppContexts/Locale';
 import { LogProvider, LogProviderProps } from 'musetric/AppContexts/Log';
 import { CssProvider, CssProviderProps } from 'musetric/AppContexts/Css';
 import { IconProvider, IconProviderProps } from 'musetric/AppContexts/Icon';
@@ -36,7 +36,6 @@ export const createMusetricApp: CreateMusetricApp = async (options) => {
 	type ViewId = 'soundWorkshop' | 'about';
 	const useViewEntries = (): AppViewEntry<ViewId>[] => {
 		const { GithubIcon, PerformanceIcon } = icons;
-		const { t } = useLocaleContext();
 
 		const soundWorkshop = <SoundWorkshop />;
 		const githubProps: ButtonProps = {
@@ -61,9 +60,9 @@ export const createMusetricApp: CreateMusetricApp = async (options) => {
 		const aboutInfo = <AppAbout {...aboutInfoProps} />;
 
 		return [
-			{ type: 'view', id: 'soundWorkshop', name: t('App:soundWorkshop'), element: soundWorkshop },
+			{ type: 'view', id: 'soundWorkshop', name: i18n.t('App:soundWorkshop'), element: soundWorkshop },
 			{ type: 'divider' },
-			{ type: 'view', id: 'about', name: t('App:about'), element: aboutInfo },
+			{ type: 'view', id: 'about', name: i18n.t('App:about'), element: aboutInfo },
 		];
 	};
 

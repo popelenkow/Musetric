@@ -46,7 +46,7 @@ export const Frequency: FC<FrequencyProps> = (props) => {
 
 	const canvasProps: PixelCanvasProps = {
 		layout,
-		onDraw: draw,
+		draw,
 	};
 
 	return <PixelCanvas {...canvasProps} />;

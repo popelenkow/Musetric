@@ -3,17 +3,15 @@ import { useAnimation } from '../Hooks/Animation';
 import { Canvas, CanvasProps, CanvasState } from './Canvas';
 import { rotatePosition2D, Size2D, Layout2D, Position2D, getCanvasCursorPosition2D, drawImage, rotateSize2D } from '../Rendering/Layout';
 import { createPixelCanvasElement } from '../Rendering/PixelCanvasElement';
-import { useLogContext } from '../AppContexts/Log';
 
 export type PixelCanvasProps = {
 	layout: Layout2D;
 	onClick?: (cursorPosition: Position2D) => void;
-	onDraw: (output: ImageData) => void;
+	draw: (output: ImageData) => void;
 	canvasSize?: Size2D;
 };
 export const PixelCanvas: FC<PixelCanvasProps> = (props) => {
-	const { layout, onClick, onDraw, canvasSize } = props;
-	const { log } = useLogContext();
+	const { layout, onClick, draw, canvasSize } = props;
 
 	const pixelCanvasElement = useMemo(() => {
 		return createPixelCanvasElement({ size: layout.size });
@@ -42,18 +40,14 @@ export const PixelCanvas: FC<PixelCanvasProps> = (props) => {
 	useAnimation(() => {
 		if (!pixelCanvasElement) return;
 		if (!state) return;
-		onDraw(pixelCanvasElement.imageData);
+		draw(pixelCanvasElement.imageData);
 		pixelCanvasElement.context.putImageData(pixelCanvasElement.imageData, 0, 0);
 		drawImage(state.context, pixelCanvasElement.element, layout);
-	}, [onDraw, pixelCanvasElement, state, layout]);
+	}, [draw, pixelCanvasElement, state, layout]);
 
-	const onError = useCallback((message: string) => {
-		log.error(message);
-	}, [log]);
 	const canvasProps: CanvasProps = {
 		size,
-		onState: setState,
-		onError,
+		setState,
 	};
 	return <Canvas {...canvasProps} />;
 };
