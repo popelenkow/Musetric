@@ -3,11 +3,11 @@ on:
   push:
     branches: [main]
     paths:
-      - tools/eslint-config-musetric/**
+      - eslint-config-musetric/**
   pull_request:
     branches: [main]
     paths:
-      - tools/eslint-config-musetric/**
+      - eslint-config-musetric/**
   workflow_dispatch:
     inputs:
       npmPublishTag:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./tools/eslint-config-musetric
+        working-directory: ./eslint-config-musetric
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
@@ -28,7 +28,7 @@ jobs:
     - uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-    - run: python ../../.github/workflows/setBuildNumber.py
+    - run: python ../.github/workflows/setBuildNumber.py
       env:
         npmPublishTag: ${{ github.event.inputs.npmPublishTag }}
         buildNumber: ${{ github.run_number }}
