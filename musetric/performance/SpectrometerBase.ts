@@ -1,14 +1,16 @@
-/* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 import { Suite } from 'benchmark';
 import FFT from 'fft.js';
 import { createComplexIndexable } from '../src/TypedArray/ComplexIndexable';
 import { createFftRadix2Base } from '../src/Sounds/FftRadix2';
 import { createFftRadix4Base } from '../src/Sounds/FftRadix4';
+import { createConsoleLog } from '../src/AppBase/Log';
 
+const log = createConsoleLog();
 export const performanceFft = (): void => {
 	const windowSize = 16384;
 	const input = createComplexIndexable('float32', windowSize);
@@ -41,12 +43,12 @@ export const performanceFft = (): void => {
 			fftRadix4O.transform(w2, w1);
 		});
 		suite.on('cycle', (event: any) => {
-			console.log(String(event.target));
+			log.info(String(event.target));
 		});
 		suite.on('complete', () => {
 		});
-		console.log('');
-		console.log(`forward ${i}`);
+		log.info('');
+		log.info(`forward ${i}`);
 		suite.run({ async: false });
 	};
 

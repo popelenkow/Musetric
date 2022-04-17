@@ -1,4 +1,4 @@
-import { createEventEmitter } from './EventEmitter';
+import { createEventEmitter } from '../Utils/EventEmitter';
 
 export type CursorInputType = 'user' | 'process';
 export type OnCursorEvent = {
@@ -7,16 +7,16 @@ export type OnCursorEvent = {
 };
 export const createCursor = () => {
 	let v = 0;
-	const onCursor = createEventEmitter<OnCursorEvent>();
+	const emitter = createEventEmitter<OnCursorEvent>();
 	const set = (value: number, inputType: CursorInputType) => {
 		v = value;
-		onCursor.emit({ value, inputType });
+		emitter.emit({ value, inputType });
 	};
 	const get = () => {
 		return v;
 	};
 	return {
-		onCursor,
+		emitter,
 		set,
 		get,
 	} as const;

@@ -1,3 +1,3 @@
 export * from './Animation';
-export * from './Cache';
-export * from './DisabledZoom';
+export * from './LazyAudioContext';
+export * from './LazyMemo';

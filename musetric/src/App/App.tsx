@@ -1,8 +1,8 @@
-import React, { useState, ReactElement, ReactNode } from 'react';
+import React, { useState, ReactElement, ReactNode, useEffect } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useIconContext } from '../AppContexts/Icon';
 import { RootElementProvider, useRootElementContext } from '../AppContexts/RootElement';
-import { useDisabledZoom } from '../Hooks/DisabledZoom';
+import { disableZoom } from '../Utils/Zoom';
 import { AppBar } from './AppBar';
 import { AppDropdown, AppDropdownProps, AppViewEntry, AppViewElement } from './AppDropdown';
 
@@ -33,7 +33,7 @@ function Root<ViewId extends string>(props: RootProps<ViewId>): ReactElement | n
 
 	const allViewEntries = useViewEntries();
 	const { rootElement, setRootElement } = useRootElementContext();
-	useDisabledZoom(rootElement);
+	useEffect(() => disableZoom(rootElement), [rootElement]);
 
 	const [viewId, setViewId] = useState<ViewId>(initViewId);
 	const appDropdownProps: AppDropdownProps<ViewId> = {

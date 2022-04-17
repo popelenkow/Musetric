@@ -7,8 +7,8 @@ import { useLocaleContext } from '../AppContexts/Locale';
 import { Button, ButtonProps } from '../Controls/Button';
 import { NumberField, NumberFieldProps } from '../Controls/NumberField';
 import { TextField, TextFieldProps } from '../Controls/TextField';
-
 import { ScrollArea } from '../Controls/ScrollArea';
+import { useRootElementContext } from '../AppContexts/RootElement';
 
 export const getSoundParametersClasses = createClasses((css) => {
 	const { theme } = css;
@@ -34,8 +34,7 @@ export type Range = {
 	to: number;
 };
 export type UseSoundParametersOptions = {
-	element: HTMLElement | undefined;
-	soundBufferManager: SoundBufferManager;
+	sampleRate: SoundBufferManager;
 };
 export type SoundParameters = {
 	rangeX: Range;
@@ -45,19 +44,16 @@ export type SoundParameters = {
 	renderParametersButton: () => ReactElement;
 	renderParametersPanel: () => ReactElement;
 };
-export const useSoundParameters = (
-	options: UseSoundParametersOptions,
-): SoundParameters => {
-	const { element, soundBufferManager } = options;
+export const useSoundParameters = (sampleRate: number): SoundParameters => {
 	const classes = useClasses();
 	const { i18n } = useLocaleContext();
 	const { ParametersIcon } = useIconContext();
 
-	const { sampleRate } = soundBufferManager.soundBuffer;
 	const [rangeX, setRangeX] = useState<Range>({ from: 0, to: sampleRate / 2 / 6 });
 	const [frequencyRange, setFrequencyRange] = useState<Range>({ from: 0, to: sampleRate / 2 / 6 });
+	const { rootElement } = useRootElementContext();
 	useEffect(() => {
-		if (!element) return undefined;
+		if (!rootElement) return undefined;
 		const addTo = (value: number, delta: number, min: number, max: number) => {
 			const newValue = value + delta;
 			if (newValue < min) return min;
@@ -78,11 +74,11 @@ export const useSoundParameters = (
 				setRangeX({ from: rangeX.from, to });
 			}
 		};
-		element.addEventListener('wheel', wheelListener);
+		rootElement.addEventListener('wheel', wheelListener);
 		return () => {
-			element.removeEventListener('wheel', wheelListener);
+			rootElement.removeEventListener('wheel', wheelListener);
 		};
-	}, [element, sampleRate, rangeX, frequencyRange]);
+	}, [rootElement, sampleRate, rangeX, frequencyRange]);
 
 	const [isOpenParameters, setIsOpenParameters] = useState<boolean>(false);
 

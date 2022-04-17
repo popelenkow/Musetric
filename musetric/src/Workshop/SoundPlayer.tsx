@@ -3,7 +3,7 @@ import { SoundBufferManager } from '../Sounds/SoundBufferManager';
 import { useIconContext } from '../AppContexts/Icon';
 import { useLocaleContext } from '../AppContexts/Locale';
 import { Button, ButtonProps } from '../Controls/Button';
-import { useCacheAsync } from '../Hooks/Cache';
+import { useLazyMemoAsync } from '../Hooks/LazyMemo';
 import { createPlayer } from '../SoundProcessing/Player';
 import { useWorkerContext } from '../AppContexts/Worker';
 import { skipPromise } from '../Utils/SkipPromise';
@@ -21,7 +21,7 @@ export const useSoundPlayer = (soundBufferManager: SoundBufferManager): SoundPla
 	const { playerUrl } = useWorkerContext();
 
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
-	const [getPlayer] = useCacheAsync(async () => {
+	const getPlayer = useLazyMemoAsync(async () => {
 		const { soundBuffer, cursor } = soundBufferManager;
 		const { channelCount } = soundBuffer;
 		const player = await createPlayer(playerUrl, channelCount, {
@@ -35,7 +35,7 @@ export const useSoundPlayer = (soundBufferManager: SoundBufferManager): SoundPla
 				cursor.set(value, 'process');
 			},
 		});
-		cursor.onCursor.subscribe(async (event) => {
+		cursor.emitter.subscribe(async (event) => {
 			const { inputType, value } = event;
 			if (inputType === 'user') await player.setCursor(value);
 		});

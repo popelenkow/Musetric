@@ -1,5 +1,5 @@
-import { v4 as uuid } from 'uuid';
 import type { EventHandlers } from '../Typescript/Events';
+import { createIndexIterator } from '../Utils/IndexIterator';
 import type { PromiseWorker, PromiseWorkerResponse, PromiseWorkerRequest } from './PromiseWorker';
 
 export const createPromiseWorkerApi = <TypedWorker extends PromiseWorker, Events>(
@@ -27,13 +27,14 @@ export const createPromiseWorkerApi = <TypedWorker extends PromiseWorker, Events
 		callback(result);
 	};
 
+	const iterator = createIndexIterator();
 	const request = <Type extends keyof TypedWorker & string>(
 		type: Type,
 		args: Parameters<TypedWorker[Type]>,
 	) => {
 		type ResultType = ReturnType<TypedWorker[Type]>;
 		return new Promise<ResultType>((resolve) => {
-			const id = uuid();
+			const id = iterator.next((i) => !!callbacks[i]);
 			const callback = (result: unknown) => {
 				resolve(result as ResultType);
 			};
