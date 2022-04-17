@@ -13,7 +13,7 @@ export type Css = {
 	platform: Platform;
 };
 export const ThemingContext = createContext<Css>();
-export const theming = createTheming(ThemingContext);
+const theming = createTheming(ThemingContext);
 
 export function createClasses<T>(create: (css: Css) => T): ((css: Css) => T) {
 	return (css: Css) => create(css);

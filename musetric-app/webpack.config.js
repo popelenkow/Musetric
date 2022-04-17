@@ -63,7 +63,9 @@ const createConfig = (env, options) => {
 		/** @type {DevServerConfiguration} */
 		devServer: {
 			port: 3000,
-			https: true,
+			server: {
+				type: 'https',
+			},
 			headers: {
 				'Cross-Origin-Opener-Policy': 'same-origin',
 				'Cross-Origin-Embedder-Policy': 'require-corp',
