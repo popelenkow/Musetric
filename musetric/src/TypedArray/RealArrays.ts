@@ -1,5 +1,5 @@
 import { RealType, realBytesMap } from './RealType';
-import { RealArray, SharedRealArray, viewRealArray, RealArrayLike } from './RealArray';
+import { RealArray, viewRealArray, RealArrayLike } from './RealArray';
 
 export type RealArraysOptions = {
 	offset: number;
@@ -18,24 +18,6 @@ export const createRealArrays = <K extends RealType>(
 	const realRaw = new ArrayBuffer(bytes * commonLength);
 	let { offset } = options;
 	const arrays: RealArray<K>[] = [];
-	for (let i = 0; i < count; i++) {
-		const view = viewRealArray(type, realRaw, Math.floor(offset), length);
-		arrays.push(view);
-		offset += step;
-	}
-	return arrays;
-};
-
-export const createSharedRealArray = <K extends RealType>(
-	type: K,
-	commonLength: number,
-	options: RealArraysOptions,
-): SharedRealArray<K>[] => {
-	const { step, count, length } = options;
-	const bytes = realBytesMap[type];
-	const realRaw = new SharedArrayBuffer(bytes * commonLength);
-	let { offset } = options;
-	const arrays: SharedRealArray<K>[] = [];
 	for (let i = 0; i < count; i++) {
 		const view = viewRealArray(type, realRaw, Math.floor(offset), length);
 		arrays.push(view);

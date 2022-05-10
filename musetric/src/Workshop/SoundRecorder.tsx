@@ -3,7 +3,7 @@ import { useLocaleContext } from '../AppContexts/Locale';
 import { useIconContext } from '../AppContexts/Icon';
 import { useWorkerContext } from '../AppContexts/Worker';
 import { Button, ButtonProps } from '../Controls/Button';
-import { SoundBufferManager } from '../Sounds';
+import { SoundBufferManager } from '../Sounds/SoundBufferManager';
 import { createRecorder, Recorder } from '../SoundProcessing/Recorder';
 import { skipPromise } from '../Utils/SkipPromise';
 

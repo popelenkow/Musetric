@@ -20,7 +20,6 @@ export const createI18n = async (
 	await result.init({
 		lng: initLocaleId,
 		fallbackLng: initLocaleId,
-		defaultNS: 'musetric',
 		supportedLngs: localeEntries.map((x) => x.localeId),
 		resources,
 		debug: false,

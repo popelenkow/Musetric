@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, FC } from 'react';
 import className from 'classnames';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
-import { useRootElementContext } from '../AppContexts/RootElement';
 import { createSoundBufferManager } from '../Sounds/SoundBufferManager';
 import { SoundProgress } from './SoundProgress';
 import { useSoundFile } from './SoundFile';
@@ -28,7 +27,7 @@ export const getSoundWorkshopClasses = createClasses((css) => {
 					"toolbar sidebar"
 				`,
 			},
-			'&.withParameters': {
+			'&.withTopPanel': {
 				'grid-template-rows': '1fr 1fr 56px 50px',
 				'grid-template-columns': '1fr 50px',
 				'grid-template-areas': `
@@ -113,11 +112,7 @@ export const SoundWorkshop: FC = () => {
 		if (isLive) skipPromise(initRecorder());
 	}, [isLive, initRecorder]);
 
-	const { rootElement } = useRootElementContext();
-	const soundParameters = useSoundParameters({
-		element: rootElement,
-		soundBufferManager,
-	});
+	const soundParameters = useSoundParameters(soundBufferManager.soundBuffer.sampleRate);
 	const {
 		isOpenParameters,
 		renderParametersButton,
@@ -135,7 +130,7 @@ export const SoundWorkshop: FC = () => {
 	const { renderProgressBarView } = useSoundProgressBar(soundBufferManager);
 
 	const getRootStateName = () => {
-		if (isOpenParameters) return 'withParameters';
+		if (isOpenParameters) return 'withTopPanel';
 		return 'default';
 	};
 	const rootName = className({

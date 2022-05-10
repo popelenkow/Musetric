@@ -15,14 +15,10 @@ const getMusetricWorkers = (): CreateMusetricAppOptions['workers'] => {
 	const spectrumUrl = new WorkerUrl(new URL('./Spectrum.ts', import.meta.url), {
 		name: 'MusetricSpectrum',
 	});
-	const wavConverterUrl = new WorkerUrl(new URL('./WavConverter.ts', import.meta.url), {
-		name: 'MusetricWavConverter',
-	});
 	return {
 		playerUrl,
 		recorderUrl,
 		spectrumUrl,
-		wavConverterUrl,
 	};
 };
 

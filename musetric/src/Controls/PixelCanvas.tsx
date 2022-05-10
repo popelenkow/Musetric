@@ -33,7 +33,7 @@ export const PixelCanvas: FC<PixelCanvasProps> = (props) => {
 		if (!state) return undefined;
 		state.element.addEventListener('click', click);
 		return () => {
-			state.element?.removeEventListener('click', click);
+			state.element.removeEventListener('click', click);
 		};
 	}, [state, click]);
 

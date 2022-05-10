@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react';
-import { saveAs } from 'file-saver';
 import { useIconContext } from '../AppContexts/Icon';
 import { useLocaleContext } from '../AppContexts/Locale';
 import { SoundBufferManager } from '../Sounds/SoundBufferManager';
@@ -7,6 +6,7 @@ import { Button, ButtonProps } from '../Controls/Button';
 import { SelectFile, SelectFileProps } from '../Controls/SelectFile';
 import { useSoundConverter } from './SoundConverter';
 import { skipPromise } from '../Utils/SkipPromise';
+import { saveBlobFile } from '../Utils/SaveBlobFile';
 
 export type SoundFile = {
 	renderSaveFileButton: () => ReactElement;
@@ -18,9 +18,9 @@ export const useSoundFile = (soundBufferManager: SoundBufferManager): SoundFile 
 
 	const { getBlob, pushFile } = useSoundConverter(soundBufferManager);
 
-	const saveFile = async (name: string) => {
-		const blob = await getBlob();
-		saveAs(blob, name);
+	const saveFile = (name: string) => {
+		const blob = getBlob();
+		saveBlobFile(blob, name);
 	};
 
 	const pushSoundFile = async (file: File) => {
@@ -32,7 +32,7 @@ export const useSoundFile = (soundBufferManager: SoundBufferManager): SoundFile 
 			kind: 'icon',
 			rounded: true,
 			title: i18n.t('Workshop:save'),
-			onClick: () => skipPromise(saveFile('myRecording.wav')),
+			onClick: () => saveFile('myRecording.wav'),
 		};
 		return (
 			<Button {...saveFileProps}>

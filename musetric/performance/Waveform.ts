@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -8,7 +7,9 @@ import benchmark from 'benchmark';
 import { drawWaveform, evalWaves, Waves, createWaveformColors } from '../src/Rendering/Waveform';
 import { Size2D } from '../src/Rendering/Layout';
 import theme from '../src/Resources/Themes/light';
+import { createConsoleLog } from '../src/AppBase/Log';
 
+const log = createConsoleLog();
 export const performanceWaveform = (): void => {
 	const suite = new benchmark.Suite();
 	const colors = createWaveformColors(theme);
@@ -53,7 +54,7 @@ export const performanceWaveform = (): void => {
 	runWidth;
 	runHeight;
 	suite.on('cycle', (event: any) => {
-		console.log(String(event.target));
+		log.info(String(event.target));
 	});
 	suite.on('complete', (ev: any) => {
 		ev;

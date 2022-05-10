@@ -18,7 +18,7 @@ export type SpectrumOptions = {
 	count: number;
 };
 export type SpectrumBufferEvent =
-	| { type: 'newBuffer'; value: SharedArrayBuffer; }
+	| { type: 'newBuffer'; buffer: SharedArrayBuffer; }
 	| { type: 'invalidate'; from: number; to: number; }
 	| { type: 'shift'; offset: number };
 export type SpectrumWorker = {
@@ -118,7 +118,7 @@ export const createSpectrumWorker = (): SpectrumWorker => {
 		const toRenderPoint = (value: number, length: number) => {
 			return count * (value / length);
 		};
-		if (event.type === 'newBuffer') setBuffer(event.value);
+		if (event.type === 'newBuffer') setBuffer(event.buffer);
 		if (event.type === 'invalidate') {
 			if (!buffer) return;
 			const from = toRenderPoint(event.from, buffer.real.length);

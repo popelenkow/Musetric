@@ -1,6 +1,6 @@
 import { createSoundBuffer, SoundBuffer } from './SoundBuffer';
-import { createCursor, Cursor } from './Cursor';
-import { createEventEmitter, EventEmitter } from './EventEmitter';
+import { createCursor } from './Cursor';
+import { createEventEmitter, EventEmitter } from '../Utils/EventEmitter';
 
 export type SoundBufferEvent =
 	| { type: 'newBuffer'; }
@@ -9,12 +9,12 @@ export type SoundBufferEvent =
 
 const add = (
 	soundBuffer: SoundBuffer,
-	on: EventEmitter<SoundBufferEvent>,
-	chunk: Float32Array[],
+	bufferEventEmitter: EventEmitter<SoundBufferEvent>,
+	chunks: Float32Array[],
 	cursor: number,
 ) => {
 	const { length, channelCount, buffers } = soundBuffer;
-	const chunkSize = chunk[0].length;
+	const chunkSize = chunks[0].length;
 	const newSize = cursor + chunkSize;
 	const isNewBuffer = newSize > length;
 	if (isNewBuffer) {
@@ -22,68 +22,63 @@ const add = (
 		soundBuffer.setLength(newLength);
 	}
 	for (let i = 0; i < channelCount; i++) {
-		buffers[i].real.set(chunk[i], cursor);
+		buffers[i].real.set(chunks[i], cursor);
 	}
 	const event: SoundBufferEvent = isNewBuffer
 		? { type: 'newBuffer' }
 		: { type: 'invalidate', from: cursor, to: newSize };
-	on.emit(event);
+	bufferEventEmitter.emit(event);
 };
 const overwrite = (
 	soundBuffer: SoundBuffer,
-	on: EventEmitter<SoundBufferEvent>,
-	chunk: Float32Array[],
+	bufferEventEmitter: EventEmitter<SoundBufferEvent>,
+	chunks: Float32Array[],
 ) => {
 	const { length, channelCount, buffers } = soundBuffer;
-	const chunkLength = chunk[0].length;
+	const chunkLength = chunks[0].length;
 	const isNotOvercome = length > chunkLength;
 	const newSize = chunkLength;
 	const oldSize = length - newSize;
 	if (isNotOvercome) {
 		for (let i = 0; i < channelCount; i++) {
 			buffers[i].real.copyWithin(0, newSize);
-			buffers[i].real.set(chunk[i], oldSize);
+			buffers[i].real.set(chunks[i], oldSize);
 		}
-		on.emit({ type: 'shift', offset: -newSize });
+		bufferEventEmitter.emit({ type: 'shift', offset: -newSize });
 	}
 };
 
-export type SoundBufferManager = {
-	readonly soundBuffer: SoundBuffer;
-	readonly soundCircularBuffer: SoundBuffer;
-	readonly onBuffer: EventEmitter<SoundBufferEvent>;
-	readonly onCircularBuffer: EventEmitter<SoundBufferEvent>;
-	readonly cursor: Cursor;
-	readonly push: (chunk: Float32Array[], type: 'recording' | 'live' | 'file') => void;
-};
 export const createSoundBufferManager = (
 	sampleRate: number,
 	channelCount: number,
-): SoundBufferManager => {
+) => {
 	const soundBuffer = createSoundBuffer(sampleRate, channelCount);
 	const soundCircularBuffer = createSoundBuffer(sampleRate, channelCount, sampleRate * 5);
-	const onBuffer = createEventEmitter<SoundBufferEvent>();
-	const onCircularBuffer = createEventEmitter<SoundBufferEvent>();
+	const bufferEventEmitter = createEventEmitter<SoundBufferEvent>();
+	const circularBufferEventEmitter = createEventEmitter<SoundBufferEvent>();
 	const cursor = createCursor();
 
-	const push: SoundBufferManager['push'] = (chunk, type) => {
-		const chunkSize = chunk[0].length;
+	const push = (chunks: Float32Array[], type: 'recording' | 'live' | 'file') => {
+		const chunkSize = chunks[0].length;
 		if (type !== 'live') {
 			const cursorValue = cursor.get();
-			add(soundBuffer, onBuffer, chunk, cursorValue);
+			add(soundBuffer, bufferEventEmitter, chunks, cursorValue);
 			cursor.set(cursorValue + chunkSize, 'process');
 		}
 		if (type !== 'file') {
-			overwrite(soundCircularBuffer, onCircularBuffer, chunk);
+			overwrite(soundCircularBuffer, circularBufferEventEmitter, chunks);
 		}
 	};
 
 	return {
+		sampleRate,
+		channelCount,
 		soundBuffer,
 		soundCircularBuffer,
-		onBuffer,
-		onCircularBuffer,
+		bufferEventEmitter,
+		circularBufferEventEmitter,
 		cursor,
 		push,
-	};
+	} as const;
 };
+export type SoundBufferManager = ReturnType<typeof createSoundBufferManager>;

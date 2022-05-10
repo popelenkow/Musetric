@@ -3,6 +3,7 @@ export * from './ComplexIndexable';
 export * from './ComplexList';
 export * from './ComplexUtils';
 export * from './RealArray';
+export * from './RealArrays';
 export * from './RealIndexable';
 export * from './RealList';
 export * from './RealType';
