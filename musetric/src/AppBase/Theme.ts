@@ -6,7 +6,7 @@ export type Theme = {
 	hover: string;
 	primaryHover: string;
 	primary: string;
-	activePrimary: string,
+	activePrimary: string;
 	divider: string;
 	shadow: string;
 };

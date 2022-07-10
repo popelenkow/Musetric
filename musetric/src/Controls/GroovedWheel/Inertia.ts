@@ -1,4 +1,4 @@
-import { Position2D } from './Layout';
+import { Position2D } from '../../Rendering/Layout';
 
 export type InertiaOptions = {
 	resistance: number;

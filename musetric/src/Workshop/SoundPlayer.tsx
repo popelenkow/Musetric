@@ -3,7 +3,7 @@ import { SoundBufferManager } from '../Sounds/SoundBufferManager';
 import { useIconContext } from '../AppContexts/Icon';
 import { useLocaleContext } from '../AppContexts/Locale';
 import { Button, ButtonProps } from '../Controls/Button';
-import { useLazyMemoAsync } from '../Hooks/LazyMemo';
+import { useLazyMemoAsync } from '../ReactUtils/LazyMemo';
 import { createPlayer } from '../SoundProcessing/Player';
 import { useWorkerContext } from '../AppContexts/Worker';
 import { skipPromise } from '../Utils/SkipPromise';

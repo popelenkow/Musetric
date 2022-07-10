@@ -1,7 +1,6 @@
 export * from './Animation';
 export * from './Color';
 export * from './Frequency';
-export * from './GroovedWheel';
 export * from './Layout';
 export * from './PixelCanvasElement';
 export * from './Spectrogram';

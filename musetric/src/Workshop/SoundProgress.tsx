@@ -2,7 +2,7 @@ import React, { useMemo, useState, FC } from 'react';
 import className from 'classnames';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { SoundBufferManager } from '../Sounds/SoundBufferManager';
-import { useAnimation } from '../Hooks/Animation';
+import { useAnimation } from '../ReactUtils/Animation';
 import { getFieldClasses } from '../Controls/Field';
 
 export const getSoundProgressClasses = createClasses((css) => {
@@ -33,7 +33,7 @@ export const SoundProgress: FC<SoundProgressProps> = (props) => {
 	});
 
 	type State = {
-		cursor: number,
+		cursor: number;
 		length: number;
 		sampleRate: number;
 	};

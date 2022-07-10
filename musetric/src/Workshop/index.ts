@@ -1,5 +1,4 @@
-export * from './SoundConverter';
-export * from './SoundFile';
+export * from './SoundWorkshopSidebar';
 export * from './SoundLive';
 export * from './SoundPlayer';
 export * from './SoundProgress';

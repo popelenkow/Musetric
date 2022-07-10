@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, ButtonHTMLAttributes } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { WithChildren } from './utils';
+import { WithChildren } from '../ReactUtils/WithChildren';
 
 export const getButtonClasses = createClasses((css) => {
 	const { theme } = css;
@@ -153,7 +153,7 @@ export const Button: FC<WithChildren<ButtonProps>> = (props) => {
 		{ value: { active, primary, rounded } },
 	);
 
-	const buttonProps: React.ButtonHTMLAttributes<HTMLButtonElement> = {
+	const buttonProps: ButtonHTMLAttributes<HTMLButtonElement> = {
 		className: rootName,
 		title,
 		disabled,

@@ -1,10 +1,7 @@
-import React, { useEffect, useState, ReactElement, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import className from 'classnames';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
-import { useIconContext } from '../AppContexts/Icon';
 import { SoundBufferManager } from '../Sounds/SoundBufferManager';
-import { useLocaleContext } from '../AppContexts/Locale';
-import { Button, ButtonProps } from '../Controls/Button';
 import { NumberField, NumberFieldProps } from '../Controls/NumberField';
 import { TextField, TextFieldProps } from '../Controls/TextField';
 import { ScrollArea } from '../Controls/ScrollArea';
@@ -36,18 +33,8 @@ export type Range = {
 export type UseSoundParametersOptions = {
 	sampleRate: SoundBufferManager;
 };
-export type SoundParameters = {
-	rangeX: Range;
-	frequencyRange: Range;
-	sampleRate: number;
-	isOpenParameters: boolean;
-	renderParametersButton: () => ReactElement;
-	renderParametersPanel: () => ReactElement;
-};
-export const useSoundParameters = (sampleRate: number): SoundParameters => {
+export const useSoundParameters = (sampleRate: number) => {
 	const classes = useClasses();
-	const { i18n } = useLocaleContext();
-	const { ParametersIcon } = useIconContext();
 
 	const [rangeX, setRangeX] = useState<Range>({ from: 0, to: sampleRate / 2 / 6 });
 	const [frequencyRange, setFrequencyRange] = useState<Range>({ from: 0, to: sampleRate / 2 / 6 });
@@ -80,22 +67,6 @@ export const useSoundParameters = (sampleRate: number): SoundParameters => {
 		};
 	}, [rootElement, sampleRate, rangeX, frequencyRange]);
 
-	const [isOpenParameters, setIsOpenParameters] = useState<boolean>(false);
-
-	const renderParametersButton = () => {
-		const openProps: ButtonProps = {
-			kind: 'icon',
-			rounded: true,
-			title: i18n.t('Workshop:parameters'),
-			active: isOpenParameters,
-			onClick: () => setIsOpenParameters(!isOpenParameters),
-		};
-		return (
-			<Button {...openProps}>
-				<ParametersIcon />
-			</Button>
-		);
-	};
 	const setFrequencyTo = useCallback((value: number) => {
 		const { from } = frequencyRange;
 		const getTo = () => {
@@ -162,8 +133,7 @@ export const useSoundParameters = (sampleRate: number): SoundParameters => {
 		rangeX,
 		frequencyRange,
 		sampleRate,
-		isOpenParameters,
-		renderParametersButton,
 		renderParametersPanel,
-	};
+	} as const;
 };
+export type SoundParameters = ReturnType<typeof useSoundParameters>;

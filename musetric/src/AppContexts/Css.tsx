@@ -1,18 +1,19 @@
-import React, { useState, useEffect, useContext, useMemo, FC } from 'react';
+import React, { createContext, useMemo, useState, FC, useEffect } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Classes, GenerateId } from 'jss';
 import { JssProvider, createTheming, createUseStyles, Styles } from 'react-jss';
 import classNames from 'classnames';
 import { Platform, getPlatformId } from '../AppBase/Platform';
 import { Theme, ThemeEntry } from '../AppBase/Theme';
-import { createContext } from './Context';
-import { WithChildren } from '../Controls/utils';
+import { useInitializedContext } from '../ReactUtils/Context';
+import { WithChildren } from '../ReactUtils/WithChildren';
 
 export type Css = {
 	theme: Theme;
 	platform: Platform;
 };
-export const ThemingContext = createContext<Css>();
+// eslint-disable-next-line
+export const ThemingContext = createContext<Css>(undefined as any);
 export const theming = createTheming(ThemingContext);
 
 export function createClasses<T>(create: (css: Css) => T): ((css: Css) => T) {
@@ -31,7 +32,7 @@ export type CssStore = {
 	setThemeId: (id: string) => void;
 	allThemeIds: string[];
 };
-export const CssContext = createContext<CssStore>();
+export const CssContext = createContext<CssStore | undefined>(undefined);
 
 const usePlatform = (): Platform => {
 	const platformId = useMemo(() => getPlatformId(), []);
@@ -72,7 +73,7 @@ export const CssProvider: FC<WithChildren<CssProviderProps>> = (props) => {
 	const { theme = allThemeEntries[0].theme } = themeEntry || { };
 	const platform = usePlatform();
 
-	const value: CssStore = useMemo(() => ({
+	const store: CssStore = useMemo(() => ({
 		css: { theme, platform },
 		themeId,
 		setThemeId: (id: string) => {
@@ -88,7 +89,7 @@ export const CssProvider: FC<WithChildren<CssProviderProps>> = (props) => {
 		return `${prefix}${rule.key}`;
 	};
 	return (
-		<CssContext.Provider value={value}>
+		<CssContext.Provider value={store}>
 			<JssProvider generateId={generateId}>
 				<theming.ThemeProvider theme={{ theme, platform }}>
 					{children}
@@ -98,7 +99,7 @@ export const CssProvider: FC<WithChildren<CssProviderProps>> = (props) => {
 	);
 };
 
-export const useCssContext = (): CssStore => useContext(CssContext);
+export const useCssContext = (): CssStore => useInitializedContext(CssContext, 'useCssContext');
 
 export type ClassNameArg = string | {
 	value?: string | Record<string, boolean | undefined>;

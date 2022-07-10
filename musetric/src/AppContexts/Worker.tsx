@@ -1,10 +1,10 @@
-import React, { FC, useContext } from 'react';
+import React, { createContext, FC } from 'react';
 import { Workers } from '../AppBase/Worker';
-import { WithChildren } from '../Controls/utils';
-import { createContext } from './Context';
+import { WithChildren } from '../ReactUtils/WithChildren';
+import { useInitializedContext } from '../ReactUtils/Context';
 
 export type WorkerStore = Workers;
-export const WorkerContext = createContext<WorkerStore>();
+export const WorkerContext = createContext<WorkerStore | undefined>(undefined);
 
 export const WorkerConsumer = WorkerContext.Consumer;
 
@@ -24,4 +24,4 @@ export const WorkerProvider: FC<WithChildren<WorkerProviderProps>> = (props) => 
 	);
 };
 
-export const useWorkerContext = (): WorkerStore => useContext(WorkerContext);
+export const useWorkerContext = (): WorkerStore => useInitializedContext(WorkerContext, 'useWorkerContext');

@@ -9,7 +9,7 @@ export type AppViewDivider = {
 	type: 'divider';
 };
 export type AppViewElement<ViewId extends string> = {
-	type: 'view'
+	type: 'view';
 	id: ViewId;
 	name: string;
 	element: ReactNode;

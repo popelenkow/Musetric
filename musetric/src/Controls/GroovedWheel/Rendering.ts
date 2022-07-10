@@ -1,4 +1,4 @@
-import { Size2D } from './Layout';
+import { Size2D } from '../../Rendering/Layout';
 
 export type GroovedWheelColors = {
 	content: number;

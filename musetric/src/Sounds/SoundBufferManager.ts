@@ -3,9 +3,9 @@ import { createCursor } from './Cursor';
 import { createEventEmitter, EventEmitter } from '../Utils/EventEmitter';
 
 export type SoundBufferEvent =
-	| { type: 'newBuffer'; }
-	| { type: 'invalidate'; from: number; to: number; }
-	| { type: 'shift'; offset: number; };
+	| { type: 'newBuffer' }
+	| { type: 'invalidate'; from: number; to: number }
+	| { type: 'shift'; offset: number };
 
 const add = (
 	soundBuffer: SoundBuffer,

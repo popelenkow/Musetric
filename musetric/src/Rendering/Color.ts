@@ -3,9 +3,9 @@ import type { ValueObject } from '../Typescript/ValueObject';
 import { Theme } from '../AppBase/Theme';
 
 export type Rgb = {
-	r: number,
-	g: number,
-	b: number,
+	r: number;
+	g: number;
+	b: number;
 };
 
 export const parseColorToRgb = (color: Color): Rgb => {

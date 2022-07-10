@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useIconContext } from '../AppContexts/Icon';
 import { getFieldClasses } from '../Controls/Field';
-import { WithChildren } from '../Controls/utils';
+import { WithChildren } from '../ReactUtils/WithChildren';
 
 export const getAppBarClasses = createClasses((css) => {
 	const { theme } = css;
