@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { WithChildren } from './utils';
+import { WithChildren } from '../ReactUtils/WithChildren';
 
 export const getFieldClasses = createClasses((css) => {
 	const { theme } = css;

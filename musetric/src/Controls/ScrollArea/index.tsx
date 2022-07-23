@@ -2,7 +2,7 @@ import React, { FC, RefObject, useRef, useMemo, useEffect, useState } from 'reac
 import className from 'classnames';
 import { mapObject, someObject } from '../../Utils/Object';
 import { createUseClasses, createClasses } from '../../AppContexts/Css';
-import { useAnimation } from '../../Hooks/Animation';
+import { useAnimation } from '../../ReactUtils/Animation';
 import {
 	getHorizontalScrollPosition,
 	updateHorizontalScrollPosition,
@@ -13,7 +13,7 @@ import {
 	updateVerticalScrollPosition,
 	subscribeVerticalEvents,
 } from './VerticalScroll';
-import { WithChildren } from '../utils';
+import { WithChildren } from '../../ReactUtils/WithChildren';
 
 export const getScrollAreaClasses = createClasses(() => {
 	return {

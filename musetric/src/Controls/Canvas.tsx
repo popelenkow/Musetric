@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, FC } from 'react';
 import { useLogContext } from '../AppContexts';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useLocaleContext } from '../AppContexts/Locale';
@@ -24,7 +24,7 @@ export type CanvasProps = {
 	size: Size2D;
 	setState: (state: CanvasState) => void;
 };
-export const Canvas: React.FC<CanvasProps> = (props) => {
+export const Canvas: FC<CanvasProps> = (props) => {
 	const { size, setState } = props;
 	const classes = useClasses();
 	const canvasRef = useRef<HTMLCanvasElement>(null);

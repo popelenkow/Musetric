@@ -3,14 +3,14 @@ import className from 'classnames';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
 import { createSoundBufferManager } from '../Sounds/SoundBufferManager';
 import { SoundProgress } from './SoundProgress';
-import { useSoundFile } from './SoundFile';
-import { useSoundLive } from './SoundLive';
 import { useSoundPlayer } from './SoundPlayer';
 import { useSoundProgressBar } from './SoundProgressBar';
 import { useSoundRecorder } from './SoundRecorder';
 import { useSoundView } from './SoundView';
 import { useSoundParameters } from './SoundParameters';
 import { skipPromise } from '../Utils/SkipPromise';
+import { SoundWorkshopProvider, useSoundWorkshopContext } from './SoundWorkshopContext';
+import { SoundWorkshopSidebar } from './SoundWorkshopSidebar';
 
 export const getSoundWorkshopClasses = createClasses((css) => {
 	const { theme } = css;
@@ -64,44 +64,21 @@ export const getSoundWorkshopClasses = createClasses((css) => {
 			'background-color': theme.activeBackground,
 			'border-top': `1px solid ${theme.divider}`,
 		},
-		sidebar: {
-			'grid-area': 'sidebar',
-			'box-sizing': 'border-box',
-			padding: '4px 0px',
-			display: 'flex',
-			'flex-direction': 'column',
-			'justify-content': 'center',
-			'align-items': 'center',
-			'row-gap': '4px',
-			'background-color': theme.activeBackground,
-			'border-left': `1px solid ${theme.divider}`,
-		},
-		sidebarTop: {
-			display: 'flex',
-			'flex-direction': 'column',
-		},
-		sidebarMiddle: {
-			height: '100%',
-			display: 'flex',
-			'flex-direction': 'column',
-			'justify-content': 'center',
-		},
 	};
 });
 const useClasses = createUseClasses('SoundWorkshop', getSoundWorkshopClasses);
 
-export const SoundWorkshop: FC = () => {
+export const SoundWorkshopMarkup: FC = () => {
 	const classes = useClasses();
 
-	const { isLive, renderLiveButton } = useSoundLive();
+	const [state] = useSoundWorkshopContext();
+	const { isLive, isOpenParameters } = state;
 
 	const [sampleRate, channelCount] = useMemo(() => [48000, 2], []);
 	const soundBufferManager = useMemo(
 		() => createSoundBufferManager(sampleRate, channelCount),
 		[sampleRate, channelCount],
 	);
-
-	const { renderOpenFileButton, renderSaveFileButton } = useSoundFile(soundBufferManager);
 
 	const { isPlaying, renderPlayerButton } = useSoundPlayer(soundBufferManager);
 	const {
@@ -114,13 +91,10 @@ export const SoundWorkshop: FC = () => {
 
 	const soundParameters = useSoundParameters(soundBufferManager.soundBuffer.sampleRate);
 	const {
-		isOpenParameters,
-		renderParametersButton,
 		renderParametersPanel,
 	} = soundParameters;
 	const {
 		renderSoundView,
-		renderWaveformButton, renderFrequencyButton, renderSpectrogramButton,
 	} = useSoundView({
 		soundBufferManager,
 		soundParameters,
@@ -152,19 +126,17 @@ export const SoundWorkshop: FC = () => {
 				<SoundProgress soundBufferManager={soundBufferManager} />
 				{renderRecorderButton({ disabled: isPlaying })}
 			</div>
-			<div className={classes.sidebar}>
-				<div className={classes.sidebarTop}>
-					{renderParametersButton()}
-				</div>
-				<div className={classes.sidebarMiddle}>
-					{renderLiveButton()}
-					{renderWaveformButton()}
-					{renderFrequencyButton()}
-					{renderSpectrogramButton()}
-					{renderOpenFileButton()}
-					{renderSaveFileButton()}
-				</div>
-			</div>
+			<SoundWorkshopSidebar
+				soundBufferManager={soundBufferManager}
+			/>
 		</div>
+	);
+};
+
+export const SoundWorkshop: FC = () => {
+	return (
+		<SoundWorkshopProvider>
+			<SoundWorkshopMarkup />
+		</SoundWorkshopProvider>
 	);
 };

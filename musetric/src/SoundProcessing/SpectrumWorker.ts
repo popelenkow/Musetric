@@ -18,8 +18,8 @@ export type SpectrumOptions = {
 	count: number;
 };
 export type SpectrumBufferEvent =
-	| { type: 'newBuffer'; buffer: SharedArrayBuffer; }
-	| { type: 'invalidate'; from: number; to: number; }
+	| { type: 'newBuffer'; buffer: SharedArrayBuffer }
+	| { type: 'invalidate'; from: number; to: number }
 	| { type: 'shift'; offset: number };
 export type SpectrumWorker = {
 	setup: (options: SpectrumOptions) => SharedArrayBuffer;

@@ -1,14 +1,12 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { SoundBufferManager, SoundBufferEvent } from '../Sounds/SoundBufferManager';
-import { useIconContext } from '../AppContexts/Icon';
-import { useLocaleContext } from '../AppContexts/Locale';
-import { Button, ButtonProps } from '../Controls/Button';
 import { Size2D, Direction2D, Layout2D } from '../Rendering/Layout';
 import { Waveform } from '../Controls/Waveform';
 import { Frequency } from '../Controls/Frequency';
 import { Spectrogram } from '../Controls/Spectrogram';
 import type { SoundParameters } from './SoundParameters';
 import { EventEmitterCallback } from '../Utils/EventEmitter';
+import { useSoundWorkshopContext } from './SoundWorkshopContext';
 
 export const createWaveformLayout = (): Layout2D => {
 	const size: Size2D = { width: 1024, height: 512 };
@@ -65,11 +63,9 @@ export const useSoundViewItemProps = (props: UseSoundViewProps) => {
 export type SoundViewItemProps = ReturnType<typeof useSoundViewItemProps>;
 
 export const useSoundView = (props: UseSoundViewProps) => {
-	const { WaveformIcon, FrequencyIcon, SpectrogramIcon } = useIconContext();
-	const { i18n } = useLocaleContext();
+	const [state] = useSoundWorkshopContext();
+	const { soundViewId } = state;
 
-	type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
-	const [soundViewId, setSoundViewId] = useState<SoundViewId>('Waveform');
 	const itemProps = useSoundViewItemProps(props);
 	const waveformLayout = useMemo(() => createWaveformLayout(), []);
 	const frequencyLayout = useMemo(() => createFrequencyLayout(), []);
@@ -81,53 +77,9 @@ export const useSoundView = (props: UseSoundViewProps) => {
 		if (soundViewId === 'Spectrogram') return <Spectrogram {...itemProps} layout={spectrogramLayout} />;
 		return null;
 	};
-	const renderWaveformButton = () => {
-		const waveformButtonProps: ButtonProps = {
-			kind: 'icon',
-			rounded: true,
-			title: i18n.t('Workshop:waveform'),
-			primary: soundViewId === 'Waveform',
-			onClick: () => setSoundViewId('Waveform'),
-		};
-		return (
-			<Button {...waveformButtonProps}>
-				<WaveformIcon />
-			</Button>
-		);
-	};
-	const renderFrequencyButton = () => {
-		const frequencyButtonProps: ButtonProps = {
-			kind: 'icon',
-			rounded: true,
-			title: i18n.t('Workshop:frequency'),
-			primary: soundViewId === 'Frequency',
-			onClick: () => setSoundViewId('Frequency'),
-		};
-		return (
-			<Button {...frequencyButtonProps}>
-				<FrequencyIcon />
-			</Button>
-		);
-	};
-	const renderSpectrogramButton = () => {
-		const spectrogramButtonProps: ButtonProps = {
-			kind: 'icon',
-			rounded: true,
-			title: i18n.t('Workshop:spectrogram'),
-			primary: soundViewId === 'Spectrogram',
-			onClick: () => setSoundViewId('Spectrogram'),
-		};
-		return (
-			<Button {...spectrogramButtonProps}>
-				<SpectrogramIcon />
-			</Button>
-		);
-	};
+
 	return {
 		renderSoundView,
-		renderWaveformButton,
-		renderFrequencyButton,
-		renderSpectrogramButton,
 	} as const;
 };
 export type SoundView = ReturnType<typeof useSoundView>;

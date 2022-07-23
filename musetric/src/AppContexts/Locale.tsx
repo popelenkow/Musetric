@@ -1,8 +1,8 @@
-import React, { useState, useContext, useMemo, FC } from 'react';
+import React, { useState, useMemo, FC, createContext } from 'react';
 import { i18n as I18n, WithT } from 'i18next';
 import { LocaleEntry } from '../AppBase/Locale';
-import { createContext } from './Context';
-import { WithChildren } from '../Controls/utils';
+import { useInitializedContext } from '../ReactUtils/Context';
+import { WithChildren } from '../ReactUtils/WithChildren';
 
 export type LocaleStore = {
 	i18n: WithT;
@@ -10,8 +10,7 @@ export type LocaleStore = {
 	setLocaleId: (id: string) => Promise<void>;
 	allLocaleIds: string[];
 };
-export const LocaleContext = createContext<LocaleStore>();
-export const LocaleConsumer = LocaleContext.Consumer;
+export const LocaleContext = createContext<LocaleStore | undefined>(undefined);
 
 export type LocaleProviderProps = {
 	i18n: I18n;
@@ -42,4 +41,4 @@ export const LocaleProvider: FC<WithChildren<LocaleProviderProps>> = (props) => 
 	);
 };
 
-export const useLocaleContext = (): LocaleStore => useContext(LocaleContext);
+export const useLocaleContext = (): LocaleStore => useInitializedContext(LocaleContext, 'useLocaleContext');

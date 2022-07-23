@@ -1,12 +1,12 @@
-import React, { useContext, FC, useMemo } from 'react';
+import React, { FC, useMemo, createContext } from 'react';
 import { Log } from '../AppBase/Log';
-import { WithChildren } from '../Controls/utils';
-import { createContext } from './Context';
+import { WithChildren } from '../ReactUtils/WithChildren';
+import { useInitializedContext } from '../ReactUtils/Context';
 
 export type LogStore = {
 	log: Log;
 };
-export const LogContext = createContext<LogStore>();
+export const LogContext = createContext<LogStore | undefined>(undefined);
 
 export type LogProviderProps = {
 	log: Log;
@@ -24,4 +24,4 @@ export const LogProvider: FC<WithChildren<LogProviderProps>> = (props) => {
 	);
 };
 
-export const useLogContext = (): LogStore => useContext(LogContext);
+export const useLogContext = (): LogStore => useInitializedContext(LogContext, 'useLogContext');

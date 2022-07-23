@@ -51,7 +51,7 @@ const testTransform = (createSpectrometer: (windowSize: number) => SpectrometerB
 
 		return { input, output };
 	};
-	const arr: { windowSize: number, inputR: number[], inputI: number[], outputR: number[], outputI: number[] }[] = [
+	const arr: { windowSize: number; inputR: number[]; inputI: number[]; outputR: number[]; outputI: number[] }[] = [
 		{ windowSize: 4, inputR: [0, 1, 2, 3], inputI: [0, 0, 0, 0], outputR: [6, -2, -2, -2], outputI: [0, 2, 0, -2] },
 		{ windowSize: 4, inputR: [1, 1, 1, 1], inputI: [0, 0, 0, 0], outputR: [4, 0, 0, 0], outputI: [0, 0, 0, 0] },
 		{ windowSize: 4, inputR: [1, 0, 0, 0], inputI: [0, 0, 0, 0], outputR: [1, 1, 1, 1], outputI: [0, 0, 0, 0] },

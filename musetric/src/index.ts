@@ -2,7 +2,7 @@ export * from './App';
 export * from './AppBase';
 export * from './AppContexts';
 export * from './Controls';
-export * from './Hooks';
+export * from './ReactUtils';
 export * from './Rendering';
 export * from './Resources';
 export * from './Sounds';

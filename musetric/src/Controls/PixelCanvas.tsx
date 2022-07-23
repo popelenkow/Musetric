@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, FC, useEffect, useState } from 'react';
-import { useAnimation } from '../Hooks/Animation';
+import { useAnimation } from '../ReactUtils/Animation';
 import { Canvas, CanvasProps, CanvasState } from './Canvas';
 import { rotatePosition2D, Size2D, Layout2D, Position2D, getCanvasCursorPosition2D, drawImage, rotateSize2D } from '../Rendering/Layout';
 import { createPixelCanvasElement } from '../Rendering/PixelCanvasElement';

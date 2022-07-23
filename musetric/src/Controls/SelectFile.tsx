@@ -1,5 +1,5 @@
 import React, { FC, useMemo, useEffect } from 'react';
-import { WithChildren } from './utils';
+import { WithChildren } from '../ReactUtils/WithChildren';
 import { Button, ButtonProps, getButtonClasses } from './Button';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 

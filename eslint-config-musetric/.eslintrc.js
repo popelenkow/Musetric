@@ -50,6 +50,7 @@ module.exports = {
 				'react/jsx-indent': ['error', 'tab'],
 				'react/jsx-props-no-spreading': 0,
 				'@typescript-eslint/no-useless-constructor': ['error'],
+				'@typescript-eslint/member-delimiter-style': ['error'],
 				'@typescript-eslint/no-empty-function': ['error'],
 				'react/jsx-indent-props': ['error', 'tab'],
 				'arrow-body-style': 0,
