@@ -1,28 +1,27 @@
 import React, { FC, useMemo, useCallback, useEffect, useState } from 'react';
-import { useCssContext } from '../AppContexts/Css';
-import { useWorkerContext } from '../AppContexts/Worker';
-import { SoundBufferEvent } from '../Sounds/SoundBufferManager';
+import { useCssContext, useWorkerContext } from '../AppContexts';
+import { SoundBufferEvent } from '../Sounds';
 import { createSpectrum, SpectrumBufferEvent } from '../SoundProcessing';
-import { Layout2D, Position2D } from '../Rendering/Layout';
-import { createSpectrogramColors, drawSpectrogram } from '../Rendering/Spectrogram';
-import { RealArray, SharedRealArray } from '../TypedArray/RealArray';
-import { viewRealArrays } from '../TypedArray/RealArrays';
+import { Position2D, createSpectrogramColors, drawSpectrogram, NumberRange, Layout2D } from '../Rendering';
+import { RealArray, SharedRealArray, viewRealArrays } from '../TypedArray';
 import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
-import type { SoundParameters } from '../Workshop/SoundParameters';
-import { skipPromise } from '../Utils/SkipPromise';
-import { EventEmitterCallback, EventEmitterUnsubscribe } from '../Utils/EventEmitter';
+import { skipPromise, EventEmitterCallback, UnsubscribeEventEmitter } from '../Utils';
 
 export type SpectrogramProps = {
 	getBuffer: () => SharedRealArray<'float32'>;
 	getCursor: () => number | undefined;
 	setCursor: (newCursor: number) => void;
 	// eslint-disable-next-line max-len
-	subscribeBufferEvents: (callback: EventEmitterCallback<SoundBufferEvent>) => EventEmitterUnsubscribe;
-	soundParameters: SoundParameters;
+	subscribeBufferEvents: (callback: EventEmitterCallback<SoundBufferEvent>) => UnsubscribeEventEmitter;
+	frequencyRange: NumberRange;
+	sampleRate: number;
 	layout: Layout2D;
 };
 export const Spectrogram: FC<SpectrogramProps> = (props) => {
-	const { getBuffer, getCursor, setCursor, subscribeBufferEvents, soundParameters, layout } = props;
+	const {
+		getBuffer, getCursor, setCursor, subscribeBufferEvents,
+		frequencyRange, sampleRate, layout,
+	} = props;
 	const { theme } = useCssContext().css;
 	const colors = useMemo(() => createSpectrogramColors(theme), [theme]);
 	const { spectrumUrl } = useWorkerContext();
@@ -31,20 +30,18 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
 	const spectrum = useMemo(() => createSpectrum(spectrumUrl), [spectrumUrl]);
 
 	useEffect(() => {
-		return () => {
+		skipPromise(spectrum.start());
+		const destroy = async () => {
+			await spectrum.stop();
 			spectrum.destroy();
 		};
-	}, [spectrum]);
-
-	useEffect(() => {
-		skipPromise(spectrum.start());
-		return () => skipPromise(spectrum.stop());
+		return () => skipPromise(destroy());
 	}, [spectrum]);
 
 	const count = useMemo(() => layout.size.height, [layout]);
 	const [frequencies, setFrequencies] = useState<RealArray<'uint8'>[]>();
 	useEffect(() => {
-		const run = async () => {
+		const setup = async () => {
 			const raw = await spectrum.setup({ windowSize, count });
 			const fftSize = windowSize / 2;
 			const result = viewRealArrays('uint8', raw, {
@@ -55,7 +52,7 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
 			});
 			setFrequencies(result);
 		};
-		skipPromise(run());
+		skipPromise(setup());
 	}, [spectrum, windowSize, count]);
 
 	useEffect(() => {
@@ -93,10 +90,11 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
 			output: output.data,
 			frame: layout.size,
 			colors,
-			soundParameters,
+			frequencyRange,
+			sampleRate,
 			cursor,
 		});
-	}, [getCursor, soundParameters, frequencies, colors, layout]);
+	}, [getCursor, frequencies, colors, frequencyRange, sampleRate, layout]);
 
 	const canvasProps: PixelCanvasProps = {
 		layout,

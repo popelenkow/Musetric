@@ -1,11 +1,9 @@
 import React, { FC } from 'react';
-import { useIconContext } from '../../AppContexts/Icon';
-import { useLocaleContext } from '../../AppContexts/Locale';
-import { SoundBufferManager } from '../../Sounds/SoundBufferManager';
-import { SelectFile, SelectFileProps } from '../../Controls/SelectFile';
-import { skipPromise } from '../../Utils/SkipPromise';
+import { useIconContext, useLocaleContext } from '../../AppContexts';
+import { SoundBufferManager, decodeFileToWav } from '../../Sounds';
+import { SelectFile, SelectFileProps } from '../../Controls';
+import { skipPromise } from '../../Utils';
 import { useLazyAudioContext } from '../../ReactUtils';
-import { decodeFileToWav } from '../../Sounds';
 
 export type SoundOpenFileButtonProps = {
 	soundBufferManager: SoundBufferManager;

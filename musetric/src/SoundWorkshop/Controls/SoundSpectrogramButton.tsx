@@ -1,22 +1,24 @@
 import React, { FC } from 'react';
-import { useSoundWorkshopContext } from '../SoundWorkshopContext';
+import { SoundViewId } from '../Store';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 
-export type SoundSpectrogramButtonProps = object;
-export const SoundSpectrogramButton: FC<SoundSpectrogramButtonProps> = () => {
+export type SoundSpectrogramButtonProps = {
+	soundViewId: SoundViewId;
+	setSoundViewId: (value: SoundViewId) => void;
+};
+export const SoundSpectrogramButton: FC<SoundSpectrogramButtonProps> = (props) => {
+	const { soundViewId, setSoundViewId } = props;
+
 	const { SpectrogramIcon } = useIconContext();
 	const { i18n } = useLocaleContext();
-
-	const [state, dispatch] = useSoundWorkshopContext();
-	const { soundViewId } = state;
 
 	const spectrogramButtonProps: ButtonProps = {
 		kind: 'icon',
 		rounded: true,
 		title: i18n.t('Workshop:spectrogram'),
 		primary: soundViewId === 'Spectrogram',
-		onClick: () => dispatch({ type: 'setSoundViewId', soundViewId: 'Spectrogram' }),
+		onClick: () => setSoundViewId('Spectrogram'),
 	};
 	return (
 		<Button {...spectrogramButtonProps}>

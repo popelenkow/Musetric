@@ -1,10 +1,8 @@
 import React, { FC } from 'react';
-import { useIconContext } from '../../AppContexts/Icon';
-import { useLocaleContext } from '../../AppContexts/Locale';
-import { SoundBufferManager } from '../../Sounds/SoundBufferManager';
-import { Button, ButtonProps } from '../../Controls/Button';
-import { saveBlobFile } from '../../Utils/SaveBlobFile';
-import { createWav } from '../../Sounds';
+import { useIconContext, useLocaleContext } from '../../AppContexts';
+import { SoundBufferManager, createWav } from '../../Sounds';
+import { Button, ButtonProps } from '../../Controls';
+import { saveBlobFile } from '../../Utils';
 
 export type SoundSaveFileButtonProps = {
 	soundBufferManager: SoundBufferManager;
@@ -15,13 +13,14 @@ export const SoundSaveFileButton: FC<SoundSaveFileButtonProps> = (props) => {
 	const { SaveIcon } = useIconContext();
 	const { i18n } = useLocaleContext();
 
+	const getBlob = (): Blob => {
+		const { soundBuffer } = soundBufferManager;
+		const { buffers, sampleRate } = soundBuffer;
+		const blob = createWav(buffers.map((x) => x.real), sampleRate);
+		return blob;
+	};
+
 	const saveFile = (name: string) => {
-		const getBlob = (): Blob => {
-			const { soundBuffer } = soundBufferManager;
-			const { buffers, sampleRate } = soundBuffer;
-			const blob = createWav(buffers.map((x) => x.real), sampleRate);
-			return blob;
-		};
 		const blob = getBlob();
 		saveBlobFile(blob, name);
 	};

@@ -1,7 +1,7 @@
-import React, { useMemo, ReactElement, useCallback } from 'react';
-import { SoundBufferManager } from '../Sounds/SoundBufferManager';
-import { Size2D, Direction2D } from '../Rendering/Layout';
-import { Waveform, WaveformProps } from '../Controls/Waveform';
+import React, { useMemo, useCallback, FC } from 'react';
+import { SoundBufferManager } from '../../Sounds/SoundBufferManager';
+import { Size2D, Direction2D } from '../../Rendering/Layout';
+import { Waveform, WaveformProps } from '../../Controls/Waveform';
 
 export const createSoundProgressBarLayout = () => {
 	const size: Size2D = { width: 128, height: 1024 };
@@ -9,12 +9,12 @@ export const createSoundProgressBarLayout = () => {
 	return { size, direction };
 };
 
-export type SoundProgressBar = {
-	renderProgressBarView: () => ReactElement;
+export type SoundProgressBarProps = {
+	soundBufferManager: SoundBufferManager;
 };
-export const useSoundProgressBar = (
-	soundBufferManager: SoundBufferManager,
-): SoundProgressBar => {
+export const SoundProgressBar: FC<SoundProgressBarProps> = (props) => {
+	const { soundBufferManager } = props;
+
 	const soundProgressBarLayout = useMemo(() => createSoundProgressBarLayout(), []);
 
 	const getCursor = useCallback(() => {
@@ -37,7 +37,7 @@ export const useSoundProgressBar = (
 		layout: soundProgressBarLayout,
 	};
 
-	return {
-		renderProgressBarView: () => <Waveform {...waveformProps} />,
-	};
+	return (
+		<Waveform {...waveformProps} />
+	);
 };

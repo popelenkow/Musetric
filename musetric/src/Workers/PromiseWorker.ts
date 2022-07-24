@@ -1,4 +1,4 @@
-import type { PushEvent } from '../Typescript/Events';
+import { PushEvent } from '../Types';
 
 export type PromiseWorkerRequest = {
 	id: string;
