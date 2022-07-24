@@ -1,8 +1,7 @@
 import { RealArray } from '../TypedArray/RealArray';
 import { Theme } from '../AppBase/Theme';
-import type { SoundParameters } from '../Workshop/SoundParameters';
 import { parseTheme, gradientUint32ByRgb } from './Color';
-import { Size2D } from './Layout';
+import { NumberRange, Size2D } from './Layout';
 
 export type SpectrogramColors = {
 	gradient: Uint32Array;
@@ -20,12 +19,12 @@ export type DrawSpectrogramOptions = {
 	output: Uint8ClampedArray;
 	frame: Size2D;
 	colors: SpectrogramColors;
-	soundParameters: SoundParameters;
+	frequencyRange: NumberRange;
+	sampleRate: number;
 	cursor?: number;
 };
 export const drawSpectrogram = (options: DrawSpectrogramOptions): void => {
-	const { input, output, frame, colors, soundParameters, cursor } = options;
-	const { frequencyRange, sampleRate } = soundParameters;
+	const { input, output, frame, colors, frequencyRange, sampleRate, cursor } = options;
 	const { gradient, activePrimary } = colors;
 	const out = new Uint32Array(output.buffer);
 

@@ -1,4 +1,4 @@
-import type { EventHandlers } from '../Typescript/Events';
+import type { EventHandlers } from '../Types';
 import { createIndexIterator } from '../Utils/IndexIterator';
 import type { PromiseWorker, PromiseWorkerResponse, PromiseWorkerRequest } from './PromiseWorker';
 

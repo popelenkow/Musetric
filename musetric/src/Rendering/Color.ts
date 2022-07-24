@@ -1,5 +1,5 @@
 import Color from 'color';
-import type { ValueObject } from '../Typescript/ValueObject';
+import type { ValueObject } from '../UtilityTypes';
 import { Theme } from '../AppBase/Theme';
 
 export type Rgb = {

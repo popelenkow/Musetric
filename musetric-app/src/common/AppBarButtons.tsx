@@ -16,14 +16,15 @@ export const useAppBarButtons = (): ReactElement => {
 		dark: DarkIcon,
 	};
 
+	const getLocale = () => {
+		return localizeLocaleId(localeId, i18n) || localeId;
+	};
 	const localeSwitchProps: SwitchProps<string> = {
 		rounded: true,
 		currentId: localeId,
 		ids: allLocaleIds,
 		set: (id) => skipPromise(setLocaleId(id)),
-	};
-	const getLocale = () => {
-		return localizeLocaleId(localeId, i18n) || localeId;
+		title: getLocale(),
 	};
 
 	const themeSwitchProps: SwitchProps<string> = {

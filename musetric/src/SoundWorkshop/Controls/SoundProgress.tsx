@@ -1,9 +1,9 @@
 import React, { useMemo, useState, FC } from 'react';
 import className from 'classnames';
-import { createUseClasses, createClasses } from '../AppContexts/Css';
-import { SoundBufferManager } from '../Sounds/SoundBufferManager';
-import { useAnimation } from '../ReactUtils/Animation';
-import { getFieldClasses } from '../Controls/Field';
+import { createUseClasses, createClasses } from '../../AppContexts';
+import { SoundBufferManager } from '../../Sounds';
+import { useAnimation } from '../../ReactUtils';
+import { getFieldClasses } from '../../Controls';
 
 export const getSoundProgressClasses = createClasses((css) => {
 	const fieldClasses = getFieldClasses(css);
@@ -44,14 +44,14 @@ export const SoundProgress: FC<SoundProgressProps> = (props) => {
 		const { cursor, sampleRate } = state;
 		const value = cursor / sampleRate;
 		const cursorValue = new Date(value * 1000);
-		return cursorValue.toISOString().substr(14, 5);
+		return cursorValue.toISOString().substring(14, 19);
 	}, [state]);
 
 	const memorySizeString = useMemo(() => {
 		const { length, sampleRate } = state;
 		const value = length / sampleRate;
 		const cursorValue = new Date(value * 1000);
-		return cursorValue.toISOString().substr(14, 5);
+		return cursorValue.toISOString().substring(14, 19);
 	}, [state]);
 
 	useAnimation(() => {

@@ -1,15 +1,16 @@
+export type NumberRange = {
+	from: number;
+	to: number;
+};
 export type Rotation2D = 'none' | 'left' | 'right' | 'twice';
-
 export type Direction2D = {
 	rotation: Rotation2D;
 	reflection: boolean;
 };
-
 export type Position2D = {
 	x: number;
 	y: number;
 };
-
 export type Size2D = {
 	width: number;
 	height: number;

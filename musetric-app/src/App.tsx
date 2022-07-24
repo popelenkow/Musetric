@@ -12,7 +12,7 @@ import { CssProvider, CssProviderProps } from 'musetric/AppContexts/Css';
 import { IconProvider, IconProviderProps } from 'musetric/AppContexts/Icon';
 import { WorkerProvider } from 'musetric/AppContexts/Worker';
 import { Button, ButtonProps } from 'musetric/Controls/Button';
-import { SoundWorkshop } from 'musetric/Workshop';
+import { SoundWorkshop } from 'musetric/SoundWorkshop';
 import type { LocaleEntry } from 'musetric/AppBase/Locale';
 import type { ThemeEntry } from 'musetric/AppBase/Theme';
 import type { Icons } from 'musetric/AppBase/Icon';

@@ -1,13 +1,12 @@
-import type { PromiseObjectApi } from '../Typescript/PromiseObjectApi';
-import type { EventHandlers } from '../Typescript/Events';
+import type { PromiseObjectApi } from '../UtilityTypes';
+import type { EventHandlers } from '../Types';
 import { createPromiseWorkerApi } from '../Workers/PromiseWorkerApi';
 import type { RecorderWorklet, RecorderEvents } from './RecorderWorklet';
 
-export type Recorder =
-	& PromiseObjectApi<RecorderWorklet>
-	& {
-		mediaStream: MediaStream;
-	};
+export type Recorder = PromiseObjectApi<RecorderWorklet> & {
+	mediaStream: MediaStream;
+	destroy: () => void;
+};
 
 export const createRecorder = async (
 	workletUrl: URL | string,
@@ -30,6 +29,10 @@ export const createRecorder = async (
 	return {
 		start: (...args) => request('start', args),
 		stop: (...args) => request('stop', args),
+		destroy: () => {
+			worklet.disconnect();
+			source.disconnect();
+		},
 		mediaStream,
 	};
 };

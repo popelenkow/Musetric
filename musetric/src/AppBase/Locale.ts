@@ -42,7 +42,7 @@ export const localizeLocaleId = (lng: string, i18n: WithT): string | undefined =
 };
 
 export const localizeThemeId = (theme: string, i18n: WithT): string | undefined => {
-	if (theme === 'white') return i18n.t('AppBase:theme.white');
+	if (theme === 'light') return i18n.t('AppBase:theme.light');
 	if (theme === 'dark') return i18n.t('AppBase:theme.dark');
 	return undefined;
 };
