@@ -1,13 +1,15 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { SoundViewId } from '../Store';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 
 export type SoundWaveformButtonProps = {
-	soundViewId: SoundViewId;
-	setSoundViewId: (value: SoundViewId) => void;
+	soundViewId: SoundViewId,
+	setSoundViewId: (value: SoundViewId) => void,
 };
-export const SoundWaveformButton: FC<SoundWaveformButtonProps> = (props) => {
+export function SoundWaveformButton(
+	props: SoundWaveformButtonProps,
+): ReactElement {
 	const { soundViewId, setSoundViewId } = props;
 
 	const { WaveformIcon } = useIconContext();
@@ -24,4 +26,4 @@ export const SoundWaveformButton: FC<SoundWaveformButtonProps> = (props) => {
 			<WaveformIcon />
 		</Button>
 	);
-};
+}

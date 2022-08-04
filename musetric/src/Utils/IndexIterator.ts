@@ -9,5 +9,5 @@ export const createIndexIterator = () => {
 			} while (needNext?.(getId()));
 			return getId();
 		},
-	};
+	} as const;
 };

@@ -1,21 +1,21 @@
 import { Position2D } from '../../Rendering/Layout';
 
 export type InertiaOptions = {
-	resistance: number;
-	friction: number;
-	sampleCount: number;
+	resistance: number,
+	friction: number,
+	sampleCount: number,
 };
 export type Inertia = {
-	setDelta: (delta: Position2D, time: number) => void;
-	getDelta: (time: number) => Position2D;
-	stop: () => void;
+	setDelta: (delta: Position2D, time: number) => void,
+	getDelta: (time: number) => Position2D,
+	stop: () => void,
 };
 export const createInertia = (options: InertiaOptions): Inertia => {
 	const { resistance, friction, sampleCount } = options;
 
 	type DeltaInfo = {
-		delta: Position2D;
-		time: number;
+		delta: Position2D,
+		time: number,
 	};
 	let deltas: DeltaInfo[] = [];
 	let velocity: Position2D = { x: 0, y: 0 };

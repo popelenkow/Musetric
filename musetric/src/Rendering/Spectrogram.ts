@@ -4,8 +4,8 @@ import { parseTheme, gradientUint32ByRgb } from './Color';
 import { NumberRange, Size2D } from './Layout';
 
 export type SpectrogramColors = {
-	gradient: Uint32Array;
-	activePrimary: number;
+	gradient: Uint32Array,
+	activePrimary: number,
 };
 export const createSpectrogramColors = (theme: Theme): SpectrogramColors => {
 	const colors = parseTheme('uint32', theme);
@@ -15,13 +15,13 @@ export const createSpectrogramColors = (theme: Theme): SpectrogramColors => {
 };
 
 export type DrawSpectrogramOptions = {
-	input: RealArray<'uint8'>[];
-	output: Uint8ClampedArray;
-	frame: Size2D;
-	colors: SpectrogramColors;
-	frequencyRange: NumberRange;
-	sampleRate: number;
-	cursor?: number;
+	input: RealArray<'uint8'>[],
+	output: Uint8ClampedArray,
+	frame: Size2D,
+	colors: SpectrogramColors,
+	frequencyRange: NumberRange,
+	sampleRate: number,
+	cursor?: number,
 };
 export const drawSpectrogram = (options: DrawSpectrogramOptions): void => {
 	const { input, output, frame, colors, frequencyRange, sampleRate, cursor } = options;

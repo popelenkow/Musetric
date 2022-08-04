@@ -1,12 +1,14 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 
 export type SoundLiveButtonProps = {
-	isLive: boolean;
-	setIsLive: (value: boolean) => void;
+	isLive: boolean,
+	setIsLive: (value: boolean) => void,
 };
-export const SoundLiveButton: FC<SoundLiveButtonProps> = (props) => {
+export function SoundLiveButton(
+	props: SoundLiveButtonProps,
+): ReactElement {
 	const { isLive, setIsLive } = props;
 
 	const { LiveIcon } = useIconContext();
@@ -24,4 +26,4 @@ export const SoundLiveButton: FC<SoundLiveButtonProps> = (props) => {
 			<LiveIcon />
 		</Button>
 	);
-};
+}

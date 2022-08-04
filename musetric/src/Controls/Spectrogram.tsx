@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useCallback, useEffect, useState } from 'react';
+import React, { useMemo, useCallback, useEffect, useState, ReactElement } from 'react';
 import { useCssContext, useWorkerContext } from '../AppContexts';
 import { SoundBufferEvent } from '../Sounds';
 import { createSpectrum, SpectrumBufferEvent } from '../SoundProcessing';
@@ -8,16 +8,16 @@ import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 import { skipPromise, EventEmitterCallback, UnsubscribeEventEmitter } from '../Utils';
 
 export type SpectrogramProps = {
-	getBuffer: () => SharedRealArray<'float32'>;
-	getCursor: () => number | undefined;
-	setCursor: (newCursor: number) => void;
+	getBuffer: () => SharedRealArray<'float32'>,
+	getCursor: () => number | undefined,
+	setCursor: (newCursor: number) => void,
 	// eslint-disable-next-line max-len
-	subscribeBufferEvents: (callback: EventEmitterCallback<SoundBufferEvent>) => UnsubscribeEventEmitter;
-	frequencyRange: NumberRange;
-	sampleRate: number;
-	layout: Layout2D;
+	subscribeBufferEvents: (callback: EventEmitterCallback<SoundBufferEvent>) => UnsubscribeEventEmitter,
+	frequencyRange: NumberRange,
+	sampleRate: number,
+	layout: Layout2D,
 };
-export const Spectrogram: FC<SpectrogramProps> = (props) => {
+export function Spectrogram(props: SpectrogramProps): ReactElement {
 	const {
 		getBuffer, getCursor, setCursor, subscribeBufferEvents,
 		frequencyRange, sampleRate, layout,
@@ -31,7 +31,7 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
 
 	useEffect(() => {
 		skipPromise(spectrum.start());
-		const destroy = async () => {
+		const destroy = async (): Promise<void> => {
 			await spectrum.stop();
 			spectrum.destroy();
 		};
@@ -41,7 +41,7 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
 	const count = useMemo(() => layout.size.height, [layout]);
 	const [frequencies, setFrequencies] = useState<RealArray<'uint8'>[]>();
 	useEffect(() => {
-		const setup = async () => {
+		const setup = async (): Promise<void> => {
 			const raw = await spectrum.setup({ windowSize, count });
 			const fftSize = windowSize / 2;
 			const result = viewRealArrays('uint8', raw, {
@@ -103,4 +103,4 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
 	};
 
 	return <PixelCanvas {...canvasProps} />;
-};
+}

@@ -1,8 +1,8 @@
 import { RealIndexable } from '../TypedArray/RealIndexable';
 
 type MapAmplitudeToDecibelOptions = {
-	min: number;
-	max: number;
+	min: number,
+	max: number,
 };
 export const mapAmplitudeToDecibel = (
 	amplitudes: RealIndexable,

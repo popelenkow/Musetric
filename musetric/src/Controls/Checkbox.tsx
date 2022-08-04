@@ -1,8 +1,7 @@
-import React, { FC } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 import { getButtonClasses } from './Button';
 import { Field, FieldProps } from './Field';
-import { WithChildren } from '../ReactUtils/WithChildren';
 
 export const getCheckboxClasses = createClasses((css) => {
 	const { theme } = css;
@@ -26,28 +25,25 @@ export const getCheckboxClasses = createClasses((css) => {
 const useClasses = createUseClasses('Checkbox', getCheckboxClasses);
 
 export type CheckboxProps = {
-	kind?: 'simple' | 'icon' | 'full';
-	align?: 'left' | 'center' | 'right';
-	disabled?: boolean;
-	primary?: boolean;
-	rounded?: boolean;
-	title?: string;
-	onToggle: () => void;
-	checked?: boolean;
+	kind?: 'simple' | 'icon' | 'full',
+	align?: 'left' | 'center' | 'right',
+	disabled?: boolean,
+	primary?: boolean,
+	rounded?: boolean,
+	title?: string,
+	onToggle: () => void,
+	checked?: boolean,
 	classNames?: {
-		root?: string;
-	};
+		root?: string,
+	},
 };
-export const Checkbox: FC<WithChildren<CheckboxProps>> = (props) => {
+export function Checkbox(
+	props: CheckboxProps & { children: ReactNode },
+): ReactElement {
 	const {
-		kind,
-		disabled,
-		rounded,
-		title,
-		onToggle,
-		checked,
-		classNames,
-		children,
+		kind, disabled, rounded,
+		title, onToggle, checked,
+		classNames, children,
 	} = props;
 	const classes = useClasses();
 
@@ -76,4 +72,4 @@ export const Checkbox: FC<WithChildren<CheckboxProps>> = (props) => {
 			</Field>
 		</label>
 	);
-};
+}

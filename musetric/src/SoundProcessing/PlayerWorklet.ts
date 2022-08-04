@@ -2,19 +2,19 @@ import { runPromiseAudioWorklet, PromiseAudioWorkletOptions, PromiseAudioWorklet
 import { viewRealArray, RealArray } from '../TypedArray/RealArray';
 
 export type PlayerOptions = {
-	soundBuffer: SharedArrayBuffer;
-	cursor: number;
+	soundBuffer: SharedArrayBuffer,
+	cursor: number,
 };
 export type PlayerWorklet = {
-	setup: (options: PlayerOptions) => void;
-	start: () => void;
-	stop: () => void;
-	setCursor: (value: number) => void;
+	setup: (options: PlayerOptions) => void,
+	start: () => void,
+	stop: () => void,
+	setCursor: (value: number) => void,
 };
 
 export type PlayerEvents = {
-	onCursor: { value: number };
-	onStopped: { reset: boolean };
+	onCursor: { value: number },
+	onStopped: { reset: boolean },
 };
 
 const createPlayerWorklet = (
@@ -23,8 +23,8 @@ const createPlayerWorklet = (
 	const { pushEvent, getWorkletState } = options;
 
 	type Started = {
-		time: number;
-		cursor: number;
+		time: number,
+		cursor: number,
 	};
 	let started: Started | undefined;
 	let isPlaying = false;
@@ -38,8 +38,8 @@ const createPlayerWorklet = (
 	};
 
 	type State = {
-		soundBuffer: RealArray<'float32'>;
-		cursor: number;
+		soundBuffer: RealArray<'float32'>,
+		cursor: number,
 	};
 	let state: State | undefined;
 	const process = (_input: Float32Array[], output: Float32Array[]) => {

@@ -6,12 +6,12 @@ import { createDftBase } from '../src/Sounds/Dft';
 import { createFftRadix2Base } from '../src/Sounds/FftRadix2';
 import { createFftRadix4Base } from '../src/Sounds/FftRadix4';
 
-const toStringArray = (input: ArrayLike<number>) => {
+const toStringArray = (input: ArrayLike<number>): string => {
 	const arr = Array.from<number>(input).map((x) => (x % 1 ? x.toFixed(2) : x));
 	if (arr.length < 9) return `[${arr.join(', ')}]`;
 	return `[${arr.slice(0, 6).join(', ')}, ...(${arr.length})]`;
 };
-const isArrayCloseTo = (arr1: ArrayLike<number>, arr2: ArrayLike<number>) => {
+const isArrayCloseTo = (arr1: ArrayLike<number>, arr2: ArrayLike<number>): boolean => {
 	if (arr1.length !== arr2.length) return false;
 	const size = arr1.length;
 	for (let i = 0; i < size; i++) {
@@ -25,8 +25,9 @@ const isArrayCloseTo = (arr1: ArrayLike<number>, arr2: ArrayLike<number>) => {
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace
 	namespace jest {
+		// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 		interface Matchers<R> {
-			toBeArrayCloseTo(expected: ArrayLike<number>): R;
+			toBeArrayCloseTo(expected: ArrayLike<number>): R,
 		}
 	}
 }
@@ -36,11 +37,11 @@ expect.extend({
 		return {
 			message: () => `${toStringArray(received)} to be close ${toStringArray(expected)}`,
 			pass,
-		};
+		} as const;
 	},
 });
 
-const testTransform = (createSpectrometer: (windowSize: number) => SpectrometerBase) => {
+const testTransform = (createSpectrometer: (windowSize: number) => SpectrometerBase): void => {
 	const create = (windowSize: number, real: number[], imag: number[]) => {
 		const input = createComplexArray('float64', windowSize);
 		const output = createComplexArray('float64', windowSize);
@@ -49,9 +50,9 @@ const testTransform = (createSpectrometer: (windowSize: number) => SpectrometerB
 			input.imag[i] = imag[i];
 		}
 
-		return { input, output };
+		return { input, output } as const;
 	};
-	const arr: { windowSize: number; inputR: number[]; inputI: number[]; outputR: number[]; outputI: number[] }[] = [
+	const arr: { windowSize: number, inputR: number[], inputI: number[], outputR: number[], outputI: number[] }[] = [
 		{ windowSize: 4, inputR: [0, 1, 2, 3], inputI: [0, 0, 0, 0], outputR: [6, -2, -2, -2], outputI: [0, 2, 0, -2] },
 		{ windowSize: 4, inputR: [1, 1, 1, 1], inputI: [0, 0, 0, 0], outputR: [4, 0, 0, 0], outputI: [0, 0, 0, 0] },
 		{ windowSize: 4, inputR: [1, 0, 0, 0], inputI: [0, 0, 0, 0], outputR: [1, 1, 1, 1], outputI: [0, 0, 0, 0] },

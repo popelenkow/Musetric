@@ -1,4 +1,4 @@
-import React, { ReactNode, FC, useCallback } from 'react';
+import React, { ReactNode, ReactElement, useMemo } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useLocaleContext } from '../AppContexts/Locale';
 import { getFieldClasses } from '../Controls/Field';
@@ -28,17 +28,19 @@ export const getAppAboutClasses = createClasses((css) => {
 const useClasses = createUseClasses('AppAbout', getAppAboutClasses);
 
 export type AppAboutProps = {
-	appVersion: string;
-	links?: ReactNode[];
+	appVersion: string,
+	links?: ReactNode[],
 };
 
-export const AppAbout: FC<AppAboutProps> = (props) => {
+export function AppAbout(
+	props: AppAboutProps,
+): ReactElement {
 	const { appVersion, links } = props;
 	const classes = useClasses();
 	const { i18n } = useLocaleContext();
 
-	const noLinks = !links || links.length === 0;
-	const Links = useCallback<FC>(() => {
+	const linksElement = useMemo(() => {
+		const noLinks = !links || links.length === 0;
 		if (noLinks) return null;
 
 		return (
@@ -46,7 +48,7 @@ export const AppAbout: FC<AppAboutProps> = (props) => {
 				{links}
 			</div>
 		);
-	}, [classes, links, noLinks]);
+	}, [classes, links]);
 
 	return (
 		<div className={classes.root}>
@@ -54,8 +56,8 @@ export const AppAbout: FC<AppAboutProps> = (props) => {
 				<div>Musetric</div>
 				<div>{`${i18n.t('AppBase:version')} ${appVersion}`}</div>
 				<div>{`${i18n.t('AppBase:licensed')}`}</div>
-				<Links />
+				{linksElement}
 			</div>
 		</div>
 	);
-};
+}

@@ -1,8 +1,7 @@
-import React, { FC, SetStateAction, Dispatch, ReactElement, useEffect, useRef } from 'react';
+import React, { SetStateAction, Dispatch, ReactElement, useEffect, useRef, ReactNode } from 'react';
 import { useRootElementContext } from '../AppContexts/RootElement';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 import { Button, ButtonProps } from './Button';
-import { WithChildren } from '../ReactUtils/WithChildren';
 
 export const getDropdownClasses = createClasses((css) => {
 	const { theme } = css;
@@ -29,21 +28,23 @@ export const getDropdownClasses = createClasses((css) => {
 const useClasses = createUseClasses('Dropdown', getDropdownClasses);
 
 export type DropdownProps = {
-	kind?: 'simple' | 'icon' | 'full';
-	align?: 'left' | 'center' | 'right';
-	disabled?: boolean;
-	active?: boolean;
-	primary?: boolean;
-	rounded?: boolean;
-	title?: string;
-	isOpen: boolean;
-	setIsOpen: Dispatch<SetStateAction<boolean>>;
+	kind?: 'simple' | 'icon' | 'full',
+	align?: 'left' | 'center' | 'right',
+	disabled?: boolean,
+	active?: boolean,
+	primary?: boolean,
+	rounded?: boolean,
+	title?: string,
+	isOpen: boolean,
+	setIsOpen: Dispatch<SetStateAction<boolean>>,
 	menu: {
-		render: () => ReactElement;
-		width?: string;
-	};
+		render: () => ReactElement,
+		width?: string,
+	},
 };
-export const Dropdown: FC<WithChildren<DropdownProps>> = (props) => {
+export function Dropdown(
+	props: DropdownProps & { children: ReactNode },
+): ReactElement {
 	const {
 		kind, disabled, active, primary, rounded,
 		title, isOpen, setIsOpen, menu, children,
@@ -112,4 +113,4 @@ export const Dropdown: FC<WithChildren<DropdownProps>> = (props) => {
 			</div>
 		</div>
 	);
-};
+}

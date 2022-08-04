@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 
 export const getDividerClasses = createClasses((css) => {
@@ -13,10 +13,10 @@ export const getDividerClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('Divider', getDividerClasses);
 
-export const Divider: FC = () => {
+export function Divider(): ReactElement {
 	const classes = useClasses();
 
 	return (
 		<div className={classes.root} />
 	);
-};
+}

@@ -4,8 +4,8 @@ import { parseTheme } from './Color';
 import { Size2D } from './Layout';
 
 export type FrequencyColors = {
-	activeContent: number;
-	background: number;
+	activeContent: number,
+	background: number,
 };
 export const createFrequencyColors = (theme: Theme): FrequencyColors => {
 	const { activeContent, background } = parseTheme('uint32', theme);

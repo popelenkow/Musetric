@@ -1,11 +1,11 @@
 import { SharedRealArray, createSharedRealArray, viewRealArray } from '../TypedArray/RealArray';
 
 export type SoundBuffer = {
-	readonly sampleRate: number;
-	readonly channelCount: number;
-	readonly length: number;
-	readonly buffers: SharedRealArray<'float32'>[];
-	readonly setLength: (length: number) => void;
+	readonly sampleRate: number,
+	readonly channelCount: number,
+	readonly length: number,
+	readonly buffers: SharedRealArray<'float32'>[],
+	readonly setLength: (length: number) => void,
 };
 export const createSoundBuffer = (
 	sampleRate: number,
@@ -22,7 +22,7 @@ export const createSoundBuffer = (
 		channelCount,
 		length: initLength,
 		buffers,
-		setLength: (length: number) => {
+		setLength: (length: number): void => {
 			if (length === soundBuffer.length) return;
 			const isIncrease = length > soundBuffer.length;
 			for (let i = 0; i < channelCount; i++) {

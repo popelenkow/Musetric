@@ -6,7 +6,7 @@ import type { PlayerWorklet, PlayerEvents } from './PlayerWorklet';
 export type Player =
 	& PromiseObjectApi<PlayerWorklet>
 	& {
-		mediaStream: MediaStream;
+		mediaStream: MediaStream,
 	};
 
 export const createPlayer = async (

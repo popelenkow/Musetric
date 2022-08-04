@@ -17,18 +17,18 @@ export const startAnimation = (callback: AnimationCallback): StopAnimation => {
 };
 
 export type AnimationState = {
-	onIteration: () => void;
-	onStop?: () => void;
-	onStopped?: () => void;
+	onIteration: () => void,
+	onStop?: () => void,
+	onStopped?: () => void,
 };
 export type OnStart<T extends unknown[]> = (...args: T) => AnimationState;
 export type Animation<T extends unknown[]> = {
-	start: (...args: T) => void;
-	stop: () => void;
+	start: (...args: T) => void,
+	stop: () => void,
 };
 export const createAnimation = <T extends unknown[]>(onStart: OnStart<T>): Animation<T> => {
 	type State = Omit<AnimationState, 'onIteration'> & {
-		stopAnimation: StopAnimation;
+		stopAnimation: StopAnimation,
 	};
 	let state: State | undefined;
 	const stop = () => {

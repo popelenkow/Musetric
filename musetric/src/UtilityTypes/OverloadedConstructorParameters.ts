@@ -3,15 +3,15 @@
 type FN = new (...args: unknown[]) => unknown;
 
 type Params<T> = T extends {
-	new (...args: infer A1): unknown;
-	new (...args: infer A2): unknown;
-	new (...args: infer A3): unknown;
-	new (...args: infer A4): unknown;
-	new (...args: infer A5): unknown;
-	new (...args: infer A6): unknown;
-	new (...args: infer A7): unknown;
-	new (...args: infer A8): unknown;
-	new (...args: infer A9): unknown;
+	new (...args: infer A1): unknown,
+	new (...args: infer A2): unknown,
+	new (...args: infer A3): unknown,
+	new (...args: infer A4): unknown,
+	new (...args: infer A5): unknown,
+	new (...args: infer A6): unknown,
+	new (...args: infer A7): unknown,
+	new (...args: infer A8): unknown,
+	new (...args: infer A9): unknown,
 }
 	? [A1, A2, A3, A4, A5, A6, A7, A8, A9]
 	: never;

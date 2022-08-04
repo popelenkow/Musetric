@@ -1,5 +1,5 @@
 export type Timer = {
-	timeIsUp: () => boolean;
+	timeIsUp: () => boolean,
 };
 export const createTimer = (ms: number): Timer => {
 	const startAt = new Date().getTime();

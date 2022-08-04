@@ -1,4 +1,4 @@
-import React, { FC, RefObject, useRef, useMemo, useEffect, useState } from 'react';
+import React, { RefObject, useRef, useMemo, useEffect, useState, ReactNode } from 'react';
 import className from 'classnames';
 import { mapObject, someObject } from '../../Utils/Object';
 import { createUseClasses, createClasses } from '../../AppContexts/Css';
@@ -13,7 +13,6 @@ import {
 	updateVerticalScrollPosition,
 	subscribeVerticalEvents,
 } from './VerticalScroll';
-import { WithChildren } from '../../ReactUtils/WithChildren';
 
 export const getScrollAreaClasses = createClasses(() => {
 	return {
@@ -94,8 +93,8 @@ const useRefs = () => {
 	useEffect(() => {
 		const getElements = (): undefined | Elements => {
 			const result = mapObject(refs, (ref) => ref.current);
-			if (someObject(result, (value) => !value)) return undefined;
-			return result as Record<ElementType, HTMLDivElement>;
+			if (!someObject(result, (value): value is HTMLDivElement => !!value)) return undefined;
+			return result;
 		};
 		setElements(getElements());
 	}, [refs]);
@@ -113,7 +112,8 @@ const updateScrolls = (elements: Elements): void => {
 	if (x !== undefined) {
 		horizontalTrack.classList.remove('hidden');
 		updateHorizontalScrollPosition(elements, x);
-	} else {
+	}
+	else {
 		horizontalTrack.classList.add('hidden');
 	}
 
@@ -121,17 +121,18 @@ const updateScrolls = (elements: Elements): void => {
 	if (y !== undefined) {
 		verticalTrack.classList.remove('hidden');
 		updateVerticalScrollPosition(elements, y);
-	} else {
+	}
+	else {
 		verticalTrack.classList.add('hidden');
 	}
 };
 
 export type ScrollAreaProps = {
 	classNames?: {
-		root?: string;
-	};
+		root?: string,
+	},
 };
-export const ScrollArea: FC<WithChildren<ScrollAreaProps>> = (props) => {
+export function ScrollArea(props: ScrollAreaProps & { children: ReactNode }) {
 	const { children, classNames } = props;
 	const classes = useClasses();
 
@@ -169,4 +170,4 @@ export const ScrollArea: FC<WithChildren<ScrollAreaProps>> = (props) => {
 			</div>
 		</div>
 	);
-};
+}

@@ -2,10 +2,10 @@ import { RealType, realBytesMap } from './RealType';
 import { RealArray, viewRealArray, RealArrayLike } from './RealArray';
 
 export type RealArraysOptions = {
-	offset: number;
-	step: number;
-	count: number;
-	length: number;
+	offset: number,
+	step: number,
+	count: number,
+	length: number,
 };
 
 export const createRealArrays = <K extends RealType>(

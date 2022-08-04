@@ -12,8 +12,6 @@ module.exports = {
 	extends: [
 		'airbnb',
 		'airbnb/hooks',
-		'eslint:recommended',
-		'plugin:react/recommended',
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
@@ -31,36 +29,64 @@ module.exports = {
 			},
 			extends: [
 				'airbnb-typescript',
-				'plugin:@typescript-eslint/eslint-recommended',
 				'plugin:@typescript-eslint/recommended',
 				'plugin:@typescript-eslint/recommended-requiring-type-checking',
-				'plugin:import/typescript',
 			],
 		},
 		{
-			files: ['*.js', '*.ts', '*.tsx'],
+			files: ['*.js', '*.ts', '*.jsx', '*.tsx'],
 			rules: {
 				'import/prefer-default-export': 0,
 				indent: ['error', 'tab', { SwitchCase: 1 }],
-				'@typescript-eslint/indent': ['error', 'tab'],
-				'jsx-quotes': ['error', 'prefer-single'],
 				'no-plusplus': 0,
 				'no-tabs': 0,
 				'object-curly-newline': 0,
-				'react/jsx-indent': ['error', 'tab'],
-				'react/jsx-props-no-spreading': 0,
-				'@typescript-eslint/no-useless-constructor': ['error'],
-				'@typescript-eslint/member-delimiter-style': ['error'],
-				'@typescript-eslint/no-empty-function': ['error'],
-				'react/jsx-indent-props': ['error', 'tab'],
 				'arrow-body-style': 0,
 				'no-param-reassign': 0,
 				'no-bitwise': 0,
+				'func-names': ['error'],
+				'jsx-quotes': ['error', 'prefer-single'],
 				'jsx-a11y/label-has-associated-control': [2, {
 					labelComponents: ['CustomInputLabel'],
 					labelAttributes: ['label'],
 					controlComponents: ['CustomInput'],
 					depth: 3,
+				}],
+				'react/jsx-indent': ['error', 'tab'],
+				'react/jsx-props-no-spreading': 0,
+				'react/jsx-indent-props': ['error', 'tab'],
+				'react/require-default-props': 0,
+				'@typescript-eslint/indent': ['error', 'tab'],
+				'@typescript-eslint/no-useless-constructor': ['error'],
+				'@typescript-eslint/member-delimiter-style': ['error', {
+					multiline: {
+						delimiter: 'comma',
+						requireLast: true,
+					},
+					singleline: {
+						delimiter: 'comma',
+						requireLast: false,
+					},
+				}],
+				'@typescript-eslint/no-empty-function': ['error'],
+				'@typescript-eslint/consistent-type-assertions': ['error', {
+					assertionStyle: 'never',
+				}],
+				'@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+				'@typescript-eslint/brace-style': ['error', 'stroustrup'],
+			},
+		},
+		{
+			files: ['*.js', '*.ts'],
+			rules: {
+				'func-style': ['error'],
+			},
+		},
+		{
+			files: ['*.jsx', '*.tsx'],
+			rules: {
+				'react/function-component-definition': [2, {
+					namedComponents: ['function-declaration'],
 				}],
 			},
 		},

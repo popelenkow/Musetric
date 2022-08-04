@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 
 export const getTextFieldClasses = createClasses((css) => {
@@ -63,13 +63,15 @@ export const getTextFieldClasses = createClasses((css) => {
 const useClasses = createUseClasses('TextField', getTextFieldClasses);
 
 export type TextFieldProps = {
-	value: string;
-	label?: string;
-	disabled?: boolean;
-	primary?: boolean;
-	rounded?: boolean;
+	value: string,
+	label?: string,
+	disabled?: boolean,
+	primary?: boolean,
+	rounded?: boolean,
 };
-export const TextField: FC<TextFieldProps> = (props) => {
+export function TextField(
+	props: TextFieldProps,
+): ReactElement {
 	const {
 		value, label,
 		disabled, primary, rounded,
@@ -89,4 +91,4 @@ export const TextField: FC<TextFieldProps> = (props) => {
 			</fieldset>
 		</div>
 	);
-};
+}

@@ -1,24 +1,25 @@
-import React, { useState, useMemo, FC, createContext } from 'react';
+import React, { useState, useMemo, createContext, ReactNode, ReactElement } from 'react';
 import { i18n as I18n, WithT } from 'i18next';
 import { LocaleEntry } from '../AppBase/Locale';
 import { useInitializedContext } from '../ReactUtils/Context';
-import { WithChildren } from '../ReactUtils/WithChildren';
 
 export type LocaleStore = {
-	i18n: WithT;
-	localeId: string;
-	setLocaleId: (id: string) => Promise<void>;
-	allLocaleIds: string[];
+	i18n: WithT,
+	localeId: string,
+	setLocaleId: (id: string) => Promise<void>,
+	allLocaleIds: string[],
 };
 export const LocaleContext = createContext<LocaleStore | undefined>(undefined);
 
 export type LocaleProviderProps = {
-	i18n: I18n;
-	allLocaleEntries: LocaleEntry[];
-	onLocaleId: (localeId: string) => void;
+	i18n: I18n,
+	allLocaleEntries: LocaleEntry[],
+	onLocaleId: (localeId: string) => void,
 };
 
-export const LocaleProvider: FC<WithChildren<LocaleProviderProps>> = (props) => {
+export function LocaleProvider(
+	props: LocaleProviderProps & { children: ReactNode },
+): ReactElement {
 	const { children, i18n, allLocaleEntries, onLocaleId } = props;
 
 	const [localeId, setLocaleId] = useState<string>(i18n.language);
@@ -39,6 +40,6 @@ export const LocaleProvider: FC<WithChildren<LocaleProviderProps>> = (props) => 
 			{children}
 		</LocaleContext.Provider>
 	);
-};
+}
 
 export const useLocaleContext = (): LocaleStore => useInitializedContext(LocaleContext, 'useLocaleContext');

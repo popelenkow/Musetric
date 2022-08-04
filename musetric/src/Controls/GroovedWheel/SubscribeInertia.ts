@@ -12,10 +12,10 @@ const getClientPosition = (event: MouseEvent | TouchEvent) => {
 };
 
 export type InertialDragOptions = {
-	inertia: Inertia;
-	element: HTMLElement;
-	onMove: (delta: Position2D) => void;
-	onActive: (value: boolean) => void;
+	inertia: Inertia,
+	element: HTMLElement,
+	onMove: (delta: Position2D) => void,
+	onActive: (value: boolean) => void,
 };
 export const subscribeInertia = (options: InertialDragOptions) => {
 	const { inertia, element, onMove, onActive } = options;
@@ -66,7 +66,8 @@ export const subscribeInertia = (options: InertialDragOptions) => {
 			inertia.setDelta(delta, time);
 			commit();
 			onActive(true);
-		} else {
+		}
+		else {
 			const delta: Position2D = inertia.getDelta(time);
 			if (delta.x === 0 && delta.y === 0) {
 				onActive(false);

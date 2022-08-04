@@ -1,13 +1,15 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { SoundViewId } from '../Store';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 
 export type SoundSpectrogramButtonProps = {
-	soundViewId: SoundViewId;
-	setSoundViewId: (value: SoundViewId) => void;
+	soundViewId: SoundViewId,
+	setSoundViewId: (value: SoundViewId) => void,
 };
-export const SoundSpectrogramButton: FC<SoundSpectrogramButtonProps> = (props) => {
+export function SoundSpectrogramButton(
+	props: SoundSpectrogramButtonProps,
+): ReactElement {
 	const { soundViewId, setSoundViewId } = props;
 
 	const { SpectrogramIcon } = useIconContext();
@@ -25,4 +27,4 @@ export const SoundSpectrogramButton: FC<SoundSpectrogramButtonProps> = (props) =
 			<SpectrogramIcon />
 		</Button>
 	);
-};
+}

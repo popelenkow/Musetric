@@ -1,18 +1,18 @@
 export type Theme = {
-	background: string;
-	activeBackground: string;
-	content: string;
-	activeContent: string;
-	hover: string;
-	primaryHover: string;
-	primary: string;
-	activePrimary: string;
-	divider: string;
-	shadow: string;
+	background: string,
+	activeBackground: string,
+	content: string,
+	activeContent: string,
+	hover: string,
+	primaryHover: string,
+	primary: string,
+	activePrimary: string,
+	divider: string,
+	shadow: string,
 };
 export type ThemeEntry = {
-	themeId: string;
-	theme: Theme;
+	themeId: string,
+	theme: Theme,
 };
 
 export const getStorageThemeId = (): string | undefined => {

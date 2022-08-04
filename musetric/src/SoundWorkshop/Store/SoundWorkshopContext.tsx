@@ -1,5 +1,5 @@
-import React, { FC, useMemo, createContext, useReducer, Dispatch, useRef, useEffect } from 'react';
-import { WithChildren, useInitializedContext } from '../../ReactUtils';
+import React, { useMemo, createContext, useReducer, Dispatch, useRef, useEffect, ReactElement, ReactNode } from 'react';
+import { useInitializedContext } from '../../ReactUtils';
 import { createSoundBufferManager, SoundBufferManager } from '../../Sounds/SoundBufferManager';
 import { createRecorder, Recorder } from '../../SoundProcessing';
 import { NumberRange } from '../../Rendering';
@@ -8,18 +8,18 @@ import { useWorkerContext } from '../../AppContexts';
 export type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
 
 export type SoundParameters = {
-	frequencyRange: NumberRange;
-	sampleRate: number;
+	frequencyRange: NumberRange,
+	sampleRate: number,
 };
 export type SoundWorkshopState = {
-	isLive: boolean;
-	isPlaying: boolean;
-	isRecording: boolean;
-	soundViewId: SoundViewId;
-	isOpenParameters: boolean;
-	soundParameters: SoundParameters;
-	soundBufferManager: SoundBufferManager;
-	recorder?: Recorder;
+	isLive: boolean,
+	isPlaying: boolean,
+	isRecording: boolean,
+	soundViewId: SoundViewId,
+	isOpenParameters: boolean,
+	soundParameters: SoundParameters,
+	soundBufferManager: SoundBufferManager,
+	recorder?: Recorder,
 };
 const initialValues = {
 	sampleRate: 48000,
@@ -42,13 +42,13 @@ const initialState: SoundWorkshopState = {
 };
 
 export type SoundWorkshopAction = (
-	| { type: 'setIsLive'; isLive: boolean }
-	| { type: 'setIsPlaying'; isPlaying: boolean }
-	| { type: 'setIsRecording'; isRecording: boolean }
-	| { type: 'setSoundViewId'; soundViewId: SoundViewId }
-	| { type: 'setIsOpenParameters'; isOpenParameters: boolean }
-	| { type: 'setSoundParameters'; soundParameters: SoundParameters }
-	| { type: 'setRecorder'; recorder: Recorder }
+	| { type: 'setIsLive', isLive: boolean }
+	| { type: 'setIsPlaying', isPlaying: boolean }
+	| { type: 'setIsRecording', isRecording: boolean }
+	| { type: 'setSoundViewId', soundViewId: SoundViewId }
+	| { type: 'setIsOpenParameters', isOpenParameters: boolean }
+	| { type: 'setSoundParameters', soundParameters: SoundParameters }
+	| { type: 'setRecorder', recorder: Recorder }
 );
 export const soundWorkshopReducer = (
 	state: SoundWorkshopState,
@@ -91,13 +91,15 @@ export const soundWorkshopReducer = (
 };
 
 export type SoundWorkshopStore = SoundWorkshopState & {
-	dispatch: Dispatch<SoundWorkshopAction>;
-	getRecorder: () => Promise<Recorder>;
+	dispatch: Dispatch<SoundWorkshopAction>,
+	getRecorder: () => Promise<Recorder>,
 };
 export const SoundWorkshopContext = createContext<SoundWorkshopStore | undefined>(undefined);
 
 export type SoundWorkshopProviderProps = object;
-export const SoundWorkshopProvider: FC<WithChildren<SoundWorkshopProviderProps>> = (props) => {
+export function SoundWorkshopProvider(
+	props: SoundWorkshopProviderProps & { children: ReactNode },
+): ReactElement {
 	const { children } = props;
 
 	const recorderRef = useRef<Recorder>();
@@ -137,7 +139,7 @@ export const SoundWorkshopProvider: FC<WithChildren<SoundWorkshopProviderProps>>
 			{children}
 		</SoundWorkshopContext.Provider>
 	);
-};
+}
 
 export const useSoundWorkshopStore = (): SoundWorkshopStore => (
 	useInitializedContext(SoundWorkshopContext, 'useSoundWorkshopContext')

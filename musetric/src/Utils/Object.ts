@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/consistent-type-assertions */
+
 export const mapObject = <Key extends string, Value, Result>(
 	obj: Record<Key, Value>,
 	map: (value: Value) => Result,
@@ -10,10 +12,10 @@ export const mapObject = <Key extends string, Value, Result>(
 	return result;
 };
 
-export const someObject = <Key extends string, Value>(
+export const someObject = <Key extends string, Value, Result extends Value>(
 	obj: Record<Key, Value>,
-	predicate: (value: Value) => boolean,
-): boolean => {
+	predicate: (value: Value) => value is Result,
+): obj is Record<Key, Result> => {
 	const keys = Object.keys(obj) as Key[];
 	return keys.some((key) => predicate(obj[key]));
 };

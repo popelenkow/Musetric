@@ -1,12 +1,14 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 
 export type SoundOpenParametersButtonProps = {
-	isOpenParameters: boolean;
-	setIsOpenParameters: (value: boolean) => void;
+	isOpenParameters: boolean,
+	setIsOpenParameters: (value: boolean) => void,
 };
-export const SoundOpenParametersButton: FC<SoundOpenParametersButtonProps> = (props) => {
+export function SoundOpenParametersButton(
+	props: SoundOpenParametersButtonProps,
+): ReactElement {
 	const { isOpenParameters, setIsOpenParameters } = props;
 
 	const { ParametersIcon } = useIconContext();
@@ -24,4 +26,4 @@ export const SoundOpenParametersButton: FC<SoundOpenParametersButtonProps> = (pr
 			<ParametersIcon />
 		</Button>
 	);
-};
+}

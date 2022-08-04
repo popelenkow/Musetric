@@ -20,11 +20,11 @@ import type { Workers } from 'musetric/AppBase/Worker';
 import { useAppBarButtons } from './common/AppBarButtons';
 
 export type CreateMusetricAppOptions = {
-	elementId: string;
-	allLocaleEntries: LocaleEntry[];
-	allThemeEntries: ThemeEntry[];
-	icons: Icons;
-	workers: Workers;
+	elementId: string,
+	allLocaleEntries: LocaleEntry[],
+	allThemeEntries: ThemeEntry[],
+	icons: Icons,
+	workers: Workers,
 };
 export type CreateMusetricApp = (options: CreateMusetricAppOptions) => Promise<void>;
 export const createMusetricApp: CreateMusetricApp = async (options) => {
@@ -42,13 +42,17 @@ export const createMusetricApp: CreateMusetricApp = async (options) => {
 			kind: 'icon',
 			rounded: true,
 			primary: true,
-			onClick: () => { window.location.href = 'https://github.com/popelenkow/Musetric'; },
+			onClick: () => {
+				window.location.href = 'https://github.com/popelenkow/Musetric';
+			},
 		};
 		const performanceProps: ButtonProps = {
 			kind: 'icon',
 			rounded: true,
 			primary: true,
-			onClick: () => { window.location.href = `${window.location.origin}/perf.html`; },
+			onClick: () => {
+				window.location.href = `${window.location.origin}/perf.html`;
+			},
 		};
 		const aboutInfoProps: AppAboutProps = {
 			appVersion: process.env.APP_VERSION || '???',

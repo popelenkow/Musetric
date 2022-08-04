@@ -1,25 +1,25 @@
 export type NumberRange = {
-	from: number;
-	to: number;
+	from: number,
+	to: number,
 };
 export type Rotation2D = 'none' | 'left' | 'right' | 'twice';
 export type Direction2D = {
-	rotation: Rotation2D;
-	reflection: boolean;
+	rotation: Rotation2D,
+	reflection: boolean,
 };
 export type Position2D = {
-	x: number;
-	y: number;
+	x: number,
+	y: number,
 };
 export type Size2D = {
-	width: number;
-	height: number;
+	width: number,
+	height: number,
 };
 
 export type Layout2D = {
-	size: Size2D;
-	position?: Position2D;
-	direction?: Direction2D;
+	size: Size2D,
+	position?: Position2D,
+	direction?: Direction2D,
 };
 
 export const getCanvasCursorPosition2D = (
@@ -75,7 +75,8 @@ export const drawImage = (
 	if (rotation === 'twice') {
 		if (reflection) {
 			context.transform(1, 0, 0, -1, 0, size.height);
-		} else {
+		}
+		else {
 			context.transform(-1, 0, 0, -1, size.width, size.height);
 		}
 	}
@@ -84,7 +85,8 @@ export const drawImage = (
 			context.transform(-1, 0, 0, 1, size.height, 0);
 			context.translate(0, size.width);
 			context.rotate(-Math.PI / 2);
-		} else {
+		}
+		else {
 			context.translate(size.height, 0);
 			context.rotate(Math.PI / 2);
 		}
@@ -94,7 +96,8 @@ export const drawImage = (
 			context.transform(-1, 0, 0, 1, size.width, 0);
 			context.translate(size.width, 0);
 			context.rotate(Math.PI / 2);
-		} else {
+		}
+		else {
 			context.translate(0, size.width);
 			context.rotate(-Math.PI / 2);
 		}

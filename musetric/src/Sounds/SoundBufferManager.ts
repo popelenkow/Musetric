@@ -4,15 +4,15 @@ import { createEventEmitter, EventEmitter } from '../Utils/EventEmitter';
 
 export type SoundBufferEvent =
 	| { type: 'newBuffer' }
-	| { type: 'invalidate'; from: number; to: number }
-	| { type: 'shift'; offset: number };
+	| { type: 'invalidate', from: number, to: number }
+	| { type: 'shift', offset: number };
 
 const add = (
 	soundBuffer: SoundBuffer,
 	bufferEventEmitter: EventEmitter<SoundBufferEvent>,
 	chunks: Float32Array[],
 	cursor: number,
-) => {
+): void => {
 	const { length, channelCount, buffers } = soundBuffer;
 	const chunkSize = chunks[0].length;
 	const newSize = cursor + chunkSize;
@@ -33,7 +33,7 @@ const overwrite = (
 	soundBuffer: SoundBuffer,
 	bufferEventEmitter: EventEmitter<SoundBufferEvent>,
 	chunks: Float32Array[],
-) => {
+): void => {
 	const { length, channelCount, buffers } = soundBuffer;
 	const chunkLength = chunks[0].length;
 	const isNotOvercome = length > chunkLength;

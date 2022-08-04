@@ -3,8 +3,8 @@ import { parseTheme } from './Color';
 import { Size2D } from './Layout';
 
 export type Waves = {
-	minArray: Float32Array;
-	maxArray: Float32Array;
+	minArray: Float32Array,
+	maxArray: Float32Array,
 };
 
 export const evalWaves = (
@@ -35,9 +35,9 @@ export const evalWaves = (
 };
 
 export type WaveformColors = {
-	activeContent: number;
-	background: number;
-	activePrimary: number;
+	activeContent: number,
+	background: number,
+	activePrimary: number,
 };
 export const createWaveformColors = (theme: Theme): WaveformColors => {
 	const { activeContent, background, activePrimary } = parseTheme('uint32', theme);

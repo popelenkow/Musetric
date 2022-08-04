@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useState, FC, useEffect } from 'react';
+import React, { createContext, useMemo, useState, useEffect, ReactNode, ReactElement } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Classes, GenerateId } from 'jss';
 import { JssProvider, createTheming, createUseStyles, Styles } from 'react-jss';
@@ -6,11 +6,10 @@ import classNames from 'classnames';
 import { Platform, getPlatformId } from '../AppBase/Platform';
 import { Theme, ThemeEntry } from '../AppBase/Theme';
 import { useInitializedContext } from '../ReactUtils/Context';
-import { WithChildren } from '../ReactUtils/WithChildren';
 
 export type Css = {
-	theme: Theme;
-	platform: Platform;
+	theme: Theme,
+	platform: Platform,
 };
 // eslint-disable-next-line
 export const ThemingContext = createContext<Css>(undefined as any);
@@ -27,10 +26,10 @@ export const createUseClasses = <C extends string, Props>(
 };
 
 export type CssStore = {
-	css: Css;
-	themeId: string;
-	setThemeId: (id: string) => void;
-	allThemeIds: string[];
+	css: Css,
+	themeId: string,
+	setThemeId: (id: string) => void,
+	allThemeIds: string[],
 };
 export const CssContext = createContext<CssStore | undefined>(undefined);
 
@@ -60,11 +59,13 @@ const usePlatform = (): Platform => {
 };
 
 export type CssProviderProps = {
-	initThemeId?: string;
-	allThemeEntries: ThemeEntry[];
-	onSetThemeId?: (themeId: string) => void;
+	initThemeId?: string,
+	allThemeEntries: ThemeEntry[],
+	onSetThemeId?: (themeId: string) => void,
 };
-export const CssProvider: FC<WithChildren<CssProviderProps>> = (props) => {
+export function CssProvider(
+	props: CssProviderProps & { children: ReactNode },
+): ReactElement {
 	const { children, initThemeId, allThemeEntries, onSetThemeId } = props;
 
 	const allThemeIds = allThemeEntries.map((x) => x.themeId);
@@ -97,13 +98,13 @@ export const CssProvider: FC<WithChildren<CssProviderProps>> = (props) => {
 			</JssProvider>
 		</CssContext.Provider>
 	);
-};
+}
 
 export const useCssContext = (): CssStore => useInitializedContext(CssContext, 'useCssContext');
 
 export type ClassNameArg = string | {
-	value?: string | Record<string, boolean | undefined>;
-	default?: string;
+	value?: string | Record<string, boolean | undefined>,
+	default?: string,
 };
 export const className = (...args: ClassNameArg[]) => {
 	const resultArr = args.map<Record<string, boolean | undefined>>((arg) => {
