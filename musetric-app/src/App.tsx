@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App, AppProps, AppProviders } from 'musetric/App/App';
 import { AppViewEntry } from 'musetric/App/AppDropdown';
@@ -136,5 +136,5 @@ export const createMusetricApp: CreateMusetricApp = async (options) => {
 	const rootElement = document.getElementById(elementId);
 	if (!rootElement) throw new Error();
 	const root = createRoot(rootElement);
-	root.render(<App {...appProps} />);
+	root.render(<StrictMode><App {...appProps} /></StrictMode>);
 };
