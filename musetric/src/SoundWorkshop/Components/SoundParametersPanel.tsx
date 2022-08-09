@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, FC } from 'react';
+import React, { useEffect, useCallback, ReactElement } from 'react';
 import className from 'classnames';
 import { createUseClasses, createClasses } from '../../AppContexts/Css';
 import { NumberField, NumberFieldProps } from '../../Controls/NumberField';
@@ -55,10 +55,12 @@ const subscribe = (
 	};
 };
 export type SoundParametersPanelProps = {
-	soundParameters: SoundParameters;
-	setSoundParameters: (soundParameters: SoundParameters) => void;
+	soundParameters: SoundParameters,
+	setSoundParameters: (soundParameters: SoundParameters) => void,
 };
-export const SoundParametersPanel: FC<SoundParametersPanelProps> = (props) => {
+export function SoundParametersPanel(
+	props: SoundParametersPanelProps,
+): ReactElement {
 	const { soundParameters, setSoundParameters } = props;
 
 	const classes = useClasses();
@@ -137,4 +139,4 @@ export const SoundParametersPanel: FC<SoundParametersPanelProps> = (props) => {
 			</ScrollArea>
 		</div>
 	);
-};
+}

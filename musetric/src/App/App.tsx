@@ -22,11 +22,11 @@ export const getAppClasses = createClasses((css) => {
 const useClasses = createUseClasses('App', getAppClasses);
 
 type RootProps<ViewId extends string> = {
-	initViewId: ViewId;
-	useViewEntries: () => AppViewEntry<ViewId>[];
-	useAppBarButtons: () => ReactElement;
+	initViewId: ViewId,
+	useViewEntries: () => AppViewEntry<ViewId>[],
+	useAppBarButtons: () => ReactElement,
 };
-function Root<ViewId extends string>(props: RootProps<ViewId>): ReactElement | null {
+function Root<ViewId extends string>(props: RootProps<ViewId>): ReactElement {
 	const { initViewId, useViewEntries, useAppBarButtons } = props;
 	const classes = useClasses();
 	const { MenuIcon } = useIconContext();
@@ -60,14 +60,14 @@ function Root<ViewId extends string>(props: RootProps<ViewId>): ReactElement | n
 
 export type AppProvider = (children?: ReactNode) => ReactElement | null;
 export type AppProviders = {
-	locale: AppProvider;
-	log: AppProvider;
-	css: AppProvider;
-	icon: AppProvider;
-	worker: AppProvider;
+	locale: AppProvider,
+	log: AppProvider,
+	css: AppProvider,
+	icon: AppProvider,
+	worker: AppProvider,
 };
 export type AppProps<ViewId extends string> = {
-	providers: AppProviders;
+	providers: AppProviders,
 } & RootProps<ViewId>;
 export function App<ViewId extends string>(props: AppProps<ViewId>): ReactElement | null {
 	const { providers } = props;

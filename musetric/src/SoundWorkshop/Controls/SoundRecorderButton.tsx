@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 import { SoundBufferManager } from '../../Sounds';
@@ -6,13 +6,15 @@ import { skipPromise } from '../../Utils';
 import { useSoundWorkshopStore } from '../Store';
 
 export type SoundRecorderButtonProps = {
-	disabled: boolean;
-	soundBufferManager: SoundBufferManager;
-	isLive: boolean;
-	isRecording: boolean;
-	setIsRecording: (value: boolean) => void;
+	disabled: boolean,
+	soundBufferManager: SoundBufferManager,
+	isLive: boolean,
+	isRecording: boolean,
+	setIsRecording: (value: boolean) => void,
 };
-export const SoundRecorderButton: FC<SoundRecorderButtonProps> = (props) => {
+export function SoundRecorderButton(
+	props: SoundRecorderButtonProps,
+): ReactElement {
 	const { disabled, isLive, isRecording, setIsRecording } = props;
 
 	const { RecordIcon } = useIconContext();
@@ -56,4 +58,4 @@ export const SoundRecorderButton: FC<SoundRecorderButtonProps> = (props) => {
 			<RecordIcon />
 		</Button>
 	);
-};
+}

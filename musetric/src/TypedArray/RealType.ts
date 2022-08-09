@@ -1,10 +1,10 @@
 import type { OverloadedConstructorParameters } from '../UtilityTypes';
 
 export type RealTypeMap = {
-	float32: Float32Array;
-	float64: Float64Array;
-	uint32: Uint32Array;
-	uint8: Uint8Array;
+	float32: Float32Array,
+	float64: Float64Array,
+	uint32: Uint32Array,
+	uint8: Uint8Array,
 };
 export type RealType = keyof RealTypeMap;
 export const realBytesMap: Record<RealType, number> = {
@@ -14,6 +14,7 @@ export const realBytesMap: Record<RealType, number> = {
 	uint8: Uint8Array.BYTES_PER_ELEMENT,
 };
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 const castArgs = (args: unknown[]): [] => args as [];
 type RealArrayConstructorArgs = OverloadedConstructorParameters<Float32ArrayConstructor>;
 type RealArrayConstructor = (...args: RealArrayConstructorArgs) => unknown;
@@ -25,7 +26,7 @@ export const createRealTypeMap: Record<RealType, RealArrayConstructor> = {
 };
 
 export type RealListTypeMap = {
-	list: number[];
+	list: number[],
 };
 export type RealListType = keyof RealListTypeMap;
 

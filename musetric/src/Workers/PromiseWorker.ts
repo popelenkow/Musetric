@@ -1,27 +1,27 @@
 import { PushEvent } from '../Types';
 
 export type PromiseWorkerRequest = {
-	id: string;
-	type: string;
-	args: unknown[];
+	id: string,
+	type: string,
+	args: unknown[],
 };
 export type PromiseWorkerResponse = {
-	id: string;
-	type: string;
-	result: unknown;
+	id: string,
+	type: string,
+	result: unknown,
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type PromiseWorker = Record<string, (...args: any[]) => unknown>;
 
 export type PromiseWorkerOptions<Events> = {
-	pushEvent: PushEvent<Events>;
+	pushEvent: PushEvent<Events>,
 };
 
 export const runPromiseWorker = <Events>(
 	host: Worker,
 	createWorker: (options: PromiseWorkerOptions<Events>) => PromiseWorker,
 ): void => {
-	const post = (message: PromiseWorkerResponse) => {
+	const post = (message: PromiseWorkerResponse): void => {
 		host.postMessage(message);
 	};
 
@@ -32,7 +32,7 @@ export const runPromiseWorker = <Events>(
 		},
 	};
 	const worker = createWorker(options);
-	host.onmessage = (event: MessageEvent<PromiseWorkerRequest>) => {
+	host.onmessage = (event: MessageEvent<PromiseWorkerRequest>): void => {
 		const { id, type, args } = event.data;
 		const result = worker[type](...args);
 		post({ id, type, result });

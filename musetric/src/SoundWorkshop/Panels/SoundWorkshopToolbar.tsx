@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { createClasses, createUseClasses } from '../../AppContexts/Css';
 import { useSoundWorkshopStore } from '../Store';
 import {
@@ -26,8 +26,7 @@ export const getSoundWorkshopToolbarClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('SoundWorkshopToolbar', getSoundWorkshopToolbarClasses);
 
-export type SoundWorkshopToolbarProps = object;
-export const SoundWorkshopToolbar: FC<SoundWorkshopToolbarProps> = () => {
+export function SoundWorkshopToolbar(): ReactElement {
 	const classes = useClasses();
 
 	const store = useSoundWorkshopStore();
@@ -59,4 +58,4 @@ export const SoundWorkshopToolbar: FC<SoundWorkshopToolbarProps> = () => {
 			<SoundRecorderButton {...soundRecorderButtonProps} />
 		</div>
 	);
-};
+}

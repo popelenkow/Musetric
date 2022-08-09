@@ -1,5 +1,4 @@
-import React, { FC, useMemo, useEffect } from 'react';
-import { WithChildren } from '../ReactUtils/WithChildren';
+import React, { useMemo, useEffect, ReactNode, ReactElement } from 'react';
 import { Button, ButtonProps, getButtonClasses } from './Button';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 
@@ -14,15 +13,17 @@ export const getSelectFileClasses = createClasses((css) => {
 const useClasses = createUseClasses('SelectFile', getSelectFileClasses);
 
 export type SelectFileProps = {
-	kind?: 'simple' | 'icon' | 'full';
-	align?: 'left' | 'center' | 'right';
-	disabled?: boolean;
-	primary?: boolean;
-	rounded?: boolean;
-	title?: string;
-	changeFile: (file: File) => void;
+	kind?: 'simple' | 'icon' | 'full',
+	align?: 'left' | 'center' | 'right',
+	disabled?: boolean,
+	primary?: boolean,
+	rounded?: boolean,
+	title?: string,
+	changeFile: (file: File) => void,
 };
-export const SelectFile: FC<WithChildren<SelectFileProps>> = (props) => {
+export function SelectFile(
+	props: SelectFileProps & { children: ReactNode },
+): ReactElement {
 	const {
 		kind, disabled, primary, rounded,
 		title, changeFile, children,
@@ -37,8 +38,12 @@ export const SelectFile: FC<WithChildren<SelectFileProps>> = (props) => {
 
 	useEffect(() => {
 		input.onchange = (event) => {
-			const target = event.target as HTMLInputElement | null;
-			const file = target?.files?.item(0);
+			const { target } = event;
+			const isInput = (element: EventTarget | null): element is HTMLInputElement => (
+				element instanceof HTMLInputElement
+			);
+			if (!isInput(target)) return;
+			const file = target.files?.item(0);
 			if (!file) return;
 			changeFile(file);
 		};
@@ -59,4 +64,4 @@ export const SelectFile: FC<WithChildren<SelectFileProps>> = (props) => {
 			{children}
 		</Button>
 	);
-};
+}

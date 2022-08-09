@@ -1,4 +1,4 @@
-const floatTo16BitPCM = (view: DataView, offset: number, buffer: Float32Array) => {
+const floatTo16BitPCM = (view: DataView, offset: number, buffer: Float32Array): void => {
 	let arrayOffset = 0;
 	for (let i = 0; i < buffer.length; i++) {
 		const s = Math.max(-1, Math.min(1, buffer[i]));
@@ -7,13 +7,17 @@ const floatTo16BitPCM = (view: DataView, offset: number, buffer: Float32Array) =
 	}
 };
 
-const writeString = (view: DataView, offset: number, value: string) => {
+const writeString = (view: DataView, offset: number, value: string): void => {
 	for (let i = 0; i < value.length; i++) {
 		view.setUint8(offset + i, value.charCodeAt(i));
 	}
 };
 
-const createDataView = (sampleRate: number, numChannels: number, samples: Float32Array) => {
+const createDataView = (
+	sampleRate: number,
+	numChannels: number,
+	samples: Float32Array,
+): DataView => {
 	const buffer = new ArrayBuffer(44 + samples.length * 2);
 	const view = new DataView(buffer);
 
@@ -66,7 +70,10 @@ const interleave = (bufferL: Float32Array, bufferR: Float32Array): Float32Array 
 	return result;
 };
 
-export const createWav = (buffers: Float32Array[], sampleRate: number) => {
+export const createWav = (
+	buffers: Float32Array[],
+	sampleRate: number,
+): Blob => {
 	const channelCount = buffers.length;
 	const interleaved = channelCount === 2
 		? interleave(buffers[0], buffers[1])
@@ -77,7 +84,10 @@ export const createWav = (buffers: Float32Array[], sampleRate: number) => {
 	return audioBlob;
 };
 
-export const decodeFileToWav = async (audioContext: AudioContext, file: File) => {
+export const decodeFileToWav = async (
+	audioContext: AudioContext,
+	file: File,
+): Promise<Float32Array[]> => {
 	const arrayBuffer = await file.arrayBuffer();
 	const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 	const channels: Float32Array[] = [];

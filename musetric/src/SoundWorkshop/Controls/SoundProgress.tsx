@@ -1,4 +1,4 @@
-import React, { useMemo, useState, FC } from 'react';
+import React, { useMemo, useState, ReactElement } from 'react';
 import className from 'classnames';
 import { createUseClasses, createClasses } from '../../AppContexts';
 import { SoundBufferManager } from '../../Sounds';
@@ -19,12 +19,12 @@ export const getSoundProgressClasses = createClasses((css) => {
 const useClasses = createUseClasses('SoundProgress', getSoundProgressClasses);
 
 export type SoundProgressProps = {
-	soundBufferManager: SoundBufferManager;
+	soundBufferManager: SoundBufferManager,
 	classNames?: {
-		root?: string;
-	};
+		root?: string,
+	},
 };
-export const SoundProgress: FC<SoundProgressProps> = (props) => {
+export function SoundProgress(props: SoundProgressProps): ReactElement {
 	const { soundBufferManager, classNames } = props;
 	const classes = useClasses();
 
@@ -33,9 +33,9 @@ export const SoundProgress: FC<SoundProgressProps> = (props) => {
 	});
 
 	type State = {
-		cursor: number;
-		length: number;
-		sampleRate: number;
+		cursor: number,
+		length: number,
+		sampleRate: number,
 	};
 
 	const [state, setState] = useState<State>({ cursor: 0, length: 0, sampleRate: 1 });
@@ -77,4 +77,4 @@ export const SoundProgress: FC<SoundProgressProps> = (props) => {
 			{`${cursorString} / ${memorySizeString}`}
 		</div>
 	);
-};
+}

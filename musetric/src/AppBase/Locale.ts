@@ -2,8 +2,8 @@ import i18next, { i18n as I18n, WithT, ResourceLanguage, Resource } from 'i18nex
 
 export type Locale = ResourceLanguage;
 export type LocaleEntry = {
-	localeId: string;
-	locale: Locale;
+	localeId: string,
+	locale: Locale,
 };
 
 export const createLocaleResources = (localeEntries: LocaleEntry[]): Resource => (

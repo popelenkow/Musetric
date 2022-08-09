@@ -7,16 +7,16 @@ https://stackoverflow.com/questions/61089091/is-it-possible-to-get-raw-values-of
 https://www.html5rocks.com/en/tutorials/getusermedia/intro/#toc-webaudio-api
 */
 type AudioWorkletProcessorType = {
-	readonly port: MessagePort;
+	readonly port: MessagePort,
 	process(
 		inputs: Float32Array[][],
 		outputs: Float32Array[][],
 		parameters: Record<string, Float32Array>,
-	): boolean;
+	): boolean,
 };
 declare const AudioWorkletProcessor: {
-	prototype: AudioWorkletProcessorType;
-	new(options?: AudioWorkletNodeOptions): AudioWorkletProcessorType;
+	prototype: AudioWorkletProcessorType,
+	new(options?: AudioWorkletNodeOptions): AudioWorkletProcessorType,
 };
 type ProcessorCtor = (new (options?: AudioWorkletNodeOptions) => AudioWorkletProcessorType);
 declare const registerProcessor: (name: string, processorCtor: ProcessorCtor) => void;
@@ -24,19 +24,19 @@ declare const sampleRate: number;
 declare const currentTime: number;
 
 export type PromiseAudioWorkletState = {
-	sampleRate: number;
-	currentTime: number;
+	sampleRate: number,
+	currentTime: number,
 };
 export type PromiseAudioWorkletOptions<Events> = {
-	pushEvent: PushEvent<Events>;
-	getWorkletState: () => PromiseAudioWorkletState;
+	pushEvent: PushEvent<Events>,
+	getWorkletState: () => PromiseAudioWorkletState,
 };
 export type PromiseAudioWorkletOnProcess = {
 	process: (
 		input: Float32Array[],
 		outputs: Float32Array[],
 		parameters: Record<string, Float32Array>,
-	) => void;
+	) => void,
 };
 export type PromiseAudioWorklet = PromiseWorker & PromiseAudioWorkletOnProcess;
 
@@ -44,11 +44,11 @@ export const runPromiseAudioWorklet = <Events>(
 	processorName: string,
 	createWorklet: (options: PromiseAudioWorkletOptions<Events>) => PromiseAudioWorklet,
 ): void => {
-	const initWorklet = (messagePort: MessagePort) => {
-		const post = (message: PromiseWorkerResponse) => {
+	const initWorklet = (messagePort: MessagePort): PromiseAudioWorklet => {
+		const post = (message: PromiseWorkerResponse): void => {
 			messagePort.postMessage(message);
 		};
-		const getWorkletState = () => ({ sampleRate, currentTime });
+		const getWorkletState = () => ({ sampleRate, currentTime }) as const;
 
 		const worklet = createWorklet({
 			pushEvent: (type, result) => {
@@ -57,7 +57,7 @@ export const runPromiseAudioWorklet = <Events>(
 			},
 			getWorkletState,
 		});
-		messagePort.onmessage = (event: MessageEvent<PromiseWorkerRequest>) => {
+		messagePort.onmessage = (event: MessageEvent<PromiseWorkerRequest>): void => {
 			const { id, type, args } = event.data;
 			const result = worklet[type](...args);
 			post({ id, type, result });

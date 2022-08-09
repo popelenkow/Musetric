@@ -6,14 +6,14 @@ import { ComplexIndexable } from '../TypedArray/ComplexIndexable';
 /* Licensed by MIT. Based on https://github.com/indutny/fft.js/tree/4a18cf88fcdbd4ad5acca6eaea06a0b462047835 */
 
 type SingleTransform2Options = {
-	input: ComplexIndexable;
-	output: ComplexIndexable;
-	outOff: number;
-	off: number;
-	step: number;
+	input: ComplexIndexable,
+	output: ComplexIndexable,
+	outOff: number,
+	off: number,
+	step: number,
 };
 /** radix-2 implementation. Only called for len=4 */
-const singleTransform2 = (options: SingleTransform2Options) => {
+const singleTransform2 = (options: SingleTransform2Options): void => {
 	const { input, output, outOff, off, step } = options;
 
 	const evenR = input.real[off];
@@ -33,15 +33,15 @@ const singleTransform2 = (options: SingleTransform2Options) => {
 };
 
 type SingleTransform4Options = {
-	input: ComplexIndexable;
-	output: ComplexIndexable;
-	inv: boolean;
-	outOff: number;
-	off: number;
-	step: number;
+	input: ComplexIndexable,
+	output: ComplexIndexable,
+	inv: boolean,
+	outOff: number,
+	off: number,
+	step: number,
 };
 /** radix-4. Only called for len=8 */
-const singleTransform4 = (options: SingleTransform4Options) => {
+const singleTransform4 = (options: SingleTransform4Options): void => {
 	const { input, output, inv, outOff, off, step } = options;
 	const sign = inv ? -1 : 1;
 	const step2 = step * 2;
@@ -91,16 +91,16 @@ const singleTransform4 = (options: SingleTransform4Options) => {
 };
 
 type Transform4Options = {
-	input: ComplexIndexable;
-	output: ComplexIndexable;
-	inv: boolean;
-	windowSize: number;
-	width: number;
-	reverseTable: Uint32Array;
-	table: RealIndexable;
+	input: ComplexIndexable,
+	output: ComplexIndexable,
+	inv: boolean,
+	windowSize: number,
+	width: number,
+	reverseTable: Uint32Array,
+	table: RealIndexable,
 };
 /** radix-4 implementation */
-const transform4 = (options: Transform4Options) => {
+const transform4 = (options: Transform4Options): void => {
 	const { input, output, inv, windowSize, width, reverseTable, table } = options;
 
 	// Initial step (permute and transform)
@@ -114,7 +114,8 @@ const transform4 = (options: Transform4Options) => {
 			const off = reverseTable[t];
 			singleTransform2({ input, output, outOff, off, step });
 		}
-	} else {
+	}
+	else {
 		// len === 4
 		for (outOff = 0, t = 0; outOff < windowSize; outOff += 4, t++) {
 			const off = reverseTable[t];
@@ -202,7 +203,7 @@ const transform4 = (options: Transform4Options) => {
 	}
 };
 
-const createReverseTable = (width: number) => {
+const createReverseTable = (width: number): Uint32Array => {
 	const reverseTable = new Uint32Array(1 << width);
 	for (let j = 0; j < reverseTable.length; j++) {
 		reverseTable[j] = 0;
@@ -228,7 +229,7 @@ const createTable = <K extends RealIndexableType>(
 	return table;
 };
 
-const getWidth = (windowSize: number) => {
+const getWidth = (windowSize: number): number => {
 	// Find size's power of two
 	let power = 0;
 	for (let t = 1; windowSize > t; t <<= 1) {

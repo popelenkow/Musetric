@@ -13,15 +13,15 @@ export const getSwitchClasses = createClasses((css) => {
 const useClasses = createUseClasses('Switch', getSwitchClasses);
 
 export type SwitchProps<T> = {
-	kind?: 'simple' | 'icon' | 'full';
-	align?: 'left' | 'center' | 'right';
-	disabled?: boolean;
-	primary?: boolean;
-	rounded?: boolean;
-	title?: string;
-	currentId: T;
-	ids: T[];
-	set: (id: T) => void;
+	kind?: 'simple' | 'icon' | 'full',
+	align?: 'left' | 'center' | 'right',
+	disabled?: boolean,
+	primary?: boolean,
+	rounded?: boolean,
+	title?: string,
+	currentId: T,
+	ids: T[],
+	set: (id: T) => void,
 };
 type Props<T> = PropsWithChildren<SwitchProps<T>>;
 export function Switch<T>(props: Props<T>): ReactElement | null {

@@ -5,21 +5,21 @@ import { RealIndexable, createRealIndexable } from '../TypedArray/RealIndexable'
 import { gaussWindowFilter } from './WindowFilters';
 
 export type SpectrometerBase = {
-	forward: (input: ComplexIndexable, output: ComplexIndexable) => void;
-	inverse: (input: ComplexIndexable, output: ComplexIndexable) => void;
+	forward: (input: ComplexIndexable, output: ComplexIndexable) => void,
+	inverse: (input: ComplexIndexable, output: ComplexIndexable) => void,
 };
 
 export type SpectrometerFrequencyOptions = {
-	convert?: (amplitudes: RealIndexable) => void;
+	convert?: (amplitudes: RealIndexable) => void,
 };
 
 export type Spectrometer = SpectrometerBase & {
 	frequency: (
 		input: RealIndexable, output: RealIndexable, options: SpectrometerFrequencyOptions
-	) => void;
+	) => void,
 	byteFrequency: (
 		input: RealIndexable, output: RealIndexable, options: SpectrometerFrequencyOptions
-	) => void;
+	) => void,
 };
 export const createSpectrometer = (windowSize: number, base: SpectrometerBase): Spectrometer => {
 	const { forward, inverse } = base;

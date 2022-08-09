@@ -1,6 +1,5 @@
-import React, { FC } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { WithChildren } from '../ReactUtils/WithChildren';
 
 export const getFieldClasses = createClasses((css) => {
 	const { theme } = css;
@@ -64,16 +63,18 @@ export const getFieldClasses = createClasses((css) => {
 const useClasses = createUseClasses('Field', getFieldClasses);
 
 export type FieldProps = {
-	kind?: 'simple' | 'icon' | 'full';
-	align?: 'left' | 'center' | 'right';
-	disabled?: boolean;
-	primary?: boolean;
-	rounded?: boolean;
+	kind?: 'simple' | 'icon' | 'full',
+	align?: 'left' | 'center' | 'right',
+	disabled?: boolean,
+	primary?: boolean,
+	rounded?: boolean,
 	classNames?: {
-		root?: string;
-	};
+		root?: string,
+	},
 };
-export const Field: FC<WithChildren<FieldProps>> = (props) => {
+export function Field(
+	props: FieldProps & { children: ReactNode },
+): ReactElement {
 	const {
 		disabled, primary, rounded,
 		kind, align, children, classNames,
@@ -92,4 +93,4 @@ export const Field: FC<WithChildren<FieldProps>> = (props) => {
 			{children}
 		</div>
 	);
-};
+}

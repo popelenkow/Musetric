@@ -1,3 +1,3 @@
-export const skipPromise = (promise: Promise<unknown>) => {
+export const skipPromise = (promise: Promise<unknown>): void => {
 	promise.finally(() => {});
 };

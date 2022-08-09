@@ -4,8 +4,8 @@ import { skipPromise } from './SkipPromise';
 export type EventEmitterCallback<TEvent> = (event: TEvent) => Promise<void> | void;
 export type UnsubscribeEventEmitter = () => void;
 export type EventEmitter<TEvent> = {
-	subscribe: (callback: EventEmitterCallback<TEvent>) => UnsubscribeEventEmitter;
-	emit: (event: TEvent) => void;
+	subscribe: (callback: EventEmitterCallback<TEvent>) => UnsubscribeEventEmitter,
+	emit: (event: TEvent) => void,
 };
 export const createEventEmitter = <TEvent>(): EventEmitter<TEvent> => {
 	const iterator = createIndexIterator();
@@ -17,10 +17,10 @@ export const createEventEmitter = <TEvent>(): EventEmitter<TEvent> => {
 			delete callbacks[id];
 		};
 	};
-	const emit = (event: TEvent) => {
+	const emit = (event: TEvent): void => {
 		Object.keys(callbacks).forEach((id) => {
 			const callback = callbacks[id];
-			const run = async () => {
+			const run = async (): Promise<void> => {
 				await callback(event);
 			};
 			setTimeout(() => {

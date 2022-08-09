@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { SoundBufferManager, decodeFileToWav } from '../../Sounds';
 import { SelectFile, SelectFileProps } from '../../Controls';
@@ -6,9 +6,11 @@ import { skipPromise } from '../../Utils';
 import { useLazyAudioContext } from '../../ReactUtils';
 
 export type SoundOpenFileButtonProps = {
-	soundBufferManager: SoundBufferManager;
+	soundBufferManager: SoundBufferManager,
 };
-export const SoundOpenFileButton: FC<SoundOpenFileButtonProps> = (props) => {
+export function SoundOpenFileButton(
+	props: SoundOpenFileButtonProps,
+): ReactElement {
 	const { soundBufferManager } = props;
 
 	const { OpenFileIcon } = useIconContext();
@@ -33,4 +35,4 @@ export const SoundOpenFileButton: FC<SoundOpenFileButtonProps> = (props) => {
 			<OpenFileIcon />
 		</SelectFile>
 	);
-};
+}

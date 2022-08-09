@@ -1,20 +1,21 @@
-import React, { createContext, FC, useState, useMemo } from 'react';
-import { WithChildren } from '../ReactUtils/WithChildren';
+import React, { createContext, useState, useMemo, ReactNode, ReactElement } from 'react';
 import { useInitializedContext } from '../ReactUtils/Context';
 
 export type RootElementStore = {
-	rootElement: HTMLElement;
-	setRootElement: (element: HTMLElement) => void;
+	rootElement: HTMLElement,
+	setRootElement: (element: HTMLElement) => void,
 };
 export const RootElementContext = createContext<RootElementStore | undefined>(undefined);
 
 export const RootElementConsumer = RootElementContext.Consumer;
 
 export type RootElementProviderProps = {
-	initRootElement?: HTMLElement;
+	initRootElement?: HTMLElement,
 };
 
-export const RootElementProvider: FC<WithChildren<RootElementProviderProps>> = (props) => {
+export function RootElementProvider(
+	props: RootElementProviderProps & { children: ReactNode },
+): ReactElement {
 	const { children, initRootElement } = props;
 
 	const initElement = initRootElement || document.body;
@@ -29,6 +30,6 @@ export const RootElementProvider: FC<WithChildren<RootElementProviderProps>> = (
 			{children}
 		</RootElementContext.Provider>
 	);
-};
+}
 
 export const useRootElementContext = (): RootElementStore => useInitializedContext(RootElementContext, 'useRootElementContext');

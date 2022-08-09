@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { ReactElement, useCallback, useMemo } from 'react';
 import { useCssContext } from '../AppContexts/Css';
 import { viewRealArray, createRealArray, SharedRealArray } from '../TypedArray/RealArray';
 import { createFftRadix4 } from '../Sounds/FftRadix4';
@@ -7,11 +7,13 @@ import { createFrequencyColors, drawFrequency } from '../Rendering/Frequency';
 import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 
 export type FrequencyProps = {
-	getBuffer: () => SharedRealArray<'float32'>;
-	getCursor: () => number | undefined;
-	layout: Layout2D;
+	getBuffer: () => SharedRealArray<'float32'>,
+	getCursor: () => number | undefined,
+	layout: Layout2D,
 };
-export const Frequency: FC<FrequencyProps> = (props) => {
+export function Frequency(
+	props: FrequencyProps,
+): ReactElement {
 	const { getBuffer, getCursor, layout } = props;
 	const { css } = useCssContext();
 	const colors = useMemo(() => createFrequencyColors(css.theme), [css.theme]);
@@ -41,4 +43,4 @@ export const Frequency: FC<FrequencyProps> = (props) => {
 	};
 
 	return <PixelCanvas {...canvasProps} />;
-};
+}

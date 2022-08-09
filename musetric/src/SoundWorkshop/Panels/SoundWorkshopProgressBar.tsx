@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { createClasses, createUseClasses } from '../../AppContexts/Css';
 import { SoundProgressBar, SoundProgressBarProps } from '../Components';
 import { useSoundWorkshopStore } from '../Store';
@@ -17,8 +17,7 @@ export const getSoundWorkshopProgressBarClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('SoundWorkshopProgressBar', getSoundWorkshopProgressBarClasses);
 
-export type SoundWorkshopProgressBarProps = object;
-export const SoundWorkshopProgressBar: FC<SoundWorkshopProgressBarProps> = () => {
+export function SoundWorkshopProgressBar(): ReactElement {
 	const classes = useClasses();
 
 	const store = useSoundWorkshopStore();
@@ -32,4 +31,4 @@ export const SoundWorkshopProgressBar: FC<SoundWorkshopProgressBarProps> = () =>
 			<SoundProgressBar {...soundProgressBarProps} />
 		</div>
 	);
-};
+}

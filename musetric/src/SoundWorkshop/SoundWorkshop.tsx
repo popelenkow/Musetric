@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import className from 'classnames';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
 import { SoundWorkshopProvider, useSoundWorkshopStore } from './Store';
@@ -40,7 +40,7 @@ export const getSoundWorkshopClasses = createClasses(() => {
 });
 const useClasses = createUseClasses('SoundWorkshop', getSoundWorkshopClasses);
 
-export const SoundWorkshopMarkup: FC = () => {
+export function SoundWorkshopMarkup(): ReactElement {
 	const classes = useClasses();
 
 	const store = useSoundWorkshopStore();
@@ -64,12 +64,12 @@ export const SoundWorkshopMarkup: FC = () => {
 			<SoundWorkshopSidebar />
 		</div>
 	);
-};
+}
 
-export const SoundWorkshop: FC = () => {
+export function SoundWorkshop(): ReactElement {
 	return (
 		<SoundWorkshopProvider>
 			<SoundWorkshopMarkup />
 		</SoundWorkshopProvider>
 	);
-};
+}

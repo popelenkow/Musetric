@@ -24,10 +24,10 @@ export const run = async (): Promise<void> => {
 	root.style.minHeight = `${window.innerHeight}px`;
 
 	type PerfData = {
-		windowSize: number;
-		fft2R: number;
-		fft4R: number;
-		fft4O: number;
+		windowSize: number,
+		fft2R: number,
+		fft4R: number,
+		fft4O: number,
 	};
 
 	let text = '';

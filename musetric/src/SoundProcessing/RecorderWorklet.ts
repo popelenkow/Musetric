@@ -2,15 +2,15 @@ import { runPromiseAudioWorklet, PromiseAudioWorkletOnProcess } from '../Workers
 import type { PromiseAudioWorkletOptions } from '../Workers/PromiseAudioWorklet';
 
 export type RecorderWorklet = {
-	start: () => void;
-	stop: () => void;
+	start: () => void,
+	stop: () => void,
 };
 
 export type RecorderEvents = {
 	onProcess: {
-		chunk: Float32Array[];
-		isRecording: boolean;
-	};
+		chunk: Float32Array[],
+		isRecording: boolean,
+	},
 };
 
 export const createRecorderWorklet = (

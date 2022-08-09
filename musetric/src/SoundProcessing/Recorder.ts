@@ -4,8 +4,8 @@ import { createPromiseWorkerApi } from '../Workers/PromiseWorkerApi';
 import type { RecorderWorklet, RecorderEvents } from './RecorderWorklet';
 
 export type Recorder = PromiseObjectApi<RecorderWorklet> & {
-	mediaStream: MediaStream;
-	destroy: () => void;
+	mediaStream: MediaStream,
+	destroy: () => void,
 };
 
 export const createRecorder = async (

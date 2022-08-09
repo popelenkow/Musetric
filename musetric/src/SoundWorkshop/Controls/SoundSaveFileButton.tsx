@@ -1,13 +1,13 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { SoundBufferManager, createWav } from '../../Sounds';
 import { Button, ButtonProps } from '../../Controls';
 import { saveBlobFile } from '../../Utils';
 
 export type SoundSaveFileButtonProps = {
-	soundBufferManager: SoundBufferManager;
+	soundBufferManager: SoundBufferManager,
 };
-export const SoundSaveFileButton: FC<SoundSaveFileButtonProps> = (props) => {
+export function SoundSaveFileButton(props: SoundSaveFileButtonProps): ReactElement {
 	const { soundBufferManager } = props;
 
 	const { SaveIcon } = useIconContext();
@@ -36,4 +36,4 @@ export const SoundSaveFileButton: FC<SoundSaveFileButtonProps> = (props) => {
 			<SaveIcon />
 		</Button>
 	);
-};
+}

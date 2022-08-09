@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { SoundBufferManager } from '../../Sounds';
 import { useIconContext, useWorkerContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
@@ -7,12 +7,12 @@ import { createPlayer } from '../../SoundProcessing';
 import { skipPromise } from '../../Utils';
 
 export type SoundPlayerButtonProps = {
-	disabled: boolean;
-	soundBufferManager: SoundBufferManager;
-	isPlaying: boolean;
-	setIsPlaying: (value: boolean) => void;
+	disabled: boolean,
+	soundBufferManager: SoundBufferManager,
+	isPlaying: boolean,
+	setIsPlaying: (value: boolean) => void,
 };
-export const SoundPlayerButton: FC<SoundPlayerButtonProps> = (props) => {
+export function SoundPlayerButton(props: SoundPlayerButtonProps): ReactElement {
 	const { disabled, soundBufferManager, isPlaying, setIsPlaying } = props;
 
 	const { PlayIcon, StopIcon } = useIconContext();
@@ -69,4 +69,4 @@ export const SoundPlayerButton: FC<SoundPlayerButtonProps> = (props) => {
 			{isPlaying ? <StopIcon /> : <PlayIcon />}
 		</Button>
 	);
-};
+}

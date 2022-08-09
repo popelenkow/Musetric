@@ -6,24 +6,24 @@ import { Divider } from '../Controls/Divider';
 import { Dropdown, DropdownProps } from '../Controls/Dropdown';
 
 export type AppViewDivider = {
-	type: 'divider';
+	type: 'divider',
 };
 export type AppViewElement<ViewId extends string> = {
-	type: 'view';
-	id: ViewId;
-	name: string;
-	element: ReactNode;
+	type: 'view',
+	id: ViewId,
+	name: string,
+	element: ReactNode,
 };
 export type AppViewEntry<ViewId extends string> = AppViewDivider | AppViewElement<ViewId>;
-
+function f() {
+}
+f();
 export type AppDropdownProps<ViewId extends string> = {
-	viewId: ViewId;
-	setViewId: Dispatch<SetStateAction<ViewId>>;
-	allViewEntries: AppViewEntry<ViewId>[];
+	viewId: ViewId,
+	setViewId: Dispatch<SetStateAction<ViewId>>,
+	allViewEntries: AppViewEntry<ViewId>[],
 };
-export function AppDropdown<ViewId extends string>(
-	props: AppDropdownProps<ViewId>,
-): ReactElement | null {
+export function AppDropdown<ViewId extends string>(props: AppDropdownProps<ViewId>): ReactElement {
 	const { viewId, setViewId, allViewEntries } = props;
 	const { MenuIcon } = useIconContext();
 	const { i18n } = useLocaleContext();

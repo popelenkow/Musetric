@@ -1,13 +1,13 @@
 import { Size2D } from './Layout';
 
 export type CreatePixelCanvasElementOptions = {
-	size: Size2D;
+	size: Size2D,
 };
 export type PixelCanvasElement = {
-	element: HTMLCanvasElement;
-	context: CanvasRenderingContext2D;
-	imageData: ImageData;
-	size: Size2D;
+	element: HTMLCanvasElement,
+	context: CanvasRenderingContext2D,
+	imageData: ImageData,
+	size: Size2D,
 };
 export const createPixelCanvasElement = (
 	options: CreatePixelCanvasElementOptions,

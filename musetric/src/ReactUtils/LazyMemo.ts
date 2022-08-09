@@ -5,8 +5,8 @@ export const useLazyMemo = <T>(
 	deps: DependencyList,
 ): () => T => {
 	type LazyState = (
-		| { value: T | undefined; actual: false }
-		| { value: T; actual: true }
+		| { value: T | undefined, actual: false }
+		| { value: T, actual: true }
 	);
 
 	const stateRef = useRef<LazyState>({
@@ -37,8 +37,8 @@ export const useLazyMemoAsync = <T>(
 	deps: DependencyList,
 ): () => Promise<T> => {
 	type LazyState = (
-		| { value: T | undefined; actual: false }
-		| { value: T; actual: true }
+		| { value: T | undefined, actual: false }
+		| { value: T, actual: true }
 	);
 
 	const stateRef = useRef<LazyState>({

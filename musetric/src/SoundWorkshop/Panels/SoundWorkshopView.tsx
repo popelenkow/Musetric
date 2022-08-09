@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { ReactElement } from 'react';
 import { createClasses, createUseClasses } from '../../AppContexts/Css';
 import { useSoundWorkshopStore } from '../Store';
 import { SoundView, SoundViewProps } from '../Components';
@@ -17,7 +17,7 @@ export const getSoundWorkshopViewClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('SoundWorkshopView', getSoundWorkshopViewClasses);
 
-export const SoundWorkshopView: FC = () => {
+export function SoundWorkshopView(): ReactElement {
 	const classes = useClasses();
 
 	const store = useSoundWorkshopStore();
@@ -34,4 +34,4 @@ export const SoundWorkshopView: FC = () => {
 			<SoundView {...soundViewProps} />
 		</div>
 	);
-};
+}

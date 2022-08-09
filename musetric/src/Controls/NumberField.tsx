@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useRef, useState } from 'react';
+import React, { ReactElement, useCallback, useRef, useState } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 import { useAnimation } from '../ReactUtils/Animation';
 import { parseColor } from '../Rendering/Color';
@@ -47,13 +47,15 @@ export const getNumberFieldClasses = createClasses((css) => {
 const useClasses = createUseClasses('NumberField', getNumberFieldClasses);
 
 export type NumberFieldProps = {
-	value: number;
-	setValue: (value: number) => number;
-	label?: string;
-	disabled?: boolean;
-	rounded?: boolean;
+	value: number,
+	setValue: (value: number) => number,
+	label?: string,
+	disabled?: boolean,
+	rounded?: boolean,
 };
-export const NumberField: FC<NumberFieldProps> = (props) => {
+export function NumberField(
+	props: NumberFieldProps,
+): ReactElement {
 	const {
 		value, setValue, label,
 		disabled, rounded,
@@ -125,4 +127,4 @@ export const NumberField: FC<NumberFieldProps> = (props) => {
 			</div>
 		</div>
 	);
-};
+}

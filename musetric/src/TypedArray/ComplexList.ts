@@ -1,12 +1,12 @@
 import { RealListType } from './RealType';
 
 export type ComplexListMap = {
-	list: ComplexList;
+	list: ComplexList,
 };
 export type ComplexList = {
-	readonly type: RealListType;
-	readonly real: number[];
-	readonly imag: number[];
+	readonly type: RealListType,
+	readonly real: number[],
+	readonly imag: number[],
 };
 
 export const createComplexList = (length: number): ComplexList => {

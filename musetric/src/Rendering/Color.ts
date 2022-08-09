@@ -3,9 +3,9 @@ import type { ValueObject } from '../UtilityTypes';
 import { Theme } from '../AppBase/Theme';
 
 export type Rgb = {
-	r: number;
-	g: number;
-	b: number;
+	r: number,
+	g: number,
+	b: number,
 };
 
 export const parseColorToRgb = (color: Color): Rgb => {
@@ -22,19 +22,19 @@ export const parseColorToUint32Color = (color: Color): number => {
 	return result[0];
 };
 type ColorTypeMap = {
-	color: Color<string>;
-	rgb: Rgb;
-	uint32: number;
-	hex: string;
+	color: Color<string>,
+	rgb: Rgb,
+	uint32: number,
+	hex: string,
 };
 export type ColorType = keyof ColorTypeMap;
 export type TypedTheme<Type extends ColorType> = ValueObject<Theme, ColorTypeMap[Type]>;
 
 export const colorMap = {
-	color: (value: Color) => value,
-	rgb: (value: Color) => parseColorToRgb(value),
-	uint32: (value: Color) => parseColorToUint32Color(value),
-	hex: (value: Color) => value.hex(),
+	color: (value: Color): ColorTypeMap['color'] => value,
+	rgb: (value: Color): ColorTypeMap['rgb'] => parseColorToRgb(value),
+	uint32: (value: Color): ColorTypeMap['uint32'] => parseColorToUint32Color(value),
+	hex: (value: Color): ColorTypeMap['hex'] => value.hex(),
 };
 export const parseColor = <Type extends ColorType>(
 	type: Type,
@@ -42,13 +42,16 @@ export const parseColor = <Type extends ColorType>(
 ): ColorTypeMap[Type] => {
 	const color = new Color(colorString);
 	const map = colorMap[type];
+	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 	return map(color) as ColorTypeMap[Type];
 };
 export const parseTheme = <Type extends ColorType>(
 	type: Type,
 	theme: Theme,
 ): TypedTheme<Type> => {
+	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 	const result = {} as TypedTheme<Type>;
+	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 	const keys = Object.keys(theme) as (keyof Theme)[];
 	keys.forEach((key) => {
 		result[key] = parseColor(type, theme[key]);
@@ -60,7 +63,7 @@ export const gradientUint32ByRgb = (
 	from: Rgb,
 	to: Rgb,
 	count: number,
-	map: (value: number) => number = (value) => value,
+	map: (value: number) => number = (value): number => value,
 ): Uint32Array => {
 	const buffer = new ArrayBuffer(4 * count);
 	const rgba = new Uint8Array(buffer);

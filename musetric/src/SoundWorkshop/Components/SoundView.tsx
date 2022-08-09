@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, FC } from 'react';
+import React, { useMemo, useCallback, ReactElement } from 'react';
 import { SoundBufferManager, SoundBufferEvent } from '../../Sounds/SoundBufferManager';
 import { Size2D, Direction2D, Layout2D } from '../../Rendering/Layout';
 import { Waveform } from '../../Controls/Waveform';
@@ -24,9 +24,9 @@ export const createSpectrogramLayout = (): Layout2D => {
 };
 
 export type SoundViewProps = {
-	soundBufferManager: SoundBufferManager;
-	soundParameters: SoundParameters;
-	isLive: boolean;
+	soundBufferManager: SoundBufferManager,
+	soundParameters: SoundParameters,
+	isLive: boolean,
 };
 export const useSoundViewItemProps = (props: SoundViewProps) => {
 	const { soundBufferManager, soundParameters, isLive } = props;
@@ -66,7 +66,7 @@ export const useSoundViewItemProps = (props: SoundViewProps) => {
 };
 export type SoundViewItemProps = ReturnType<typeof useSoundViewItemProps>;
 
-export const SoundView: FC<SoundViewProps> = (props) => {
+export function SoundView(props: SoundViewProps): ReactElement | null {
 	const store = useSoundWorkshopStore();
 	const { soundViewId } = store;
 
@@ -79,4 +79,4 @@ export const SoundView: FC<SoundViewProps> = (props) => {
 	if (soundViewId === 'Frequency') return <Frequency {...itemProps} layout={frequencyLayout} />;
 	if (soundViewId === 'Spectrogram') return <Spectrogram {...itemProps} layout={spectrogramLayout} />;
 	return null;
-};
+}

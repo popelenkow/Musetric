@@ -9,6 +9,8 @@ export const createComplexIndexable = <K extends RealIndexableType>(
 	type: K,
 	length: number,
 ): ComplexIndexable<K> => {
+	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 	if (type === 'list') return createComplexList(length) as ComplexIndexable<K>;
+	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 	return createComplexArray(type, length) as ComplexIndexable<K>;
 };

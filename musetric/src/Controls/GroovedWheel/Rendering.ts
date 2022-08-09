@@ -1,8 +1,8 @@
 import { Size2D } from '../../Rendering/Layout';
 
 export type GroovedWheelColors = {
-	content: number;
-	background: number;
+	content: number,
+	background: number,
 };
 export const drawGroovedWheel = (
 	position: number,

@@ -35,13 +35,13 @@ const transform = (
 };
 
 export type DftFrequencyOptions = {
-	offset: number;
+	offset: number,
 };
 
 export type DftFrequenciesOptions = {
-	offset: number;
-	step: number;
-	count: number;
+	offset: number,
+	step: number,
+	count: number,
 };
 
 export const createDftBase = (windowSize: number): SpectrometerBase => {

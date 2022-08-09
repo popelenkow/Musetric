@@ -14,26 +14,26 @@ const flags = {
 type Flag = typeof flags[keyof typeof flags];
 
 export type SpectrumOptions = {
-	windowSize: number;
-	count: number;
+	windowSize: number,
+	count: number,
 };
 export type SpectrumBufferEvent =
-	| { type: 'newBuffer'; buffer: SharedArrayBuffer }
-	| { type: 'invalidate'; from: number; to: number }
-	| { type: 'shift'; offset: number };
+	| { type: 'newBuffer', buffer: SharedArrayBuffer }
+	| { type: 'invalidate', from: number, to: number }
+	| { type: 'shift', offset: number };
 export type SpectrumWorker = {
-	setup: (options: SpectrumOptions) => SharedArrayBuffer;
-	start: () => void;
-	stop: () => void;
-	emitBufferEvent: (event: SpectrumBufferEvent) => void;
+	setup: (options: SpectrumOptions) => SharedArrayBuffer,
+	start: () => void,
+	stop: () => void,
+	emitBufferEvent: (event: SpectrumBufferEvent) => void,
 };
 export const createSpectrumWorker = (): SpectrumWorker => {
 	type SpectrumState = SpectrumOptions & {
-		spectrometer: Spectrometer;
-		raw: RealArray<'uint8'>;
-		outputs: RealArray<'uint8'>[];
-		outputStats: Flag[];
-		draw: () => void;
+		spectrometer: Spectrometer,
+		raw: RealArray<'uint8'>,
+		outputs: RealArray<'uint8'>[],
+		outputStats: Flag[],
+		draw: () => void,
 	};
 	let state: SpectrumState | undefined;
 	const setup = (options: SpectrumOptions) => {
@@ -73,7 +73,8 @@ export const createSpectrumWorker = (): SpectrumWorker => {
 				for (let i = count - floorOffset; i < count; i++) {
 					outputStats[i] = flags.invalid;
 				}
-			} else {
+			}
+			else {
 				raw.real.copyWithin(fftSize * floorOffset, 0, fftSize * (count - floorOffset));
 				for (let i = count - 1; i >= floorOffset; i--) {
 					outputStats[i] = outputStats[i - floorOffset];

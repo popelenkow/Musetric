@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useMemo, useRef, MutableRefObject } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, MutableRefObject, ReactElement } from 'react';
 import { createInertia } from './Inertia';
 import { subscribeInertia } from './SubscribeInertia';
 import { Position2D, Size2D, Layout2D, Direction2D } from '../../Rendering/Layout';
@@ -6,12 +6,12 @@ import { GroovedWheelColors, drawGroovedWheel } from './Rendering';
 import { PixelCanvas, PixelCanvasProps } from '../PixelCanvas';
 
 export type GroovedWheelProps = {
-	onMove: (delta: number) => void;
-	onActive: (value: boolean) => void;
-	stopRef: MutableRefObject<(() => void) | null>;
-	contentColor: number;
+	onMove: (delta: number) => void,
+	onActive: (value: boolean) => void,
+	stopRef: MutableRefObject<(() => void) | null>,
+	contentColor: number,
 };
-export const GroovedWheel: FC<GroovedWheelProps> = (props) => {
+export function GroovedWheel(props: GroovedWheelProps): ReactElement {
 	const { onMove, onActive, stopRef, contentColor } = props;
 	const ref = useRef<HTMLDivElement>(null);
 
@@ -63,4 +63,4 @@ export const GroovedWheel: FC<GroovedWheelProps> = (props) => {
 			<PixelCanvas {...pixelCanvasProps} />
 		</div>
 	);
-};
+}
