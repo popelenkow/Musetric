@@ -1,19 +1,18 @@
-import React, { ReactElement, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useCssContext } from '../AppContexts/Css';
 import { viewRealArray, createRealArray, SharedRealArray } from '../TypedArray/RealArray';
 import { createFftRadix4 } from '../Sounds/FftRadix4';
 import { Layout2D } from '../Rendering/Layout';
 import { createFrequencyColors, drawFrequency } from '../Rendering/Frequency';
 import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
+import { SFC } from '../UtilityTypes';
 
 export type FrequencyProps = {
 	getBuffer: () => SharedRealArray<'float32'>,
 	getCursor: () => number | undefined,
 	layout: Layout2D,
 };
-export function Frequency(
-	props: FrequencyProps,
-): ReactElement {
+export const Frequency: SFC<FrequencyProps> = (props) => {
 	const { getBuffer, getCursor, layout } = props;
 	const { css } = useCssContext();
 	const colors = useMemo(() => createFrequencyColors(css.theme), [css.theme]);
@@ -43,4 +42,5 @@ export function Frequency(
 	};
 
 	return <PixelCanvas {...canvasProps} />;
-}
+};
+Frequency.displayName = 'Frequency';

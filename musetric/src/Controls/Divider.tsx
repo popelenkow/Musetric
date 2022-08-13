@@ -1,5 +1,6 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
+import { SFC } from '../UtilityTypes';
 
 export const getDividerClasses = createClasses((css) => {
 	const { theme } = css;
@@ -13,10 +14,11 @@ export const getDividerClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('Divider', getDividerClasses);
 
-export function Divider(): ReactElement {
+export const Divider: SFC = () => {
 	const classes = useClasses();
 
 	return (
 		<div className={classes.root} />
 	);
-}
+};
+Divider.displayName = 'Divider';

@@ -1,5 +1,6 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
+import { SFC } from '../UtilityTypes';
 import { getButtonClasses } from './Button';
 import { Field, FieldProps } from './Field';
 
@@ -37,9 +38,7 @@ export type CheckboxProps = {
 		root?: string,
 	},
 };
-export function Checkbox(
-	props: CheckboxProps & { children: ReactNode },
-): ReactElement {
+export const Checkbox: SFC<CheckboxProps, 'required'> = (props) => {
 	const {
 		kind, disabled, rounded,
 		title, onToggle, checked,
@@ -59,12 +58,16 @@ export function Checkbox(
 		classNames: { root: classes.button },
 	};
 
+	const onChange = (): void => {
+		if (disabled) return;
+		onToggle();
+	};
 	return (
 		<label className={rootName} title={title}>
 			<input
 				className={classes.input}
 				type='checkbox'
-				onChange={() => !disabled && onToggle()}
+				onChange={onChange}
 				checked={checked}
 			/>
 			<Field {...fieldProps}>
@@ -72,4 +75,5 @@ export function Checkbox(
 			</Field>
 		</label>
 	);
-}
+};
+Checkbox.displayName = 'Checkbox';

@@ -1,5 +1,6 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
+import { ChildrenProps, DisplayName, FCResult } from '../UtilityTypes';
 import { getButtonClasses } from './Button';
 import { Field, FieldProps } from './Field';
 
@@ -24,25 +25,26 @@ export const getRadioClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('Radio', getRadioClasses);
 
-export type RadioProps<T extends string> = {
+export type RadioProps<Value extends string> = {
 	kind?: 'simple' | 'icon' | 'full',
 	align?: 'left' | 'center' | 'right',
 	disabled?: boolean,
 	primary?: boolean,
 	rounded?: boolean,
 	title?: string,
-	onSelected: (value: T) => void,
+	onSelected: (value: Value) => void,
 	label: string,
-	value: T,
-	checkedValue: T,
+	value: Value,
+	checkedValue: Value,
 	classNames?: {
 		root?: string,
 	},
 };
-
-export function Radio<T extends string>(
-	props: RadioProps<T> & { children: ReactNode },
-): ReactElement {
+type RadioFC = DisplayName & (
+	<Value extends string>(props: RadioProps<Value> & ChildrenProps) => FCResult
+);
+export const Radio: RadioFC = (props) => {
+	type Value = (typeof props)['value'];
 	const {
 		kind,
 		disabled,
@@ -77,10 +79,10 @@ export function Radio<T extends string>(
 				type='radio'
 				name={label}
 				value={value}
-				onChange={(event) => {
+				onChange={(event): void => {
 					if (disabled) return;
 					// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-					onSelected(event.target.value as T);
+					onSelected(event.target.value as Value);
 				}}
 				checked={checked}
 			/>
@@ -89,4 +91,5 @@ export function Radio<T extends string>(
 			</Field>
 		</label>
 	);
-}
+};
+Radio.displayName = 'Radio';

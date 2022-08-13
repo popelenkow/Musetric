@@ -2,10 +2,16 @@ import type { EventHandlers } from '../Types';
 import { createIndexIterator } from '../Utils/IndexIterator';
 import type { PromiseWorker, PromiseWorkerResponse, PromiseWorkerRequest } from './PromiseWorker';
 
+export type PromiseWorkerApi<TypedWorker extends PromiseWorker> = (
+	<Type extends keyof TypedWorker & string>(
+		type: Type,
+		args: Parameters<TypedWorker[Type]>,
+	) => Promise<ReturnType<TypedWorker[Type]>>
+);
 export const createPromiseWorkerApi = <TypedWorker extends PromiseWorker, Events>(
 	port: Worker | MessagePort,
 	handlers: EventHandlers<Events>,
-) => {
+): PromiseWorkerApi<TypedWorker> => {
 	const postMessage = (message: PromiseWorkerRequest): void => {
 		port.postMessage(message);
 	};
@@ -30,11 +36,8 @@ export const createPromiseWorkerApi = <TypedWorker extends PromiseWorker, Events
 	};
 
 	const iterator = createIndexIterator();
-	const request = <Type extends keyof TypedWorker & string>(
-		type: Type,
-		args: Parameters<TypedWorker[Type]>,
-	): Promise<ReturnType<TypedWorker[Type]>> => {
-		type ResultType = ReturnType<TypedWorker[Type]>;
+	const request: PromiseWorkerApi<TypedWorker> = (type, args) => {
+		type ResultType = ReturnType<TypedWorker[typeof type]>;
 		return new Promise<ResultType>((resolve) => {
 			const id = iterator.next((i) => !!callbacks[i]);
 			const callback = (result: unknown): void => {

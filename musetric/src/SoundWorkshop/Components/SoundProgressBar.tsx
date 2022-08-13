@@ -1,9 +1,10 @@
-import React, { useMemo, useCallback, ReactElement } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { SoundBufferManager } from '../../Sounds/SoundBufferManager';
-import { Size2D, Direction2D } from '../../Rendering/Layout';
+import { Size2D, Direction2D, Layout2D } from '../../Rendering/Layout';
 import { Waveform, WaveformProps } from '../../Controls/Waveform';
+import { SFC } from '../../UtilityTypes';
 
-export const createSoundProgressBarLayout = () => {
+export const createSoundProgressBarLayout = (): Layout2D => {
 	const size: Size2D = { width: 128, height: 1024 };
 	const direction: Direction2D = { rotation: 'left', reflection: false };
 	return { size, direction };
@@ -12,9 +13,7 @@ export const createSoundProgressBarLayout = () => {
 export type SoundProgressBarProps = {
 	soundBufferManager: SoundBufferManager,
 };
-export function SoundProgressBar(
-	props: SoundProgressBarProps,
-): ReactElement {
+export const SoundProgressBar: SFC<SoundProgressBarProps> = (props) => {
 	const { soundBufferManager } = props;
 
 	const soundProgressBarLayout = useMemo(() => createSoundProgressBarLayout(), []);
@@ -42,4 +41,5 @@ export function SoundProgressBar(
 	return (
 		<Waveform {...waveformProps} />
 	);
-}
+};
+SoundProgressBar.displayName = 'SoundProgressBar';

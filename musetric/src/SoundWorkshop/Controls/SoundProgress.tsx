@@ -1,9 +1,10 @@
-import React, { useMemo, useState, ReactElement } from 'react';
+import React, { useMemo, useState } from 'react';
 import className from 'classnames';
 import { createUseClasses, createClasses } from '../../AppContexts';
 import { SoundBufferManager } from '../../Sounds';
 import { useAnimation } from '../../ReactUtils';
 import { getFieldClasses } from '../../Controls';
+import { SFC } from '../../UtilityTypes';
 
 export const getSoundProgressClasses = createClasses((css) => {
 	const fieldClasses = getFieldClasses(css);
@@ -24,7 +25,7 @@ export type SoundProgressProps = {
 		root?: string,
 	},
 };
-export function SoundProgress(props: SoundProgressProps): ReactElement {
+export const SoundProgress: SFC<SoundProgressProps> = (props) => {
 	const { soundBufferManager, classNames } = props;
 	const classes = useClasses();
 
@@ -61,7 +62,7 @@ export function SoundProgress(props: SoundProgressProps): ReactElement {
 			length: soundBuffer.length,
 			sampleRate: soundBuffer.sampleRate,
 		};
-		const isEqual = () => {
+		const isEqual = (): boolean => {
 			if (state.cursor !== newState.cursor) return false;
 			if (state.length !== newState.length) return false;
 			if (state.sampleRate !== newState.sampleRate) return false;
@@ -77,4 +78,5 @@ export function SoundProgress(props: SoundProgressProps): ReactElement {
 			{`${cursorString} / ${memorySizeString}`}
 		</div>
 	);
-}
+};
+SoundProgress.displayName = 'SoundProgress';

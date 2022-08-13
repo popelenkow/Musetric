@@ -4,8 +4,8 @@ import { createPromiseWorkerApi } from '../Workers/PromiseWorkerApi';
 import type { RecorderWorklet, RecorderEvents } from './RecorderWorklet';
 
 export type Recorder = PromiseObjectApi<RecorderWorklet> & {
-	mediaStream: MediaStream,
 	destroy: () => void,
+	mediaStream: MediaStream,
 };
 
 export const createRecorder = async (
@@ -26,7 +26,7 @@ export const createRecorder = async (
 	const worklet = new AudioWorkletNode(source.context, 'RecorderWorklet', options);
 	source.connect(worklet);
 	const request = createPromiseWorkerApi<RecorderWorklet, RecorderEvents>(worklet.port, handlers);
-	return {
+	const result: Recorder = {
 		start: (...args) => request('start', args),
 		stop: (...args) => request('stop', args),
 		destroy: () => {
@@ -35,4 +35,5 @@ export const createRecorder = async (
 		},
 		mediaStream,
 	};
+	return result;
 };

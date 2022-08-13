@@ -1,5 +1,6 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
+import { SFC } from '../UtilityTypes';
 
 export const getFieldClasses = createClasses((css) => {
 	const { theme } = css;
@@ -72,9 +73,7 @@ export type FieldProps = {
 		root?: string,
 	},
 };
-export function Field(
-	props: FieldProps & { children: ReactNode },
-): ReactElement {
+export const Field: SFC<FieldProps, 'required'> = (props) => {
 	const {
 		disabled, primary, rounded,
 		kind, align, children, classNames,
@@ -93,4 +92,5 @@ export function Field(
 			{children}
 		</div>
 	);
-}
+};
+Field.displayName = 'Field';

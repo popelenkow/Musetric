@@ -6,13 +6,13 @@ export type Log = {
 };
 export const createConsoleLog = (): Log => {
 	return {
-		info: (message) => {
+		info: (message): void => {
 			console.log(message);
 		},
-		warn: (message) => {
+		warn: (message): void => {
 			console.warn(message);
 		},
-		error: (message) => {
+		error: (message): void => {
 			console.error(message);
 		},
 	};

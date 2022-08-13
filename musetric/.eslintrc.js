@@ -5,11 +5,10 @@ module.exports = {
 		'musetric',
 	],
 	rules: {
-		'react/require-default-props': 0,
 		'react-hooks/exhaustive-deps': ['error', {
 			additionalHooks: '(useAnimation|useLazyMemo)',
 		}],
-		// '@typescript-eslint/explicit-function-return-type': 'error',
+		'react/function-component-definition': 0,
 	},
 	ignorePatterns: getIgnorePatterns(['dist'], ['build.js']),
 	overrides: getTsPaths(__dirname, ['.', 'test', 'performance']),

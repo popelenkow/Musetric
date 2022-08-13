@@ -1,6 +1,7 @@
-import React, { createContext, ReactElement, ReactNode } from 'react';
+import React, { createContext } from 'react';
 import { Icons } from '../AppBase/Icon';
 import { useInitializedContext } from '../ReactUtils/Context';
+import { SFC } from '../UtilityTypes';
 
 export type IconStore = Icons;
 export const IconContext = createContext<IconStore | undefined>(undefined);
@@ -8,9 +9,7 @@ export const IconContext = createContext<IconStore | undefined>(undefined);
 export type IconProviderProps = {
 	icons: Icons,
 };
-export function IconProvider(
-	props: IconProviderProps & { children: ReactNode },
-): ReactElement {
+export const IconProvider: SFC<IconProviderProps, 'required'> = (props) => {
 	const { children, icons } = props;
 
 	const store: IconStore = icons;
@@ -20,6 +19,7 @@ export function IconProvider(
 			{children}
 		</IconContext.Provider>
 	);
-}
+};
+IconProvider.displayName = 'IconProvider';
 
 export const useIconContext = (): IconStore => useInitializedContext(IconContext, 'useIconContext');

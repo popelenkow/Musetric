@@ -6,7 +6,7 @@ const transform = (
 	output: ComplexIndexable,
 	windowSize: number,
 	isInverse: boolean,
-) => {
+): void => {
 	for (let i = 0; i < windowSize; i++) {
 		output.real[i] = 0;
 		output.imag[i] = 0;

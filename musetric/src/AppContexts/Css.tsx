@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useState, useEffect, ReactNode, ReactElement } from 'react';
+import React, { createContext, useMemo, useState, useEffect } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Classes, GenerateId } from 'jss';
 import { JssProvider, createTheming, createUseStyles, Styles } from 'react-jss';
@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { Platform, getPlatformId } from '../AppBase/Platform';
 import { Theme, ThemeEntry } from '../AppBase/Theme';
 import { useInitializedContext } from '../ReactUtils/Context';
+import { SFC } from '../UtilityTypes';
 
 export type Css = {
 	theme: Theme,
@@ -15,9 +16,9 @@ export type Css = {
 export const ThemingContext = createContext<Css>(undefined as any);
 export const theming = createTheming(ThemingContext);
 
-export function createClasses<T>(create: (css: Css) => T): ((css: Css) => T) {
-	return (css: Css) => create(css);
-}
+type CreateClasses = <T>(create: (css: Css) => T) => ((css: Css) => T);
+export const createClasses: CreateClasses = (create) => (css: Css) => create(css);
+
 export const createUseClasses = <C extends string, Props>(
 	name: string,
 	styles: Styles<C, Props, Css> | ((theme: Css) => Styles<C, Props, undefined>),
@@ -38,7 +39,7 @@ const usePlatform = (): Platform => {
 	const [innerHeight, setInnerHeight] = useState<number>(window.innerHeight);
 
 	useEffect(() => {
-		const resize = () => {
+		const resize = (): void => {
 			setInnerHeight(window.innerHeight);
 		};
 
@@ -63,9 +64,7 @@ export type CssProviderProps = {
 	allThemeEntries: ThemeEntry[],
 	onSetThemeId?: (themeId: string) => void,
 };
-export function CssProvider(
-	props: CssProviderProps & { children: ReactNode },
-): ReactElement {
+export const CssProvider: SFC<CssProviderProps, 'required'> = (props) => {
 	const { children, initThemeId, allThemeEntries, onSetThemeId } = props;
 
 	const allThemeIds = allThemeEntries.map((x) => x.themeId);
@@ -77,7 +76,7 @@ export function CssProvider(
 	const store: CssStore = useMemo(() => ({
 		css: { theme, platform },
 		themeId,
-		setThemeId: (id: string) => {
+		setThemeId: (id: string): void => {
 			setThemeId(id);
 			if (onSetThemeId) onSetThemeId(id);
 		},
@@ -98,7 +97,8 @@ export function CssProvider(
 			</JssProvider>
 		</CssContext.Provider>
 	);
-}
+};
+CssProvider.displayName = 'CssProvider';
 
 export const useCssContext = (): CssStore => useInitializedContext(CssContext, 'useCssContext');
 
@@ -106,7 +106,7 @@ export type ClassNameArg = string | {
 	value?: string | Record<string, boolean | undefined>,
 	default?: string,
 };
-export const className = (...args: ClassNameArg[]) => {
+export const className = (...args: ClassNameArg[]): string => {
 	const resultArr = args.map<Record<string, boolean | undefined>>((arg) => {
 		if (typeof arg === 'string') return { [arg]: true };
 		if (!arg.value) return {};

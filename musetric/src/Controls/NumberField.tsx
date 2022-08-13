@@ -1,9 +1,10 @@
-import React, { ReactElement, useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 import { useAnimation } from '../ReactUtils/Animation';
 import { parseColor } from '../Rendering/Color';
 import { getTextFieldClasses } from './TextField';
 import { GroovedWheel, GroovedWheelProps } from './GroovedWheel';
+import { SFC } from '../UtilityTypes';
 
 export const getNumberFieldClasses = createClasses((css) => {
 	const { theme, platform } = css;
@@ -53,9 +54,7 @@ export type NumberFieldProps = {
 	disabled?: boolean,
 	rounded?: boolean,
 };
-export function NumberField(
-	props: NumberFieldProps,
-): ReactElement {
+export const NumberField: SFC<NumberFieldProps> = (props) => {
 	const {
 		value, setValue, label,
 		disabled, rounded,
@@ -127,4 +126,5 @@ export function NumberField(
 			</div>
 		</div>
 	);
-}
+};
+NumberField.displayName = 'NumberField';

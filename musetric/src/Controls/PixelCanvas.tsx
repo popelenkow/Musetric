@@ -1,8 +1,9 @@
-import React, { useMemo, useCallback, useEffect, useState, ReactElement } from 'react';
+import React, { useMemo, useCallback, useEffect, useState } from 'react';
 import { useAnimation } from '../ReactUtils/Animation';
 import { Canvas, CanvasProps, CanvasState } from './Canvas';
 import { rotatePosition2D, Size2D, Layout2D, Position2D, getCanvasCursorPosition2D, drawImage, rotateSize2D } from '../Rendering/Layout';
 import { createPixelCanvasElement } from '../Rendering/PixelCanvasElement';
+import { SFC } from '../UtilityTypes';
 
 export type PixelCanvasProps = {
 	layout: Layout2D,
@@ -10,7 +11,7 @@ export type PixelCanvasProps = {
 	draw: (output: ImageData) => void,
 	canvasSize?: Size2D,
 };
-export function PixelCanvas(props: PixelCanvasProps): ReactElement {
+export const PixelCanvas: SFC<PixelCanvasProps> = (props) => {
 	const { layout, onClick, draw, canvasSize } = props;
 
 	const pixelCanvasElement = useMemo(() => {
@@ -50,4 +51,5 @@ export function PixelCanvas(props: PixelCanvasProps): ReactElement {
 		setState,
 	};
 	return <Canvas {...canvasProps} />;
-}
+};
+PixelCanvas.displayName = 'PixelCanvas';

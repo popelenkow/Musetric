@@ -1,13 +1,14 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { SoundViewId } from '../Store';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
+import { SFC } from '../../UtilityTypes';
 
 export type SoundFrequencyButtonProps = {
 	soundViewId: SoundViewId,
 	setSoundViewId: (value: SoundViewId) => void,
 };
-export function SoundFrequencyButton(props: SoundFrequencyButtonProps): ReactElement {
+export const SoundFrequencyButton: SFC<SoundFrequencyButtonProps> = (props) => {
 	const { soundViewId, setSoundViewId } = props;
 
 	const { FrequencyIcon } = useIconContext();
@@ -25,4 +26,5 @@ export function SoundFrequencyButton(props: SoundFrequencyButtonProps): ReactEle
 			<FrequencyIcon />
 		</Button>
 	);
-}
+};
+SoundFrequencyButton.displayName = 'SoundFrequencyButton';

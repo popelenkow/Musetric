@@ -35,7 +35,7 @@ export const getCanvasCursorPosition2D = (
 const rotate = (
 	position: Position2D,
 	rotation: Rotation2D,
-) => {
+): Position2D => {
 	if (rotation === 'none') return position;
 	if (rotation === 'left') return { x: 1 - position.y, y: position.x };
 	if (rotation === 'right') return { x: position.y, y: 1 - position.x };

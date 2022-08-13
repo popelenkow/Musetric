@@ -1,5 +1,6 @@
-import React, { createContext, useState, useMemo, ReactNode, ReactElement } from 'react';
+import React, { createContext, useState, useMemo } from 'react';
 import { useInitializedContext } from '../ReactUtils/Context';
+import { SFC } from '../UtilityTypes';
 
 export type RootElementStore = {
 	rootElement: HTMLElement,
@@ -13,9 +14,7 @@ export type RootElementProviderProps = {
 	initRootElement?: HTMLElement,
 };
 
-export function RootElementProvider(
-	props: RootElementProviderProps & { children: ReactNode },
-): ReactElement {
+export const RootElementProvider: SFC<RootElementProviderProps, 'required'> = (props) => {
 	const { children, initRootElement } = props;
 
 	const initElement = initRootElement || document.body;
@@ -30,6 +29,7 @@ export function RootElementProvider(
 			{children}
 		</RootElementContext.Provider>
 	);
-}
+};
+RootElementProvider.displayName = 'RootElementProvider';
 
 export const useRootElementContext = (): RootElementStore => useInitializedContext(RootElementContext, 'useRootElementContext');

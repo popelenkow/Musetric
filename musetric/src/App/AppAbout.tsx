@@ -1,7 +1,8 @@
-import React, { ReactNode, ReactElement, useMemo } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useLocaleContext } from '../AppContexts/Locale';
 import { getFieldClasses } from '../Controls/Field';
+import { SFC } from '../UtilityTypes';
 
 export const getAppAboutClasses = createClasses((css) => {
 	const { theme } = css;
@@ -31,10 +32,7 @@ export type AppAboutProps = {
 	appVersion: string,
 	links?: ReactNode[],
 };
-
-export function AppAbout(
-	props: AppAboutProps,
-): ReactElement {
+export const AppAbout: SFC<AppAboutProps> = (props) => {
 	const { appVersion, links } = props;
 	const classes = useClasses();
 	const { i18n } = useLocaleContext();
@@ -60,4 +58,5 @@ export function AppAbout(
 			</div>
 		</div>
 	);
-}
+};
+AppAbout.displayName = 'AppAbout';

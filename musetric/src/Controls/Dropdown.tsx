@@ -1,7 +1,8 @@
-import React, { SetStateAction, Dispatch, ReactElement, useEffect, useRef, ReactNode } from 'react';
+import React, { SetStateAction, Dispatch, ReactElement, useEffect, useRef } from 'react';
 import { useRootElementContext } from '../AppContexts/RootElement';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 import { Button, ButtonProps } from './Button';
+import { SFC } from '../UtilityTypes';
 
 export const getDropdownClasses = createClasses((css) => {
 	const { theme } = css;
@@ -42,9 +43,7 @@ export type DropdownProps = {
 		width?: string,
 	},
 };
-export function Dropdown(
-	props: DropdownProps & { children: ReactNode },
-): ReactElement {
+export const Dropdown: SFC<DropdownProps, 'required'> = (props) => {
 	const {
 		kind, disabled, active, primary, rounded,
 		title, isOpen, setIsOpen, menu, children,
@@ -54,7 +53,7 @@ export function Dropdown(
 	const { rootElement } = useRootElementContext();
 	const ref = useRef<HTMLDivElement>(null);
 	useEffect(() => {
-		const closeOnOut = (event: MouseEvent | TouchEvent) => {
+		const closeOnOut = (event: MouseEvent | TouchEvent): void => {
 			if (!ref.current) return;
 			const { target } = event;
 			if (!target || !(target instanceof Node)) return;
@@ -69,7 +68,7 @@ export function Dropdown(
 		};
 	}, [rootElement, setIsOpen]);
 	useEffect(() => {
-		const move = (event: KeyboardEvent) => {
+		const move = (event: KeyboardEvent): void => {
 			const keys = ['ArrowDown', 'ArrowUp', 'Escape'];
 			if (keys.some((x) => event.key === x)) {
 				event.stopPropagation();
@@ -89,7 +88,7 @@ export function Dropdown(
 		classes.menu,
 		{ value: { open: isOpen } },
 	);
-	const click = () => {
+	const click = (): void => {
 		setIsOpen(!isOpen);
 	};
 
@@ -113,4 +112,5 @@ export function Dropdown(
 			</div>
 		</div>
 	);
-}
+};
+Dropdown.displayName = 'Dropdown';

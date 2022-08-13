@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, ReactElement } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLogContext } from '../AppContexts';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useLocaleContext } from '../AppContexts/Locale';
 import { Size2D } from '../Rendering/Layout';
+import { SFC } from '../UtilityTypes';
 
 export const getCanvasClasses = createClasses(() => {
 	return {
@@ -24,9 +25,7 @@ export type CanvasProps = {
 	size: Size2D,
 	setState: (state: CanvasState) => void,
 };
-export function Canvas(
-	props: CanvasProps,
-): ReactElement {
+export const Canvas: SFC<CanvasProps> = (props) => {
 	const { size, setState } = props;
 	const classes = useClasses();
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -56,4 +55,5 @@ export function Canvas(
 		...size,
 	};
 	return <canvas {...canvasProps} />;
-}
+};
+Canvas.displayName = 'Canvas';

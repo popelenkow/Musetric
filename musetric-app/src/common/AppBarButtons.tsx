@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, ReactNode } from 'react';
 import { localizeLocaleId, localizeThemeId } from 'musetric/AppBase/Locale';
 import { useLocaleContext } from 'musetric/AppContexts/Locale';
 import { useCssContext } from 'musetric/AppContexts/Css';
@@ -16,7 +16,7 @@ export const useAppBarButtons = (): ReactElement => {
 		dark: DarkIcon,
 	};
 
-	const getLocale = () => {
+	const getLocale = (): string => {
 		return localizeLocaleId(localeId, i18n) || localeId;
 	};
 	const localeSwitchProps: SwitchProps<string> = {
@@ -37,7 +37,7 @@ export const useAppBarButtons = (): ReactElement => {
 		},
 		title: localizeThemeId(themeId, i18n) || themeId,
 	};
-	const getTheme = () => {
+	const getTheme = (): ReactNode => {
 		const Icon = themeMap[themeId];
 		if (Icon) return <Icon />;
 		return localizeThemeId(themeId, i18n) || themeId;

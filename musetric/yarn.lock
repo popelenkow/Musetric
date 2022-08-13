@@ -781,10 +781,15 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.5.tgz#1001cc5e6a3704b83c236027e77f2f58ea010f40"
   integrity sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==
 
-"@types/node@*", "@types/node@18.6.5":
+"@types/node@*":
   version "18.6.5"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.6.5.tgz#06caea822caf9e59d5034b695186ee74154d2802"
   integrity sha512-Xjt5ZGUa5WusGZJ4WJPbOT8QOqp6nDynVFRKcUt32bOgvXEoc6o085WNkYTMO7ifAj2isEfQQ2cseE+wT6jsRw==
+
+"@types/node@18.7.3":
+  version "18.7.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.3.tgz#432c89796eab539b7a30b7b8801a727b585238a4"
+  integrity sha512-LJgzOEwWuMTBxHzgBR/fhhBOWrvBjvO+zPteUgbbuQi80rYIZHrk1mNbRUqPZqSLP2H7Rwt1EFLL/tNLD1Xx/w==
 
 "@types/prettier@^2.1.5":
   version "2.7.0"
@@ -1780,10 +1785,10 @@ eslint-config-airbnb@^19.0.4:
     object.assign "^4.1.2"
     object.entries "^1.1.5"
 
-eslint-config-musetric@0.0.45:
-  version "0.0.45"
-  resolved "https://registry.yarnpkg.com/eslint-config-musetric/-/eslint-config-musetric-0.0.45.tgz#85ed638903dfac726fa6a324395fbb16850bf359"
-  integrity sha512-j/oGgLxMkbpFdd0fj9lHS4epGIHrMo4qtKpR0I8IXzxxBFwS64euIc6gQ20zgqF3EbXk3nBGaQq8+cIE6PfE8Q==
+eslint-config-musetric@0.0.46:
+  version "0.0.46"
+  resolved "https://registry.yarnpkg.com/eslint-config-musetric/-/eslint-config-musetric-0.0.46.tgz#d81dc6f01889ab6eec78eeeeb41220537ad1fba6"
+  integrity sha512-HrRSK6CizgCKrKsuVnHzIr40cCzhGIQIzwIxBBHFhontD4udiW5GcYzmsosrk4ys/kueCKuPm8pAtqUCVKZGRw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.33.0"
     "@typescript-eslint/parser" "^5.33.0"

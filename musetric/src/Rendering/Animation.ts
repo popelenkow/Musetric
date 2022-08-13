@@ -4,7 +4,7 @@ export type StopAnimation = () => void;
 export const startAnimation = (callback: AnimationCallback): StopAnimation => {
 	let next = true;
 	let time = 0;
-	const loop = (curTime: number) => {
+	const loop = (curTime: number): void => {
 		if (!next) return;
 		callback(curTime - time);
 		time = curTime;
@@ -31,7 +31,7 @@ export const createAnimation = <T extends unknown[]>(onStart: OnStart<T>): Anima
 		stopAnimation: StopAnimation,
 	};
 	let state: State | undefined;
-	const stop = () => {
+	const stop = (): void => {
 		if (!state) return;
 		const { stopAnimation, onStop, onStopped } = state;
 		state = undefined;
@@ -39,7 +39,7 @@ export const createAnimation = <T extends unknown[]>(onStart: OnStart<T>): Anima
 		stopAnimation();
 		if (onStopped) onStopped();
 	};
-	const start = (...args: T) => {
+	const start = (...args: T): void => {
 		stop();
 		const { onIteration, onStop, onStopped } = onStart(...args);
 		const stopAnimation = startAnimation(onIteration);

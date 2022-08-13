@@ -1,10 +1,11 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { SoundBufferManager } from '../../Sounds';
 import { useIconContext, useWorkerContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 import { useLazyMemoAsync } from '../../ReactUtils';
 import { createPlayer } from '../../SoundProcessing';
 import { skipPromise } from '../../Utils';
+import { SFC } from '../../UtilityTypes';
 
 export type SoundPlayerButtonProps = {
 	disabled: boolean,
@@ -12,7 +13,7 @@ export type SoundPlayerButtonProps = {
 	isPlaying: boolean,
 	setIsPlaying: (value: boolean) => void,
 };
-export function SoundPlayerButton(props: SoundPlayerButtonProps): ReactElement {
+export const SoundPlayerButton: SFC<SoundPlayerButtonProps> = (props) => {
 	const { disabled, soundBufferManager, isPlaying, setIsPlaying } = props;
 
 	const { PlayIcon, StopIcon } = useIconContext();
@@ -40,7 +41,7 @@ export function SoundPlayerButton(props: SoundPlayerButtonProps): ReactElement {
 		return player;
 	}, [soundBufferManager, playerUrl, setIsPlaying]);
 
-	const startPlaying = async () => {
+	const startPlaying = async (): Promise<void> => {
 		const { soundBuffer, cursor } = soundBufferManager;
 		const { buffers } = soundBuffer;
 		const player = await getPlayer();
@@ -51,7 +52,7 @@ export function SoundPlayerButton(props: SoundPlayerButtonProps): ReactElement {
 		await player.start();
 		setIsPlaying(true);
 	};
-	const stopPlaying = async () => {
+	const stopPlaying = async (): Promise<void> => {
 		const player = await getPlayer();
 		await player.stop();
 	};
@@ -69,4 +70,5 @@ export function SoundPlayerButton(props: SoundPlayerButtonProps): ReactElement {
 			{isPlaying ? <StopIcon /> : <PlayIcon />}
 		</Button>
 	);
-}
+};
+SoundPlayerButton.displayName = 'SoundPlayerButton';

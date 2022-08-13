@@ -1,9 +1,10 @@
-import React, { useMemo, createContext, useReducer, Dispatch, useRef, useEffect, ReactElement, ReactNode } from 'react';
+import React, { useMemo, createContext, useReducer, Dispatch, useRef, useEffect } from 'react';
 import { useInitializedContext } from '../../ReactUtils';
 import { createSoundBufferManager, SoundBufferManager } from '../../Sounds/SoundBufferManager';
 import { createRecorder, Recorder } from '../../SoundProcessing';
 import { NumberRange } from '../../Rendering';
 import { useWorkerContext } from '../../AppContexts';
+import { ChildrenProps, SFC } from '../../UtilityTypes';
 
 export type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
 
@@ -96,10 +97,7 @@ export type SoundWorkshopStore = SoundWorkshopState & {
 };
 export const SoundWorkshopContext = createContext<SoundWorkshopStore | undefined>(undefined);
 
-export type SoundWorkshopProviderProps = object;
-export function SoundWorkshopProvider(
-	props: SoundWorkshopProviderProps & { children: ReactNode },
-): ReactElement {
+export const SoundWorkshopProvider: SFC<ChildrenProps> = (props) => {
 	const { children } = props;
 
 	const recorderRef = useRef<Recorder>();
@@ -107,7 +105,7 @@ export function SoundWorkshopProvider(
 
 	const [state, dispatch] = useReducer(soundWorkshopReducer, initialState);
 	const store = useMemo<SoundWorkshopStore>(() => {
-		const getRecorder = async () => {
+		const getRecorder = async (): Promise<Recorder> => {
 			if (recorderRef.current) return recorderRef.current;
 			const { soundBufferManager } = state;
 			const { channelCount } = soundBufferManager.soundBuffer;
@@ -139,7 +137,8 @@ export function SoundWorkshopProvider(
 			{children}
 		</SoundWorkshopContext.Provider>
 	);
-}
+};
+SoundWorkshopProvider.displayName = 'SoundWorkshopProvider';
 
 export const useSoundWorkshopStore = (): SoundWorkshopStore => (
 	useInitializedContext(SoundWorkshopContext, 'useSoundWorkshopContext')

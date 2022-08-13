@@ -12,7 +12,7 @@ export const drawGroovedWheel = (
 ): void => {
 	const { content, background } = colors;
 	const out = new Uint32Array(output.buffer);
-	const round = (value: number, period: number) => {
+	const round = (value: number, period: number): number => {
 		return ((Math.floor(value) % period) + period) % period;
 	};
 	for (let y = 0; y < frame.height; y++) {

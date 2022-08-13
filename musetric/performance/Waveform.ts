@@ -13,7 +13,7 @@ const log = createConsoleLog();
 export const performanceWaveform = (): void => {
 	const suite = new benchmark.Suite();
 	const colors = createWaveformColors(theme);
-	const run = (width: number, height: number, sec: number) => {
+	const run = (width: number, height: number, sec: number): void => {
 		const frame: Size2D = {
 			width,
 			height,
@@ -29,21 +29,21 @@ export const performanceWaveform = (): void => {
 			drawWaveform(analysis, output, frame, colors);
 		});
 	};
-	const runSec = () => {
+	const runSec = (): void => {
 		const width = 600;
 		const height = 600;
 		for (let sec = 10; sec <= 60; sec += 10) {
 			run(width, height, sec);
 		}
 	};
-	const runWidth = () => {
+	const runWidth = (): void => {
 		const height = 600;
 		const sec = 40;
 		for (let width = 400; width <= 800; width += 200) {
 			run(width, height, sec);
 		}
 	};
-	const runHeight = () => {
+	const runHeight = (): void => {
 		const width = 600;
 		const sec = 40;
 		for (let height = 400; height <= 800; height += 200) {

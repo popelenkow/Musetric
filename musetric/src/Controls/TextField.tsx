@@ -1,5 +1,6 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
+import { SFC } from '../UtilityTypes';
 
 export const getTextFieldClasses = createClasses((css) => {
 	const { theme, platform } = css;
@@ -69,9 +70,7 @@ export type TextFieldProps = {
 	primary?: boolean,
 	rounded?: boolean,
 };
-export function TextField(
-	props: TextFieldProps,
-): ReactElement {
+export const TextField: SFC<TextFieldProps> = (props) => {
 	const {
 		value, label,
 		disabled, primary, rounded,
@@ -91,4 +90,5 @@ export function TextField(
 			</fieldset>
 		</div>
 	);
-}
+};
+TextField.displayName = 'TextField';
