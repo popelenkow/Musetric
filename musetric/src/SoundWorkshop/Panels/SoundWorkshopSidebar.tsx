@@ -1,5 +1,6 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { createClasses, createUseClasses } from '../../AppContexts/Css';
+import { SFC } from '../../UtilityTypes';
 import {
 	SoundSaveFileButton, SoundSaveFileButtonProps,
 	SoundOpenFileButton, SoundOpenFileButtonProps,
@@ -40,7 +41,7 @@ export const getSoundWorkshopSidebarClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('SoundWorkshopSidebar', getSoundWorkshopSidebarClasses);
 
-export function SoundWorkshopSidebar(): ReactElement {
+export const SoundWorkshopSidebar: SFC = () => {
 	const classes = useClasses();
 
 	const store = useSoundWorkshopStore();
@@ -98,4 +99,5 @@ export function SoundWorkshopSidebar(): ReactElement {
 			</div>
 		</div>
 	);
-}
+};
+SoundWorkshopSidebar.displayName = 'SoundWorkshopSidebar';

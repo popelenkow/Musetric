@@ -1,6 +1,7 @@
-import React, { useMemo, useEffect, ReactNode, ReactElement } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { Button, ButtonProps, getButtonClasses } from './Button';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
+import { SFC } from '../UtilityTypes';
 
 export const getSelectFileClasses = createClasses((css) => {
 	const buttonClasses = getButtonClasses(css);
@@ -21,9 +22,7 @@ export type SelectFileProps = {
 	title?: string,
 	changeFile: (file: File) => void,
 };
-export function SelectFile(
-	props: SelectFileProps & { children: ReactNode },
-): ReactElement {
+export const SelectFile: SFC<SelectFileProps, 'required'> = (props) => {
 	const {
 		kind, disabled, primary, rounded,
 		title, changeFile, children,
@@ -37,7 +36,7 @@ export function SelectFile(
 	}, []);
 
 	useEffect(() => {
-		input.onchange = (event) => {
+		input.onchange = (event): void => {
 			const { target } = event;
 			const isInput = (element: EventTarget | null): element is HTMLInputElement => (
 				element instanceof HTMLInputElement
@@ -64,4 +63,5 @@ export function SelectFile(
 			{children}
 		</Button>
 	);
-}
+};
+SelectFile.displayName = 'SelectFile';

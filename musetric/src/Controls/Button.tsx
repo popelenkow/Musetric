@@ -1,5 +1,6 @@
-import React, { ButtonHTMLAttributes, ReactElement, ReactNode } from 'react';
+import React, { ButtonHTMLAttributes } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
+import { SFC } from '../UtilityTypes';
 
 export const getButtonClasses = createClasses((css) => {
 	const { theme } = css;
@@ -138,9 +139,7 @@ export type ButtonProps = {
 		root?: string,
 	},
 };
-export function Button(
-	props: ButtonProps & { children: ReactNode },
-): ReactElement {
+export const Button: SFC<ButtonProps, 'required'> = (props) => {
 	const {
 		kind, align, disabled, active, primary, rounded,
 		title, onClick, classNames, children,
@@ -166,4 +165,5 @@ export function Button(
 			{children}
 		</button>
 	);
-}
+};
+Button.displayName = 'Button';

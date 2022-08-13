@@ -22,7 +22,7 @@ const getMusetricWorkers = (): CreateMusetricAppOptions['workers'] => {
 	};
 };
 
-const run = async () => {
+const run = async (): Promise<void> => {
 	const elementId = 'root';
 	const allLocaleEntries = getMusetricLocaleEntries();
 	const allThemeEntries = getMusetricThemeEntries();

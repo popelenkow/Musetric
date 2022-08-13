@@ -5,6 +5,7 @@ export type OnCursorEvent = {
 	value: number,
 	inputType: CursorInputType,
 };
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const createCursor = () => {
 	let v = 0;
 	const emitter = createEventEmitter<OnCursorEvent>();

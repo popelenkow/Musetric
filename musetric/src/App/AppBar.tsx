@@ -1,7 +1,8 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useIconContext } from '../AppContexts/Icon';
 import { getFieldClasses } from '../Controls/Field';
+import { SFC } from '../UtilityTypes';
 
 export const getAppBarClasses = createClasses((css) => {
 	const { theme } = css;
@@ -38,10 +39,7 @@ export const getAppBarClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('AppBar', getAppBarClasses);
 
-type AppBarProps = object;
-export function AppBar(
-	props: AppBarProps & { children: ReactNode },
-): ReactElement {
+export const AppBar: SFC<object, 'required'> = (props) => {
 	const { children } = props;
 	const classes = useClasses();
 	const { AppIcon } = useIconContext();
@@ -53,4 +51,5 @@ export function AppBar(
 			{children}
 		</div>
 	);
-}
+};
+AppBar.displayName = 'AppBar';

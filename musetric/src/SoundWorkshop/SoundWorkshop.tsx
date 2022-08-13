@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import className from 'classnames';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
 import { SoundWorkshopProvider, useSoundWorkshopStore } from './Store';
@@ -7,6 +7,7 @@ import {
 	SoundWorkshopProgressBar, SoundWorkshopView,
 	SoundWorkshopTopPanel,
 } from './Panels';
+import { SFC } from '../UtilityTypes';
 
 export const getSoundWorkshopClasses = createClasses(() => {
 	return {
@@ -40,13 +41,13 @@ export const getSoundWorkshopClasses = createClasses(() => {
 });
 const useClasses = createUseClasses('SoundWorkshop', getSoundWorkshopClasses);
 
-export function SoundWorkshopMarkup(): ReactElement {
+export const SoundWorkshopMarkup: SFC = () => {
 	const classes = useClasses();
 
 	const store = useSoundWorkshopStore();
 	const { isOpenParameters } = store;
 
-	const getRootStateName = () => {
+	const getRootStateName = (): string => {
 		if (isOpenParameters) return 'withTopPanel';
 		return 'default';
 	};
@@ -64,12 +65,14 @@ export function SoundWorkshopMarkup(): ReactElement {
 			<SoundWorkshopSidebar />
 		</div>
 	);
-}
+};
+SoundWorkshopMarkup.displayName = 'SoundWorkshopMarkup';
 
-export function SoundWorkshop(): ReactElement {
+export const SoundWorkshop: SFC = () => {
 	return (
 		<SoundWorkshopProvider>
 			<SoundWorkshopMarkup />
 		</SoundWorkshopProvider>
 	);
-}
+};
+SoundWorkshop.displayName = 'SoundWorkshop';

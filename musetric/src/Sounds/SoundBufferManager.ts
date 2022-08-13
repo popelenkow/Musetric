@@ -48,6 +48,7 @@ const overwrite = (
 	}
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const createSoundBufferManager = (
 	sampleRate: number,
 	channelCount: number,
@@ -58,7 +59,7 @@ export const createSoundBufferManager = (
 	const circularBufferEventEmitter = createEventEmitter<SoundBufferEvent>();
 	const cursor = createCursor();
 
-	const push = (chunks: Float32Array[], type: 'recording' | 'live' | 'file') => {
+	const push = (chunks: Float32Array[], type: 'recording' | 'live' | 'file'): void => {
 		const chunkSize = chunks[0].length;
 		if (type !== 'live') {
 			const cursorValue = cursor.get();

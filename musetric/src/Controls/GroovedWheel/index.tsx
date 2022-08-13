@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, MutableRefObject, ReactElement } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, MutableRefObject } from 'react';
 import { createInertia } from './Inertia';
 import { subscribeInertia } from './SubscribeInertia';
 import { Position2D, Size2D, Layout2D, Direction2D } from '../../Rendering/Layout';
 import { GroovedWheelColors, drawGroovedWheel } from './Rendering';
 import { PixelCanvas, PixelCanvasProps } from '../PixelCanvas';
+import { SFC } from '../../UtilityTypes';
 
 export type GroovedWheelProps = {
 	onMove: (delta: number) => void,
@@ -11,7 +12,7 @@ export type GroovedWheelProps = {
 	stopRef: MutableRefObject<(() => void) | null>,
 	contentColor: number,
 };
-export function GroovedWheel(props: GroovedWheelProps): ReactElement {
+export const GroovedWheel: SFC<GroovedWheelProps> = (props) => {
 	const { onMove, onActive, stopRef, contentColor } = props;
 	const ref = useRef<HTMLDivElement>(null);
 
@@ -36,8 +37,8 @@ export function GroovedWheel(props: GroovedWheelProps): ReactElement {
 			friction: 200,
 			sampleCount: 3,
 		});
-		stopRef.current = () => inertia.stop();
-		const move = (delta: Position2D) => {
+		stopRef.current = (): void => inertia.stop();
+		const move = (delta: Position2D): void => {
 			const realWidth = Number.parseFloat(window.getComputedStyle(root).width);
 			const dx = -delta.x;
 			shift.current += dx * (layout.size.width / realWidth);
@@ -63,4 +64,5 @@ export function GroovedWheel(props: GroovedWheelProps): ReactElement {
 			<PixelCanvas {...pixelCanvasProps} />
 		</div>
 	);
-}
+};
+GroovedWheel.displayName = 'GroovedWheel';

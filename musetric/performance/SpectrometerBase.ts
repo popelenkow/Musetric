@@ -24,7 +24,7 @@ export const performanceFft = (): void => {
 		input.imag[i] = arr[i];
 	}
 
-	const run = (i: number) => {
+	const run = (i: number): void => {
 		const suite = new Suite();
 		const fftRadix2 = createFftRadix2Base(i);
 		suite.add('fft2R', () => {

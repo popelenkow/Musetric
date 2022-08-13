@@ -23,7 +23,7 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: ['*.ts', '*.tsx'],
+			files: ['*.ts', '*.tsx', '*.mts'],
 			parserOptions: {
 				project: './tsconfig.json',
 			},
@@ -34,7 +34,7 @@ module.exports = {
 			],
 		},
 		{
-			files: ['*.js', '*.ts', '*.jsx', '*.tsx'],
+			files: ['*.js', '*.jsx', '*.mjs', '*.ts', '*.tsx', '*.mts'],
 			rules: {
 				'import/prefer-default-export': 0,
 				indent: ['error', 'tab', { SwitchCase: 1 }],
@@ -45,6 +45,7 @@ module.exports = {
 				'no-param-reassign': 0,
 				'no-bitwise': 0,
 				'func-names': ['error'],
+				'func-style': ['error'],
 				'jsx-quotes': ['error', 'prefer-single'],
 				'jsx-a11y/label-has-associated-control': [2, {
 					labelComponents: ['CustomInputLabel'],
@@ -56,6 +57,7 @@ module.exports = {
 				'react/jsx-props-no-spreading': 0,
 				'react/jsx-indent-props': ['error', 'tab'],
 				'react/require-default-props': 0,
+				'react/prop-types': 0,
 				'@typescript-eslint/indent': ['error', 'tab'],
 				'@typescript-eslint/no-useless-constructor': ['error'],
 				'@typescript-eslint/member-delimiter-style': ['error', {
@@ -74,20 +76,13 @@ module.exports = {
 				}],
 				'@typescript-eslint/consistent-type-definitions': ['error', 'type'],
 				'@typescript-eslint/brace-style': ['error', 'stroustrup'],
+				'@typescript-eslint/no-unused-vars': ['error'],
 			},
 		},
 		{
-			files: ['*.js', '*.ts'],
+			files: ['*.ts', '*.tsx', '*.mts'],
 			rules: {
-				'func-style': ['error'],
-			},
-		},
-		{
-			files: ['*.jsx', '*.tsx'],
-			rules: {
-				'react/function-component-definition': [2, {
-					namedComponents: ['function-declaration'],
-				}],
+				'@typescript-eslint/explicit-function-return-type': 'error',
 			},
 		},
 	],

@@ -20,7 +20,7 @@ const createTable = <K extends RealType>(type: K, length: number): Table<K> => {
 	return { cos, sin };
 };
 
-const createReverseTable = (size: number) => {
+const createReverseTable = (size: number): Uint32Array => {
 	const reverseTable = new Uint32Array(size);
 	let limit = 1;
 	let bit = size >> 1;
@@ -38,7 +38,7 @@ const transform = (
 	arr: ComplexArray,
 	windowSize: number,
 	table: Table,
-) => {
+): void => {
 	let halfSize = 1;
 	while (halfSize < windowSize) {
 		const cos = table.cos.real[halfSize];

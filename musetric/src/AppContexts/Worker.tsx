@@ -1,6 +1,7 @@
-import React, { createContext, ReactElement, ReactNode } from 'react';
+import React, { createContext } from 'react';
 import { Workers } from '../AppBase/Worker';
 import { useInitializedContext } from '../ReactUtils/Context';
+import { SFC } from '../UtilityTypes';
 
 export type WorkerStore = Workers;
 export const WorkerContext = createContext<WorkerStore | undefined>(undefined);
@@ -11,9 +12,7 @@ export type WorkerProviderProps = {
 	workers: Workers,
 };
 
-export function WorkerProvider(
-	props: WorkerProviderProps & { children: ReactNode },
-): ReactElement {
+export const WorkerProvider: SFC<WorkerProviderProps, 'required'> = (props) => {
 	const { children, workers } = props;
 
 	const store: WorkerStore = workers;
@@ -23,6 +22,7 @@ export function WorkerProvider(
 			{children}
 		</WorkerContext.Provider>
 	);
-}
+};
+WorkerProvider.displayName = 'WorkerProvider';
 
 export const useWorkerContext = (): WorkerStore => useInitializedContext(WorkerContext, 'useWorkerContext');

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
 /* eslint-disable max-len */
-import { createComplexArray } from '../src/TypedArray/ComplexArray';
+import { ComplexArray, createComplexArray } from '../src/TypedArray/ComplexArray';
 import { SpectrometerBase } from '../src/Sounds/Spectrometer';
 import { createDftBase } from '../src/Sounds/Dft';
 import { createFftRadix2Base } from '../src/Sounds/FftRadix2';
@@ -42,7 +42,11 @@ expect.extend({
 });
 
 const testTransform = (createSpectrometer: (windowSize: number) => SpectrometerBase): void => {
-	const create = (windowSize: number, real: number[], imag: number[]) => {
+	type IO = {
+		input: ComplexArray<'float64'>,
+		output: ComplexArray<'float64'>,
+	};
+	const create = (windowSize: number, real: number[], imag: number[]): IO => {
 		const input = createComplexArray('float64', windowSize);
 		const output = createComplexArray('float64', windowSize);
 		for (let i = 0; i < windowSize; i++) {
@@ -50,7 +54,7 @@ const testTransform = (createSpectrometer: (windowSize: number) => SpectrometerB
 			input.imag[i] = imag[i];
 		}
 
-		return { input, output } as const;
+		return { input, output };
 	};
 	const arr: { windowSize: number, inputR: number[], inputI: number[], outputR: number[], outputI: number[] }[] = [
 		{ windowSize: 4, inputR: [0, 1, 2, 3], inputI: [0, 0, 0, 0], outputR: [6, -2, -2, -2], outputI: [0, 2, 0, -2] },

@@ -1,5 +1,6 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { createClasses, createUseClasses } from '../../AppContexts/Css';
+import { SFC } from '../../UtilityTypes';
 import { SoundParametersPanel, SoundParametersPanelProps } from '../Components';
 import { SoundParameters, useSoundWorkshopStore } from '../Store';
 
@@ -12,7 +13,7 @@ export const getSoundWorkshopTopPanelClasses = createClasses(() => {
 });
 const useClasses = createUseClasses('SoundWorkshopTopPanel', getSoundWorkshopTopPanelClasses);
 
-export function SoundWorkshopTopPanel(): ReactElement {
+export const SoundWorkshopTopPanel: SFC = () => {
 	const classes = useClasses();
 
 	const store = useSoundWorkshopStore();
@@ -32,4 +33,5 @@ export function SoundWorkshopTopPanel(): ReactElement {
 			<SoundParametersPanel {...soundParametersPanelProps} />
 		</div>
 	);
-}
+};
+SoundWorkshopTopPanel.displayName = 'SoundWorkshopTopPanel';

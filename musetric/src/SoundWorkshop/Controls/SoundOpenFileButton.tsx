@@ -1,16 +1,15 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { SoundBufferManager, decodeFileToWav } from '../../Sounds';
 import { SelectFile, SelectFileProps } from '../../Controls';
 import { skipPromise } from '../../Utils';
 import { useLazyAudioContext } from '../../ReactUtils';
+import { SFC } from '../../UtilityTypes';
 
 export type SoundOpenFileButtonProps = {
 	soundBufferManager: SoundBufferManager,
 };
-export function SoundOpenFileButton(
-	props: SoundOpenFileButtonProps,
-): ReactElement {
+export const SoundOpenFileButton: SFC<SoundOpenFileButtonProps> = (props) => {
 	const { soundBufferManager } = props;
 
 	const { OpenFileIcon } = useIconContext();
@@ -18,7 +17,7 @@ export function SoundOpenFileButton(
 
 	const getAudioContext = useLazyAudioContext(soundBufferManager.soundBuffer.sampleRate);
 
-	const pushSoundFile = async (file: File) => {
+	const pushSoundFile = async (file: File): Promise<void> => {
 		const audioContext = getAudioContext();
 		const channels = await decodeFileToWav(audioContext, file);
 		soundBufferManager.push(channels, 'file');
@@ -35,4 +34,5 @@ export function SoundOpenFileButton(
 			<OpenFileIcon />
 		</SelectFile>
 	);
-}
+};
+SoundOpenFileButton.displayName = 'SoundOpenFileButton';

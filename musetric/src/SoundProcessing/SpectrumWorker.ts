@@ -36,7 +36,7 @@ export const createSpectrumWorker = (): SpectrumWorker => {
 		draw: () => void,
 	};
 	let state: SpectrumState | undefined;
-	const setup = (options: SpectrumOptions) => {
+	const setup = (options: SpectrumOptions): SharedArrayBuffer => {
 		const { windowSize, count } = options;
 		const fftSize = windowSize / 2;
 		const spectrometer = createFftRadix4(windowSize);
@@ -49,13 +49,13 @@ export const createSpectrumWorker = (): SpectrumWorker => {
 			count,
 		});
 		const outputStats = Array<Flag>(count).fill(flags.invalid);
-		const draw = () => result.real.set(raw.real);
+		const draw = (): void => result.real.set(raw.real);
 		state = { windowSize, count, raw, spectrometer, outputs, outputStats, draw };
 		return result.realRaw;
 	};
 
 	let accOffset = 0;
-	const shift = (offset: number) => {
+	const shift = (offset: number): void => {
 		if (!state) return;
 		const { raw, windowSize, outputStats, count } = state;
 		const fftSize = windowSize / 2;
@@ -86,7 +86,7 @@ export const createSpectrumWorker = (): SpectrumWorker => {
 		}
 	};
 
-	const invalidate = (rawFrom: number, rawTo: number) => {
+	const invalidate = (rawFrom: number, rawTo: number): void => {
 		if (!state) return;
 		const from = Math.floor(rawFrom);
 		const to = Math.floor(rawTo);
@@ -98,7 +98,7 @@ export const createSpectrumWorker = (): SpectrumWorker => {
 
 	let buffer: RealArray<'float32'> | undefined;
 	let inputs: RealArray<'float32'>[] | undefined;
-	const setBuffer = (value: SharedArrayBuffer) => {
+	const setBuffer = (value: SharedArrayBuffer): void => {
 		if (!state) return;
 		const { windowSize, count } = state;
 		buffer = viewRealArray('float32', value);
@@ -113,10 +113,10 @@ export const createSpectrumWorker = (): SpectrumWorker => {
 		accOffset = 0;
 	};
 
-	const emitBufferEvent = (event: SpectrumBufferEvent) => {
+	const emitBufferEvent = (event: SpectrumBufferEvent): void => {
 		if (!state) return;
 		const { count } = state;
-		const toRenderPoint = (value: number, length: number) => {
+		const toRenderPoint = (value: number, length: number): number => {
 			return count * (value / length);
 		};
 		if (event.type === 'newBuffer') setBuffer(event.buffer);

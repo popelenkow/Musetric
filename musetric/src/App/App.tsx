@@ -1,8 +1,9 @@
-import React, { useState, ReactElement, ReactNode, useEffect } from 'react';
+import React, { useState, ReactElement, ReactNode, useEffect, useRef } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useIconContext } from '../AppContexts/Icon';
 import { RootElementProvider, useRootElementContext } from '../AppContexts/RootElement';
-import { disableZoom } from '../Utils/Zoom';
+import { DisplayName, FCResult } from '../UtilityTypes';
+import { subscribeDisableZoom } from '../Utils/Zoom';
 import { AppBar } from './AppBar';
 import { AppDropdown, AppDropdownProps, AppViewEntry, AppViewElement } from './AppDropdown';
 
@@ -26,14 +27,23 @@ type RootProps<ViewId extends string> = {
 	useViewEntries: () => AppViewEntry<ViewId>[],
 	useAppBarButtons: () => ReactElement,
 };
-function Root<ViewId extends string>(props: RootProps<ViewId>): ReactElement {
+type RootFC = DisplayName & (
+	<ViewId extends string>(props: RootProps<ViewId>) => FCResult
+);
+const Root: RootFC = (props) => {
+	type ViewId = (typeof props)['initViewId'];
 	const { initViewId, useViewEntries, useAppBarButtons } = props;
 	const classes = useClasses();
 	const { MenuIcon } = useIconContext();
 
 	const allViewEntries = useViewEntries();
 	const { rootElement, setRootElement } = useRootElementContext();
-	useEffect(() => disableZoom(rootElement), [rootElement]);
+	useEffect(() => subscribeDisableZoom(rootElement), [rootElement]);
+
+	const rootElementRef = useRef<HTMLDivElement>(null);
+	useEffect(() => {
+		if (rootElementRef.current) setRootElement(rootElementRef.current);
+	}, [setRootElement]);
 
 	const [viewId, setViewId] = useState<ViewId>(initViewId);
 	const appDropdownProps: AppDropdownProps<ViewId> = {
@@ -48,7 +58,7 @@ function Root<ViewId extends string>(props: RootProps<ViewId>): ReactElement {
 
 	const buttons = useAppBarButtons();
 	return (
-		<div ref={(elem) => elem && setRootElement(elem)} className={classes.root}>
+		<div ref={rootElementRef} className={classes.root}>
 			<AppBar>
 				{buttons}
 				<AppDropdown {...appDropdownProps}><MenuIcon /></AppDropdown>
@@ -56,9 +66,10 @@ function Root<ViewId extends string>(props: RootProps<ViewId>): ReactElement {
 			{element}
 		</div>
 	);
-}
+};
+Root.displayName = 'Root';
 
-export type AppProvider = (children?: ReactNode) => ReactElement | null;
+export type AppProvider = (children: ReactNode) => FCResult;
 export type AppProviders = {
 	locale: AppProvider,
 	log: AppProvider,
@@ -69,7 +80,10 @@ export type AppProviders = {
 export type AppProps<ViewId extends string> = {
 	providers: AppProviders,
 } & RootProps<ViewId>;
-export function App<ViewId extends string>(props: AppProps<ViewId>): ReactElement | null {
+type AppFC = DisplayName & (
+	<ViewId extends string>(props: AppProps<ViewId>) => FCResult
+);
+export const App: AppFC = (props) => {
 	const { providers } = props;
 	const root = (
 		<RootElementProvider>
@@ -83,5 +97,6 @@ export function App<ViewId extends string>(props: AppProps<ViewId>): ReactElemen
 		providers.icon,
 		providers.worker,
 	];
-	return arr.reduce<ReactElement | null>((acc, provider) => provider(acc), root);
-}
+	return arr.reduce<ReactElement>((acc, provider) => provider(acc), root);
+};
+App.displayName = 'App';

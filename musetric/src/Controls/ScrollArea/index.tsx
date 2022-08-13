@@ -1,4 +1,4 @@
-import React, { RefObject, useRef, useMemo, useEffect, useState, ReactNode } from 'react';
+import React, { RefObject, useRef, useMemo, useEffect, useState } from 'react';
 import className from 'classnames';
 import { mapObject, someObject } from '../../Utils/Object';
 import { createUseClasses, createClasses } from '../../AppContexts/Css';
@@ -13,6 +13,7 @@ import {
 	updateVerticalScrollPosition,
 	subscribeVerticalEvents,
 } from './VerticalScroll';
+import { SFC } from '../../UtilityTypes';
 
 export const getScrollAreaClasses = createClasses(() => {
 	return {
@@ -78,14 +79,19 @@ const useClasses = createUseClasses('ScrollArea', getScrollAreaClasses);
 
 type ElementType = 'content' | 'horizontalTrack' | 'horizontalThumb' | 'verticalTrack' | 'verticalThumb';
 type Elements = Record<ElementType, HTMLDivElement>;
-const useRefs = () => {
+type Refs = Record<ElementType, RefObject<HTMLDivElement>>;
+type RefsResult = {
+	refs: Refs,
+	elements: Elements | undefined,
+};
+const useRefs = (): RefsResult => {
 	const content = useRef<HTMLDivElement>(null);
 	const horizontalTrack = useRef<HTMLDivElement>(null);
 	const horizontalThumb = useRef<HTMLDivElement>(null);
 	const verticalTrack = useRef<HTMLDivElement>(null);
 	const verticalThumb = useRef<HTMLDivElement>(null);
 
-	const refs = useMemo<Record<ElementType, RefObject<HTMLDivElement>>>(() => ({
+	const refs = useMemo<Refs>(() => ({
 		content, horizontalTrack, horizontalThumb, verticalTrack, verticalThumb,
 	}), []);
 
@@ -132,7 +138,7 @@ export type ScrollAreaProps = {
 		root?: string,
 	},
 };
-export function ScrollArea(props: ScrollAreaProps & { children: ReactNode }) {
+export const ScrollArea: SFC<ScrollAreaProps, 'required'> = (props) => {
 	const { children, classNames } = props;
 	const classes = useClasses();
 
@@ -170,4 +176,5 @@ export function ScrollArea(props: ScrollAreaProps & { children: ReactNode }) {
 			</div>
 		</div>
 	);
-}
+};
+ScrollArea.displayName = 'ScrollArea';

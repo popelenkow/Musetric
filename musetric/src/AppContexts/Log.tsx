@@ -1,6 +1,7 @@
-import React, { useMemo, createContext, ReactElement, ReactNode } from 'react';
+import React, { useMemo, createContext } from 'react';
 import { Log } from '../AppBase/Log';
 import { useInitializedContext } from '../ReactUtils/Context';
+import { SFC } from '../UtilityTypes';
 
 export type LogStore = {
 	log: Log,
@@ -11,9 +12,7 @@ export type LogProviderProps = {
 	log: Log,
 };
 
-export function LogProvider(
-	props: LogProviderProps & { children: ReactNode },
-): ReactElement {
+export const LogProvider: SFC<LogProviderProps, 'required'> = (props) => {
 	const { children, log } = props;
 
 	const store: LogStore = useMemo(() => ({ log }), [log]);
@@ -23,6 +22,7 @@ export function LogProvider(
 			{children}
 		</LogContext.Provider>
 	);
-}
+};
+LogProvider.displayName = 'LogProvider';
 
 export const useLogContext = (): LogStore => useInitializedContext(LogContext, 'useLogContext');

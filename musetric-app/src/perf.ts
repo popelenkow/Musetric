@@ -8,7 +8,7 @@ import { createFftRadix4Base } from 'musetric/Sounds/FftRadix4';
 import { getStorageThemeId } from 'musetric/AppBase/Theme';
 import { allThemeEntries } from 'musetric/Resources/Themes';
 
-const add = (dt: number, t1: number, t2: number) => {
+const add = (dt: number, t1: number, t2: number): number => {
 	return 0.95 * dt + 0.05 * (t2 - t1);
 };
 
@@ -45,7 +45,7 @@ export const run = async (): Promise<void> => {
 		let t1: number;
 		let t2: number;
 		let dt = 0;
-		const perf = (task: () => void) => {
+		const perf = (task: () => void): number => {
 			dt = 0;
 			for (let j = 0; j < L; j++) {
 				t1 = performance.now();
@@ -145,7 +145,7 @@ export const run = async (): Promise<void> => {
 	root.appendChild(textDiv);
 
 	const arr: PerfData[] = [];
-	const plot = (size: number) => {
+	const plot = (size: number): void => {
 		const perfValue = perfAll(size);
 		arr.push(perfValue);
 		const fft2RData = getDataset(arr, 'fft2R');

@@ -6,7 +6,11 @@ const isTouchEvent = (event: MouseEvent | TouchEvent): event is TouchEvent => {
 	return event instanceof TouchEvent;
 };
 
-const getClientPosition = (event: MouseEvent | TouchEvent) => {
+type ClientPosition = {
+	clientX: number,
+	clientY: number,
+};
+const getClientPosition = (event: MouseEvent | TouchEvent): ClientPosition => {
 	const { clientX, clientY } = isTouchEvent(event) ? event.touches[0] : event;
 	return { clientX, clientY };
 };
@@ -17,13 +21,14 @@ export type InertialDragOptions = {
 	onMove: (delta: Position2D) => void,
 	onActive: (value: boolean) => void,
 };
-export const subscribeInertia = (options: InertialDragOptions) => {
+export type UnsubscribeInertia = () => void;
+export const subscribeInertia = (options: InertialDragOptions): UnsubscribeInertia => {
 	const { inertia, element, onMove, onActive } = options;
 	let isDragging = false;
 
 	const currentPosition: Position2D = { x: 0, y: 0 };
 	const commitPosition: Position2D = { x: 0, y: 0 };
-	const commit = () => {
+	const commit = (): void => {
 		commitPosition.x = currentPosition.x;
 		commitPosition.y = currentPosition.y;
 	};
@@ -33,7 +38,7 @@ export const subscribeInertia = (options: InertialDragOptions) => {
 			y: currentPosition.y - commitPosition.y,
 		};
 	};
-	const onDragMove = (event: MouseEvent | TouchEvent) => {
+	const onDragMove = (event: MouseEvent | TouchEvent): void => {
 		if (!isDragging) return;
 		event.preventDefault();
 		const { clientX, clientY } = getClientPosition(event);
@@ -46,7 +51,7 @@ export const subscribeInertia = (options: InertialDragOptions) => {
 		onMove(delta);
 	};
 
-	const onDragStart = (event: MouseEvent | TouchEvent) => {
+	const onDragStart = (event: MouseEvent | TouchEvent): void => {
 		isDragging = true;
 		inertia.stop();
 		const { clientX, clientY } = getClientPosition(event);
@@ -55,7 +60,7 @@ export const subscribeInertia = (options: InertialDragOptions) => {
 		commit();
 	};
 
-	const onDragEnd = () => {
+	const onDragEnd = (): void => {
 		isDragging = false;
 	};
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, ReactElement } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import className from 'classnames';
 import { createUseClasses, createClasses } from '../../AppContexts/Css';
 import { NumberField, NumberFieldProps } from '../../Controls/NumberField';
@@ -7,6 +7,7 @@ import { ScrollArea } from '../../Controls/ScrollArea';
 import { useRootElementContext } from '../../AppContexts/RootElement';
 import { SoundParameters } from '../Store';
 import { NumberRange } from '../../Rendering';
+import { SFC } from '../../UtilityTypes';
 
 export const getSoundParametersClasses = createClasses((css) => {
 	const { theme } = css;
@@ -28,14 +29,15 @@ export const getSoundParametersClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('SoundParameters', getSoundParametersClasses);
 
-const subscribe = (
+type UnsubscribeInput = () => void;
+const subscribeInput = (
 	rootElement: HTMLElement,
 	sampleRate: number,
 	frequencyRange: NumberRange,
 	setFrequencyRange: (value: NumberRange) => void,
-) => {
+): UnsubscribeInput | undefined => {
 	if (!rootElement) return undefined;
-	const addTo = (value: number, delta: number, min: number, max: number) => {
+	const addTo = (value: number, delta: number, min: number, max: number): number => {
 		const newValue = value + delta;
 		if (newValue < min) return min;
 		if (newValue > max) return max;
@@ -58,9 +60,7 @@ export type SoundParametersPanelProps = {
 	soundParameters: SoundParameters,
 	setSoundParameters: (soundParameters: SoundParameters) => void,
 };
-export function SoundParametersPanel(
-	props: SoundParametersPanelProps,
-): ReactElement {
+export const SoundParametersPanel: SFC<SoundParametersPanelProps> = (props) => {
 	const { soundParameters, setSoundParameters } = props;
 
 	const classes = useClasses();
@@ -79,12 +79,12 @@ export function SoundParametersPanel(
 
 	const { rootElement } = useRootElementContext();
 	useEffect(() => {
-		return subscribe(rootElement, sampleRate, frequencyRange, setFrequencyRange);
+		return subscribeInput(rootElement, sampleRate, frequencyRange, setFrequencyRange);
 	}, [rootElement, sampleRate, frequencyRange, setFrequencyRange]);
 
 	const setFrequencyTo = useCallback((value: number) => {
 		const { from } = frequencyRange;
-		const getTo = () => {
+		const getTo = (): number => {
 			if (value > sampleRate / 2) return sampleRate / 2;
 			if (value < from + 1) return from + 1;
 			return value;
@@ -95,7 +95,7 @@ export function SoundParametersPanel(
 	}, [frequencyRange, sampleRate, setFrequencyRange]);
 	const setFrequencyFrom = useCallback((value: number) => {
 		const { to } = frequencyRange;
-		const getFrom = () => {
+		const getFrom = (): number => {
 			if (value < 0) return 0;
 			if (value > to - 1) return to - 1;
 			return value;
@@ -139,4 +139,5 @@ export function SoundParametersPanel(
 			</ScrollArea>
 		</div>
 	);
-}
+};
+SoundParametersPanel.displayName = 'SoundParametersPanel';

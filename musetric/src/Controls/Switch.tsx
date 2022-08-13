@@ -1,5 +1,6 @@
-import React, { useState, PropsWithChildren, ReactElement } from 'react';
+import React, { useState } from 'react';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
+import { ChildrenProps, DisplayName, FCResult } from '../UtilityTypes';
 import { getButtonClasses, Button, ButtonProps } from './Button';
 
 export const getSwitchClasses = createClasses((css) => {
@@ -23,8 +24,10 @@ export type SwitchProps<T> = {
 	ids: T[],
 	set: (id: T) => void,
 };
-type Props<T> = PropsWithChildren<SwitchProps<T>>;
-export function Switch<T>(props: Props<T>): ReactElement | null {
+type SwitchFC = DisplayName & (
+	<T>(props: SwitchProps<T> & ChildrenProps) => FCResult
+);
+export const Switch: SwitchFC = (props) => {
 	const {
 		kind,
 		disabled,
@@ -40,7 +43,7 @@ export function Switch<T>(props: Props<T>): ReactElement | null {
 
 	const [id, setId] = useState(currentId);
 
-	const next = () => {
+	const next = (): void => {
 		let index = ids.indexOf(id);
 		index = (index + 1) % ids.length;
 		const newId = ids[index];
@@ -62,4 +65,5 @@ export function Switch<T>(props: Props<T>): ReactElement | null {
 			{children}
 		</Button>
 	);
-}
+};
+Switch.displayName = 'Switch';

@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect, useState, ReactElement } from 'react';
+import React, { useMemo, useCallback, useEffect, useState } from 'react';
 import { useCssContext, useWorkerContext } from '../AppContexts';
 import { SoundBufferEvent } from '../Sounds';
 import { createSpectrum, SpectrumBufferEvent } from '../SoundProcessing';
@@ -6,6 +6,7 @@ import { Position2D, createSpectrogramColors, drawSpectrogram, NumberRange, Layo
 import { RealArray, SharedRealArray, viewRealArrays } from '../TypedArray';
 import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 import { skipPromise, EventEmitterCallback, UnsubscribeEventEmitter } from '../Utils';
+import { SFC } from '../UtilityTypes';
 
 export type SpectrogramProps = {
 	getBuffer: () => SharedRealArray<'float32'>,
@@ -17,7 +18,7 @@ export type SpectrogramProps = {
 	sampleRate: number,
 	layout: Layout2D,
 };
-export function Spectrogram(props: SpectrogramProps): ReactElement {
+export const Spectrogram: SFC<SpectrogramProps> = (props) => {
 	const {
 		getBuffer, getCursor, setCursor, subscribeBufferEvents,
 		frequencyRange, sampleRate, layout,
@@ -103,4 +104,5 @@ export function Spectrogram(props: SpectrogramProps): ReactElement {
 	};
 
 	return <PixelCanvas {...canvasProps} />;
-}
+};
+Spectrogram.displayName = 'Spectrogram';

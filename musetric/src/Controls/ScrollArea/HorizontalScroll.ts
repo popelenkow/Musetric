@@ -7,7 +7,11 @@ export const getHorizontalScrollPosition = (content: HTMLDivElement): number | u
 	return Math.floor(scrollLeft) / (scrollWidth - clientWidth);
 };
 
-const getHorizontalScrollWidth = (elements: Elements) => {
+type HorizontalScrollWidth = {
+	trackWidth: number,
+	thumbWidth: number,
+};
+const getHorizontalScrollWidth = (elements: Elements): HorizontalScrollWidth => {
 	const { content, horizontalTrack } = elements;
 	const { clientWidth, scrollWidth } = content;
 	const { paddingLeft, paddingRight } = getComputedStyle(horizontalTrack);
@@ -17,7 +21,7 @@ const getHorizontalScrollWidth = (elements: Elements) => {
 	return { trackWidth, thumbWidth };
 };
 
-const getHorizontalOriginalScrollPosition = (position: number, elements: Elements) => {
+const getHorizontalOriginalScrollPosition = (position: number, elements: Elements): number => {
 	const { content } = elements;
 	const { scrollWidth, clientWidth } = content;
 	const { trackWidth, thumbWidth } = getHorizontalScrollWidth(elements);
@@ -29,7 +33,7 @@ const getHorizontalOriginalScrollPosition = (position: number, elements: Element
 export const updateHorizontalScrollPosition = (
 	elements: Elements,
 	position: number,
-) => {
+): void => {
 	const { horizontalThumb } = elements;
 	const { trackWidth, thumbWidth } = getHorizontalScrollWidth(elements);
 	const x = position * (trackWidth - thumbWidth);
@@ -37,16 +41,17 @@ export const updateHorizontalScrollPosition = (
 	horizontalThumb.style.transform = `translateX(${x}px)`;
 };
 
-const getClientX = (event: MouseEvent | TouchEvent) => {
+const getClientX = (event: MouseEvent | TouchEvent): number => {
 	if (event instanceof TouchEvent) return event.targetTouches[0].clientX;
 	return event.clientX;
 };
 
-export const subscribeHorizontalEvents = (elements: Elements) => {
+export type UnsubscribeHorizontalEvents = () => void;
+export const subscribeHorizontalEvents = (elements: Elements): UnsubscribeHorizontalEvents => {
 	const { content, horizontalTrack, horizontalThumb } = elements;
 	let dragging = false;
 	let prevPosition = 0;
-	const drag = (event: MouseEvent | TouchEvent) => {
+	const drag = (event: MouseEvent | TouchEvent): void => {
 		event.preventDefault();
 		event.stopPropagation();
 		const clientX = getClientX(event);
@@ -55,7 +60,7 @@ export const subscribeHorizontalEvents = (elements: Elements) => {
 		const position = clientX - left - thumbWidth / 2;
 		content.scrollLeft = getHorizontalOriginalScrollPosition(position, elements);
 	};
-	const startDrag = (event: MouseEvent | TouchEvent) => {
+	const startDrag = (event: MouseEvent | TouchEvent): void => {
 		event.preventDefault();
 		event.stopPropagation();
 		dragging = true;
@@ -63,14 +68,14 @@ export const subscribeHorizontalEvents = (elements: Elements) => {
 		const { left } = horizontalThumb.getBoundingClientRect();
 		prevPosition = clientX - left;
 	};
-	const onDrag = (event: MouseEvent | TouchEvent) => {
+	const onDrag = (event: MouseEvent | TouchEvent): void => {
 		if (!dragging) return;
 		const clientX = getClientX(event);
 		const { left } = horizontalTrack.getBoundingClientRect();
 		const position = clientX - left - prevPosition;
 		content.scrollLeft = getHorizontalOriginalScrollPosition(position, elements);
 	};
-	const stopDrag = () => {
+	const stopDrag = (): void => {
 		dragging = false;
 	};
 	horizontalTrack.addEventListener('touchstart', drag);

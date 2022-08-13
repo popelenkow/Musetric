@@ -28,10 +28,10 @@ const createPlayerWorklet = (
 	};
 	let started: Started | undefined;
 	let isPlaying = false;
-	const start = () => {
+	const start = (): void => {
 		isPlaying = true;
 	};
-	const stop = (reset = false) => {
+	const stop = (reset = false): void => {
 		isPlaying = false;
 		started = undefined;
 		pushEvent('onStopped', { reset });
@@ -42,7 +42,7 @@ const createPlayerWorklet = (
 		cursor: number,
 	};
 	let state: State | undefined;
-	const process = (_input: Float32Array[], output: Float32Array[]) => {
+	const process = (_input: Float32Array[], output: Float32Array[]): void => {
 		if (!state) return;
 		if (!isPlaying) return;
 		const { sampleRate, currentTime } = getWorkletState();
@@ -67,13 +67,13 @@ const createPlayerWorklet = (
 		}
 		pushEvent('onCursor', { value: currentCursor + size });
 	};
-	const setup = (playerOptions: PlayerOptions) => {
+	const setup = (playerOptions: PlayerOptions): void => {
 		const { cursor } = playerOptions;
 		const soundBuffer = viewRealArray('float32', playerOptions.soundBuffer);
 		state = { soundBuffer, cursor };
 		started = undefined;
 	};
-	const setCursor = (value: number) => {
+	const setCursor = (value: number): void => {
 		if (!state) return;
 		state.cursor = value;
 		started = undefined;

@@ -7,7 +7,11 @@ export const getVerticalScrollPosition = (content: HTMLDivElement): number | und
 	return Math.floor(scrollTop) / (scrollHeight - clientHeight);
 };
 
-const getVerticalScrollHeights = (elements: Elements) => {
+type VerticalScrollHeights = {
+	trackHeight: number,
+	thumbHeight: number,
+};
+const getVerticalScrollHeights = (elements: Elements): VerticalScrollHeights => {
 	const { content, verticalTrack } = elements;
 	const { scrollHeight, clientHeight } = content;
 	const { paddingTop, paddingBottom } = getComputedStyle(verticalTrack);
@@ -17,7 +21,7 @@ const getVerticalScrollHeights = (elements: Elements) => {
 	return { trackHeight, thumbHeight };
 };
 
-const getVerticalOriginalScrollPosition = (offset: number, elements: Elements) => {
+const getVerticalOriginalScrollPosition = (offset: number, elements: Elements): number => {
 	const { content } = elements;
 	const { scrollHeight, clientHeight } = content;
 	const { trackHeight, thumbHeight } = getVerticalScrollHeights(elements);
@@ -29,7 +33,7 @@ const getVerticalOriginalScrollPosition = (offset: number, elements: Elements) =
 export const updateVerticalScrollPosition = (
 	elements: Elements,
 	position: number,
-) => {
+): void => {
 	const { verticalThumb } = elements;
 	const { trackHeight, thumbHeight } = getVerticalScrollHeights(elements);
 	const y = position * (trackHeight - thumbHeight);
@@ -37,16 +41,17 @@ export const updateVerticalScrollPosition = (
 	verticalThumb.style.transform = `translateY(${y}px)`;
 };
 
-const getClientY = (event: MouseEvent | TouchEvent) => {
+const getClientY = (event: MouseEvent | TouchEvent): number => {
 	if (event instanceof TouchEvent) return event.targetTouches[0].clientY;
 	return event.clientY;
 };
 
-export const subscribeVerticalEvents = (elements: Elements) => {
+export type UnsubscribeVerticalEvents = () => void;
+export const subscribeVerticalEvents = (elements: Elements): UnsubscribeVerticalEvents => {
 	const { content, verticalTrack, verticalThumb } = elements;
 	let dragging = false;
 	let prevPosition = 0;
-	const drag = (event: MouseEvent | TouchEvent) => {
+	const drag = (event: MouseEvent | TouchEvent): void => {
 		event.preventDefault();
 		event.stopPropagation();
 		const clientY = getClientY(event);
@@ -55,7 +60,7 @@ export const subscribeVerticalEvents = (elements: Elements) => {
 		const position = clientY - top - thumbHeight / 2;
 		content.scrollTop = getVerticalOriginalScrollPosition(position, elements);
 	};
-	const startDrag = (event: MouseEvent | TouchEvent) => {
+	const startDrag = (event: MouseEvent | TouchEvent): void => {
 		event.preventDefault();
 		event.stopPropagation();
 		dragging = true;
@@ -63,14 +68,14 @@ export const subscribeVerticalEvents = (elements: Elements) => {
 		const { top } = verticalThumb.getBoundingClientRect();
 		prevPosition = clientY - top;
 	};
-	const onDrag = (event: MouseEvent | TouchEvent) => {
+	const onDrag = (event: MouseEvent | TouchEvent): void => {
 		if (!dragging) return;
 		const clientY = getClientY(event);
 		const { top } = verticalTrack.getBoundingClientRect();
 		const position = clientY - top - prevPosition;
 		content.scrollTop = getVerticalOriginalScrollPosition(position, elements);
 	};
-	const stopDrag = () => {
+	const stopDrag = (): void => {
 		dragging = false;
 	};
 	verticalTrack.addEventListener('touchstart', drag);

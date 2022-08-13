@@ -27,9 +27,9 @@ export const createRecorderWorklet = (
 		new Float32Array(length),
 	];
 
-	const process = (input: Float32Array[]) => {
+	const process = (input: Float32Array[]): void => {
 		const step = input[0].length;
-		const push = () => {
+		const push = (): void => {
 			if (length < offset + step) throw new Error(`Recorder: { length: ${length}, offset: ${offset}, step: ${step} }`);
 			for (let i = 0; i < input.length; i++) {
 				const x = input[i];
@@ -48,10 +48,10 @@ export const createRecorderWorklet = (
 			offset = 0;
 		}
 	};
-	const start = () => {
+	const start = (): void => {
 		isRecording = true;
 	};
-	const stop = () => {
+	const stop = (): void => {
 		isRecording = false;
 	};
 	const handlers = {

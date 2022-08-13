@@ -1,9 +1,10 @@
-import React, { useMemo, useCallback, ReactElement } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useCssContext } from '../AppContexts/Css';
 import { Layout2D, Size2D, Position2D } from '../Rendering/Layout';
 import { Waves, drawWaveform, createWaveformColors, evalWaves } from '../Rendering/Waveform';
 import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 import { SharedRealArray } from '../TypedArray';
+import { SFC } from '../UtilityTypes';
 
 export type WaveformProps = {
 	getBuffer: () => SharedRealArray<'float32'>,
@@ -11,7 +12,7 @@ export type WaveformProps = {
 	setCursor: (newCursor: number) => void,
 	layout: Layout2D,
 };
-export function Waveform(props: WaveformProps): ReactElement {
+export const Waveform: SFC<WaveformProps> = (props) => {
 	const { getBuffer, getCursor, setCursor, layout } = props;
 	const { css } = useCssContext();
 	const colors = useMemo(() => createWaveformColors(css.theme), [css.theme]);
@@ -46,4 +47,5 @@ export function Waveform(props: WaveformProps): ReactElement {
 	};
 
 	return <PixelCanvas {...canvasProps} />;
-}
+};
+Waveform.displayName = 'Waveform';

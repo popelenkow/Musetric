@@ -4,6 +4,7 @@ import { useLocaleContext } from '../AppContexts/Locale';
 import { Button, ButtonProps } from '../Controls/Button';
 import { Divider } from '../Controls/Divider';
 import { Dropdown, DropdownProps } from '../Controls/Dropdown';
+import { DisplayName, FCResult } from '../UtilityTypes';
 
 export type AppViewDivider = {
 	type: 'divider',
@@ -15,15 +16,17 @@ export type AppViewElement<ViewId extends string> = {
 	element: ReactNode,
 };
 export type AppViewEntry<ViewId extends string> = AppViewDivider | AppViewElement<ViewId>;
-function f() {
-}
-f();
+
 export type AppDropdownProps<ViewId extends string> = {
 	viewId: ViewId,
 	setViewId: Dispatch<SetStateAction<ViewId>>,
 	allViewEntries: AppViewEntry<ViewId>[],
 };
-export function AppDropdown<ViewId extends string>(props: AppDropdownProps<ViewId>): ReactElement {
+type AppDropdownFC = DisplayName & (
+	<ViewId extends string>(props: AppDropdownProps<ViewId>) => FCResult
+);
+export const AppDropdown: AppDropdownFC = (props) => {
+	type ViewId = (typeof props)['viewId'];
 	const { viewId, setViewId, allViewEntries } = props;
 	const { MenuIcon } = useIconContext();
 	const { i18n } = useLocaleContext();
@@ -34,7 +37,7 @@ export function AppDropdown<ViewId extends string>(props: AppDropdownProps<ViewI
 			return <Divider key={`app-divider-${index}`} />;
 		}
 		if (view.type === 'view') {
-			const onClick = () => {
+			const onClick = (): void => {
 				setViewId(view.id);
 				setIsOpen(false);
 			};
@@ -55,7 +58,7 @@ export function AppDropdown<ViewId extends string>(props: AppDropdownProps<ViewI
 		}
 		return null;
 	};
-	const renderMenu = () => <>{allViewEntries.map(mapMenu)}</>;
+	const renderMenu = (): ReactElement => <>{allViewEntries.map(mapMenu)}</>;
 	const dropdownProps: DropdownProps = {
 		kind: 'icon',
 		active: isOpen,
@@ -72,4 +75,5 @@ export function AppDropdown<ViewId extends string>(props: AppDropdownProps<ViewI
 	return (
 		<Dropdown {...dropdownProps}><MenuIcon /></Dropdown>
 	);
-}
+};
+AppDropdown.displayName = 'AppDropdown';

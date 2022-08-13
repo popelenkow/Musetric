@@ -19,7 +19,7 @@ export const createInertia = (options: InertiaOptions): Inertia => {
 	};
 	let deltas: DeltaInfo[] = [];
 	let velocity: Position2D = { x: 0, y: 0 };
-	const computeVelocityByDeltas = () => {
+	const computeVelocityByDeltas = (): Position2D => {
 		const result: Position2D = { x: 0, y: 0 };
 		for (let i = 0; i < deltas.length; i++) {
 			const info = deltas[i];
@@ -32,16 +32,16 @@ export const createInertia = (options: InertiaOptions): Inertia => {
 		result.y *= Math.log(Math.abs(result.y) + 1) / 10;
 		return result;
 	};
-	const release = () => {
+	const release = (): void => {
 		velocity = computeVelocityByDeltas();
 		deltas = [];
 	};
 
-	const setDelta = (delta: Position2D, time: number) => {
+	const setDelta = (delta: Position2D, time: number): void => {
 		deltas = deltas.slice(0, sampleCount - 1);
 		deltas.unshift({ delta, time });
 	};
-	const getDelta = (time: number) => {
+	const getDelta = (time: number): Position2D => {
 		if (deltas.length !== 0) release();
 		const result: Position2D = {
 			x: velocity.x * time,
@@ -56,7 +56,7 @@ export const createInertia = (options: InertiaOptions): Inertia => {
 		velocity.y = Math.sign(velocity.y) * Math.max(0, absY - deltaV * (absY / r));
 		return result;
 	};
-	const stop = () => {
+	const stop = (): void => {
 		velocity = { x: 0, y: 0 };
 	};
 	return {
