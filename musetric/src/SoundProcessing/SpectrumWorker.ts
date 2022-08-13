@@ -1,6 +1,5 @@
 import { createFftRadix4 } from '../Sounds/FftRadix4';
 import { Spectrometer } from '../Sounds/Spectrometer';
-import { createAnimation } from '../Rendering/Animation';
 import { createTimer } from '../Rendering/Timer';
 import { runPromiseWorker } from '../Workers/PromiseWorker';
 import { viewRealArray, RealArray, createSharedRealArray, createRealArray } from '../TypedArray/RealArray';
@@ -134,8 +133,9 @@ export const createSpectrumWorker = (): SpectrumWorker => {
 	};
 
 	let index = 0;
+	let pause = true;
 	const onIteration = (): void => {
-		if (!state || !inputs) return;
+		if (!state || !inputs || pause) return;
 		const { draw, count, spectrometer, outputs, outputStats } = state;
 		const { timeIsUp } = createTimer(10);
 		let i = index;
@@ -152,9 +152,18 @@ export const createSpectrumWorker = (): SpectrumWorker => {
 		index = i % count;
 	};
 
-	const { start, stop } = createAnimation(() => ({
-		onIteration,
-	}));
+	const loop = (): void => {
+		onIteration();
+		setTimeout(loop, 16);
+	};
+	loop();
+
+	const start = (): void => {
+		pause = false;
+	};
+	const stop = (): void => {
+		pause = true;
+	};
 
 	return {
 		setup,

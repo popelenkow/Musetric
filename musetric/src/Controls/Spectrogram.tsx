@@ -34,7 +34,6 @@ export const Spectrogram: SFC<SpectrogramProps> = (props) => {
 		skipPromise(spectrum.start());
 		const destroy = async (): Promise<void> => {
 			await spectrum.stop();
-			spectrum.destroy();
 		};
 		return () => skipPromise(destroy());
 	}, [spectrum]);
