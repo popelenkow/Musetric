@@ -1,12 +1,12 @@
 import React from 'react';
 import { createClasses, createUseClasses } from '../../AppContexts/Css';
-import { useSoundWorkshopStore } from '../Store';
+import { SFC } from '../../UtilityTypes';
 import {
 	SoundProgress,
 	SoundPlayerButton, SoundPlayerButtonProps,
 	SoundRecorderButton, SoundRecorderButtonProps,
 } from '../Controls';
-import { SFC } from '../../UtilityTypes';
+import { useSoundWorkshopStore } from '../Store';
 
 export const getSoundWorkshopToolbarClasses = createClasses((css) => {
 	const { theme } = css;

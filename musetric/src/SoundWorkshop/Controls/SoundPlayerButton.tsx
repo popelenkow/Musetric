@@ -1,11 +1,11 @@
 import React from 'react';
-import { SoundBufferManager } from '../../Sounds';
 import { useIconContext, useWorkerContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 import { useLazyMemoAsync } from '../../ReactUtils';
 import { createPlayer } from '../../SoundProcessing';
-import { skipPromise } from '../../Utils';
+import { SoundBufferManager } from '../../Sounds';
 import { SFC } from '../../UtilityTypes';
+import { skipPromise } from '../../Utils';
 
 export type SoundPlayerButtonProps = {
 	disabled: boolean,

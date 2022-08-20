@@ -1,5 +1,5 @@
-import { RealType, realBytesMap } from './RealType';
 import { RealArray, viewRealArray, RealArrayLike } from './RealArray';
+import { RealType, realBytesMap } from './RealType';
 
 export type RealArraysOptions = {
 	offset: number,

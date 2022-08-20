@@ -1,9 +1,9 @@
-import React, { useMemo, useState } from 'react';
 import className from 'classnames';
+import React, { useMemo, useState } from 'react';
 import { createUseClasses, createClasses } from '../../AppContexts';
-import { SoundBufferManager } from '../../Sounds';
-import { useAnimation } from '../../ReactUtils';
 import { getFieldClasses } from '../../Controls';
+import { useAnimation } from '../../ReactUtils';
+import { SoundBufferManager } from '../../Sounds';
 import { SFC } from '../../UtilityTypes';
 
 export const getSoundProgressClasses = createClasses((css) => {

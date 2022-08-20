@@ -2,9 +2,9 @@
 /** @typedef {import("webpack-dev-server").Configuration} DevServerConfiguration */
 
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
-const CopyPlugin = require('copy-webpack-plugin');
 const WorkerUrlPlugin = require('worker-url/plugin');
 const { createDtsBundlePlugin } = require('./DtsBundlePlugin');
 const musetricAppPkg = require('./package.json');

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
-import { SoundBufferManager, createWav } from '../../Sounds';
 import { Button, ButtonProps } from '../../Controls';
-import { saveBlobFile } from '../../Utils';
+import { SoundBufferManager, createWav } from '../../Sounds';
 import { SFC } from '../../UtilityTypes';
+import { saveBlobFile } from '../../Utils';
 
 export type SoundSaveFileButtonProps = {
 	soundBufferManager: SoundBufferManager,

@@ -1,9 +1,9 @@
 import React, { useMemo, createContext, useReducer, Dispatch, useRef, useEffect } from 'react';
-import { useInitializedContext } from '../../ReactUtils';
-import { createSoundBufferManager, SoundBufferManager } from '../../Sounds/SoundBufferManager';
-import { createRecorder, Recorder } from '../../SoundProcessing';
-import { NumberRange } from '../../Rendering';
 import { useWorkerContext } from '../../AppContexts';
+import { useInitializedContext } from '../../ReactUtils';
+import { NumberRange } from '../../Rendering';
+import { createRecorder, Recorder } from '../../SoundProcessing';
+import { createSoundBufferManager, SoundBufferManager } from '../../Sounds/SoundBufferManager';
 import { ChildrenProps, SFC } from '../../UtilityTypes';
 
 export type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';

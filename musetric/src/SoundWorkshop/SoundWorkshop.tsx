@@ -1,13 +1,13 @@
-import React from 'react';
 import className from 'classnames';
+import React from 'react';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
-import { SoundWorkshopProvider, useSoundWorkshopStore } from './Store';
+import { SFC } from '../UtilityTypes';
 import {
 	SoundWorkshopSidebar, SoundWorkshopToolbar,
 	SoundWorkshopProgressBar, SoundWorkshopView,
 	SoundWorkshopTopPanel,
 } from './Panels';
-import { SFC } from '../UtilityTypes';
+import { SoundWorkshopProvider, useSoundWorkshopStore } from './Store';
 
 export const getSoundWorkshopClasses = createClasses(() => {
 	return {

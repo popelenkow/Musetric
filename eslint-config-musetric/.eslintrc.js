@@ -37,6 +37,13 @@ module.exports = {
 			files: ['*.js', '*.jsx', '*.mjs', '*.ts', '*.tsx', '*.mts'],
 			rules: {
 				'import/prefer-default-export': 0,
+				'import/order': ['error', {
+					alphabetize: {
+						order: 'asc',
+						caseInsensitive: true,
+					},
+					'newlines-between': 'never',
+				}],
 				indent: ['error', 'tab', { SwitchCase: 1 }],
 				'no-plusplus': 0,
 				'no-tabs': 0,
@@ -58,6 +65,9 @@ module.exports = {
 				'react/jsx-indent-props': ['error', 'tab'],
 				'react/require-default-props': 0,
 				'react/prop-types': 0,
+				'react/function-component-definition': [2, {
+					namedComponents: 'arrow-function',
+				}],
 				'@typescript-eslint/indent': ['error', 'tab'],
 				'@typescript-eslint/no-useless-constructor': ['error'],
 				'@typescript-eslint/member-delimiter-style': ['error', {

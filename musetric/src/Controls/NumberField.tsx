@@ -2,9 +2,9 @@ import React, { useCallback, useRef, useState } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 import { useAnimation } from '../ReactUtils/Animation';
 import { parseColor } from '../Rendering/Color';
-import { getTextFieldClasses } from './TextField';
-import { GroovedWheel, GroovedWheelProps } from './GroovedWheel';
 import { SFC } from '../UtilityTypes';
+import { GroovedWheel, GroovedWheelProps } from './GroovedWheel';
+import { getTextFieldClasses } from './TextField';
 
 export const getNumberFieldClasses = createClasses((css) => {
 	const { theme, platform } = css;

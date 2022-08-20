@@ -4,10 +4,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import benchmark from 'benchmark';
-import { drawWaveform, evalWaves, Waves, createWaveformColors } from '../src/Rendering/Waveform';
-import { Size2D } from '../src/Rendering/Layout';
-import theme from '../src/Resources/Themes/light';
 import { createConsoleLog } from '../src/AppBase/Log';
+import { Size2D } from '../src/Rendering/Layout';
+import { drawWaveform, evalWaves, Waves, createWaveformColors } from '../src/Rendering/Waveform';
+import theme from '../src/Resources/Themes/light';
 
 const log = createConsoleLog();
 export const performanceWaveform = (): void => {

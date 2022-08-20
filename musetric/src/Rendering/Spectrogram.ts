@@ -1,5 +1,5 @@
-import { RealArray } from '../TypedArray/RealArray';
 import { Theme } from '../AppBase/Theme';
+import { RealArray } from '../TypedArray/RealArray';
 import { parseTheme, gradientUint32ByRgb } from './Color';
 import { NumberRange, Size2D } from './Layout';
 

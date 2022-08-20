@@ -5,10 +5,10 @@
 
 import { Suite } from 'benchmark';
 import FFT from 'fft.js';
-import { createComplexIndexable } from '../src/TypedArray/ComplexIndexable';
+import { createConsoleLog } from '../src/AppBase/Log';
 import { createFftRadix2Base } from '../src/Sounds/FftRadix2';
 import { createFftRadix4Base } from '../src/Sounds/FftRadix4';
-import { createConsoleLog } from '../src/AppBase/Log';
+import { createComplexIndexable } from '../src/TypedArray/ComplexIndexable';
 
 const log = createConsoleLog();
 export const performanceFft = (): void => {

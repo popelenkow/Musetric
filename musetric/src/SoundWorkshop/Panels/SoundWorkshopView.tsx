@@ -1,8 +1,8 @@
 import React from 'react';
 import { createClasses, createUseClasses } from '../../AppContexts/Css';
-import { useSoundWorkshopStore } from '../Store';
-import { SoundView, SoundViewProps } from '../Components';
 import { SFC } from '../../UtilityTypes';
+import { SoundView, SoundViewProps } from '../Components';
+import { useSoundWorkshopStore } from '../Store';
 
 export const getSoundWorkshopViewClasses = createClasses((css) => {
 	const { theme } = css;

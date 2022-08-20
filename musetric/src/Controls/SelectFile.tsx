@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect } from 'react';
-import { Button, ButtonProps, getButtonClasses } from './Button';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { SFC } from '../UtilityTypes';
+import { Button, ButtonProps, getButtonClasses } from './Button';
 
 export const getSelectFileClasses = createClasses((css) => {
 	const buttonClasses = getButtonClasses(css);

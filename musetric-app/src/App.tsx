@@ -1,22 +1,22 @@
-import React, { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
 import { App, AppProps, AppProviders } from 'musetric/App/App';
-import { AppViewEntry } from 'musetric/App/AppDropdown';
 import { AppAbout, AppAboutProps } from 'musetric/App/AppAbout';
+import { AppViewEntry } from 'musetric/App/AppDropdown';
+import type { Icons } from 'musetric/AppBase/Icon';
 import { getStorageLocaleId, setStorageLocaleId, createI18n } from 'musetric/AppBase/Locale';
+import type { LocaleEntry } from 'musetric/AppBase/Locale';
 import { createConsoleLog } from 'musetric/AppBase/Log';
 import { getStorageThemeId, setStorageThemeId } from 'musetric/AppBase/Theme';
-import { LocaleProvider, LocaleProviderProps } from 'musetric/AppContexts/Locale';
-import { LogProvider, LogProviderProps } from 'musetric/AppContexts/Log';
+import type { ThemeEntry } from 'musetric/AppBase/Theme';
+import type { Workers } from 'musetric/AppBase/Worker';
 import { CssProvider, CssProviderProps } from 'musetric/AppContexts/Css';
 import { IconProvider, IconProviderProps } from 'musetric/AppContexts/Icon';
+import { LocaleProvider, LocaleProviderProps } from 'musetric/AppContexts/Locale';
+import { LogProvider, LogProviderProps } from 'musetric/AppContexts/Log';
 import { WorkerProvider } from 'musetric/AppContexts/Worker';
 import { Button, ButtonProps } from 'musetric/Controls/Button';
 import { SoundWorkshop } from 'musetric/SoundWorkshop';
-import type { LocaleEntry } from 'musetric/AppBase/Locale';
-import type { ThemeEntry } from 'musetric/AppBase/Theme';
-import type { Icons } from 'musetric/AppBase/Icon';
-import type { Workers } from 'musetric/AppBase/Worker';
+import React, { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import { useAppBarButtons } from './common/AppBarButtons';
 
 export type CreateMusetricAppOptions = {

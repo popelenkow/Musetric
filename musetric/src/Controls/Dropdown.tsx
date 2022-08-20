@@ -1,8 +1,8 @@
 import React, { SetStateAction, Dispatch, ReactElement, useEffect, useRef } from 'react';
-import { useRootElementContext } from '../AppContexts/RootElement';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { Button, ButtonProps } from './Button';
+import { useRootElementContext } from '../AppContexts/RootElement';
 import { SFC } from '../UtilityTypes';
+import { Button, ButtonProps } from './Button';
 
 export const getDropdownClasses = createClasses((css) => {
 	const { theme } = css;

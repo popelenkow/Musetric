@@ -1,13 +1,13 @@
-import React, { useEffect, useCallback } from 'react';
 import className from 'classnames';
+import React, { useEffect, useCallback } from 'react';
 import { createUseClasses, createClasses } from '../../AppContexts/Css';
-import { NumberField, NumberFieldProps } from '../../Controls/NumberField';
-import { TextField, TextFieldProps } from '../../Controls/TextField';
-import { ScrollArea } from '../../Controls/ScrollArea';
 import { useRootElementContext } from '../../AppContexts/RootElement';
-import { SoundParameters } from '../Store';
+import { NumberField, NumberFieldProps } from '../../Controls/NumberField';
+import { ScrollArea } from '../../Controls/ScrollArea';
+import { TextField, TextFieldProps } from '../../Controls/TextField';
 import { NumberRange } from '../../Rendering';
 import { SFC } from '../../UtilityTypes';
+import { SoundParameters } from '../Store';
 
 export const getSoundParametersClasses = createClasses((css) => {
 	const { theme } = css;

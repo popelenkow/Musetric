@@ -8,7 +8,6 @@ module.exports = {
 		'react-hooks/exhaustive-deps': ['error', {
 			additionalHooks: '(useAnimation|useLazyMemo)',
 		}],
-		'react/function-component-definition': 0,
 	},
 	ignorePatterns: getIgnorePatterns(['dist'], ['build.js']),
 	overrides: getTsPaths(__dirname, ['.', 'test', 'performance']),
