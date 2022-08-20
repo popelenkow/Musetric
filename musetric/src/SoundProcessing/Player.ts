@@ -1,5 +1,5 @@
-import type { PromiseObjectApi } from '../UtilityTypes';
 import type { EventHandlers } from '../Types';
+import type { PromiseObjectApi } from '../UtilityTypes';
 import { createPromiseWorkerApi } from '../Workers/PromiseWorkerApi';
 import type { PlayerWorklet, PlayerEvents } from './PlayerWorklet';
 

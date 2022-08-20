@@ -1,6 +1,6 @@
-import { createSoundBuffer, SoundBuffer } from './SoundBuffer';
-import { createCursor } from './Cursor';
 import { createEventEmitter, EventEmitter } from '../Utils/EventEmitter';
+import { createCursor } from './Cursor';
+import { createSoundBuffer, SoundBuffer } from './SoundBuffer';
 
 export type SoundBufferEvent =
 	| { type: 'newBuffer' }

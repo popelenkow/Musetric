@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, MutableRefObject } from 'react';
-import { createInertia } from './Inertia';
-import { subscribeInertia } from './SubscribeInertia';
 import { Position2D, Size2D, Layout2D, Direction2D } from '../../Rendering/Layout';
-import { GroovedWheelColors, drawGroovedWheel } from './Rendering';
-import { PixelCanvas, PixelCanvasProps } from '../PixelCanvas';
 import { SFC } from '../../UtilityTypes';
+import { PixelCanvas, PixelCanvasProps } from '../PixelCanvas';
+import { createInertia } from './Inertia';
+import { GroovedWheelColors, drawGroovedWheel } from './Rendering';
+import { subscribeInertia } from './SubscribeInertia';
 
 export type GroovedWheelProps = {
 	onMove: (delta: number) => void,

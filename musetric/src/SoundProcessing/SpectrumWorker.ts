@@ -1,9 +1,9 @@
+import { createTimer } from '../Rendering/Timer';
 import { createFftRadix4 } from '../Sounds/FftRadix4';
 import { Spectrometer } from '../Sounds/Spectrometer';
-import { createTimer } from '../Rendering/Timer';
-import { runPromiseWorker } from '../Workers/PromiseWorker';
 import { viewRealArray, RealArray, createSharedRealArray, createRealArray } from '../TypedArray/RealArray';
 import { viewRealArrays } from '../TypedArray/RealArrays';
+import { runPromiseWorker } from '../Workers/PromiseWorker';
 
 const flags = {
 	invalid: 0,

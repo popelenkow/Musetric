@@ -1,7 +1,7 @@
-import { mapAmplitudeToDecibel } from './AmplitudeToDecibel';
 import { ComplexIndexable, createComplexIndexable } from '../TypedArray/ComplexIndexable';
 import { normComplexIndexable } from '../TypedArray/ComplexUtils';
 import { RealIndexable, createRealIndexable } from '../TypedArray/RealIndexable';
+import { mapAmplitudeToDecibel } from './AmplitudeToDecibel';
 import { gaussWindowFilter } from './WindowFilters';
 
 export type SpectrometerBase = {

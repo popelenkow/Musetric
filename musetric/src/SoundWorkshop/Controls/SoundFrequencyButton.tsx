@@ -1,8 +1,8 @@
 import React from 'react';
-import { SoundViewId } from '../Store';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 import { SFC } from '../../UtilityTypes';
+import { SoundViewId } from '../Store';
 
 export type SoundFrequencyButtonProps = {
 	soundViewId: SoundViewId,

@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from 'react';
-import { SoundBufferManager } from '../../Sounds/SoundBufferManager';
-import { Size2D, Direction2D, Layout2D } from '../../Rendering/Layout';
 import { Waveform, WaveformProps } from '../../Controls/Waveform';
+import { Size2D, Direction2D, Layout2D } from '../../Rendering/Layout';
+import { SoundBufferManager } from '../../Sounds/SoundBufferManager';
 import { SFC } from '../../UtilityTypes';
 
 export const createSoundProgressBarLayout = (): Layout2D => {

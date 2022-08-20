@@ -2,9 +2,9 @@ import React, { useMemo, useCallback } from 'react';
 import { useCssContext } from '../AppContexts/Css';
 import { Layout2D, Size2D, Position2D } from '../Rendering/Layout';
 import { Waves, drawWaveform, createWaveformColors, evalWaves } from '../Rendering/Waveform';
-import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 import { SharedRealArray } from '../TypedArray';
 import { SFC } from '../UtilityTypes';
+import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 
 export type WaveformProps = {
 	getBuffer: () => SharedRealArray<'float32'>,

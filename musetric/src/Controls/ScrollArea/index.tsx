@@ -1,8 +1,9 @@
-import React, { RefObject, useRef, useMemo, useEffect, useState } from 'react';
 import className from 'classnames';
-import { mapObject, someObject } from '../../Utils/Object';
+import React, { RefObject, useRef, useMemo, useEffect, useState } from 'react';
 import { createUseClasses, createClasses } from '../../AppContexts/Css';
 import { useAnimation } from '../../ReactUtils/Animation';
+import { SFC } from '../../UtilityTypes';
+import { mapObject, someObject } from '../../Utils/Object';
 import {
 	getHorizontalScrollPosition,
 	updateHorizontalScrollPosition,
@@ -13,7 +14,6 @@ import {
 	updateVerticalScrollPosition,
 	subscribeVerticalEvents,
 } from './VerticalScroll';
-import { SFC } from '../../UtilityTypes';
 
 export const getScrollAreaClasses = createClasses(() => {
 	return {

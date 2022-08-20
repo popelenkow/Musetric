@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
 import { useCssContext } from '../AppContexts/Css';
-import { viewRealArray, createRealArray, SharedRealArray } from '../TypedArray/RealArray';
-import { createFftRadix4 } from '../Sounds/FftRadix4';
-import { Layout2D } from '../Rendering/Layout';
 import { createFrequencyColors, drawFrequency } from '../Rendering/Frequency';
-import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
+import { Layout2D } from '../Rendering/Layout';
+import { createFftRadix4 } from '../Sounds/FftRadix4';
+import { viewRealArray, createRealArray, SharedRealArray } from '../TypedArray/RealArray';
 import { SFC } from '../UtilityTypes';
+import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 
 export type FrequencyProps = {
 	getBuffer: () => SharedRealArray<'float32'>,

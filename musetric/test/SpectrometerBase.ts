@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
 /* eslint-disable max-len */
-import { ComplexArray, createComplexArray } from '../src/TypedArray/ComplexArray';
-import { SpectrometerBase } from '../src/Sounds/Spectrometer';
 import { createDftBase } from '../src/Sounds/Dft';
 import { createFftRadix2Base } from '../src/Sounds/FftRadix2';
 import { createFftRadix4Base } from '../src/Sounds/FftRadix4';
+import { SpectrometerBase } from '../src/Sounds/Spectrometer';
+import { ComplexArray, createComplexArray } from '../src/TypedArray/ComplexArray';
 
 const toStringArray = (input: ArrayLike<number>): string => {
 	const arr = Array.from<number>(input).map((x) => (x % 1 ? x.toFixed(2) : x));

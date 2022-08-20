@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import FFT from 'fft.js';
 import Chart, { ChartConfiguration, ChartData, ScatterDataPoint } from 'chart.js/auto';
-import { createComplexArray } from 'musetric/TypedArray/ComplexArray';
-import { createComplexIndexable } from 'musetric/TypedArray/ComplexIndexable';
-import { createFftRadix2Base } from 'musetric/Sounds/FftRadix2';
-import { createFftRadix4Base } from 'musetric/Sounds/FftRadix4';
+import FFT from 'fft.js';
 import { getStorageThemeId } from 'musetric/AppBase/Theme';
 import { allThemeEntries } from 'musetric/Resources/Themes';
+import { createFftRadix2Base } from 'musetric/Sounds/FftRadix2';
+import { createFftRadix4Base } from 'musetric/Sounds/FftRadix4';
+import { createComplexArray } from 'musetric/TypedArray/ComplexArray';
+import { createComplexIndexable } from 'musetric/TypedArray/ComplexIndexable';
 
 const add = (dt: number, t1: number, t2: number): number => {
 	return 0.95 * dt + 0.05 * (t2 - t1);

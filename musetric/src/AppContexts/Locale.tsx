@@ -1,5 +1,5 @@
-import React, { useState, useMemo, createContext } from 'react';
 import { i18n as I18n, WithT } from 'i18next';
+import React, { useState, useMemo, createContext } from 'react';
 import { LocaleEntry } from '../AppBase/Locale';
 import { useInitializedContext } from '../ReactUtils/Context';
 import { SFC } from '../UtilityTypes';

@@ -1,8 +1,8 @@
-import React, { createContext, useMemo, useState, useEffect } from 'react';
+import classNames from 'classnames';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Classes, GenerateId } from 'jss';
+import React, { createContext, useMemo, useState, useEffect } from 'react';
 import { JssProvider, createTheming, createUseStyles, Styles } from 'react-jss';
-import classNames from 'classnames';
 import { Platform, getPlatformId } from '../AppBase/Platform';
 import { Theme, ThemeEntry } from '../AppBase/Theme';
 import { useInitializedContext } from '../ReactUtils/Context';

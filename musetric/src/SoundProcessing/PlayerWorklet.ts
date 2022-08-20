@@ -1,5 +1,5 @@
-import { runPromiseAudioWorklet, PromiseAudioWorkletOptions, PromiseAudioWorkletOnProcess } from '../Workers/PromiseAudioWorklet';
 import { viewRealArray, RealArray } from '../TypedArray/RealArray';
+import { runPromiseAudioWorklet, PromiseAudioWorkletOptions, PromiseAudioWorkletOnProcess } from '../Workers/PromiseAudioWorklet';
 
 export type PlayerOptions = {
 	soundBuffer: SharedArrayBuffer,

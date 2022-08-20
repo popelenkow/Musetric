@@ -1,6 +1,6 @@
 import { startAnimation } from '../../Rendering/Animation';
-import { Inertia } from './Inertia';
 import { Position2D } from '../../Rendering/Layout';
+import { Inertia } from './Inertia';
 
 const isTouchEvent = (event: MouseEvent | TouchEvent): event is TouchEvent => {
 	return event instanceof TouchEvent;

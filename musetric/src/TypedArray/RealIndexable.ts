@@ -1,6 +1,6 @@
-import { RealIndexableType } from './RealType';
 import { createRealArray, RealArrayMap } from './RealArray';
 import { createRealList, RealListMap } from './RealList';
+import { RealIndexableType } from './RealType';
 
 export type RealIndexableMap = RealArrayMap & RealListMap;
 export type RealIndexable<K extends RealIndexableType = RealIndexableType> =

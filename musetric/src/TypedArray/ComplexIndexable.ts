@@ -1,6 +1,6 @@
-import { RealIndexableType } from './RealType';
 import { createComplexArray, ComplexArrayMap } from './ComplexArray';
 import { createComplexList, ComplexListMap } from './ComplexList';
+import { RealIndexableType } from './RealType';
 
 export type ComplexIndexableMap = ComplexArrayMap & ComplexListMap;
 export type ComplexIndexable<K extends RealIndexableType = RealIndexableType> =

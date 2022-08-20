@@ -1,12 +1,12 @@
 import React, { useMemo, useCallback, useEffect, useState } from 'react';
 import { useCssContext, useWorkerContext } from '../AppContexts';
-import { SoundBufferEvent } from '../Sounds';
-import { createSpectrum, SpectrumBufferEvent } from '../SoundProcessing';
 import { Position2D, createSpectrogramColors, drawSpectrogram, NumberRange, Layout2D } from '../Rendering';
+import { createSpectrum, SpectrumBufferEvent } from '../SoundProcessing';
+import { SoundBufferEvent } from '../Sounds';
 import { RealArray, SharedRealArray, viewRealArrays } from '../TypedArray';
-import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
-import { skipPromise, EventEmitterCallback, UnsubscribeEventEmitter } from '../Utils';
 import { SFC } from '../UtilityTypes';
+import { skipPromise, EventEmitterCallback, UnsubscribeEventEmitter } from '../Utils';
+import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 
 export type SpectrogramProps = {
 	getBuffer: () => SharedRealArray<'float32'>,

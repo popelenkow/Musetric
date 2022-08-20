@@ -1,5 +1,5 @@
-import { RealIndexable } from './RealIndexable';
 import { ComplexIndexable } from './ComplexIndexable';
+import { RealIndexable } from './RealIndexable';
 
 export const normComplexIndexable = (
 	input: ComplexIndexable,

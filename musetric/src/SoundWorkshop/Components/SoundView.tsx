@@ -1,12 +1,12 @@
 import React, { useMemo, useCallback } from 'react';
-import { SoundBufferManager, SoundBufferEvent } from '../../Sounds/SoundBufferManager';
-import { Size2D, Direction2D, Layout2D } from '../../Rendering/Layout';
-import { Waveform } from '../../Controls/Waveform';
 import { Frequency } from '../../Controls/Frequency';
 import { Spectrogram } from '../../Controls/Spectrogram';
-import { SoundParameters, useSoundWorkshopStore } from '../Store';
-import { EventEmitterCallback } from '../../Utils/EventEmitter';
+import { Waveform } from '../../Controls/Waveform';
+import { Size2D, Direction2D, Layout2D } from '../../Rendering/Layout';
+import { SoundBufferManager, SoundBufferEvent } from '../../Sounds/SoundBufferManager';
 import { SFC } from '../../UtilityTypes';
+import { EventEmitterCallback } from '../../Utils/EventEmitter';
+import { SoundParameters, useSoundWorkshopStore } from '../Store';
 
 export const createWaveformLayout = (): Layout2D => {
 	const size: Size2D = { width: 1024, height: 512 };

@@ -1,10 +1,10 @@
-import React, { FC, ReactElement, ReactNode } from 'react';
 import { localizeLocaleId, localizeThemeId } from 'musetric/AppBase/Locale';
-import { useLocaleContext } from 'musetric/AppContexts/Locale';
 import { useCssContext } from 'musetric/AppContexts/Css';
 import { useIconContext } from 'musetric/AppContexts/Icon';
+import { useLocaleContext } from 'musetric/AppContexts/Locale';
 import { Switch, SwitchProps } from 'musetric/Controls/Switch';
 import { skipPromise } from 'musetric/Utils/SkipPromise';
+import React, { FC, ReactElement, ReactNode } from 'react';
 
 export const useAppBarButtons = (): ReactElement => {
 	const { localeId, setLocaleId, allLocaleIds, i18n } = useLocaleContext();
