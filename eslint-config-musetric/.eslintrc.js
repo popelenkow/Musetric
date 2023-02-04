@@ -87,6 +87,7 @@ module.exports = {
 				'@typescript-eslint/consistent-type-definitions': ['error', 'type'],
 				'@typescript-eslint/brace-style': ['error', 'stroustrup'],
 				'@typescript-eslint/no-unused-vars': ['error'],
+				'@typescript-eslint/type-annotation-spacing': 'error',
 			},
 		},
 		{

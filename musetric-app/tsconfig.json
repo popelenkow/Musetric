@@ -15,9 +15,6 @@
 			"musetric/*": ["../musetric/src/*"],
 		},
 	},
-	"references": [
-		{ "path": "../musetric/" },
-	],
 	"include": [
 		"./src/**/*",
 	],

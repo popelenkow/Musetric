@@ -1,4 +1,4 @@
-import i18next, { i18n as I18n, WithT, ResourceLanguage, Resource } from 'i18next';
+import i18next, { i18n as I18nOriginal, ResourceLanguage, Resource, TOptionsBase, StringMap } from 'i18next';
 
 export type Locale = ResourceLanguage;
 export type LocaleEntry = {
@@ -10,6 +10,9 @@ export const createLocaleResources = (localeEntries: LocaleEntry[]): Resource =>
 	localeEntries.reduce<Resource>((acc, x) => ({ ...acc, [x.localeId]: x.locale }), {})
 );
 
+export type I18n = Omit<I18nOriginal, 't'> & {
+	t: (key: string, options?: TOptionsBase & StringMap) => string,
+};
 export const createI18n = async (
 	initLocaleId: string,
 	localeEntries: LocaleEntry[],
@@ -25,23 +28,27 @@ export const createI18n = async (
 		debug: false,
 	});
 
-	return result;
+	return {
+		...result,
+		// eslint-disable-next-line
+		t: (...args: any) => result.t.apply(result, args) ?? '',
+	};
 };
 
 export const getStorageLocaleId = (): string | undefined => {
-	const localeId = localStorage.getItem('locale') || undefined;
+	const localeId = localStorage.getItem('locale') ?? undefined;
 	return localeId;
 };
 export const setStorageLocaleId = (localeId: string): void => {
 	localStorage.setItem('locale', localeId);
 };
 
-export const localizeLocaleId = (lng: string, i18n: WithT): string | undefined => {
+export const localizeLocaleId = (lng: string, i18n: I18n): string | undefined => {
 	const res = i18n.t('AppBase:locale', { lng });
 	return res;
 };
 
-export const localizeThemeId = (theme: string, i18n: WithT): string | undefined => {
+export const localizeThemeId = (theme: string, i18n: I18n): string | undefined => {
 	if (theme === 'light') return i18n.t('AppBase:theme.light');
 	if (theme === 'dark') return i18n.t('AppBase:theme.dark');
 	return undefined;
