@@ -10,6 +10,8 @@ with open('package.json', 'r+') as json_file:
     version = rawVersion
   elif tag == 'beta':
     version = f'{rawVersion}-beta.{buildNumber}'
+  elif tag == 'next':
+    version = f'{rawVersion}-next.{buildNumber}'
   else:
     version = f'{rawVersion}-dev.{buildNumber}'
   print(f'version {version}')

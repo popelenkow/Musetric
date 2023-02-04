@@ -11,7 +11,7 @@
 	"devDependencies": {
 		"copyfiles": "2.4.1",
 		"gh-pages": "4.0.0",
-		"musetric-app": "0.0.42",
+		"musetric-app": "0.0.43",
 		"rimraf": "3.0.2"
 	}
 }

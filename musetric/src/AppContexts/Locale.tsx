@@ -1,11 +1,10 @@
-import { i18n as I18n, WithT } from 'i18next';
 import React, { useState, useMemo, createContext } from 'react';
-import { LocaleEntry } from '../AppBase/Locale';
+import { I18n, LocaleEntry } from '../AppBase/Locale';
 import { useInitializedContext } from '../ReactUtils/Context';
 import { SFC } from '../UtilityTypes';
 
 export type LocaleStore = {
-	i18n: WithT,
+	i18n: I18n,
 	localeId: string,
 	setLocaleId: (id: string) => Promise<void>,
 	allLocaleIds: string[],
