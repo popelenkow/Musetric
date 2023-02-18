@@ -1,7 +1,7 @@
 {
 	"name": "musetric-app",
 	"description": "Musetric is javascript music application",
-	"version": "0.0.45",
+	"version": "0.0.47",
 	"license": "MIT",
 	"main": "musetricApp.js",
 	"types": "musetricApp.d.ts",

@@ -5,7 +5,7 @@
 [![npm version](https://img.shields.io/npm/v/musetric)](https://www.npmjs.com/package/musetric)
 ![License](https://img.shields.io/github/license/popelenkow/musetric)
 
-[**Live Demo**](https://musetric.herokuapp.com/)
+[**Live Demo**](https://popelenkow.github.io/Musetric/)
 
 Musetric is a application for exploration of sounds. Record or upload sound and play it. Visualize to parse sound techniques.
 
