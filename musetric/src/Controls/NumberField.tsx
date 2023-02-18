@@ -127,4 +127,3 @@ export const NumberField: SFC<NumberFieldProps> = (props) => {
 		</div>
 	);
 };
-NumberField.displayName = 'NumberField';

@@ -177,4 +177,3 @@ export const ScrollArea: SFC<ScrollAreaProps, 'required'> = (props) => {
 		</div>
 	);
 };
-ScrollArea.displayName = 'ScrollArea';

@@ -65,4 +65,3 @@ export const GroovedWheel: SFC<GroovedWheelProps> = (props) => {
 		</div>
 	);
 };
-GroovedWheel.displayName = 'GroovedWheel';

@@ -166,4 +166,3 @@ export const Button: SFC<ButtonProps, 'required'> = (props) => {
 		</button>
 	);
 };
-Button.displayName = 'Button';

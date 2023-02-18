@@ -93,4 +93,3 @@ export const Field: SFC<FieldProps, 'required'> = (props) => {
 		</div>
 	);
 };
-Field.displayName = 'Field';

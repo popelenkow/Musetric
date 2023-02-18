@@ -12,4 +12,3 @@ export const SpectrogramIcon: SFC = () => (
 		<path d='M3 12c3 -2 6 -2 9 0s6 2 9 0' />
 	</svg>
 );
-SpectrogramIcon.displayName = 'SpectrogramIcon';

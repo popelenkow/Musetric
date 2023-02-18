@@ -42,4 +42,3 @@ export const SoundProgressBar: SFC<SoundProgressBarProps> = (props) => {
 		<Waveform {...waveformProps} />
 	);
 };
-SoundProgressBar.displayName = 'SoundProgressBar';

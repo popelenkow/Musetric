@@ -20,6 +20,5 @@ export const IconProvider: SFC<IconProviderProps, 'required'> = (props) => {
 		</IconContext.Provider>
 	);
 };
-IconProvider.displayName = 'IconProvider';
 
 export const useIconContext = (): IconStore => useInitializedContext(IconContext, 'useIconContext');

@@ -138,7 +138,6 @@ export const SoundWorkshopProvider: SFC<ChildrenProps> = (props) => {
 		</SoundWorkshopContext.Provider>
 	);
 };
-SoundWorkshopProvider.displayName = 'SoundWorkshopProvider';
 
 export const useSoundWorkshopStore = (): SoundWorkshopStore => (
 	useInitializedContext(SoundWorkshopContext, 'useSoundWorkshopContext')

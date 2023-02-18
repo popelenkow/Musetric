@@ -1,6 +1,6 @@
 import React from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { ChildrenProps, DisplayName, FCResult } from '../UtilityTypes';
+import { ChildrenProps, FCResult } from '../UtilityTypes';
 import { getButtonClasses } from './Button';
 import { Field, FieldProps } from './Field';
 
@@ -40,7 +40,7 @@ export type RadioProps<Value extends string> = {
 		root?: string,
 	},
 };
-type RadioFC = DisplayName & (
+type RadioFC = (
 	<Value extends string>(props: RadioProps<Value> & ChildrenProps) => FCResult
 );
 export const Radio: RadioFC = (props) => {
@@ -92,4 +92,3 @@ export const Radio: RadioFC = (props) => {
 		</label>
 	);
 };
-Radio.displayName = 'Radio';

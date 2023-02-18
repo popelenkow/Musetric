@@ -21,4 +21,3 @@ export const Divider: SFC = () => {
 		<div className={classes.root} />
 	);
 };
-Divider.displayName = 'Divider';

@@ -34,4 +34,3 @@ export const SoundWorkshopTopPanel: SFC = () => {
 		</div>
 	);
 };
-SoundWorkshopTopPanel.displayName = 'SoundWorkshopTopPanel';

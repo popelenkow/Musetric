@@ -60,4 +60,3 @@ export const SoundWorkshopToolbar: SFC = () => {
 		</div>
 	);
 };
-SoundWorkshopToolbar.displayName = 'SoundWorkshopToolbar';

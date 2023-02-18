@@ -14,4 +14,3 @@ export const LiveIcon: SFC = () => (
 		</g>
 	</svg>
 );
-LiveIcon.displayName = 'LiveIcon';

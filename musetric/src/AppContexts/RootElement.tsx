@@ -30,6 +30,5 @@ export const RootElementProvider: SFC<RootElementProviderProps, 'required'> = (p
 		</RootElementContext.Provider>
 	);
 };
-RootElementProvider.displayName = 'RootElementProvider';
 
 export const useRootElementContext = (): RootElementStore => useInitializedContext(RootElementContext, 'useRootElementContext');

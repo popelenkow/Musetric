@@ -8,4 +8,3 @@ export const AppIcon: SFC = () => (
 		</g>
 	</svg>
 );
-AppIcon.displayName = 'AppIcon';

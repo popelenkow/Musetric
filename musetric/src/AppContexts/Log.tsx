@@ -23,6 +23,5 @@ export const LogProvider: SFC<LogProviderProps, 'required'> = (props) => {
 		</LogContext.Provider>
 	);
 };
-LogProvider.displayName = 'LogProvider';
 
 export const useLogContext = (): LogStore => useInitializedContext(LogContext, 'useLogContext');

@@ -58,4 +58,3 @@ export const SoundRecorderButton: SFC<SoundRecorderButtonProps> = (props) => {
 		</Button>
 	);
 };
-SoundRecorderButton.displayName = 'SoundRecorderButton';

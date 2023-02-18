@@ -56,4 +56,3 @@ export const Canvas: SFC<CanvasProps> = (props) => {
 	};
 	return <canvas {...canvasProps} />;
 };
-Canvas.displayName = 'Canvas';

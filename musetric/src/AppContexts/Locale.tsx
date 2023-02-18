@@ -39,6 +39,5 @@ export const LocaleProvider: SFC<LocaleProviderProps, 'required'> = (props) => {
 		</LocaleContext.Provider>
 	);
 };
-LocaleProvider.displayName = 'LocaleProvider';
 
 export const useLocaleContext = (): LocaleStore => useInitializedContext(LocaleContext, 'useLocaleContext');

@@ -23,6 +23,5 @@ export const WorkerProvider: SFC<WorkerProviderProps, 'required'> = (props) => {
 		</WorkerContext.Provider>
 	);
 };
-WorkerProvider.displayName = 'WorkerProvider';
 
 export const useWorkerContext = (): WorkerStore => useInitializedContext(WorkerContext, 'useWorkerContext');

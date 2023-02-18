@@ -27,4 +27,3 @@ export const SoundSpectrogramButton: SFC<SoundSpectrogramButtonProps> = (props) 
 		</Button>
 	);
 };
-SoundSpectrogramButton.displayName = 'SoundSpectrogramButton';

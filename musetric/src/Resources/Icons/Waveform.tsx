@@ -10,4 +10,3 @@ export const WaveformIcon: SFC = () => (
 		<path d='m11.75 2v20h2.5v-20zm-5 2.5v15h2.5v-15zm10 2.5v10h2.5v-10zm-15 2.5v5h2.5v-5z' />
 	</svg>
 );
-WaveformIcon.displayName = 'WaveformIcon';

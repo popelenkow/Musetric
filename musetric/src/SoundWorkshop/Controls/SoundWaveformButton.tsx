@@ -26,4 +26,3 @@ export const SoundWaveformButton: SFC<SoundWaveformButtonProps> = (props) => {
 		</Button>
 	);
 };
-SoundWaveformButton.displayName = 'SoundWaveformButton';

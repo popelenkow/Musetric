@@ -52,4 +52,3 @@ export const PixelCanvas: SFC<PixelCanvasProps> = (props) => {
 	};
 	return <Canvas {...canvasProps} />;
 };
-PixelCanvas.displayName = 'PixelCanvas';

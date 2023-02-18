@@ -82,4 +82,3 @@ export const SoundView: SFC<SoundViewProps, 'none', 'optional'> = (props) => {
 	if (soundViewId === 'Spectrogram') return <Spectrogram {...itemProps} layout={spectrogramLayout} />;
 	return null;
 };
-SoundView.displayName = 'SoundView';

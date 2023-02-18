@@ -2,7 +2,7 @@ import React, { useState, ReactElement, ReactNode, useEffect, useRef } from 'rea
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useIconContext } from '../AppContexts/Icon';
 import { RootElementProvider, useRootElementContext } from '../AppContexts/RootElement';
-import { DisplayName, FCResult } from '../UtilityTypes';
+import { FCResult } from '../UtilityTypes';
 import { subscribeDisableZoom } from '../Utils/Zoom';
 import { AppBar } from './AppBar';
 import { AppDropdown, AppDropdownProps, AppViewEntry, AppViewElement } from './AppDropdown';
@@ -27,7 +27,7 @@ type RootProps<ViewId extends string> = {
 	useViewEntries: () => AppViewEntry<ViewId>[],
 	useAppBarButtons: () => ReactElement,
 };
-type RootFC = DisplayName & (
+type RootFC = (
 	<ViewId extends string>(props: RootProps<ViewId>) => FCResult
 );
 const Root: RootFC = (props) => {
@@ -67,7 +67,6 @@ const Root: RootFC = (props) => {
 		</div>
 	);
 };
-Root.displayName = 'Root';
 
 export type AppProvider = (children: ReactNode) => FCResult;
 export type AppProviders = {
@@ -80,7 +79,7 @@ export type AppProviders = {
 export type AppProps<ViewId extends string> = {
 	providers: AppProviders,
 } & RootProps<ViewId>;
-type AppFC = DisplayName & (
+type AppFC = (
 	<ViewId extends string>(props: AppProps<ViewId>) => FCResult
 );
 export const App: AppFC = (props) => {
@@ -99,4 +98,3 @@ export const App: AppFC = (props) => {
 	];
 	return arr.reduce<ReactElement>((acc, provider) => provider(acc), root);
 };
-App.displayName = 'App';

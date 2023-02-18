@@ -26,4 +26,3 @@ export const SoundLiveButton: SFC<SoundLiveButtonProps> = (props) => {
 		</Button>
 	);
 };
-SoundLiveButton.displayName = 'SoundLiveButton';

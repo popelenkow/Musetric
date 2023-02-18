@@ -113,4 +113,3 @@ export const Dropdown: SFC<DropdownProps, 'required'> = (props) => {
 		</div>
 	);
 };
-Dropdown.displayName = 'Dropdown';
