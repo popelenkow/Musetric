@@ -91,4 +91,3 @@ export const TextField: SFC<TextFieldProps> = (props) => {
 		</div>
 	);
 };
-TextField.displayName = 'TextField';

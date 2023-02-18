@@ -98,7 +98,6 @@ export const CssProvider: SFC<CssProviderProps, 'required'> = (props) => {
 		</CssContext.Provider>
 	);
 };
-CssProvider.displayName = 'CssProvider';
 
 export const useCssContext = (): CssStore => useInitializedContext(CssContext, 'useCssContext');
 

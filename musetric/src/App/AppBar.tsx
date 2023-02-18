@@ -52,4 +52,3 @@ export const AppBar: SFC<object, 'required'> = (props) => {
 		</div>
 	);
 };
-AppBar.displayName = 'AppBar';

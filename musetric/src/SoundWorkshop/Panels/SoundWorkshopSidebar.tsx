@@ -100,4 +100,3 @@ export const SoundWorkshopSidebar: SFC = () => {
 		</div>
 	);
 };
-SoundWorkshopSidebar.displayName = 'SoundWorkshopSidebar';

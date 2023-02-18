@@ -33,4 +33,3 @@ export const SoundWorkshopProgressBar: SFC = () => {
 		</div>
 	);
 };
-SoundWorkshopProgressBar.displayName = 'SoundWorkshopProgressBar';

@@ -48,4 +48,3 @@ export const Waveform: SFC<WaveformProps> = (props) => {
 
 	return <PixelCanvas {...canvasProps} />;
 };
-Waveform.displayName = 'Waveform';

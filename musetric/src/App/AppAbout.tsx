@@ -59,4 +59,3 @@ export const AppAbout: SFC<AppAboutProps> = (props) => {
 		</div>
 	);
 };
-AppAbout.displayName = 'AppAbout';

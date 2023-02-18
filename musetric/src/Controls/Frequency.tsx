@@ -43,4 +43,3 @@ export const Frequency: SFC<FrequencyProps> = (props) => {
 
 	return <PixelCanvas {...canvasProps} />;
 };
-Frequency.displayName = 'Frequency';

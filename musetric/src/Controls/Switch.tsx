@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
-import { ChildrenProps, DisplayName, FCResult } from '../UtilityTypes';
+import { ChildrenProps, FCResult } from '../UtilityTypes';
 import { getButtonClasses, Button, ButtonProps } from './Button';
 
 export const getSwitchClasses = createClasses((css) => {
@@ -24,7 +24,7 @@ export type SwitchProps<T> = {
 	ids: T[],
 	set: (id: T) => void,
 };
-type SwitchFC = DisplayName & (
+type SwitchFC = (
 	<T>(props: SwitchProps<T> & ChildrenProps) => FCResult
 );
 export const Switch: SwitchFC = (props) => {
@@ -66,4 +66,3 @@ export const Switch: SwitchFC = (props) => {
 		</Button>
 	);
 };
-Switch.displayName = 'Switch';

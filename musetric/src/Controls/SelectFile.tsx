@@ -64,4 +64,3 @@ export const SelectFile: SFC<SelectFileProps, 'required'> = (props) => {
 		</Button>
 	);
 };
-SelectFile.displayName = 'SelectFile';

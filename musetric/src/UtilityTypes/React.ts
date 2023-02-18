@@ -16,13 +16,12 @@ type FCResultMap = {
 type FCResultType = keyof FCResultMap;
 export type FCResult<Type extends FCResultType = 'required'> = FCResultMap[Type];
 
-export type DisplayName = { displayName: string };
 /** Strict FC */
 export type SFC<
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	Props = {},
 	CType extends ChildrenPropsType = 'none',
 	RType extends FCResultType = 'required',
-> = DisplayName & (
+> = (
 	(props: Props & ChildrenProps<CType>) => FCResult<RType>
 );

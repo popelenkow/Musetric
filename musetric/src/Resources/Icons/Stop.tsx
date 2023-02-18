@@ -10,4 +10,3 @@ export const StopIcon: SFC = () => (
 		<path d='m4 4h16v16h-16z' />
 	</svg>
 );
-StopIcon.displayName = 'StopIcon';

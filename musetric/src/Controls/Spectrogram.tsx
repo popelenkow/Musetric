@@ -104,4 +104,3 @@ export const Spectrogram: SFC<SpectrogramProps> = (props) => {
 
 	return <PixelCanvas {...canvasProps} />;
 };
-Spectrogram.displayName = 'Spectrogram';

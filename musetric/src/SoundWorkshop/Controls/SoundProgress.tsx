@@ -79,4 +79,3 @@ export const SoundProgress: SFC<SoundProgressProps> = (props) => {
 		</div>
 	);
 };
-SoundProgress.displayName = 'SoundProgress';

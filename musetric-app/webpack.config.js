@@ -119,6 +119,7 @@ const create = (env) => {
 				patterns: [
 					{ from: './src/index.html', to: './index.html' },
 					{ from: './src/perf.html', to: './perf.html' },
+					{ from: './src/coi-serviceworker.min.js', to: './coi-serviceworker.min.js' },
 					{ from: './src/favicon.ico', to: './favicon.ico' },
 					{ from: './package.json', to: './package.json' },
 					{ from: '../license.md', to: './license.md' },

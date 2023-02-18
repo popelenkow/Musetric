@@ -27,4 +27,3 @@ export const SoundFrequencyButton: SFC<SoundFrequencyButtonProps> = (props) => {
 		</Button>
 	);
 };
-SoundFrequencyButton.displayName = 'SoundFrequencyButton';

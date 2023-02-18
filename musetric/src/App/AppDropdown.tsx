@@ -4,7 +4,7 @@ import { useLocaleContext } from '../AppContexts/Locale';
 import { Button, ButtonProps } from '../Controls/Button';
 import { Divider } from '../Controls/Divider';
 import { Dropdown, DropdownProps } from '../Controls/Dropdown';
-import { DisplayName, FCResult } from '../UtilityTypes';
+import { FCResult } from '../UtilityTypes';
 
 export type AppViewDivider = {
 	type: 'divider',
@@ -22,7 +22,7 @@ export type AppDropdownProps<ViewId extends string> = {
 	setViewId: Dispatch<SetStateAction<ViewId>>,
 	allViewEntries: AppViewEntry<ViewId>[],
 };
-type AppDropdownFC = DisplayName & (
+type AppDropdownFC = (
 	<ViewId extends string>(props: AppDropdownProps<ViewId>) => FCResult
 );
 export const AppDropdown: AppDropdownFC = (props) => {
@@ -76,4 +76,3 @@ export const AppDropdown: AppDropdownFC = (props) => {
 		<Dropdown {...dropdownProps}><MenuIcon /></Dropdown>
 	);
 };
-AppDropdown.displayName = 'AppDropdown';

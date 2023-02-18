@@ -38,4 +38,3 @@ export const SoundSaveFileButton: SFC<SoundSaveFileButtonProps> = (props) => {
 		</Button>
 	);
 };
-SoundSaveFileButton.displayName = 'SoundSaveFileButton';

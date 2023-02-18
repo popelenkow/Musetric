@@ -10,4 +10,3 @@ export const FrequencyIcon: SFC = () => (
 		<path d='m10.5 3v18h3v-18zm6 4.5v13.5h3v-13.5zm-12 6v7.5h3v-7.5z' />
 	</svg>
 );
-FrequencyIcon.displayName = 'FrequencyIcon';

@@ -66,7 +66,6 @@ export const SoundWorkshopMarkup: SFC = () => {
 		</div>
 	);
 };
-SoundWorkshopMarkup.displayName = 'SoundWorkshopMarkup';
 
 export const SoundWorkshop: SFC = () => {
 	return (
@@ -75,4 +74,3 @@ export const SoundWorkshop: SFC = () => {
 		</SoundWorkshopProvider>
 	);
 };
-SoundWorkshop.displayName = 'SoundWorkshop';

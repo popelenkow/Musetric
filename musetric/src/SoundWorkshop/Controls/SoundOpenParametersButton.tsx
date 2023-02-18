@@ -26,4 +26,3 @@ export const SoundOpenParametersButton: SFC<SoundOpenParametersButtonProps> = (p
 		</Button>
 	);
 };
-SoundOpenParametersButton.displayName = 'SoundOpenParametersButton';

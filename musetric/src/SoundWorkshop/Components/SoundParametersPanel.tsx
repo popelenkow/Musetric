@@ -140,4 +140,3 @@ export const SoundParametersPanel: SFC<SoundParametersPanelProps> = (props) => {
 		</div>
 	);
 };
-SoundParametersPanel.displayName = 'SoundParametersPanel';

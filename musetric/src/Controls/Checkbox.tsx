@@ -76,4 +76,3 @@ export const Checkbox: SFC<CheckboxProps, 'required'> = (props) => {
 		</label>
 	);
 };
-Checkbox.displayName = 'Checkbox';

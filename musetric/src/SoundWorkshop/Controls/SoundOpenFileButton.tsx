@@ -35,4 +35,3 @@ export const SoundOpenFileButton: SFC<SoundOpenFileButtonProps> = (props) => {
 		</SelectFile>
 	);
 };
-SoundOpenFileButton.displayName = 'SoundOpenFileButton';
