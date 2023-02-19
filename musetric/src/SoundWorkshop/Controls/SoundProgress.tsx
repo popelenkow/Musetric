@@ -1,5 +1,5 @@
 import className from 'classnames';
-import React, { useMemo, useState } from 'react';
+import React, { useRef } from 'react';
 import { createUseClasses, createClasses } from '../../AppContexts';
 import { getFieldClasses } from '../../Controls';
 import { useAnimation } from '../../ReactUtils';
@@ -39,43 +39,47 @@ export const SoundProgress: SFC<SoundProgressProps> = (props) => {
 		sampleRate: number,
 	};
 
-	const [state, setState] = useState<State>({ cursor: 0, length: 0, sampleRate: 1 });
-
-	const cursorString = useMemo(() => {
-		const { cursor, sampleRate } = state;
-		const value = cursor / sampleRate;
-		const cursorValue = new Date(value * 1000);
-		return cursorValue.toISOString().substring(14, 19);
-	}, [state]);
-
-	const memorySizeString = useMemo(() => {
-		const { length, sampleRate } = state;
-		const value = length / sampleRate;
-		const cursorValue = new Date(value * 1000);
-		return cursorValue.toISOString().substring(14, 19);
-	}, [state]);
+	const cursorRef = useRef<HTMLDivElement>(null);
+	const memorySizeRef = useRef<HTMLDivElement>(null);
+	const stateRef = useRef<State>({ cursor: 0, length: 0, sampleRate: 1 });
 
 	useAnimation(() => {
-		const { soundBuffer, cursor } = soundBufferManager;
-		const newState = {
-			cursor: cursor.get(),
+		const { soundBuffer } = soundBufferManager;
+		const newState: State = {
+			cursor: soundBufferManager.cursor.get(),
 			length: soundBuffer.length,
 			sampleRate: soundBuffer.sampleRate,
 		};
-		const isEqual = (): boolean => {
-			if (state.cursor !== newState.cursor) return false;
-			if (state.length !== newState.length) return false;
-			if (state.sampleRate !== newState.sampleRate) return false;
-			return true;
+		stateRef.current = newState;
+		const {
+			cursor,
+			length,
+			sampleRate,
+		} = newState;
+
+		const getCursorString = (): string => {
+			const value = cursor / sampleRate;
+			const cursorValue = new Date(value * 1000);
+			return cursorValue.toISOString().substring(14, 19);
 		};
-		if (!isEqual()) {
-			setState(newState);
-		}
-	}, [soundBufferManager, state]);
+
+		const getMemorySize = (): string => {
+			const value = length / sampleRate;
+			const cursorValue = new Date(value * 1000);
+			return cursorValue.toISOString().substring(14, 19);
+		};
+		if (!cursorRef.current || !memorySizeRef.current) return;
+		cursorRef.current.textContent = getCursorString();
+		memorySizeRef.current.textContent = getMemorySize();
+	}, [soundBufferManager]);
 
 	return (
 		<div className={rootName}>
-			{`${cursorString} / ${memorySizeString}`}
+			<div ref={cursorRef} />
+			<div>
+				{' / '}
+			</div>
+			<div ref={memorySizeRef} />
 		</div>
 	);
 };

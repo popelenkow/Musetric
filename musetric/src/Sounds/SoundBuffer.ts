@@ -12,28 +12,35 @@ export const createSoundBuffer = (
 	channelCount: number,
 	initLength = sampleRate * 2,
 ): SoundBuffer => {
-	const buffers: SharedRealArray<'float32'>[] = [];
+	let buffers: SharedRealArray<'float32'>[] = [];
 	for (let i = 0; i < channelCount; i++) {
 		buffers[i] = createSharedRealArray('float32', initLength);
 	}
+	let length = initLength;
 
-	const soundBuffer = {
+	const soundBuffer: SoundBuffer = {
 		sampleRate,
 		channelCount,
-		length: initLength,
-		buffers,
-		setLength: (length: number): void => {
-			if (length === soundBuffer.length) return;
-			const isIncrease = length > soundBuffer.length;
+		get length() {
+			return length;
+		},
+		get buffers() {
+			return buffers;
+		},
+		setLength: (newLength) => {
+			if (newLength === soundBuffer.length) return;
+			const isIncrease = newLength > soundBuffer.length;
+			const newBuffers: SharedRealArray<'float32'>[] = [];
 			for (let i = 0; i < channelCount; i++) {
-				const buffer = createSharedRealArray('float32', length);
+				const newBuffer = createSharedRealArray('float32', newLength);
 				const old = isIncrease
 					? buffers[i].real
-					: viewRealArray(buffers[i].type, buffers[i].realRaw, 0, length).real;
-				buffer.real.set(old);
-				buffers[i] = buffer;
+					: viewRealArray(buffers[i].type, buffers[i].realRaw, 0, newLength).real;
+				newBuffer.real.set(old);
+				newBuffers[i] = newBuffer;
 			}
-			soundBuffer.length = length;
+			length = newLength;
+			buffers = newBuffers;
 		},
 	};
 	return soundBuffer;

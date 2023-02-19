@@ -4,7 +4,15 @@ import { Button, ButtonProps } from '../../Controls';
 import { SoundBufferManager } from '../../Sounds';
 import { SFC } from '../../UtilityTypes';
 import { skipPromise } from '../../Utils';
-import { useSoundWorkshopStore } from '../Store';
+import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const { getRecorder } = store;
+	return {
+		getRecorder,
+	};
+};
 
 export type SoundRecorderButtonProps = {
 	disabled: boolean,
@@ -19,7 +27,7 @@ export const SoundRecorderButton: SFC<SoundRecorderButtonProps> = (props) => {
 	const { RecordIcon } = useIconContext();
 	const { i18n } = useLocaleContext();
 
-	const store = useSoundWorkshopStore();
+	const store = useSoundWorkshopStore(select);
 
 	useEffect(() => {
 		if (isLive) skipPromise(store.getRecorder());

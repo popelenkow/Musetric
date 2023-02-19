@@ -10,7 +10,7 @@ import {
 	SoundSpectrogramButton, SoundSpectrogramButtonProps,
 	SoundOpenParametersButton, SoundOpenParametersButtonProps,
 } from '../Controls';
-import { useSoundWorkshopStore } from '../Store';
+import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
 export const getSoundWorkshopSidebarClasses = createClasses((css) => {
 	const { theme } = css;
@@ -41,40 +41,62 @@ export const getSoundWorkshopSidebarClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('SoundWorkshopSidebar', getSoundWorkshopSidebarClasses);
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const {
+		isOpenParameters,
+		setIsOpenParameters,
+		isLive,
+		setIsLive,
+		soundViewId,
+		setSoundViewId,
+		soundBufferManager,
+	} = store;
+	return {
+		isOpenParameters,
+		setIsOpenParameters,
+		isLive,
+		setIsLive,
+		soundViewId,
+		setSoundViewId,
+		soundBufferManager,
+	};
+};
+
 export const SoundWorkshopSidebar: SFC = () => {
 	const classes = useClasses();
 
-	const store = useSoundWorkshopStore();
+	const store = useSoundWorkshopStore(select);
 
 	const soundOpenParametersButtonProps: SoundOpenParametersButtonProps = {
 		isOpenParameters: store.isOpenParameters,
 		setIsOpenParameters: (value) => (
-			store.dispatch({ type: 'setIsOpenParameters', isOpenParameters: value })
+			store.setIsOpenParameters(value)
 		),
 	};
 
 	const soundLiveButtonProps: SoundLiveButtonProps = {
 		isLive: store.isLive,
 		setIsLive: (value) => {
-			store.dispatch({ type: 'setIsLive', isLive: value });
+			store.setIsLive(value);
 		},
 	};
 	const soundWaveformButtonProps: SoundWaveformButtonProps = {
 		soundViewId: store.soundViewId,
 		setSoundViewId: (value) => {
-			store.dispatch({ type: 'setSoundViewId', soundViewId: value });
+			store.setSoundViewId(value);
 		},
 	};
 	const soundFrequencyButtonProps: SoundFrequencyButtonProps = {
 		soundViewId: store.soundViewId,
 		setSoundViewId: (value) => {
-			store.dispatch({ type: 'setSoundViewId', soundViewId: value });
+			store.setSoundViewId(value);
 		},
 	};
 	const soundSpectrogramButtonProps: SoundSpectrogramButtonProps = {
 		soundViewId: store.soundViewId,
 		setSoundViewId: (value) => {
-			store.dispatch({ type: 'setSoundViewId', soundViewId: value });
+			store.setSoundViewId(value);
 		},
 	};
 	const soundOpenFileButtonProps: SoundOpenFileButtonProps = {

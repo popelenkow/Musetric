@@ -6,7 +6,7 @@ import { Size2D, Direction2D, Layout2D } from '../../Rendering/Layout';
 import { SoundBufferManager, SoundBufferEvent } from '../../Sounds/SoundBufferManager';
 import { SFC } from '../../UtilityTypes';
 import { EventEmitterCallback } from '../../Utils/EventEmitter';
-import { SoundParameters, useSoundWorkshopStore } from '../Store';
+import { SoundParameters, SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
 export const createWaveformLayout = (): Layout2D => {
 	const size: Size2D = { width: 1024, height: 512 };
@@ -68,8 +68,16 @@ export const useSoundViewItemProps = (props: SoundViewProps) => {
 };
 export type SoundViewItemProps = ReturnType<typeof useSoundViewItemProps>;
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const { soundViewId } = store;
+	return {
+		soundViewId,
+	};
+};
+
 export const SoundView: SFC<SoundViewProps, 'none', 'optional'> = (props) => {
-	const store = useSoundWorkshopStore();
+	const store = useSoundWorkshopStore(select);
 	const { soundViewId } = store;
 
 	const itemProps = useSoundViewItemProps(props);

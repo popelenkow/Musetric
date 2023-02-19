@@ -7,7 +7,7 @@ import {
 	SoundWorkshopProgressBar, SoundWorkshopView,
 	SoundWorkshopTopPanel,
 } from './Panels';
-import { SoundWorkshopProvider, useSoundWorkshopStore } from './Store';
+import { SoundWorkshopProvider, SoundWorkshopStore, useSoundWorkshopStore } from './Store';
 
 export const getSoundWorkshopClasses = createClasses(() => {
 	return {
@@ -41,10 +41,18 @@ export const getSoundWorkshopClasses = createClasses(() => {
 });
 const useClasses = createUseClasses('SoundWorkshop', getSoundWorkshopClasses);
 
-export const SoundWorkshopMarkup: SFC = () => {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const { isOpenParameters } = store;
+	return {
+		isOpenParameters,
+	};
+};
+
+const SoundWorkshop: SFC = () => {
 	const classes = useClasses();
 
-	const store = useSoundWorkshopStore();
+	const store = useSoundWorkshopStore(select);
 	const { isOpenParameters } = store;
 
 	const getRootStateName = (): string => {
@@ -67,10 +75,11 @@ export const SoundWorkshopMarkup: SFC = () => {
 	);
 };
 
-export const SoundWorkshop: SFC = () => {
-	return (
-		<SoundWorkshopProvider>
-			<SoundWorkshopMarkup />
-		</SoundWorkshopProvider>
-	);
+const WithStore: SFC = () => (
+	<SoundWorkshopProvider>
+		<SoundWorkshop />
+	</SoundWorkshopProvider>
+);
+export {
+	WithStore as SoundWorkshop,
 };

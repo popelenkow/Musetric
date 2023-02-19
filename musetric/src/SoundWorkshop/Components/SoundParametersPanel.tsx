@@ -7,7 +7,7 @@ import { ScrollArea } from '../../Controls/ScrollArea';
 import { TextField, TextFieldProps } from '../../Controls/TextField';
 import { NumberRange } from '../../Rendering';
 import { SFC } from '../../UtilityTypes';
-import { SoundParameters } from '../Store';
+import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
 export const getSoundParametersClasses = createClasses((css) => {
 	const { theme } = css;
@@ -28,6 +28,14 @@ export const getSoundParametersClasses = createClasses((css) => {
 	};
 });
 const useClasses = createUseClasses('SoundParameters', getSoundParametersClasses);
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const { soundParameters, setSoundParameters } = store;
+	return {
+		soundParameters, setSoundParameters,
+	};
+};
 
 type UnsubscribeInput = () => void;
 const subscribeInput = (
@@ -56,12 +64,13 @@ const subscribeInput = (
 		rootElement.removeEventListener('wheel', wheelListener);
 	};
 };
-export type SoundParametersPanelProps = {
-	soundParameters: SoundParameters,
-	setSoundParameters: (soundParameters: SoundParameters) => void,
-};
-export const SoundParametersPanel: SFC<SoundParametersPanelProps> = (props) => {
-	const { soundParameters, setSoundParameters } = props;
+export const SoundParametersPanel: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+
+	const {
+		soundParameters,
+		setSoundParameters,
+	} = store;
 
 	const classes = useClasses();
 	const rootName = className({
@@ -72,10 +81,9 @@ export const SoundParametersPanel: SFC<SoundParametersPanelProps> = (props) => {
 
 	const setFrequencyRange = useCallback((value: NumberRange) => (
 		setSoundParameters({
-			...soundParameters,
 			frequencyRange: value,
 		})
-	), [soundParameters, setSoundParameters]);
+	), [setSoundParameters]);
 
 	const { rootElement } = useRootElementContext();
 	useEffect(() => {
