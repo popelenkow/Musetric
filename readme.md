@@ -1,5 +1,4 @@
-# <img src="https://user-images.githubusercontent.com/7475599/87945559-1c49ec80-cacb-11ea-8f24-42c0738d1dcd.png" width="26" height="26"> Musetric
-
+# <img src="https://user-images.githubusercontent.com/7475599/219905035-c7ac6484-e8f3-4b3c-bb7d-f7872abe1a9b.png" width="28" height="28" style="float: left; margin-top: 8px; margin-right: 4px;"> Musetric
 
 [![example branch parameter](https://github.com/popelenkow/Musetric/actions/workflows/musetric.yml/badge.svg?branch=main)](https://github.com/popelenkow/Musetric/actions/workflows/musetric.yml)
 [![npm version](https://img.shields.io/npm/v/musetric)](https://www.npmjs.com/package/musetric)
