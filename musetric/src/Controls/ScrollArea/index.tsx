@@ -1,4 +1,3 @@
-import className from 'classnames';
 import React, { RefObject, useRef, useMemo, useEffect, useState } from 'react';
 import { createUseClasses, createClasses } from '../../AppContexts/Css';
 import { useAnimation } from '../../ReactUtils/Animation';
@@ -144,14 +143,10 @@ export const ScrollArea: SFC<ScrollAreaProps, 'required'> = (props) => {
 
 	const { refs, elements } = useRefs();
 
-	const rootName = className({
-		[classNames?.root || classes.root]: true,
-	});
-
 	useAnimation(() => {
-		if (!elements) return;
-		updateScrolls(elements);
-	}, [elements]);
+		if (!elements) return undefined;
+		return () => updateScrolls(elements);
+	});
 
 	useEffect(() => {
 		if (!elements) return undefined;
@@ -164,7 +159,7 @@ export const ScrollArea: SFC<ScrollAreaProps, 'required'> = (props) => {
 	}, [elements]);
 
 	return (
-		<div className={rootName}>
+		<div className={classNames?.root || classes.root}>
 			<div ref={refs.content} className={classes.content}>
 				{children}
 			</div>

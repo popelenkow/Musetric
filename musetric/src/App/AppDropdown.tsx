@@ -68,7 +68,7 @@ export const AppDropdown: AppDropdownFC = (props) => {
 		setIsOpen,
 		menu: {
 			render: renderMenu,
-			width: '200px',
+			width: '230px',
 		},
 	};
 

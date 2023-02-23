@@ -82,9 +82,9 @@ export const Field: SFC<FieldProps, 'required'> = (props) => {
 	const classes = useClasses();
 	const rootName = className(
 		classNames?.root || classes.root,
-		{ value: kind, default: 'simple' },
-		{ value: align, default: 'center' },
-		{ value: { disabled, primary, rounded } },
+		kind ?? 'simple',
+		align ?? 'center',
+		{ disabled, primary, rounded },
 	);
 
 	return (

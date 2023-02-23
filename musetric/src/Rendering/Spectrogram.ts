@@ -5,13 +5,11 @@ import { NumberRange, Size2D } from './Layout';
 
 export type SpectrogramColors = {
 	gradient: Uint32Array,
-	activePrimary: number,
 };
 export const createSpectrogramColors = (theme: Theme): SpectrogramColors => {
-	const colors = parseTheme('uint32', theme);
 	const { background, activeContent } = parseTheme('rgb', theme);
 	const gradient = gradientUint32ByRgb(background, activeContent, 256);
-	return { gradient, activePrimary: colors.activePrimary };
+	return { gradient };
 };
 
 export type DrawSpectrogramOptions = {
@@ -21,11 +19,10 @@ export type DrawSpectrogramOptions = {
 	colors: SpectrogramColors,
 	frequencyRange: NumberRange,
 	sampleRate: number,
-	cursor?: number,
 };
 export const drawSpectrogram = (options: DrawSpectrogramOptions): void => {
-	const { input, output, frame, colors, frequencyRange, sampleRate, cursor } = options;
-	const { gradient, activePrimary } = colors;
+	const { input, output, frame, colors, frequencyRange, sampleRate } = options;
+	const { gradient } = colors;
 	const out = new Uint32Array(output.buffer);
 
 	const stepY = input.length / frame.height;
@@ -44,11 +41,5 @@ export const drawSpectrogram = (options: DrawSpectrogramOptions): void => {
 			offsetX += stepX;
 		}
 		offsetY += stepY;
-	}
-
-	if (typeof cursor === 'number') {
-		const y = Math.round(cursor * (frame.height - 1));
-		index = y * frame.width;
-		out.fill(activePrimary, index, index + frame.width);
 	}
 };

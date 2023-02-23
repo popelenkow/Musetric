@@ -70,17 +70,21 @@ export type SoundViewItemProps = ReturnType<typeof useSoundViewItemProps>;
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const select = (store: SoundWorkshopStore) => {
-	const { soundViewId } = store;
+	const { soundViewId, isLive, soundBufferManager, soundParameters } = store;
 	return {
-		soundViewId,
+		soundViewId, isLive, soundBufferManager, soundParameters,
 	};
 };
 
-export const SoundView: SFC<SoundViewProps, 'none', 'optional'> = (props) => {
+export const SoundView: SFC<object, 'none', 'optional'> = () => {
 	const store = useSoundWorkshopStore(select);
-	const { soundViewId } = store;
+	const { soundViewId, isLive, soundBufferManager, soundParameters } = store;
 
-	const itemProps = useSoundViewItemProps(props);
+	const itemProps = useSoundViewItemProps({
+		soundBufferManager,
+		soundParameters,
+		isLive,
+	});
 	const waveformLayout = useMemo(() => createWaveformLayout(), []);
 	const frequencyLayout = useMemo(() => createFrequencyLayout(), []);
 	const spectrogramLayout = useMemo(() => createSpectrogramLayout(), []);

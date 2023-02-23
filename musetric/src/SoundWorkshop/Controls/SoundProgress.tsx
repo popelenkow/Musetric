@@ -1,8 +1,7 @@
-import className from 'classnames';
 import React, { useRef } from 'react';
 import { createUseClasses, createClasses } from '../../AppContexts';
 import { getFieldClasses } from '../../Controls';
-import { useAnimation } from '../../ReactUtils';
+import { useAnimationCallback } from '../../ReactUtils';
 import { SoundBufferManager } from '../../Sounds';
 import { SFC } from '../../UtilityTypes';
 
@@ -29,10 +28,6 @@ export const SoundProgress: SFC<SoundProgressProps> = (props) => {
 	const { soundBufferManager, classNames } = props;
 	const classes = useClasses();
 
-	const rootName = className({
-		[classNames?.root || classes.root]: true,
-	});
-
 	type State = {
 		cursor: number,
 		length: number,
@@ -43,7 +38,7 @@ export const SoundProgress: SFC<SoundProgressProps> = (props) => {
 	const memorySizeRef = useRef<HTMLDivElement>(null);
 	const stateRef = useRef<State>({ cursor: 0, length: 0, sampleRate: 1 });
 
-	useAnimation(() => {
+	useAnimationCallback(() => {
 		const { soundBuffer } = soundBufferManager;
 		const newState: State = {
 			cursor: soundBufferManager.cursor.get(),
@@ -71,10 +66,10 @@ export const SoundProgress: SFC<SoundProgressProps> = (props) => {
 		if (!cursorRef.current || !memorySizeRef.current) return;
 		cursorRef.current.textContent = getCursorString();
 		memorySizeRef.current.textContent = getMemorySize();
-	}, [soundBufferManager]);
+	});
 
 	return (
-		<div className={rootName}>
+		<div className={classNames?.root || classes.root}>
 			<div ref={cursorRef} />
 			<div>
 				{' / '}

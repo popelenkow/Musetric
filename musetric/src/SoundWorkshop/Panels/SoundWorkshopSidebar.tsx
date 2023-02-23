@@ -37,6 +37,10 @@ export const getSoundWorkshopSidebarClasses = createClasses((css) => {
 			'flex-direction': 'column',
 			'justify-content': 'center',
 		},
+		bottom: {
+			display: 'flex',
+			'flex-direction': 'column',
+		},
 	};
 });
 const useClasses = createUseClasses('SoundWorkshopSidebar', getSoundWorkshopSidebarClasses);
@@ -109,15 +113,17 @@ export const SoundWorkshopSidebar: SFC = () => {
 	return (
 		<div className={classes.root}>
 			<div className={classes.top}>
-				<SoundOpenParametersButton {...soundOpenParametersButtonProps} />
+				<SoundOpenFileButton {...soundOpenFileButtonProps} />
+				<SoundSaveFileButton {...soundSaveFileButtonProps} />
 			</div>
 			<div className={classes.middle}>
 				<SoundLiveButton {...soundLiveButtonProps} />
 				<SoundWaveformButton {...soundWaveformButtonProps} />
 				<SoundFrequencyButton {...soundFrequencyButtonProps} />
 				<SoundSpectrogramButton {...soundSpectrogramButtonProps} />
-				<SoundOpenFileButton {...soundOpenFileButtonProps} />
-				<SoundSaveFileButton {...soundSaveFileButtonProps} />
+			</div>
+			<div className={classes.bottom}>
+				<SoundOpenParametersButton {...soundOpenParametersButtonProps} />
 			</div>
 		</div>
 	);

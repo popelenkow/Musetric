@@ -79,7 +79,7 @@ export const TextField: SFC<TextFieldProps> = (props) => {
 	const classes = useClasses();
 	const fieldsetName = className(
 		classes.fieldset,
-		{ value: { disabled, primary, rounded } },
+		{ disabled, primary, rounded },
 	);
 
 	return (

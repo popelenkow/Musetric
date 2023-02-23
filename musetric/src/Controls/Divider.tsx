@@ -7,7 +7,6 @@ export const getDividerClasses = createClasses((css) => {
 	return {
 		root: {
 			width: '100%',
-			margin: '4px 0',
 			'border-top': `1px solid ${theme.divider}`,
 		},
 	};

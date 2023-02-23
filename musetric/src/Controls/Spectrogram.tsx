@@ -1,5 +1,5 @@
-import React, { useMemo, useCallback, useEffect, useState } from 'react';
-import { useCssContext, useWorkerContext } from '../AppContexts';
+import React, { useMemo, useCallback, useEffect, useState, useRef } from 'react';
+import { createClasses, createUseClasses, useCssContext, useWorkerContext } from '../AppContexts';
 import { Position2D, createSpectrogramColors, drawSpectrogram, NumberRange, Layout2D } from '../Rendering';
 import { createSpectrum, SpectrumBufferEvent } from '../SoundProcessing';
 import { SoundBufferEvent } from '../Sounds';
@@ -7,6 +7,24 @@ import { RealArray, SharedRealArray, viewRealArrays } from '../TypedArray';
 import { SFC } from '../UtilityTypes';
 import { skipPromise, EventEmitterCallback, UnsubscribeEventEmitter } from '../Utils';
 import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
+
+export const getSpectrogramClasses = createClasses((css) => {
+	const { theme } = css;
+	return {
+		root: {
+			width: '100%',
+			height: '100%',
+			position: 'relative',
+		},
+		cursor: {
+			height: '100%',
+			'border-left': `1px solid ${theme.activePrimary}`,
+			position: 'absolute',
+			'pointer-events': 'none',
+		},
+	};
+});
+const useClasses = createUseClasses('Spectrogram', getSpectrogramClasses);
 
 export type SpectrogramProps = {
 	getBuffer: () => SharedRealArray<'float32'>,
@@ -23,9 +41,12 @@ export const Spectrogram: SFC<SpectrogramProps> = (props) => {
 		getBuffer, getCursor, setCursor, subscribeBufferEvents,
 		frequencyRange, sampleRate, layout,
 	} = props;
+
+	const classes = useClasses();
 	const { theme } = useCssContext().css;
 	const colors = useMemo(() => createSpectrogramColors(theme), [theme]);
 	const { spectrumUrl } = useWorkerContext();
+	const cursorRef = useRef<HTMLDivElement>(null);
 
 	const windowSize = useMemo(() => 4096, []);
 	const spectrum = useMemo(() => createSpectrum(spectrumUrl), [spectrumUrl]);
@@ -82,18 +103,28 @@ export const Spectrogram: SFC<SpectrogramProps> = (props) => {
 		setCursor(cursorPosition.y);
 	}, [setCursor]);
 
-	const draw = useCallback((output: ImageData) => {
-		if (!frequencies) return;
-		const cursor = getCursor();
-		drawSpectrogram({
-			input: frequencies,
-			output: output.data,
-			frame: layout.size,
-			colors,
-			frequencyRange,
-			sampleRate,
-			cursor,
-		});
+	const draw = useMemo(() => {
+		if (!frequencies) return undefined;
+		return (output: ImageData) => {
+			const cursor = getCursor();
+			if (cursorRef.current) {
+				if (typeof cursor === 'number') {
+					cursorRef.current.hidden = false;
+					cursorRef.current.style.left = `${100 * cursor}%`;
+				}
+				else {
+					cursorRef.current.hidden = true;
+				}
+			}
+			drawSpectrogram({
+				input: frequencies,
+				output: output.data,
+				frame: layout.size,
+				colors,
+				frequencyRange,
+				sampleRate,
+			});
+		};
 	}, [getCursor, frequencies, colors, frequencyRange, sampleRate, layout]);
 
 	const canvasProps: PixelCanvasProps = {
@@ -102,5 +133,10 @@ export const Spectrogram: SFC<SpectrogramProps> = (props) => {
 		draw,
 	};
 
-	return <PixelCanvas {...canvasProps} />;
+	return (
+		<div className={classes.root}>
+			<div ref={cursorRef} className={classes.cursor} />
+			<PixelCanvas {...canvasProps} />
+		</div>
+	);
 };

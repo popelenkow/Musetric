@@ -24,6 +24,9 @@ export const SoundPlayerButton: SFC<SoundPlayerButtonProps> = (props) => {
 		const { soundBuffer, cursor } = soundBufferManager;
 		const { channelCount } = soundBuffer;
 		const player = await createPlayer(playerUrl, channelCount, {
+			onStarted: () => {
+				setIsPlaying(true);
+			},
 			onStopped: (event) => {
 				const { reset } = event;
 				setIsPlaying(false);
@@ -50,7 +53,6 @@ export const SoundPlayerButton: SFC<SoundPlayerButtonProps> = (props) => {
 			soundBuffer: buffers[0].realRaw,
 		});
 		await player.start();
-		setIsPlaying(true);
 	};
 	const stopPlaying = async (): Promise<void> => {
 		const player = await getPlayer();

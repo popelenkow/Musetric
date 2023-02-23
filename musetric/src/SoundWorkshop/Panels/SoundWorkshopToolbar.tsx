@@ -56,9 +56,7 @@ export const SoundWorkshopToolbar: SFC = () => {
 		disabled: isRecording,
 		soundBufferManager,
 		isPlaying,
-		setIsPlaying: (value) => {
-			setIsPlaying(value);
-		},
+		setIsPlaying,
 	};
 
 	const soundRecorderButtonProps: SoundRecorderButtonProps = {

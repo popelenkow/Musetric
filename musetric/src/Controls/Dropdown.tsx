@@ -86,7 +86,7 @@ export const Dropdown: SFC<DropdownProps, 'required'> = (props) => {
 
 	const menuName = className(
 		classes.menu,
-		{ value: { open: isOpen } },
+		{ open: isOpen },
 	);
 	const click = (): void => {
 		setIsOpen(!isOpen);

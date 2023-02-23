@@ -6,7 +6,7 @@ module.exports = {
 	],
 	rules: {
 		'react-hooks/exhaustive-deps': ['error', {
-			additionalHooks: '(useAnimation|useLazyMemo)',
+			additionalHooks: '(useLazyMemo)',
 		}],
 	},
 	ignorePatterns: getIgnorePatterns(['dist'], ['build.js']),

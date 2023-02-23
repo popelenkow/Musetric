@@ -148,9 +148,9 @@ export const Button: SFC<ButtonProps, 'required'> = (props) => {
 	const classes = useClasses();
 	const rootName = className(
 		classNames?.root || classes.root,
-		{ value: kind, default: 'simple' },
-		{ value: align, default: 'center' },
-		{ value: { active, primary, rounded } },
+		kind ?? 'simple',
+		align ?? 'center',
+		{ active, primary, rounded },
 	);
 
 	const buttonProps: ButtonHTMLAttributes<HTMLButtonElement> = {

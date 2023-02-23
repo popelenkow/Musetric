@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { useAnimation } from '../ReactUtils/Animation';
 import { rotatePosition2D, Size2D, Layout2D, Position2D, getCanvasCursorPosition2D, drawImage, rotateSize2D } from '../Rendering/Layout';
 import { createPixelCanvasElement } from '../Rendering/PixelCanvasElement';
@@ -8,7 +8,7 @@ import { Canvas, CanvasProps, CanvasState } from './Canvas';
 export type PixelCanvasProps = {
 	layout: Layout2D,
 	onClick?: (cursorPosition: Position2D) => void,
-	draw: (output: ImageData) => void,
+	draw?: (output: ImageData) => void,
 	canvasSize?: Size2D,
 };
 export const PixelCanvas: SFC<PixelCanvasProps> = (props) => {
@@ -23,28 +23,33 @@ export const PixelCanvas: SFC<PixelCanvasProps> = (props) => {
 	}, [layout, canvasSize]);
 
 	const [state, setState] = useState<CanvasState>();
-	const click = useCallback((event: MouseEvent) => {
-		if (!onClick) return;
-		if (!state) return;
-		const position = getCanvasCursorPosition2D(state.element, event);
-		const result = rotatePosition2D(position, layout.direction);
-		onClick(result);
-	}, [state, layout, onClick]);
+
 	useEffect(() => {
 		if (!state) return undefined;
+		if (!onClick) return undefined;
+
+		const click = (event: MouseEvent): void => {
+			const position = getCanvasCursorPosition2D(state.element, event);
+			const result = rotatePosition2D(position, layout.direction);
+			onClick(result);
+		};
+
 		state.element.addEventListener('click', click);
 		return () => {
 			state.element.removeEventListener('click', click);
 		};
-	}, [state, click]);
+	}, [state, onClick, layout.direction]);
 
 	useAnimation(() => {
-		if (!pixelCanvasElement) return;
-		if (!state) return;
-		draw(pixelCanvasElement.imageData);
-		pixelCanvasElement.context.putImageData(pixelCanvasElement.imageData, 0, 0);
-		drawImage(state.context, pixelCanvasElement.element, layout);
-	}, [draw, pixelCanvasElement, state, layout]);
+		if (!pixelCanvasElement) return undefined;
+		if (!state) return undefined;
+		if (!draw) return undefined;
+		return () => {
+			draw(pixelCanvasElement.imageData);
+			pixelCanvasElement.context.putImageData(pixelCanvasElement.imageData, 0, 0);
+			drawImage(state.context, pixelCanvasElement.element, layout);
+		};
+	});
 
 	const canvasProps: CanvasProps = {
 		size,

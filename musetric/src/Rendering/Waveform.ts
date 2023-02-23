@@ -37,11 +37,10 @@ export const evalWaves = (
 export type WaveformColors = {
 	activeContent: number,
 	background: number,
-	activePrimary: number,
 };
 export const createWaveformColors = (theme: Theme): WaveformColors => {
-	const { activeContent, background, activePrimary } = parseTheme('uint32', theme);
-	return { activeContent, background, activePrimary };
+	const { activeContent, background } = parseTheme('uint32', theme);
+	return { activeContent, background };
 };
 
 export const drawWaveform = (
@@ -49,9 +48,8 @@ export const drawWaveform = (
 	output: Uint8ClampedArray,
 	frame: Size2D,
 	colors: WaveformColors,
-	cursor?: number,
 ): void => {
-	const { activeContent, background, activePrimary } = colors;
+	const { activeContent, background } = colors;
 	const { minArray, maxArray } = input;
 	const out = new Uint32Array(output.buffer);
 
@@ -62,11 +60,5 @@ export const drawWaveform = (
 		out.fill(background, index, index + min);
 		out.fill(activeContent, index + min, index + max);
 		out.fill(background, index + max, index + frame.width);
-	}
-
-	if (typeof cursor === 'number') {
-		const y = Math.round(cursor * (frame.height - 1));
-		const index = y * frame.width;
-		out.fill(activePrimary, index, index + frame.width);
 	}
 };

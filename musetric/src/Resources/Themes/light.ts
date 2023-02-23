@@ -1,9 +1,9 @@
 export default {
 	background: 'rgb(255, 255, 255)',
-	activeBackground: 'rgb(240, 240, 240)',
+	activeBackground: 'rgb(255, 255, 255)',
 	content: 'rgba(20, 20, 20, 0.6)',
 	activeContent: 'rgb(20, 20, 20)',
-	hover: 'rgba(0, 0, 0, 0.15)',
+	hover: 'rgba(0, 0, 0, 0.05)',
 	primaryHover: 'rgba(80, 160, 255, 0.2)',
 	primary: 'rgba(40, 130, 255, 0.6)',
 	activePrimary: 'rgb(40, 130, 255)',

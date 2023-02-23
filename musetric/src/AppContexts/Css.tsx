@@ -44,7 +44,9 @@ const usePlatform = (): Platform => {
 		};
 
 		window.addEventListener('resize', resize);
-		return () => window.removeEventListener('resize', resize);
+		return () => {
+			window.removeEventListener('resize', resize);
+		};
 	}, [platformId]);
 
 	const platform: Platform = platformId === 'mobile' ? {
@@ -101,23 +103,16 @@ export const CssProvider: SFC<CssProviderProps, 'required'> = (props) => {
 
 export const useCssContext = (): CssStore => useInitializedContext(CssContext, 'useCssContext');
 
-export type ClassNameArg = string | {
-	value?: string | Record<string, boolean | undefined>,
-	default?: string,
-};
+export type ClassNameArg = string | Record<string, boolean | undefined>;
 export const className = (...args: ClassNameArg[]): string => {
 	const resultArr = args.map<Record<string, boolean | undefined>>((arg) => {
 		if (typeof arg === 'string') return { [arg]: true };
-		if (!arg.value) return {};
-		if (arg.value === arg.default) return {};
-		if (typeof arg.value === 'object') return arg.value;
-		return {
-			[arg.value]: true,
-		};
+		if (typeof arg === 'object') return arg;
+		return {};
 	});
 	let resultObj = {};
 	resultArr.forEach((obj) => {
 		resultObj = { ...resultObj, ...obj };
 	});
-	return classNames(resultObj);
+	return classNames(...args);
 };

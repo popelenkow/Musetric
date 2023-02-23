@@ -8,7 +8,8 @@ import { AppBar } from './AppBar';
 import { AppDropdown, AppDropdownProps, AppViewEntry, AppViewElement } from './AppDropdown';
 
 export const getAppClasses = createClasses((css) => {
-	const { width, height } = css.platform;
+	const { theme, platform } = css;
+	const { width, height } = platform;
 	return {
 		root: {
 			'box-sizing': 'border-box',
@@ -17,6 +18,7 @@ export const getAppClasses = createClasses((css) => {
 			display: 'grid',
 			'grid-template-rows': '50px 1fr',
 			'grid-template-columns': '1fr',
+			'background-color': theme.background,
 		},
 	};
 });

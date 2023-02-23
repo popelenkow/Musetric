@@ -1,4 +1,3 @@
-import className from 'classnames';
 import React, { useEffect, useCallback } from 'react';
 import { createUseClasses, createClasses } from '../../AppContexts/Css';
 import { useRootElementContext } from '../../AppContexts/RootElement';
@@ -13,11 +12,11 @@ export const getSoundParametersClasses = createClasses((css) => {
 	const { theme } = css;
 	return {
 		root: {
-			'grid-area': 'parameters',
 			background: theme.activeBackground,
 			'box-sizing': 'border-box',
-			'border-bottom': `1px solid ${theme.divider}`,
+			'border-top': `1px solid ${theme.divider}`,
 			height: '100%',
+			width: '100%',
 		},
 		list: {
 			padding: '15px',
@@ -73,9 +72,6 @@ export const SoundParametersPanel: SFC = () => {
 	} = store;
 
 	const classes = useClasses();
-	const rootName = className({
-		[classes.root]: true,
-	});
 
 	const { frequencyRange, sampleRate } = soundParameters;
 
@@ -131,7 +127,7 @@ export const SoundParametersPanel: SFC = () => {
 		rounded: true,
 	};
 	return (
-		<div className={rootName}>
+		<div className={classes.root}>
 			<ScrollArea>
 				<div className={classes.list}>
 					<NumberField {...frequencyToProps} />
