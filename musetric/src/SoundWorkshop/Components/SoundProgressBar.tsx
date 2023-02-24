@@ -1,8 +1,8 @@
 import React, { useMemo, useCallback } from 'react';
 import { Waveform, WaveformProps } from '../../Controls/Waveform';
 import { Size2D, Direction2D, Layout2D } from '../../Rendering/Layout';
-import { SoundBufferManager } from '../../Sounds/SoundBufferManager';
 import { SFC } from '../../UtilityTypes';
+import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
 export const createSoundProgressBarLayout = (): Layout2D => {
 	const size: Size2D = { width: 128, height: 1024 };
@@ -10,11 +10,17 @@ export const createSoundProgressBarLayout = (): Layout2D => {
 	return { size, direction };
 };
 
-export type SoundProgressBarProps = {
-	soundBufferManager: SoundBufferManager,
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const { soundBufferManager } = store;
+	return {
+		soundBufferManager,
+	};
 };
-export const SoundProgressBar: SFC<SoundProgressBarProps> = (props) => {
-	const { soundBufferManager } = props;
+
+export const SoundProgressBar: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { soundBufferManager } = store;
 
 	const soundProgressBarLayout = useMemo(() => createSoundProgressBarLayout(), []);
 
