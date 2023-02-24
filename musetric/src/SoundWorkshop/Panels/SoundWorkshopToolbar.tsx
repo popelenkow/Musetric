@@ -3,10 +3,9 @@ import { createClasses, createUseClasses } from '../../AppContexts/Css';
 import { SFC } from '../../UtilityTypes';
 import {
 	SoundProgress,
-	SoundPlayerButton, SoundPlayerButtonProps,
-	SoundRecorderButton, SoundRecorderButtonProps,
+	SoundPlayerButton,
+	SoundRecorderButton,
 } from '../Controls';
-import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
 export const getSoundWorkshopToolbarClasses = createClasses((css) => {
 	const { theme } = css;
@@ -27,53 +26,14 @@ export const getSoundWorkshopToolbarClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('SoundWorkshopToolbar', getSoundWorkshopToolbarClasses);
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const select = (store: SoundWorkshopStore) => {
-	const {
-		isLive, isPlaying, isRecording,
-		setIsRecording, setIsPlaying, soundBufferManager,
-	} = store;
-	return {
-		isLive,
-		isPlaying,
-		isRecording,
-		setIsRecording,
-		setIsPlaying,
-		soundBufferManager,
-	};
-};
-
 export const SoundWorkshopToolbar: SFC = () => {
 	const classes = useClasses();
 
-	const store = useSoundWorkshopStore(select);
-	const {
-		isLive, isPlaying, isRecording,
-		setIsRecording, setIsPlaying, soundBufferManager,
-	} = store;
-
-	const soundPlayerButtonProps: SoundPlayerButtonProps = {
-		disabled: isRecording,
-		soundBufferManager,
-		isPlaying,
-		setIsPlaying,
-	};
-
-	const soundRecorderButtonProps: SoundRecorderButtonProps = {
-		disabled: isPlaying,
-		soundBufferManager,
-		isLive,
-		isRecording,
-		setIsRecording: (value) => {
-			setIsRecording(value);
-		},
-	};
-
 	return (
 		<div className={classes.root}>
-			<SoundPlayerButton {...soundPlayerButtonProps} />
-			<SoundProgress soundBufferManager={soundBufferManager} />
-			<SoundRecorderButton {...soundRecorderButtonProps} />
+			<SoundPlayerButton />
+			<SoundProgress />
+			<SoundRecorderButton />
 		</div>
 	);
 };

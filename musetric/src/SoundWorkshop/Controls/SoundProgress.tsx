@@ -2,8 +2,8 @@ import React, { useRef } from 'react';
 import { createUseClasses, createClasses } from '../../AppContexts';
 import { getFieldClasses } from '../../Controls';
 import { useAnimationCallback } from '../../ReactUtils';
-import { SoundBufferManager } from '../../Sounds';
 import { SFC } from '../../UtilityTypes';
+import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
 export const getSoundProgressClasses = createClasses((css) => {
 	const fieldClasses = getFieldClasses(css);
@@ -18,14 +18,18 @@ export const getSoundProgressClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('SoundProgress', getSoundProgressClasses);
 
-export type SoundProgressProps = {
-	soundBufferManager: SoundBufferManager,
-	classNames?: {
-		root?: string,
-	},
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const { soundBufferManager } = store;
+	return {
+		soundBufferManager,
+	};
 };
-export const SoundProgress: SFC<SoundProgressProps> = (props) => {
-	const { soundBufferManager, classNames } = props;
+
+export const SoundProgress: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { soundBufferManager } = store;
+
 	const classes = useClasses();
 
 	type State = {
@@ -69,7 +73,7 @@ export const SoundProgress: SFC<SoundProgressProps> = (props) => {
 	});
 
 	return (
-		<div className={classNames?.root || classes.root}>
+		<div className={classes.root}>
 			<div ref={cursorRef} />
 			<div>
 				{' / '}

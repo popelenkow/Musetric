@@ -1,40 +1,30 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
-import { SoundBufferManager } from '../../Sounds';
 import { SFC } from '../../UtilityTypes';
 import { skipPromise } from '../../Utils';
 import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const select = (store: SoundWorkshopStore) => {
-	const { getRecorder } = store;
+	const { isPlaying, isRecording, setIsRecording, getRecorder } = store;
 	return {
+		isPlaying,
+		isRecording,
+		setIsRecording,
 		getRecorder,
 	};
 };
 
-export type SoundRecorderButtonProps = {
-	disabled: boolean,
-	soundBufferManager: SoundBufferManager,
-	isLive: boolean,
-	isRecording: boolean,
-	setIsRecording: (value: boolean) => void,
-};
-export const SoundRecorderButton: SFC<SoundRecorderButtonProps> = (props) => {
-	const { disabled, isLive, isRecording, setIsRecording } = props;
+export const SoundRecorderButton: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { isPlaying, isRecording, setIsRecording, getRecorder } = store;
 
 	const { RecordIcon } = useIconContext();
 	const { i18n } = useLocaleContext();
 
-	const store = useSoundWorkshopStore(select);
-
-	useEffect(() => {
-		if (isLive) skipPromise(store.getRecorder());
-	}, [isLive, store]);
-
 	const startRecording = async (): Promise<void> => {
-		const recorder = await store.getRecorder();
+		const recorder = await getRecorder();
 		await recorder.start();
 		setIsRecording(true);
 	};
@@ -46,7 +36,7 @@ export const SoundRecorderButton: SFC<SoundRecorderButtonProps> = (props) => {
 
 	const recorderProps: ButtonProps = {
 		kind: 'icon',
-		disabled,
+		disabled: isPlaying,
 		rounded: true,
 		title: i18n.t('Workshop:record'),
 		active: isRecording,

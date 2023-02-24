@@ -3,18 +3,24 @@ import { useIconContext, useWorkerContext, useLocaleContext } from '../../AppCon
 import { Button, ButtonProps } from '../../Controls';
 import { useLazyMemoAsync } from '../../ReactUtils';
 import { createPlayer } from '../../SoundProcessing';
-import { SoundBufferManager } from '../../Sounds';
 import { SFC } from '../../UtilityTypes';
 import { skipPromise } from '../../Utils';
+import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
-export type SoundPlayerButtonProps = {
-	disabled: boolean,
-	soundBufferManager: SoundBufferManager,
-	isPlaying: boolean,
-	setIsPlaying: (value: boolean) => void,
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const { isRecording, isPlaying, setIsPlaying, soundBufferManager } = store;
+	return {
+		isRecording,
+		isPlaying,
+		setIsPlaying,
+		soundBufferManager,
+	};
 };
-export const SoundPlayerButton: SFC<SoundPlayerButtonProps> = (props) => {
-	const { disabled, soundBufferManager, isPlaying, setIsPlaying } = props;
+
+export const SoundPlayerButton: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { isRecording, isPlaying, setIsPlaying, soundBufferManager } = store;
 
 	const { PlayIcon, StopIcon } = useIconContext();
 	const { i18n } = useLocaleContext();
@@ -60,7 +66,7 @@ export const SoundPlayerButton: SFC<SoundPlayerButtonProps> = (props) => {
 	};
 	const buttonProps: ButtonProps = {
 		kind: 'icon',
-		disabled,
+		disabled: isRecording,
 		active: isPlaying,
 		primary: isPlaying,
 		rounded: true,
