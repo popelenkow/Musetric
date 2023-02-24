@@ -5,6 +5,7 @@ import { SFC } from '../UtilityTypes';
 export const getButtonClasses = createClasses((css) => {
 	const { theme } = css;
 	const { platformId } = css.platform;
+	const hoverSelector = platformId === 'mobile' ? '&:active' : '&:hover';
 	return {
 		root: {
 			display: 'flex',
@@ -28,11 +29,11 @@ export const getButtonClasses = createClasses((css) => {
 			'& path, rect, polygon': {
 				fill: theme.content,
 			},
-			[platformId === 'mobile' ? '&:active' : '&:hover']: {
-				'background-color': theme.hover,
-				color: theme.activeContent,
+			[hoverSelector]: {
+				'background-color': theme.contentHover,
+				color: theme.content,
 				'& path, rect, polygon': {
-					fill: theme.activeContent,
+					fill: theme.content,
 				},
 			},
 			'&.rounded': {
@@ -54,32 +55,16 @@ export const getButtonClasses = createClasses((css) => {
 				'justify-content': 'right',
 			},
 			'&:focus-visible': {
-				'border-color': theme.activeContent,
-				color: theme.activeContent,
-				'& path, rect, polygon': {
-					fill: theme.activeContent,
-				},
+				'border-color': theme.content,
 			},
 			'&[disabled]': {
 				cursor: 'default',
-				[platformId === 'mobile' ? '&:active' : '&:hover']: {
+				[hoverSelector]: {
 					color: theme.content,
-					'&.active': {
-						color: theme.activeContent,
-						'& path, rect, polygon': {
-							fill: theme.activeContent,
-						},
-					},
 					'&.primary': {
 						color: theme.primary,
 						'& path, rect, polygon': {
 							fill: theme.primary,
-						},
-						'&.active': {
-							color: theme.activePrimary,
-							'& path, rect, polygon': {
-								fill: theme.activePrimary,
-							},
 						},
 					},
 					'& path, rect, polygon': {
@@ -89,36 +74,20 @@ export const getButtonClasses = createClasses((css) => {
 				},
 				opacity: '0.4',
 			},
-			'&.active': {
-				color: theme.activeContent,
-				'& path, rect, polygon': {
-					fill: theme.activeContent,
-				},
-			},
 			'&.primary': {
 				color: theme.primary,
 				'& path, rect, polygon': {
 					fill: theme.primary,
 				},
-				'&.active': {
-					color: theme.activePrimary,
-					'& path, rect, polygon': {
-						fill: theme.activePrimary,
-					},
-				},
-				[platformId === 'mobile' ? '&:active' : '&:hover']: {
+				[hoverSelector]: {
 					'background-color': theme.primaryHover,
-					color: theme.activePrimary,
+					color: theme.primary,
 					'& path, rect, polygon': {
-						fill: theme.activePrimary,
+						fill: theme.primary,
 					},
 				},
 				'&:focus-visible': {
-					'border-color': theme.activePrimary,
-					color: theme.activePrimary,
-					'& path, rect, polygon': {
-						fill: theme.activePrimary,
-					},
+					'border-color': theme.primary,
 				},
 			},
 		},
@@ -130,7 +99,6 @@ export type ButtonProps = {
 	kind?: 'simple' | 'icon' | 'full',
 	align?: 'left' | 'center' | 'right',
 	disabled?: boolean,
-	active?: boolean,
 	primary?: boolean,
 	rounded?: boolean,
 	title?: string,
@@ -141,7 +109,7 @@ export type ButtonProps = {
 };
 export const Button: SFC<ButtonProps, 'required'> = (props) => {
 	const {
-		kind, align, disabled, active, primary, rounded,
+		kind, align, disabled, primary, rounded,
 		title, onClick, classNames, children,
 	} = props;
 
@@ -150,7 +118,7 @@ export const Button: SFC<ButtonProps, 'required'> = (props) => {
 		classNames?.root || classes.root,
 		kind ?? 'simple',
 		align ?? 'center',
-		{ active, primary, rounded },
+		{ primary, rounded },
 	);
 
 	const buttonProps: ButtonHTMLAttributes<HTMLButtonElement> = {

@@ -11,11 +11,11 @@ export const getNumberFieldClasses = createClasses((css) => {
 	const rootActive = ['&.active', platform.platformId === 'mobile' ? '&:active' : '&:hover'];
 	const rootActiveSelector = {
 		[rootActive.map((x) => x.concat(' > fieldset')).join(', ')]: {
-			'border-color': theme.activeContent,
+			'border-color': theme.content,
 			'border-bottom-color': 'transparent',
 		},
 		[rootActive.map((x) => x.concat('> .NumberField-groovedWheel > *')).join(', ')]: {
-			'background-color': theme.activeContent,
+			'background-color': theme.content,
 		},
 	};
 	return {
@@ -31,7 +31,7 @@ export const getNumberFieldClasses = createClasses((css) => {
 				'border-bottom-color': 'transparent',
 			},
 			'&:focus-visible ~ .NumberField-groovedWheel > *': {
-				'background-color': theme.activePrimary,
+				'background-color': theme.primary,
 			},
 		},
 		fieldset: {

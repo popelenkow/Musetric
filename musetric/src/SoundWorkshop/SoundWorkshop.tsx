@@ -1,16 +1,18 @@
 import React from 'react';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
 import { SFC } from '../UtilityTypes';
-import { KeyboardSubscription } from './Components';
+import { KeyboardSubscription, SoundParametersPanel, SoundView } from './Components';
 import {
 	SoundWorkshopSidebar, SoundWorkshopToolbar,
-	SoundWorkshopMain,
+	SoundWorkshopProgressBar,
 } from './Panels';
 import { SoundWorkshopProvider } from './Store';
 
-export const getSoundWorkshopClasses = createClasses(() => {
+export const getSoundWorkshopClasses = createClasses((css) => {
+	const { theme } = css;
 	return {
 		root: {
+			'background-color': theme.background,
 			display: 'grid',
 			overflow: 'hidden',
 			'grid-template-rows': '1fr 50px',
@@ -19,6 +21,26 @@ export const getSoundWorkshopClasses = createClasses(() => {
 				"main sidebar"
 				"toolbar sidebar"
 			`,
+		},
+		main: {
+			'grid-area': 'main',
+			overflow: 'hidden',
+			display: 'flex',
+			'flex-direction': 'column',
+		},
+		view: {
+			overflow: 'hidden',
+			height: '100%',
+			display: 'grid',
+			'grid-template-rows': '1fr 56px',
+			'grid-template-columns': '1fr',
+			'grid-template-areas': `
+				"view"
+				"progressBar"
+			`,
+			'& > *': {
+				overflow: 'hidden',
+			},
 		},
 	};
 });
@@ -31,7 +53,13 @@ const SoundWorkshop: SFC = () => {
 		<div className={classes.root}>
 			<SoundWorkshopToolbar />
 			<SoundWorkshopSidebar />
-			<SoundWorkshopMain />
+			<div className={classes.main}>
+				<div className={classes.view}>
+					<SoundView />
+					<SoundWorkshopProgressBar />
+				</div>
+				<SoundParametersPanel />
+			</div>
 			<KeyboardSubscription />
 		</div>
 	);

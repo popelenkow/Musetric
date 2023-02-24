@@ -2,11 +2,9 @@ export type Theme = {
 	background: string,
 	activeBackground: string,
 	content: string,
-	activeContent: string,
-	hover: string,
-	primaryHover: string,
+	contentHover: string,
 	primary: string,
-	activePrimary: string,
+	primaryHover: string,
 	divider: string,
 	shadow: string,
 };

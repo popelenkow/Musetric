@@ -42,13 +42,11 @@ export const AppDropdown: AppDropdownFC = (props) => {
 				setIsOpen(false);
 			};
 			const key = `app-${view.id}`;
-			const active = viewId === view.id;
 			const buttonProps: ButtonProps = {
 				onClick,
 				kind: 'full',
 				align: 'left',
-				active,
-				primary: active,
+				primary: viewId === view.id,
 			};
 			return (
 				<Button key={key} {...buttonProps}>
@@ -61,7 +59,7 @@ export const AppDropdown: AppDropdownFC = (props) => {
 	const renderMenu = (): ReactElement => <>{allViewEntries.map(mapMenu)}</>;
 	const dropdownProps: DropdownProps = {
 		kind: 'icon',
-		active: isOpen,
+		primary: isOpen,
 		rounded: true,
 		title: i18n.t('AppBase:dropdown'),
 		isOpen,

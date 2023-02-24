@@ -16,7 +16,7 @@ export const getWaveformClasses = createClasses((css) => {
 		},
 		cursor: {
 			height: '100%',
-			'border-left': `1px solid ${theme.activePrimary}`,
+			'border-left': `1px solid ${theme.primary}`,
 			position: 'absolute',
 			'pointer-events': 'none',
 		},

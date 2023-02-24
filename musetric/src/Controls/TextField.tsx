@@ -11,7 +11,7 @@ export const getTextFieldClasses = createClasses((css) => {
 			'min-height': '42px',
 			'font-family': 'Verdana, Arial, sans-serif',
 			[platform.platformId === 'mobile' ? '&:active > fieldset' : '&:hover > fieldset']: {
-				'border-color': theme.activeContent,
+				'border-color': theme.content,
 			},
 		},
 		input: {
@@ -24,12 +24,12 @@ export const getTextFieldClasses = createClasses((css) => {
 			'font-size': '18px',
 			border: '1px solid',
 			'border-color': 'transparent',
-			color: theme.activeContent,
+			color: theme.content,
 			width: '100%',
 			'margin-top': '3px',
 			'&:focus-visible + fieldset': {
-				'border-color': theme.activePrimary,
-				color: theme.activePrimary,
+				'border-color': theme.primary,
+				color: theme.primary,
 			},
 			'&.rounded': {
 				'border-radius': '10px',
@@ -42,7 +42,7 @@ export const getTextFieldClasses = createClasses((css) => {
 			inset: '0px',
 			'background-color': 'transparent',
 			'font-size': '18px',
-			color: theme.activeContent,
+			color: theme.content,
 			border: '1px solid',
 			position: 'absolute',
 			'border-color': theme.divider,
@@ -51,7 +51,7 @@ export const getTextFieldClasses = createClasses((css) => {
 				'border-radius': '10px',
 			},
 			'&.active': {
-				'border-color': theme.activeContent,
+				'border-color': theme.content,
 			},
 		},
 		legend: {

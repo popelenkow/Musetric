@@ -67,7 +67,6 @@ export const SoundPlayerButton: SFC = () => {
 	const buttonProps: ButtonProps = {
 		kind: 'icon',
 		disabled: isRecording,
-		active: isPlaying,
 		primary: isPlaying,
 		rounded: true,
 		title: isPlaying ? i18n.t('Workshop:stop') : i18n.t('Workshop:play'),

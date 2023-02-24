@@ -35,12 +35,12 @@ export const evalWaves = (
 };
 
 export type WaveformColors = {
-	activeContent: number,
+	content: number,
 	background: number,
 };
 export const createWaveformColors = (theme: Theme): WaveformColors => {
-	const { activeContent, background } = parseTheme('uint32', theme);
-	return { activeContent, background };
+	const { content, background } = parseTheme('uint32', theme);
+	return { content, background };
 };
 
 export const drawWaveform = (
@@ -49,7 +49,7 @@ export const drawWaveform = (
 	frame: Size2D,
 	colors: WaveformColors,
 ): void => {
-	const { activeContent, background } = colors;
+	const { content, background } = colors;
 	const { minArray, maxArray } = input;
 	const out = new Uint32Array(output.buffer);
 
@@ -58,7 +58,7 @@ export const drawWaveform = (
 		const max = Math.ceil(maxArray[y]);
 		const index = y * frame.width;
 		out.fill(background, index, index + min);
-		out.fill(activeContent, index + min, index + max);
+		out.fill(content, index + min, index + max);
 		out.fill(background, index + max, index + frame.width);
 	}
 };

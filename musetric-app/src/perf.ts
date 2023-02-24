@@ -91,14 +91,14 @@ export const run = async (): Promise<void> => {
 				legend: {
 					display: true,
 					labels: {
-						color: theme.activeContent,
+						color: theme.content,
 					},
 				},
 			},
 			scales: {
 				x: {
 					ticks: {
-						color: theme.activeContent,
+						color: theme.content,
 					},
 					grid: {
 						color: theme.divider,
@@ -106,7 +106,7 @@ export const run = async (): Promise<void> => {
 				},
 				y: {
 					ticks: {
-						color: theme.activeContent,
+						color: theme.content,
 					},
 					grid: {
 						color: theme.divider,
@@ -137,7 +137,7 @@ export const run = async (): Promise<void> => {
 	links.appendChild(app);
 
 	const textDiv = document.createElement('div');
-	textDiv.style.color = theme.activeContent;
+	textDiv.style.color = theme.content;
 
 	root.innerHTML = '';
 	root.appendChild(links);

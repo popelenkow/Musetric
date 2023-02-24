@@ -21,9 +21,9 @@ export const getFieldClasses = createClasses((css) => {
 			'justify-content': 'center',
 			border: '1px solid',
 			'border-color': 'transparent',
-			color: theme.activeContent,
+			color: theme.content,
 			'& path, rect, polygon': {
-				fill: theme.activeContent,
+				fill: theme.content,
 			},
 			'&:focus-visible': {
 				'border-color': theme.divider,
@@ -48,7 +48,7 @@ export const getFieldClasses = createClasses((css) => {
 			},
 			'&.disabled': {
 				[platformId === 'mobile' ? '&:active' : '&:hover']: {
-					'background-color': theme.hover,
+					'background-color': theme.contentHover,
 				},
 				opacity: '0.4',
 			},

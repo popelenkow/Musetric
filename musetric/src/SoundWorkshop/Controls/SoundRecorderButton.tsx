@@ -39,7 +39,6 @@ export const SoundRecorderButton: SFC = () => {
 		disabled: isPlaying,
 		rounded: true,
 		title: i18n.t('Workshop:record'),
-		active: isRecording,
 		primary: isRecording,
 		onClick: () => {
 			if (isRecording) {

@@ -27,7 +27,7 @@ export const SoundOpenParametersButton: SFC = () => {
 		kind: 'icon',
 		rounded: true,
 		title: i18n.t('Workshop:parameters'),
-		active: isOpenParameters,
+		primary: isOpenParameters,
 		onClick: () => setIsOpenParameters(!isOpenParameters),
 	};
 	return (

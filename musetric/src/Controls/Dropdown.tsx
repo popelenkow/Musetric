@@ -32,7 +32,6 @@ export type DropdownProps = {
 	kind?: 'simple' | 'icon' | 'full',
 	align?: 'left' | 'center' | 'right',
 	disabled?: boolean,
-	active?: boolean,
 	primary?: boolean,
 	rounded?: boolean,
 	title?: string,
@@ -45,7 +44,7 @@ export type DropdownProps = {
 };
 export const Dropdown: SFC<DropdownProps, 'required'> = (props) => {
 	const {
-		kind, disabled, active, primary, rounded,
+		kind, disabled, primary, rounded,
 		title, isOpen, setIsOpen, menu, children,
 	} = props;
 	const classes = useClasses();
@@ -94,7 +93,6 @@ export const Dropdown: SFC<DropdownProps, 'required'> = (props) => {
 
 	const buttonProps: ButtonProps = {
 		kind,
-		active,
 		disabled,
 		primary,
 		rounded,
