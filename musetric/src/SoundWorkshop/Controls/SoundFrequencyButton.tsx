@@ -2,14 +2,23 @@ import React from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 import { SFC } from '../../UtilityTypes';
-import { SoundViewId } from '../Store';
+import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
-export type SoundFrequencyButtonProps = {
-	soundViewId: SoundViewId,
-	setSoundViewId: (value: SoundViewId) => void,
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const {
+		soundViewId,
+		setSoundViewId,
+	} = store;
+	return {
+		soundViewId,
+		setSoundViewId,
+	};
 };
-export const SoundFrequencyButton: SFC<SoundFrequencyButtonProps> = (props) => {
-	const { soundViewId, setSoundViewId } = props;
+
+export const SoundFrequencyButton: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { soundViewId, setSoundViewId } = store;
 
 	const { FrequencyIcon } = useIconContext();
 	const { i18n } = useLocaleContext();

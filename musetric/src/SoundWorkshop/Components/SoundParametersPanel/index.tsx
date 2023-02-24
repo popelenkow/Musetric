@@ -3,6 +3,7 @@ import { createUseClasses, createClasses } from '../../../AppContexts/Css';
 import { ScrollArea } from '../../../Controls/ScrollArea';
 import { TextField, TextFieldProps } from '../../../Controls/TextField';
 import { SFC } from '../../../UtilityTypes';
+import { SoundWorkshopStore, useSoundWorkshopStore } from '../../Store';
 import { FrequencyRangeParameter } from './frequency';
 
 export const getSoundParametersClasses = createClasses((css) => {
@@ -25,7 +26,7 @@ export const getSoundParametersClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('SoundParameters', getSoundParametersClasses);
 
-export const SoundParametersPanel: SFC = () => {
+const SoundParametersPanel: SFC = () => {
 	const classes = useClasses();
 
 	const textFieldProps: TextFieldProps = {
@@ -49,4 +50,24 @@ export const SoundParametersPanel: SFC = () => {
 			</ScrollArea>
 		</div>
 	);
+};
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const { isOpenParameters } = store;
+	return {
+		isOpenParameters,
+	};
+};
+
+const WithHidden: SFC<object, 'none', 'optional'> = () => {
+	const store = useSoundWorkshopStore(select);
+	const { isOpenParameters } = store;
+
+	if (!isOpenParameters) return null;
+	return <SoundParametersPanel />;
+};
+
+export {
+	WithHidden as SoundParametersPanel,
 };

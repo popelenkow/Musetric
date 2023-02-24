@@ -1,15 +1,24 @@
 import React from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
-import { SoundBufferManager, createWav } from '../../Sounds';
+import { createWav } from '../../Sounds';
 import { SFC } from '../../UtilityTypes';
 import { saveBlobFile } from '../../Utils';
+import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
-export type SoundSaveFileButtonProps = {
-	soundBufferManager: SoundBufferManager,
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const {
+		soundBufferManager,
+	} = store;
+	return {
+		soundBufferManager,
+	};
 };
-export const SoundSaveFileButton: SFC<SoundSaveFileButtonProps> = (props) => {
-	const { soundBufferManager } = props;
+
+export const SoundSaveFileButton: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { soundBufferManager } = store;
 
 	const { SaveIcon } = useIconContext();
 	const { i18n } = useLocaleContext();

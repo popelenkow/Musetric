@@ -2,13 +2,23 @@ import React from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 import { SFC } from '../../UtilityTypes';
+import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
-export type SoundLiveButtonProps = {
-	isLive: boolean,
-	setIsLive: (value: boolean) => void,
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const {
+		isLive,
+		setIsLive,
+	} = store;
+	return {
+		isLive,
+		setIsLive,
+	};
 };
-export const SoundLiveButton: SFC<SoundLiveButtonProps> = (props) => {
-	const { isLive, setIsLive } = props;
+
+export const SoundLiveButton: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { isLive, setIsLive } = store;
 
 	const { LiveIcon } = useIconContext();
 	const { i18n } = useLocaleContext();

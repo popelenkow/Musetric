@@ -2,13 +2,23 @@ import React from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 import { SFC } from '../../UtilityTypes';
+import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
-export type SoundOpenParametersButtonProps = {
-	isOpenParameters: boolean,
-	setIsOpenParameters: (value: boolean) => void,
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const {
+		isOpenParameters,
+		setIsOpenParameters,
+	} = store;
+	return {
+		isOpenParameters,
+		setIsOpenParameters,
+	};
 };
-export const SoundOpenParametersButton: SFC<SoundOpenParametersButtonProps> = (props) => {
-	const { isOpenParameters, setIsOpenParameters } = props;
+
+export const SoundOpenParametersButton: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { isOpenParameters, setIsOpenParameters } = store;
 
 	const { ParametersIcon } = useIconContext();
 	const { i18n } = useLocaleContext();

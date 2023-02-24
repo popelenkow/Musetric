@@ -2,15 +2,14 @@ import React from 'react';
 import { createClasses, createUseClasses } from '../../AppContexts/Css';
 import { SFC } from '../../UtilityTypes';
 import {
-	SoundSaveFileButton, SoundSaveFileButtonProps,
-	SoundOpenFileButton, SoundOpenFileButtonProps,
-	SoundLiveButton, SoundLiveButtonProps,
-	SoundWaveformButton, SoundWaveformButtonProps,
-	SoundFrequencyButton, SoundFrequencyButtonProps,
-	SoundSpectrogramButton, SoundSpectrogramButtonProps,
-	SoundOpenParametersButton, SoundOpenParametersButtonProps,
+	SoundSaveFileButton,
+	SoundOpenFileButton,
+	SoundLiveButton,
+	SoundWaveformButton,
+	SoundFrequencyButton,
+	SoundSpectrogramButton,
+	SoundOpenParametersButton,
 } from '../Controls';
-import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
 export const getSoundWorkshopSidebarClasses = createClasses((css) => {
 	const { theme } = css;
@@ -45,85 +44,23 @@ export const getSoundWorkshopSidebarClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('SoundWorkshopSidebar', getSoundWorkshopSidebarClasses);
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const select = (store: SoundWorkshopStore) => {
-	const {
-		isOpenParameters,
-		setIsOpenParameters,
-		isLive,
-		setIsLive,
-		soundViewId,
-		setSoundViewId,
-		soundBufferManager,
-	} = store;
-	return {
-		isOpenParameters,
-		setIsOpenParameters,
-		isLive,
-		setIsLive,
-		soundViewId,
-		setSoundViewId,
-		soundBufferManager,
-	};
-};
-
 export const SoundWorkshopSidebar: SFC = () => {
 	const classes = useClasses();
-
-	const store = useSoundWorkshopStore(select);
-
-	const soundOpenParametersButtonProps: SoundOpenParametersButtonProps = {
-		isOpenParameters: store.isOpenParameters,
-		setIsOpenParameters: (value) => (
-			store.setIsOpenParameters(value)
-		),
-	};
-
-	const soundLiveButtonProps: SoundLiveButtonProps = {
-		isLive: store.isLive,
-		setIsLive: (value) => {
-			store.setIsLive(value);
-		},
-	};
-	const soundWaveformButtonProps: SoundWaveformButtonProps = {
-		soundViewId: store.soundViewId,
-		setSoundViewId: (value) => {
-			store.setSoundViewId(value);
-		},
-	};
-	const soundFrequencyButtonProps: SoundFrequencyButtonProps = {
-		soundViewId: store.soundViewId,
-		setSoundViewId: (value) => {
-			store.setSoundViewId(value);
-		},
-	};
-	const soundSpectrogramButtonProps: SoundSpectrogramButtonProps = {
-		soundViewId: store.soundViewId,
-		setSoundViewId: (value) => {
-			store.setSoundViewId(value);
-		},
-	};
-	const soundOpenFileButtonProps: SoundOpenFileButtonProps = {
-		soundBufferManager: store.soundBufferManager,
-	};
-	const soundSaveFileButtonProps: SoundSaveFileButtonProps = {
-		soundBufferManager: store.soundBufferManager,
-	};
 
 	return (
 		<div className={classes.root}>
 			<div className={classes.top}>
-				<SoundOpenFileButton {...soundOpenFileButtonProps} />
-				<SoundSaveFileButton {...soundSaveFileButtonProps} />
+				<SoundOpenFileButton />
+				<SoundSaveFileButton />
 			</div>
 			<div className={classes.middle}>
-				<SoundLiveButton {...soundLiveButtonProps} />
-				<SoundWaveformButton {...soundWaveformButtonProps} />
-				<SoundFrequencyButton {...soundFrequencyButtonProps} />
-				<SoundSpectrogramButton {...soundSpectrogramButtonProps} />
+				<SoundLiveButton />
+				<SoundWaveformButton />
+				<SoundFrequencyButton />
+				<SoundSpectrogramButton />
 			</div>
 			<div className={classes.bottom}>
-				<SoundOpenParametersButton {...soundOpenParametersButtonProps} />
+				<SoundOpenParametersButton />
 			</div>
 		</div>
 	);

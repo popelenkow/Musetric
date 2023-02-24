@@ -2,15 +2,24 @@ import React from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { SelectFile, SelectFileProps } from '../../Controls';
 import { useLazyAudioContext } from '../../ReactUtils';
-import { SoundBufferManager, decodeFileToWav } from '../../Sounds';
+import { decodeFileToWav } from '../../Sounds';
 import { SFC } from '../../UtilityTypes';
 import { skipPromise } from '../../Utils';
+import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
-export type SoundOpenFileButtonProps = {
-	soundBufferManager: SoundBufferManager,
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const select = (store: SoundWorkshopStore) => {
+	const {
+		soundBufferManager,
+	} = store;
+	return {
+		soundBufferManager,
+	};
 };
-export const SoundOpenFileButton: SFC<SoundOpenFileButtonProps> = (props) => {
-	const { soundBufferManager } = props;
+
+export const SoundOpenFileButton: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { soundBufferManager } = store;
 
 	const { OpenFileIcon } = useIconContext();
 	const { i18n } = useLocaleContext();

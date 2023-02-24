@@ -1,6 +1,7 @@
 import React from 'react';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
 import { SFC } from '../UtilityTypes';
+import { KeyboardSubscription } from './Components';
 import {
 	SoundWorkshopSidebar, SoundWorkshopToolbar,
 	SoundWorkshopMain,
@@ -31,6 +32,7 @@ const SoundWorkshop: SFC = () => {
 			<SoundWorkshopToolbar />
 			<SoundWorkshopSidebar />
 			<SoundWorkshopMain />
+			<KeyboardSubscription />
 		</div>
 	);
 };
