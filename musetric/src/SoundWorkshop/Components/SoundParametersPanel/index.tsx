@@ -3,7 +3,7 @@ import { createUseClasses, createClasses } from '../../../AppContexts/Css';
 import { ScrollArea } from '../../../Controls/ScrollArea';
 import { TextField, TextFieldProps } from '../../../Controls/TextField';
 import { SFC } from '../../../UtilityTypes';
-import { SoundWorkshopStore, useSoundWorkshopStore } from '../../Store';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../../Store';
 import { FrequencyRangeParameter } from './frequency';
 
 export const getSoundParametersClasses = createClasses((css) => {
@@ -54,7 +54,7 @@ const SoundParametersPanel: SFC = () => {
 
 const select = ({
 	isOpenParameters,
-}: SoundWorkshopStore) => ({
+}: SoundWorkshopSnapshot) => ({
 	isOpenParameters,
 } as const);
 

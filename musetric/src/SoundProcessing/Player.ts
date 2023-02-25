@@ -3,11 +3,12 @@ import type { PromiseObjectApi } from '../UtilityTypes';
 import { createPromiseWorkerApi } from '../Workers/PromiseWorkerApi';
 import type { PlayerWorklet, PlayerEvents } from './PlayerWorklet';
 
-export type Player =
+export type Player = (
 	& PromiseObjectApi<PlayerWorklet>
 	& {
 		mediaStream: MediaStream,
-	};
+	}
+);
 
 export const createPlayer = async (
 	workletUrl: URL | string,

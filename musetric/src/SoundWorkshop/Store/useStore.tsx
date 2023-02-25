@@ -1,18 +1,63 @@
+import produce from 'immer';
 import { memoize } from 'proxy-memoize';
 import React, { useMemo, useRef, useLayoutEffect, useState } from 'react';
 import { useInitializedContext } from '../../ReactUtils';
 
-type ContextStoreOnChange = () => void;
-type ContextStoreUnsubscribe = () => void;
-export type ContextStore<Store> = {
-	subscribe: (onChange: ContextStoreOnChange) => ContextStoreUnsubscribe,
-	getSnapshot: () => Store,
-	destroy: () => void,
+type SnapshotOnChange = () => void;
+type StoreUnsubscribe = () => void;
+export type ContextStore<Snapshot> = {
+	subscribe: (onChange: SnapshotOnChange) => StoreUnsubscribe,
+	getSnapshot: () => Snapshot,
 };
-export const useContextStore = <Store extends object, R>(
-	SoundWorkshopContext: React.Context<ContextStore<Store> | undefined>,
+
+export type SetStoreState<State> = (callback: (state: State) => State | void) => void;
+type CreateActions<State, Actions> = (
+	setState: SetStoreState<State>,
+	getState: () => State,
+) => Actions;
+
+export const createStore = <State, Actions>(
+	initialState: State,
+	createActions: CreateActions<State, Actions>,
+): ContextStore<State & Actions> => {
+	const subscriptions = new Set<SnapshotOnChange>();
+
+	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+	let actions = {} as Actions;
+	let snapshot: State & Actions = {
+		...initialState,
+		...actions,
+	};
+
+	const getState = (): State => snapshot;
+	const setState: SetStoreState<State> = (callback) => {
+		snapshot = {
+			...produce(snapshot, callback),
+			...actions,
+		};
+		subscriptions.forEach((x) => x());
+	};
+	actions = createActions(setState, getState);
+	snapshot = {
+		...snapshot,
+		...actions,
+	};
+
+	return {
+		subscribe: (callback) => {
+			subscriptions.add(callback);
+			return () => {
+				subscriptions.delete(callback);
+			};
+		},
+		getSnapshot: () => snapshot,
+	} as const;
+};
+
+export const useContextStore = <Snapshot extends object, R>(
+	SoundWorkshopContext: React.Context<ContextStore<Snapshot> | undefined>,
 	contextName: string,
-	selector: (store: Store) => R,
+	selector: (store: Snapshot) => R,
 ): R => {
 	const context = useInitializedContext(SoundWorkshopContext, contextName);
 

@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from 'react';
 import { Waveform, WaveformProps } from '../../Controls/Waveform';
 import { Size2D, Direction2D, Layout2D } from '../../Rendering/Layout';
 import { SFC } from '../../UtilityTypes';
-import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../Store';
 
 export const createSoundProgressBarLayout = (): Layout2D => {
 	const size: Size2D = { width: 128, height: 1024 };
@@ -12,7 +12,7 @@ export const createSoundProgressBarLayout = (): Layout2D => {
 
 const select = ({
 	soundBufferManager,
-}: SoundWorkshopStore) => ({
+}: SoundWorkshopSnapshot) => ({
 	soundBufferManager,
 } as const);
 

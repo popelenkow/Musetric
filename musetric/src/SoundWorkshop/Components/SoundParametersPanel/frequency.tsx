@@ -2,11 +2,11 @@ import React, { useCallback } from 'react';
 import { NumberField, NumberFieldProps } from '../../../Controls/NumberField';
 import { NumberRange } from '../../../Rendering';
 import { SFC } from '../../../UtilityTypes';
-import { SoundWorkshopStore, useSoundWorkshopStore } from '../../Store';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../../Store';
 
 const select = ({
 	soundParameters, setSoundParameters,
-}: SoundWorkshopStore) => ({
+}: SoundWorkshopSnapshot) => ({
 	soundParameters, setSoundParameters,
 } as const);
 

@@ -3,11 +3,11 @@ import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 import { SFC } from '../../UtilityTypes';
 import { skipPromise } from '../../Utils';
-import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../Store';
 
 const select = ({
 	isPlaying, isRecording, setIsRecording, getRecorder,
-}: SoundWorkshopStore) => ({
+}: SoundWorkshopSnapshot) => ({
 	isPlaying, isRecording, setIsRecording, getRecorder,
 } as const);
 

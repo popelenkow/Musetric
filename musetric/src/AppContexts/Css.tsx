@@ -36,28 +36,35 @@ export const CssContext = createContext<CssStore | undefined>(undefined);
 
 const usePlatform = (): Platform => {
 	const platformId = useMemo(() => getPlatformId(), []);
-	const [innerHeight, setInnerHeight] = useState<number>(window.innerHeight);
+	const [height, setHeight] = useState<number>(window.innerHeight);
 
 	useEffect(() => {
-		const resize = (): void => {
-			setInnerHeight(window.innerHeight);
+		const resize = (event: Event): void => {
+			const getHeight = (): number => {
+				if (event.target && 'height' in event.target && typeof event.target.height === 'number') {
+					return event.target.height;
+				}
+				return window.innerHeight;
+			};
+			setHeight(getHeight());
 		};
 
-		window.addEventListener('resize', resize);
+		const visualViewport = window.visualViewport ?? window;
+		visualViewport.addEventListener('resize', resize);
 		return () => {
-			window.removeEventListener('resize', resize);
+			visualViewport.removeEventListener('resize', resize);
 		};
 	}, [platformId]);
 
-	const platform: Platform = platformId === 'mobile' ? {
+	const platform: Platform = {
 		platformId,
-		height: `${innerHeight}px`,
-		width: '100vw',
-	} : {
-		platformId,
-		height: '100vh',
+		height: `${height}px`,
 		width: '100vw',
 	};
+
+	document.body.style.height = platform.height;
+	document.getElementById('root')!.style.height = platform.height;
+
 	return platform;
 };
 

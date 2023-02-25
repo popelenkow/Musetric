@@ -3,7 +3,7 @@ import { createUseClasses, createClasses } from '../../AppContexts';
 import { getFieldClasses } from '../../Controls';
 import { useAnimationCallback } from '../../ReactUtils';
 import { SFC } from '../../UtilityTypes';
-import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../Store';
 
 export const getSoundProgressClasses = createClasses((css) => {
 	const fieldClasses = getFieldClasses(css);
@@ -20,7 +20,7 @@ const useClasses = createUseClasses('SoundProgress', getSoundProgressClasses);
 
 const select = ({
 	soundBufferManager,
-}: SoundWorkshopStore) => ({
+}: SoundWorkshopSnapshot) => ({
 	soundBufferManager,
 } as const);
 

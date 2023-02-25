@@ -4,11 +4,11 @@ import { Button, ButtonProps } from '../../Controls';
 import { createWav } from '../../Sounds';
 import { SFC } from '../../UtilityTypes';
 import { saveBlobFile } from '../../Utils';
-import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../Store';
 
 const select = ({
 	soundBufferManager,
-}: SoundWorkshopStore) => ({
+}: SoundWorkshopSnapshot) => ({
 	soundBufferManager,
 } as const);
 

@@ -2,11 +2,11 @@ import { useEffect, useCallback } from 'react';
 import { useRootElementContext } from '../../AppContexts/RootElement';
 import { NumberRange } from '../../Rendering';
 import { SFC } from '../../UtilityTypes';
-import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../Store';
 
 const select = ({
 	soundParameters, setSoundParameters,
-}: SoundWorkshopStore) => ({
+}: SoundWorkshopSnapshot) => ({
 	soundParameters, setSoundParameters,
 } as const);
 

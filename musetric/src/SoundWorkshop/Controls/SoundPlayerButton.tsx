@@ -5,11 +5,11 @@ import { useLazyMemoAsync } from '../../ReactUtils';
 import { createPlayer } from '../../SoundProcessing';
 import { SFC } from '../../UtilityTypes';
 import { skipPromise } from '../../Utils';
-import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../Store';
 
 const select = ({
 	isRecording, isPlaying, setIsPlaying, soundBufferManager,
-}: SoundWorkshopStore) => ({
+}: SoundWorkshopSnapshot) => ({
 	isRecording, isPlaying, setIsPlaying, soundBufferManager,
 } as const);
 

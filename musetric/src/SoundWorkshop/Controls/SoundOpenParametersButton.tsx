@@ -2,11 +2,11 @@ import React from 'react';
 import { useIconContext, useLocaleContext } from '../../AppContexts';
 import { Button, ButtonProps } from '../../Controls';
 import { SFC } from '../../UtilityTypes';
-import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../Store';
 
 const select = ({
 	isOpenParameters, setIsOpenParameters,
-}: SoundWorkshopStore) => ({
+}: SoundWorkshopSnapshot) => ({
 	isOpenParameters, setIsOpenParameters,
 } as const);
 

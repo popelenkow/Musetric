@@ -5,11 +5,11 @@ import { useLazyAudioContext } from '../../ReactUtils';
 import { decodeFileToWav } from '../../Sounds';
 import { SFC } from '../../UtilityTypes';
 import { skipPromise } from '../../Utils';
-import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../Store';
 
 const select = ({
 	soundBufferManager,
-}: SoundWorkshopStore) => ({
+}: SoundWorkshopSnapshot) => ({
 	soundBufferManager,
 } as const);
 

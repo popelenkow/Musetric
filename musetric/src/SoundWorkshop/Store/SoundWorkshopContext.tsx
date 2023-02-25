@@ -1,11 +1,10 @@
-import { produce } from 'immer';
 import React, { createContext, useState, useEffect } from 'react';
 import { useWorkerContext } from '../../AppContexts';
 import { NumberRange } from '../../Rendering';
 import { createRecorder, Recorder } from '../../SoundProcessing';
 import { createSoundBufferManager, SoundBufferManager } from '../../Sounds/SoundBufferManager';
 import { ChildrenProps, SFC } from '../../UtilityTypes';
-import { useContextStore } from './useStore';
+import { ContextStore, createStore, SetStoreState, useContextStore } from './useStore';
 
 export type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
 
@@ -43,57 +42,34 @@ const initialState: SoundWorkshopState = {
 	),
 };
 
-type SetState = (callback: (state: SoundWorkshopState) => SoundWorkshopState | void) => void;
-const createActions = (setState: SetState) => ({
-	setIsLive: (isLive: boolean): void => setState((state) => {
+const createActions = (
+	recorderUrl: string | URL,
+	setState: SetStoreState<SoundWorkshopState>,
+	getState: () => SoundWorkshopState,
+) => ({
+	setIsLive: (isLive: boolean) => setState((state) => {
 		state.isLive = isLive;
 	}),
-	setIsPlaying: (isPlaying: boolean): void => setState((state) => {
+	setIsPlaying: (isPlaying: boolean) => setState((state) => {
 		state.isPlaying = isPlaying;
 	}),
-	setIsRecording: (isRecording: boolean): void => setState((state) => {
+	setIsRecording: (isRecording: boolean) => setState((state) => {
 		state.isRecording = isRecording;
 	}),
-	setSoundViewId: (soundViewId: SoundViewId): void => setState((state) => {
+	setSoundViewId: (soundViewId: SoundViewId) => setState((state) => {
 		state.soundViewId = soundViewId;
 	}),
-	setIsOpenParameters: (isOpenParameters: boolean): void => setState((state) => {
+	setIsOpenParameters: (isOpenParameters: boolean) => setState((state) => {
 		state.isOpenParameters = isOpenParameters;
 	}),
-	setSoundParameters: (soundParameters: Partial<SoundParameters>): void => setState((state) => {
+	setSoundParameters: (soundParameters: Partial<SoundParameters>) => setState((state) => {
 		state.soundParameters = {
 			...state.soundParameters,
 			...soundParameters,
 		};
 	}),
-	setRecorder: (recorder: Recorder): void => setState((state) => {
-		state.recorder = recorder;
-	}),
-} as const);
-export type SoundWorkshopStore = SoundWorkshopState & ReturnType<typeof createActions> & {
-	getRecorder: () => Promise<Recorder>,
-};
-
-type Callback = () => void;
-export type MyStore = {
-	subscribe: (callback: Callback) => Callback,
-	getSnapshot: () => SoundWorkshopStore,
-	destroy: () => void,
-};
-const createStore = (recorderUrl: string | URL): MyStore => {
-	const subscriptions = new Set<Callback>();
-	// eslint-disable-next-line
-	let snapshot: SoundWorkshopStore = {
-		...initialState,
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	} as any;
-
-	const setState = (callback: (state: SoundWorkshopState) => SoundWorkshopState | void): void => {
-		snapshot = produce(snapshot, callback);
-		subscriptions.forEach((x) => x());
-	};
-	const actions = createActions(setState);
-	const getRecorder = async (): Promise<Recorder> => {
+	getRecorder: async (): Promise<Recorder> => {
+		const snapshot = getState();
 		if (snapshot.recorder) return snapshot.recorder;
 		const { soundBufferManager } = snapshot;
 		const { channelCount } = soundBufferManager.soundBuffer;
@@ -103,41 +79,32 @@ const createStore = (recorderUrl: string | URL): MyStore => {
 				soundBufferManager.push(chunk, event.isRecording ? 'recording' : 'live');
 			},
 		});
-		actions.setRecorder(recorder);
+		setState((state) => {
+			state.recorder = recorder;
+		});
 		return recorder;
-	};
-	snapshot = {
-		...snapshot,
-		...actions,
-		getRecorder,
-	};
-	return {
-		subscribe: (callback: Callback): Callback => {
-			subscriptions.add(callback);
-			return (): void => {
-				subscriptions.delete(callback);
-			};
-		},
-		getSnapshot: () => snapshot,
-		destroy: (): void => {
-			snapshot.recorder?.destroy();
-		},
-	};
-};
+	},
+} as const);
+type Actions = ReturnType<typeof createActions>;
+export type SoundWorkshopSnapshot = SoundWorkshopState & Actions;
+type Store = ContextStore<SoundWorkshopSnapshot>;
 
-export const SoundWorkshopContext = createContext<MyStore | undefined>(undefined);
+export const SoundWorkshopContext = createContext<Store | undefined>(undefined);
 
 export const SoundWorkshopProvider: SFC<ChildrenProps> = (props) => {
 	const { children } = props;
 
 	const { recorderUrl } = useWorkerContext();
 
-	const [store, setStore] = useState<MyStore>();
+	const [store, setStore] = useState<Store>();
 	useEffect(() => {
-		const currentStore = createStore(recorderUrl);
+		const currentStore = createStore(initialState, (setState, getState) => (
+			createActions(recorderUrl, setState, getState)
+		));
 		setStore(currentStore);
 		return () => {
-			currentStore.destroy();
+			const snapshot = currentStore.getSnapshot();
+			snapshot.recorder?.destroy();
 		};
 	}, [recorderUrl]);
 
@@ -148,6 +115,6 @@ export const SoundWorkshopProvider: SFC<ChildrenProps> = (props) => {
 	);
 };
 
-export const useSoundWorkshopStore = <R,>(selector: (store: SoundWorkshopStore) => R): R => (
+export const useSoundWorkshopStore = <R,>(selector: (store: SoundWorkshopSnapshot) => R): R => (
 	useContextStore(SoundWorkshopContext, 'useSoundWorkshopContext', selector)
 );
