@@ -1,5 +1,6 @@
 node_modules/
 dist/
 build/
+.eslintrc.local.json
 yarn-error.log
 tsconfig.tsbuildinfo

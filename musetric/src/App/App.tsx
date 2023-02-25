@@ -24,7 +24,7 @@ export const getAppClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('App', getAppClasses);
 
-type RootProps<ViewId extends string> = {
+type RootProps<ViewId> = {
 	initViewId: ViewId,
 	useViewEntries: () => AppViewEntry<ViewId>[],
 	useAppBarButtons: () => ReactElement,
@@ -78,7 +78,7 @@ export type AppProviders = {
 	icon: AppProvider,
 	worker: AppProvider,
 };
-export type AppProps<ViewId extends string> = {
+export type AppProps<ViewId> = {
 	providers: AppProviders,
 } & RootProps<ViewId>;
 type AppFC = (

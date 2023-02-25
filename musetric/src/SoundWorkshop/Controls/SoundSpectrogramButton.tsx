@@ -4,17 +4,11 @@ import { Button, ButtonProps } from '../../Controls';
 import { SFC } from '../../UtilityTypes';
 import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const select = (store: SoundWorkshopStore) => {
-	const {
-		soundViewId,
-		setSoundViewId,
-	} = store;
-	return {
-		soundViewId,
-		setSoundViewId,
-	};
-};
+const select = ({
+	soundViewId, setSoundViewId,
+}: SoundWorkshopStore) => ({
+	soundViewId, setSoundViewId,
+} as const);
 
 export const SoundSpectrogramButton: SFC = () => {
 	const store = useSoundWorkshopStore(select);

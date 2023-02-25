@@ -52,13 +52,11 @@ const SoundParametersPanel: SFC = () => {
 	);
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const select = (store: SoundWorkshopStore) => {
-	const { isOpenParameters } = store;
-	return {
-		isOpenParameters,
-	};
-};
+const select = ({
+	isOpenParameters,
+}: SoundWorkshopStore) => ({
+	isOpenParameters,
+} as const);
 
 const WithHidden: SFC<object, 'none', 'optional'> = () => {
 	const store = useSoundWorkshopStore(select);

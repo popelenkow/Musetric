@@ -9,15 +9,15 @@ import { FCResult } from '../UtilityTypes';
 export type AppViewDivider = {
 	type: 'divider',
 };
-export type AppViewElement<ViewId extends string> = {
+export type AppViewElement<ViewId> = {
 	type: 'view',
 	id: ViewId,
 	name: string,
 	element: ReactNode,
 };
-export type AppViewEntry<ViewId extends string> = AppViewDivider | AppViewElement<ViewId>;
+export type AppViewEntry<ViewId> = AppViewDivider | AppViewElement<ViewId>;
 
-export type AppDropdownProps<ViewId extends string> = {
+export type AppDropdownProps<ViewId> = {
 	viewId: ViewId,
 	setViewId: Dispatch<SetStateAction<ViewId>>,
 	allViewEntries: AppViewEntry<ViewId>[],

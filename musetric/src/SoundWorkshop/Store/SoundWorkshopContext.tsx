@@ -1,12 +1,11 @@
 import { produce } from 'immer';
-import { memoize } from 'proxy-memoize';
-import React, { useMemo, createContext, useRef, useLayoutEffect, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { useWorkerContext } from '../../AppContexts';
-import { useInitializedContext } from '../../ReactUtils';
 import { NumberRange } from '../../Rendering';
 import { createRecorder, Recorder } from '../../SoundProcessing';
 import { createSoundBufferManager, SoundBufferManager } from '../../Sounds/SoundBufferManager';
 import { ChildrenProps, SFC } from '../../UtilityTypes';
+import { useContextStore } from './useStore';
 
 export type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
 
@@ -45,7 +44,6 @@ const initialState: SoundWorkshopState = {
 };
 
 type SetState = (callback: (state: SoundWorkshopState) => SoundWorkshopState | void) => void;
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const createActions = (setState: SetState) => ({
 	setIsLive: (isLive: boolean): void => setState((state) => {
 		state.isLive = isLive;
@@ -71,7 +69,7 @@ const createActions = (setState: SetState) => ({
 	setRecorder: (recorder: Recorder): void => setState((state) => {
 		state.recorder = recorder;
 	}),
-});
+} as const);
 export type SoundWorkshopStore = SoundWorkshopState & ReturnType<typeof createActions> & {
 	getRecorder: () => Promise<Recorder>,
 };
@@ -150,28 +148,6 @@ export const SoundWorkshopProvider: SFC<ChildrenProps> = (props) => {
 	);
 };
 
-// eslint-disable-next-line @typescript-eslint/comma-dangle
-export const useSoundWorkshopStore = <R,>(selector: (store: SoundWorkshopStore) => R): R => {
-	const context = useInitializedContext(SoundWorkshopContext, 'useSoundWorkshopContext');
-
-	const snapshotRef = useRef<R>();
-	const [, forceUpdate] = useState(false);
-
-	const mSelector = useMemo(() => memoize(selector), [selector]);
-	if (!snapshotRef.current) {
-		snapshotRef.current = mSelector(context.getSnapshot());
-	}
-	useLayoutEffect(() => {
-		snapshotRef.current = mSelector(context.getSnapshot());
-		const unsubscribe = context.subscribe(() => {
-			const snapshot = mSelector(context.getSnapshot());
-			if (snapshotRef.current === snapshot) return;
-			snapshotRef.current = snapshot;
-			forceUpdate((x) => !x);
-		});
-		return unsubscribe;
-	}, [context, mSelector]);
-
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	return snapshotRef.current;
-};
+export const useSoundWorkshopStore = <R,>(selector: (store: SoundWorkshopStore) => R): R => (
+	useContextStore(SoundWorkshopContext, 'useSoundWorkshopContext', selector)
+);

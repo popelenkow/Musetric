@@ -18,13 +18,11 @@ export const getSoundProgressClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('SoundProgress', getSoundProgressClasses);
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const select = (store: SoundWorkshopStore) => {
-	const { soundBufferManager } = store;
-	return {
-		soundBufferManager,
-	};
-};
+const select = ({
+	soundBufferManager,
+}: SoundWorkshopStore) => ({
+	soundBufferManager,
+} as const);
 
 export const SoundProgress: SFC = () => {
 	const store = useSoundWorkshopStore(select);

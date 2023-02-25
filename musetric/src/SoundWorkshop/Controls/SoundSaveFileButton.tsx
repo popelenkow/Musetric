@@ -6,15 +6,11 @@ import { SFC } from '../../UtilityTypes';
 import { saveBlobFile } from '../../Utils';
 import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const select = (store: SoundWorkshopStore) => {
-	const {
-		soundBufferManager,
-	} = store;
-	return {
-		soundBufferManager,
-	};
-};
+const select = ({
+	soundBufferManager,
+}: SoundWorkshopStore) => ({
+	soundBufferManager,
+} as const);
 
 export const SoundSaveFileButton: SFC = () => {
 	const store = useSoundWorkshopStore(select);

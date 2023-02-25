@@ -68,13 +68,11 @@ export const useSoundViewItemProps = (props: SoundViewProps) => {
 };
 export type SoundViewItemProps = ReturnType<typeof useSoundViewItemProps>;
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const select = (store: SoundWorkshopStore) => {
-	const { soundViewId, isLive, soundBufferManager, soundParameters } = store;
-	return {
-		soundViewId, isLive, soundBufferManager, soundParameters,
-	};
-};
+const select = ({
+	soundViewId, isLive, soundBufferManager, soundParameters,
+}: SoundWorkshopStore) => ({
+	soundViewId, isLive, soundBufferManager, soundParameters,
+} as const);
 
 export const SoundView: SFC<object, 'none', 'optional'> = () => {
 	const store = useSoundWorkshopStore(select);

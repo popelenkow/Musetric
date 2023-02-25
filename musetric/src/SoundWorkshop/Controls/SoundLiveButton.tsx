@@ -5,11 +5,11 @@ import { SFC } from '../../UtilityTypes';
 import { skipPromise } from '../../Utils';
 import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const select = (store: SoundWorkshopStore) => {
-	const { isLive, setIsLive, getRecorder } = store;
-	return { isLive, setIsLive, getRecorder };
-};
+const select = ({
+	isLive, setIsLive, getRecorder,
+}: SoundWorkshopStore) => ({
+	isLive, setIsLive, getRecorder,
+} as const);
 
 export const SoundLiveButton: SFC = () => {
 	const store = useSoundWorkshopStore(select);

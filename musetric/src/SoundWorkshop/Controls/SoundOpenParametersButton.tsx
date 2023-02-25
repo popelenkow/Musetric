@@ -4,17 +4,11 @@ import { Button, ButtonProps } from '../../Controls';
 import { SFC } from '../../UtilityTypes';
 import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const select = (store: SoundWorkshopStore) => {
-	const {
-		isOpenParameters,
-		setIsOpenParameters,
-	} = store;
-	return {
-		isOpenParameters,
-		setIsOpenParameters,
-	};
-};
+const select = ({
+	isOpenParameters, setIsOpenParameters,
+}: SoundWorkshopStore) => ({
+	isOpenParameters, setIsOpenParameters,
+} as const);
 
 export const SoundOpenParametersButton: SFC = () => {
 	const store = useSoundWorkshopStore(select);

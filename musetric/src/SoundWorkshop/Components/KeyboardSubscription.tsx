@@ -4,13 +4,11 @@ import { NumberRange } from '../../Rendering';
 import { SFC } from '../../UtilityTypes';
 import { SoundWorkshopStore, useSoundWorkshopStore } from '../Store';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const select = (store: SoundWorkshopStore) => {
-	const { soundParameters, setSoundParameters } = store;
-	return {
-		soundParameters, setSoundParameters,
-	};
-};
+const select = ({
+	soundParameters, setSoundParameters,
+}: SoundWorkshopStore) => ({
+	soundParameters, setSoundParameters,
+} as const);
 
 type UnsubscribeInput = () => void;
 const subscribeInput = (

@@ -16,8 +16,7 @@ export const run = async (): Promise<void> => {
 	const root = document.getElementById('root');
 	if (!root) throw new Error();
 	const themeId = getStorageThemeId() || 'dark';
-	const { theme } = allThemeEntries.find((x) => x.themeId === themeId) || {};
-	if (!theme) throw new Error();
+	const { theme } = allThemeEntries.find((x) => x.themeId === themeId) || allThemeEntries[0];
 	root.style.backgroundColor = theme.background;
 	root.style.display = 'flex';
 	root.style.flexDirection = 'column';

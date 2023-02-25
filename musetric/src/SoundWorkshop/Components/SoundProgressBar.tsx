@@ -10,13 +10,11 @@ export const createSoundProgressBarLayout = (): Layout2D => {
 	return { size, direction };
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const select = (store: SoundWorkshopStore) => {
-	const { soundBufferManager } = store;
-	return {
-		soundBufferManager,
-	};
-};
+const select = ({
+	soundBufferManager,
+}: SoundWorkshopStore) => ({
+	soundBufferManager,
+} as const);
 
 export const SoundProgressBar: SFC = () => {
 	const store = useSoundWorkshopStore(select);

@@ -1,4 +1,4 @@
-const { getIgnorePatterns, getTsPaths } = require('eslint-config-musetric/utils');
+const { getIgnorePatterns, getTsPath } = require('eslint-config-musetric/utils');
 
 module.exports = {
 	extends: [
@@ -10,5 +10,11 @@ module.exports = {
 		}],
 	},
 	ignorePatterns: getIgnorePatterns(['dist'], ['build.js']),
-	overrides: getTsPaths(__dirname, ['.', 'test', 'performance']),
+	overrides: [
+		getTsPath(__dirname, '.'),
+		{
+			...getTsPath(__dirname, 'test'),
+		},
+		getTsPath(__dirname, 'performance'),
+	],
 };
