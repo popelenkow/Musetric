@@ -2,8 +2,6 @@ export type PlatformId = 'desktop' | 'mobile';
 
 export type Platform = {
 	platformId: PlatformId,
-	height: string,
-	width: string,
 };
 
 export const getPlatformId = (): PlatformId => {

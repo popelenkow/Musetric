@@ -8,15 +8,17 @@ import { AppBar } from './AppBar';
 import { AppDropdown, AppDropdownProps, AppViewEntry, AppViewElement } from './AppDropdown';
 
 export const getAppClasses = createClasses((css) => {
-	const { theme, platform } = css;
-	const { width, height } = platform;
+	const { theme } = css;
 	return {
 		root: {
+			position: 'absolute',
+			'overscroll-behavior': 'none',
+			top: 'var(--screenTop, 0px)',
+			height: 'var(--100vh, 100vh)',
+			width: '100%',
 			'box-sizing': 'border-box',
-			width,
-			height,
 			display: 'grid',
-			'grid-template-rows': '50px 1fr',
+			'grid-template-rows': ' 50px 1fr',
 			'grid-template-columns': '1fr',
 			'background-color': theme.background,
 		},

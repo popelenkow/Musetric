@@ -34,36 +34,39 @@ export type CssStore = {
 };
 export const CssContext = createContext<CssStore | undefined>(undefined);
 
+const visualViewport = window.visualViewport ?? window;
+
 const usePlatform = (): Platform => {
 	const platformId = useMemo(() => getPlatformId(), []);
-	const [height, setHeight] = useState<number>(window.innerHeight);
+	const [platform] = useState<Platform>({
+		platformId,
+	});
 
 	useEffect(() => {
-		const resize = (event: Event): void => {
-			const getHeight = (): number => {
-				if (event.target && 'height' in event.target && typeof event.target.height === 'number') {
-					return event.target.height;
-				}
-				return window.innerHeight;
-			};
-			setHeight(getHeight());
+		const resize = (): void => {
+			const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+			const top = window.visualViewport ? window.visualViewport.offsetTop : 0;
+			document.documentElement.style.setProperty(
+				'--100vh',
+				`${height}px`,
+			);
+			document.documentElement.style.setProperty(
+				'--screenTop',
+				`${top}px`,
+			);
 		};
+		resize();
 
-		const visualViewport = window.visualViewport ?? window;
 		visualViewport.addEventListener('resize', resize);
+		visualViewport.addEventListener('scroll', resize, {
+			capture: true,
+			passive: false,
+		});
 		return () => {
 			visualViewport.removeEventListener('resize', resize);
+			visualViewport.removeEventListener('scroll', resize);
 		};
 	}, [platformId]);
-
-	const platform: Platform = {
-		platformId,
-		height: `${height}px`,
-		width: '100vw',
-	};
-
-	document.body.style.height = platform.height;
-	document.getElementById('root')!.style.height = platform.height;
 
 	return platform;
 };

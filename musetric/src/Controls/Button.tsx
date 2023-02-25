@@ -5,7 +5,7 @@ import { SFC } from '../UtilityTypes';
 export const getButtonClasses = createClasses((css) => {
 	const { theme } = css;
 	const { platformId } = css.platform;
-	const hoverSelector = platformId === 'mobile' ? '&:active' : '&:hover';
+	const hoverSelector = platformId === 'mobile' ? '&:active' : '.hoverable &:hover';
 	return {
 		root: {
 			display: 'flex',

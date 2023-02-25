@@ -24,6 +24,7 @@ export const getScrollAreaClasses = createClasses(() => {
 		},
 		content: {
 			position: 'absolute',
+			'overscroll-behavior': 'none',
 			'box-sizing': 'border-box',
 			overflow: 'auto',
 			inset: '0px',
