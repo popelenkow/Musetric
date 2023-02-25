@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-loop-func */
-/* eslint-disable max-len */
 import { createDftBase } from '../src/Sounds/Dft';
 import { createFftRadix2Base } from '../src/Sounds/FftRadix2';
 import { createFftRadix4Base } from '../src/Sounds/FftRadix4';
@@ -23,9 +21,7 @@ const isArrayCloseTo = (arr1: ArrayLike<number>, arr2: ArrayLike<number>): boole
 };
 
 declare global {
-	// eslint-disable-next-line @typescript-eslint/no-namespace
 	namespace jest {
-		// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 		interface Matchers<R> {
 			toBeArrayCloseTo(expected: ArrayLike<number>): R,
 		}

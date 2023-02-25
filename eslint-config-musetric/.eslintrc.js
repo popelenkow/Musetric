@@ -88,16 +88,6 @@ module.exports = {
 				'@typescript-eslint/brace-style': ['error', 'stroustrup'],
 				'@typescript-eslint/no-unused-vars': ['error'],
 				'@typescript-eslint/type-annotation-spacing': 'error',
-				'comma-dangle': [
-					'error',
-					{
-						arrays: 'always-multiline',
-						objects: 'always-multiline',
-						imports: 'always-multiline',
-						exports: 'always-multiline',
-						functions: 'always-multiline',
-					},
-				],
 			},
 		},
 		{

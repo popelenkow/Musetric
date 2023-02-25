@@ -34,6 +34,5 @@ export const useContextStore = <Store extends object, R>(
 		return unsubscribe;
 	}, [context, memoizedSelector]);
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	return snapshotRef.current;
 };

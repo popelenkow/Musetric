@@ -2007,10 +2007,10 @@ eslint-config-airbnb@^19.0.4:
     object.assign "^4.1.2"
     object.entries "^1.1.5"
 
-eslint-config-musetric@0.0.50-next.119:
-  version "0.0.50-next.119"
-  resolved "https://registry.yarnpkg.com/eslint-config-musetric/-/eslint-config-musetric-0.0.50-next.119.tgz#c34d7b90cbbd0446af734c920cc46d7d28465792"
-  integrity sha512-iXNgydmwUN+/b7pV2O9DUe9zE9yoltvCm0u5vzXp9box8r7fFN8xnMYu00tqSOxN6zr5jYxB94chiCifZcIySQ==
+eslint-config-musetric@0.0.50-next.127:
+  version "0.0.50-next.127"
+  resolved "https://registry.yarnpkg.com/eslint-config-musetric/-/eslint-config-musetric-0.0.50-next.127.tgz#7cc88d2377ac5488595e2a5944bb9882d7dc91d5"
+  integrity sha512-rkX94jOsxzSK5YRQuhQPBEHBXBcBE3orqjod/blaOU2+lLB0wf3xlzQhXNzaH8+I+xUHP9L3F7y5C+BihB8YZQ==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.50.0"
     "@typescript-eslint/parser" "^5.50.0"
