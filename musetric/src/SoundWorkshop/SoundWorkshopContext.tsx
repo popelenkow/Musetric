@@ -4,7 +4,8 @@ import { NumberRange } from '../Rendering/Layout';
 import { createRecorder, Recorder } from '../SoundProcessing/Recorder';
 import { createSoundBufferManager, SoundBufferManager } from '../Sounds/SoundBufferManager';
 import { ChildrenProps, SFC } from '../UtilityTypes/React';
-import { ContextStore, createStore, SetStoreState, useContextStore } from '../Utils/useStore';
+import { Store, createStore, SetStoreState } from '../Utils/Store';
+import { useContextStore } from '../UtilsReact/Store';
 
 export type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
 
@@ -87,16 +88,16 @@ const createActions = (
 } as const);
 type Actions = ReturnType<typeof createActions>;
 export type SoundWorkshopSnapshot = SoundWorkshopState & Actions;
-type Store = ContextStore<SoundWorkshopSnapshot>;
+type SoundWorkshopStore = Store<SoundWorkshopSnapshot>;
 
-export const SoundWorkshopContext = createContext<Store | undefined>(undefined);
+export const SoundWorkshopContext = createContext<SoundWorkshopStore | undefined>(undefined);
 
 export const SoundWorkshopProvider: SFC<ChildrenProps> = (props) => {
 	const { children } = props;
 
 	const { recorderUrl } = useWorkerContext();
 
-	const [store, setStore] = useState<Store>();
+	const [store, setStore] = useState<SoundWorkshopStore>();
 	useEffect(() => {
 		const currentStore = createStore(initialState, (setState, getState) => (
 			createActions(recorderUrl, setState, getState)
