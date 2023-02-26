@@ -1,6 +1,7 @@
 import Color from 'color';
 import { Theme } from '../AppBase/Theme';
 import type { ValueObject } from '../UtilityTypes/ValueObject';
+import { mapObject } from '../Utils/Object';
 
 export type Rgb = {
 	r: number,
@@ -41,21 +42,15 @@ export const parseColor = <Type extends ColorType>(
 	colorString: string,
 ): ColorTypeMap[Type] => {
 	const color = new Color(colorString);
-	const map = colorMap[type];
 	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-	return map(color) as ColorTypeMap[Type];
+	const map = colorMap[type] as (value: Color) => ColorTypeMap[Type];
+	return map(color);
 };
 export const parseTheme = <Type extends ColorType>(
 	type: Type,
 	theme: Theme,
 ): TypedTheme<Type> => {
-	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-	const result = {} as TypedTheme<Type>;
-	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-	const keys = Object.keys(theme) as (keyof Theme)[];
-	keys.forEach((key) => {
-		result[key] = parseColor(type, theme[key]);
-	});
+	const result = mapObject(theme, ([, value]) => parseColor(type, value));
 	return result;
 };
 

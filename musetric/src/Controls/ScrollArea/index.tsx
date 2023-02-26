@@ -98,7 +98,7 @@ const useRefs = (): RefsResult => {
 	const [elements, setElements] = useState<Elements>();
 	useEffect(() => {
 		const getElements = (): undefined | Elements => {
-			const result = mapObject(refs, (ref) => ref.current);
+			const result = mapObject<Refs, Elements>(refs, ([, ref]) => ref.current!);
 			if (!someObject(result, (value): value is HTMLDivElement => !!value)) return undefined;
 			return result;
 		};
