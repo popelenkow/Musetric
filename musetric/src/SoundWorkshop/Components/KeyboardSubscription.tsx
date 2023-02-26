@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { useRootElementContext } from '../../AppContexts/RootElement';
-import { NumberRange } from '../../Rendering';
+import { NumberRange } from '../../Rendering/Layout';
 import { SFC } from '../../UtilityTypes/React';
 import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
 

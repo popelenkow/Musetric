@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useWorkerContext } from '../AppContexts/Worker';
-import { NumberRange } from '../Rendering';
+import { NumberRange } from '../Rendering/Layout';
 import { createRecorder, Recorder } from '../SoundProcessing/Recorder';
 import { createSoundBufferManager, SoundBufferManager } from '../Sounds/SoundBufferManager';
 import { ChildrenProps, SFC } from '../UtilityTypes/React';

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { NumberField, NumberFieldProps } from '../../../Controls/NumberField';
-import { NumberRange } from '../../../Rendering';
+import { NumberRange } from '../../../Rendering/Layout';
 import { SFC } from '../../../UtilityTypes/React';
 import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../../SoundWorkshopContext';
 
