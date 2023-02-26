@@ -20,6 +20,8 @@
 		"dev": "webpack-dev-server --env dev",
 		"build": "rimraf dist && webpack",
 		"lint": "eslint **/*.{js,ts,tsx}",
+		"lint:fix": "eslint **/*.{js,ts,tsx} --fix",
+		"lint:config": "rimraf .eslintrc.local.json && eslint --print-config .eslintrc.js >> .eslintrc.local.json",
 		"parse-locale": "i18next -c ./i18next.parser.config.js"
 	},
 	"resolutions": {

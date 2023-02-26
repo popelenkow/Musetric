@@ -1,8 +1,8 @@
 import React, { RefObject, useRef, useMemo, useEffect, useState } from 'react';
 import { createUseClasses, createClasses } from '../../AppContexts/Css';
-import { useAnimation } from '../../UtilsReact/Animation';
 import { SFC } from '../../UtilityTypes/React';
 import { mapObject, someObject } from '../../Utils/Object';
+import { useAnimation } from '../../UtilsReact/Animation';
 import {
 	getHorizontalScrollPosition,
 	updateHorizontalScrollPosition,

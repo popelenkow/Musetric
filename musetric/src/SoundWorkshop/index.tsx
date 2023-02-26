@@ -1,9 +1,9 @@
 import React from 'react';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
 import { SFC } from '../UtilityTypes/React';
-import { SoundView } from './Components/SoundView';
 import { KeyboardSubscription } from './Components/KeyboardSubscription';
 import { SoundParametersPanel } from './Components/SoundParametersPanel';
+import { SoundView } from './Components/SoundView';
 import { SoundWorkshopProgressBar } from './Panels/SoundWorkshopProgressBar';
 import { SoundWorkshopSidebar } from './Panels/SoundWorkshopSidebar';
 import { SoundWorkshopToolbar } from './Panels/SoundWorkshopToolbar';

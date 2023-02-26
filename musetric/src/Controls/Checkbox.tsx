@@ -1,5 +1,5 @@
 import React from 'react';
-import { createUseClasses, createClasses, className } from '../AppContexts/Css';
+import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { SFC } from '../UtilityTypes/React';
 import { getButtonClasses } from './Button';
 import { Field, FieldProps } from './Field';
@@ -45,7 +45,6 @@ export const Checkbox: SFC<CheckboxProps, 'required'> = (props) => {
 
 	const fieldProps: FieldProps = {
 		kind,
-		disabled,
 		rounded,
 		primary: checked,
 		classNames: { root: classes.button },
