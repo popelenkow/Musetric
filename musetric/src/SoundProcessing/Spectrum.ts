@@ -1,4 +1,4 @@
-import type { PromiseObjectApi } from '../UtilityTypes';
+import type { PromiseObjectApi } from '../UtilityTypes/PromiseObjectApi';
 import { createPromiseWorkerApi } from '../Workers/PromiseWorkerApi';
 import type { SpectrumWorker } from './SpectrumWorker';
 

@@ -17,7 +17,7 @@ const runSplashScreen = (): void => {
 	splashScreen.style.alignItems = 'center';
 	splashScreen.style.font = '36px/40px "Segoe UI", Arial, sans-serif';
 	splashScreen.style.backgroundColor = theme.background;
-	splashScreen.style.color = theme.activeContent;
+	splashScreen.style.color = theme.content;
 	splashScreen.innerText = 'Musetric';
 	root.appendChild(splashScreen);
 };

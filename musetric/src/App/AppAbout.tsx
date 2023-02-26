@@ -2,7 +2,7 @@ import React, { ReactNode, useMemo } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useLocaleContext } from '../AppContexts/Locale';
 import { getFieldClasses } from '../Controls/Field';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
 
 export const getAppAboutClasses = createClasses((css) => {
 	const { theme } = css;

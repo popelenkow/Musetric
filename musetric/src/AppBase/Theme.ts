@@ -1,12 +1,12 @@
 export type Theme = {
 	background: string,
-	activeBackground: string,
+	backgroundPanel: string,
 	content: string,
-	activeContent: string,
-	hover: string,
-	primaryHover: string,
+	contentHover: string,
+	contentHoverActive: string,
 	primary: string,
-	activePrimary: string,
+	primaryHover: string,
+	primaryHoverActive: string,
 	divider: string,
 	shadow: string,
 };

@@ -4,12 +4,12 @@ import { parseTheme } from './Color';
 import { Size2D } from './Layout';
 
 export type FrequencyColors = {
-	activeContent: number,
+	content: number,
 	background: number,
 };
 export const createFrequencyColors = (theme: Theme): FrequencyColors => {
-	const { activeContent, background } = parseTheme('uint32', theme);
-	return { activeContent, background };
+	const { content, background } = parseTheme('uint32', theme);
+	return { content, background };
 };
 
 export const drawFrequency = (
@@ -18,7 +18,7 @@ export const drawFrequency = (
 	frame: Size2D,
 	colors: FrequencyColors,
 ): void => {
-	const { activeContent, background } = colors;
+	const { content, background } = colors;
 	const out = new Uint32Array(output.buffer);
 
 	const step = (1.0 * input.real.length) / frame.height;
@@ -29,7 +29,7 @@ export const drawFrequency = (
 		const index = y * frame.width;
 		const limit = Math.ceil(magnitude * frame.width);
 
-		out.fill(activeContent, index, index + limit);
+		out.fill(content, index, index + limit);
 		out.fill(background, index + limit, index + frame.width);
 	}
 };

@@ -1,8 +1,7 @@
 import React from 'react';
 import { createClasses, createUseClasses } from '../../AppContexts/Css';
-import { SFC } from '../../UtilityTypes';
-import { SoundProgressBar, SoundProgressBarProps } from '../Components';
-import { useSoundWorkshopStore } from '../Store';
+import { SFC } from '../../UtilityTypes/React';
+import { SoundProgressBar } from '../Components/SoundProgressBar';
 
 export const getSoundWorkshopProgressBarClasses = createClasses((css) => {
 	const { theme } = css;
@@ -21,15 +20,9 @@ const useClasses = createUseClasses('SoundWorkshopProgressBar', getSoundWorkshop
 export const SoundWorkshopProgressBar: SFC = () => {
 	const classes = useClasses();
 
-	const store = useSoundWorkshopStore();
-
-	const soundProgressBarProps: SoundProgressBarProps = {
-		soundBufferManager: store.soundBufferManager,
-	};
-
 	return (
 		<div className={classes.root}>
-			<SoundProgressBar {...soundProgressBarProps} />
+			<SoundProgressBar />
 		</div>
 	);
 };

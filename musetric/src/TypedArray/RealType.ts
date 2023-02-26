@@ -1,4 +1,4 @@
-import type { OverloadedConstructorParameters } from '../UtilityTypes';
+import type { OverloadedConstructorParameters } from '../UtilityTypes/OverloadedConstructorParameters';
 
 export type RealTypeMap = {
 	float32: Float32Array,

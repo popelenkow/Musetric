@@ -1,15 +1,21 @@
 import React from 'react';
-import { useIconContext, useLocaleContext } from '../../AppContexts';
-import { Button, ButtonProps } from '../../Controls';
-import { SoundBufferManager, createWav } from '../../Sounds';
-import { SFC } from '../../UtilityTypes';
-import { saveBlobFile } from '../../Utils';
+import { useIconContext } from '../../AppContexts/Icon';
+import { useLocaleContext } from '../../AppContexts/Locale';
+import { Button, ButtonProps } from '../../Controls/Button';
+import { createWav } from '../../Sounds/Wav';
+import { SFC } from '../../UtilityTypes/React';
+import { saveBlobFile } from '../../Utils/SaveBlobFile';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
 
-export type SoundSaveFileButtonProps = {
-	soundBufferManager: SoundBufferManager,
-};
-export const SoundSaveFileButton: SFC<SoundSaveFileButtonProps> = (props) => {
-	const { soundBufferManager } = props;
+const select = ({
+	soundBufferManager,
+}: SoundWorkshopSnapshot) => ({
+	soundBufferManager,
+} as const);
+
+export const SoundSaveFileButton: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { soundBufferManager } = store;
 
 	const { SaveIcon } = useIconContext();
 	const { i18n } = useLocaleContext();

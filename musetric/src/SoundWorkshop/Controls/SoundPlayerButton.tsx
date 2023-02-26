@@ -1,20 +1,23 @@
 import React from 'react';
-import { useIconContext, useWorkerContext, useLocaleContext } from '../../AppContexts';
-import { Button, ButtonProps } from '../../Controls';
-import { useLazyMemoAsync } from '../../ReactUtils';
-import { createPlayer } from '../../SoundProcessing';
-import { SoundBufferManager } from '../../Sounds';
-import { SFC } from '../../UtilityTypes';
-import { skipPromise } from '../../Utils';
+import { useIconContext } from '../../AppContexts/Icon';
+import { useLocaleContext } from '../../AppContexts/Locale';
+import { useWorkerContext } from '../../AppContexts/Worker';
+import { Button, ButtonProps } from '../../Controls/Button';
+import { createPlayer } from '../../SoundProcessing/Player';
+import { SFC } from '../../UtilityTypes/React';
+import { skipPromise } from '../../Utils/SkipPromise';
+import { useLazyMemoAsync } from '../../UtilsReact/LazyMemo';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
 
-export type SoundPlayerButtonProps = {
-	disabled: boolean,
-	soundBufferManager: SoundBufferManager,
-	isPlaying: boolean,
-	setIsPlaying: (value: boolean) => void,
-};
-export const SoundPlayerButton: SFC<SoundPlayerButtonProps> = (props) => {
-	const { disabled, soundBufferManager, isPlaying, setIsPlaying } = props;
+const select = ({
+	isRecording, isPlaying, setIsPlaying, soundBufferManager,
+}: SoundWorkshopSnapshot) => ({
+	isRecording, isPlaying, setIsPlaying, soundBufferManager,
+} as const);
+
+export const SoundPlayerButton: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { isRecording, isPlaying, setIsPlaying, soundBufferManager } = store;
 
 	const { PlayIcon, StopIcon } = useIconContext();
 	const { i18n } = useLocaleContext();
@@ -24,6 +27,9 @@ export const SoundPlayerButton: SFC<SoundPlayerButtonProps> = (props) => {
 		const { soundBuffer, cursor } = soundBufferManager;
 		const { channelCount } = soundBuffer;
 		const player = await createPlayer(playerUrl, channelCount, {
+			onStarted: () => {
+				setIsPlaying(true);
+			},
 			onStopped: (event) => {
 				const { reset } = event;
 				setIsPlaying(false);
@@ -50,7 +56,6 @@ export const SoundPlayerButton: SFC<SoundPlayerButtonProps> = (props) => {
 			soundBuffer: buffers[0].realRaw,
 		});
 		await player.start();
-		setIsPlaying(true);
 	};
 	const stopPlaying = async (): Promise<void> => {
 		const player = await getPlayer();
@@ -58,8 +63,7 @@ export const SoundPlayerButton: SFC<SoundPlayerButtonProps> = (props) => {
 	};
 	const buttonProps: ButtonProps = {
 		kind: 'icon',
-		disabled,
-		active: isPlaying,
+		disabled: isRecording,
 		primary: isPlaying,
 		rounded: true,
 		title: isPlaying ? i18n.t('Workshop:stop') : i18n.t('Workshop:play'),

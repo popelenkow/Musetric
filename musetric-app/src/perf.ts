@@ -16,8 +16,7 @@ export const run = async (): Promise<void> => {
 	const root = document.getElementById('root');
 	if (!root) throw new Error();
 	const themeId = getStorageThemeId() || 'dark';
-	const { theme } = allThemeEntries.find((x) => x.themeId === themeId) || {};
-	if (!theme) throw new Error();
+	const { theme } = allThemeEntries.find((x) => x.themeId === themeId) || allThemeEntries[0];
 	root.style.backgroundColor = theme.background;
 	root.style.display = 'flex';
 	root.style.flexDirection = 'column';
@@ -91,14 +90,14 @@ export const run = async (): Promise<void> => {
 				legend: {
 					display: true,
 					labels: {
-						color: theme.activeContent,
+						color: theme.content,
 					},
 				},
 			},
 			scales: {
 				x: {
 					ticks: {
-						color: theme.activeContent,
+						color: theme.content,
 					},
 					grid: {
 						color: theme.divider,
@@ -106,7 +105,7 @@ export const run = async (): Promise<void> => {
 				},
 				y: {
 					ticks: {
-						color: theme.activeContent,
+						color: theme.content,
 					},
 					grid: {
 						color: theme.divider,
@@ -137,7 +136,7 @@ export const run = async (): Promise<void> => {
 	links.appendChild(app);
 
 	const textDiv = document.createElement('div');
-	textDiv.style.color = theme.activeContent;
+	textDiv.style.color = theme.content;
 
 	root.innerHTML = '';
 	root.appendChild(links);

@@ -3,8 +3,7 @@ import type { ReactElement, ReactNode } from 'react';
 type ChildrenPropsMap = {
 	required: { children: ReactNode },
 	optional: { children?: ReactNode },
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	none: {},
+	none: object,
 };
 type ChildrenPropsType = keyof ChildrenPropsMap;
 export type ChildrenProps<CType extends ChildrenPropsType = 'required'> = ChildrenPropsMap[CType];
@@ -18,8 +17,7 @@ export type FCResult<Type extends FCResultType = 'required'> = FCResultMap[Type]
 
 /** Strict FC */
 export type SFC<
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	Props = {},
+	Props = object,
 	CType extends ChildrenPropsType = 'none',
 	RType extends FCResultType = 'required',
 > = (

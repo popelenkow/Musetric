@@ -1,7 +1,7 @@
 import React, { SetStateAction, Dispatch, ReactElement, useEffect, useRef } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 import { useRootElementContext } from '../AppContexts/RootElement';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
 import { Button, ButtonProps } from './Button';
 
 export const getDropdownClasses = createClasses((css) => {
@@ -17,7 +17,7 @@ export const getDropdownClasses = createClasses((css) => {
 			'z-index': '2',
 			right: '0',
 			'margin-top': '3px',
-			'background-color': theme.activeBackground,
+			'background-color': theme.backgroundPanel,
 			'min-width': '140px',
 			'box-shadow': `0px 0px 5px 1px ${theme.shadow}`,
 			'&.open': {
@@ -32,7 +32,6 @@ export type DropdownProps = {
 	kind?: 'simple' | 'icon' | 'full',
 	align?: 'left' | 'center' | 'right',
 	disabled?: boolean,
-	active?: boolean,
 	primary?: boolean,
 	rounded?: boolean,
 	title?: string,
@@ -45,7 +44,7 @@ export type DropdownProps = {
 };
 export const Dropdown: SFC<DropdownProps, 'required'> = (props) => {
 	const {
-		kind, disabled, active, primary, rounded,
+		kind, disabled, primary, rounded,
 		title, isOpen, setIsOpen, menu, children,
 	} = props;
 	const classes = useClasses();
@@ -86,7 +85,7 @@ export const Dropdown: SFC<DropdownProps, 'required'> = (props) => {
 
 	const menuName = className(
 		classes.menu,
-		{ value: { open: isOpen } },
+		{ open: isOpen },
 	);
 	const click = (): void => {
 		setIsOpen(!isOpen);
@@ -94,7 +93,6 @@ export const Dropdown: SFC<DropdownProps, 'required'> = (props) => {
 
 	const buttonProps: ButtonProps = {
 		kind,
-		active,
 		disabled,
 		primary,
 		rounded,

@@ -2,7 +2,7 @@ import React from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useIconContext } from '../AppContexts/Icon';
 import { getFieldClasses } from '../Controls/Field';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
 
 export const getAppBarClasses = createClasses((css) => {
 	const { theme } = css;
@@ -14,7 +14,7 @@ export const getAppBarClasses = createClasses((css) => {
 			width: '100%',
 			height: '100%',
 			'column-gap': '4px',
-			background: theme.activeBackground,
+			background: theme.backgroundPanel,
 			padding: '0px 4px',
 			'align-items': 'center',
 			'justify-content': 'center',

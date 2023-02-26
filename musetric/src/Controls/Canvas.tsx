@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { useLogContext } from '../AppContexts';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useLocaleContext } from '../AppContexts/Locale';
+import { useLogContext } from '../AppContexts/Log';
 import { Size2D } from '../Rendering/Layout';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
 
 export const getCanvasClasses = createClasses(() => {
 	return {

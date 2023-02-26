@@ -1,36 +1,30 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { useAnimation } from '../ReactUtils/Animation';
-import { parseColor } from '../Rendering/Color';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
+import { useAnimation } from '../UtilsReact/Animation';
 import { GroovedWheel, GroovedWheelProps } from './GroovedWheel';
 import { getTextFieldClasses } from './TextField';
 
 export const getNumberFieldClasses = createClasses((css) => {
-	const { theme, platform } = css;
+	const { theme } = css;
 	const textFieldClasses = getTextFieldClasses(css);
+	const activeSelector = ['&:not(:focus-within):active', '&:not(:focus-within).active', '.hoverable &:not(:focus-within):hover'];
 	return {
 		root: {
 			...textFieldClasses.root,
-			[platform.platformId === 'mobile' ? '&:active > fieldset' : '&:hover > fieldset']: {
-				'border-color': theme.activeContent,
-				'border-bottom-color': 'transparent',
+			[`${activeSelector.map((x) => x.concat(' > .NumberField-groovedWheel > *')).join(', ')}`]: {
+				'background-color': theme.content,
+			},
+			'&:focus-within > .NumberField-groovedWheel > *': {
+				'background-color': theme.primary,
 			},
 		},
 		input: {
 			...textFieldClasses.input,
-			'&:focus-visible + fieldset': {
-				...textFieldClasses.input['&:focus-visible + fieldset'],
-				'border-bottom-color': 'transparent',
-			},
 		},
 		fieldset: {
 			...textFieldClasses.fieldset,
-			'border-bottom-color': 'transparent',
-			'&.active': {
-				...textFieldClasses.fieldset['&.active'],
-				'border-bottom-color': 'transparent',
-			},
+			'border-bottom-color': 'transparent !important',
 		},
 		legend: {
 			...textFieldClasses.legend,
@@ -38,10 +32,10 @@ export const getNumberFieldClasses = createClasses((css) => {
 		groovedWheel: {
 			position: 'absolute',
 			cursor: 'ew-resize',
-			bottom: '6px',
+			bottom: '0px',
 			height: '8px',
-			left: '14px',
-			right: '14px',
+			left: '12px',
+			right: '12px',
 		},
 	};
 });
@@ -66,25 +60,22 @@ export const NumberField: SFC<NumberFieldProps> = (props) => {
 	const [active, setActive] = useState<boolean>(false);
 	const [localValue, setLocalValue] = useState<string>(`${value}`);
 	useAnimation(() => {
-		if (!active) return;
-		const result = setValue(Math.round(valueRef.current * 1e1) / 1e1);
-		setLocalValue(`${result}`);
-		valueRef.current = result;
-	}, [active, setValue]);
-
-	const [groovedWheelColor, setGroovedWheelColor] = useState<number>(0);
-	const fieldsetRef = useRef<HTMLFieldSetElement>(null);
-	useAnimation(() => {
-		if (!fieldsetRef.current) return;
-		const fieldsetStyles = window.getComputedStyle(fieldsetRef.current);
-		const color = parseColor('uint32', fieldsetStyles.borderRightColor);
-		setGroovedWheelColor(color);
-	}, []);
+		if (!active) return undefined;
+		return () => {
+			const result = setValue(Math.round(valueRef.current * 1e1) / 1e1);
+			setLocalValue(`${result}`);
+			valueRef.current = result;
+		};
+	});
 
 	const stopGroovedWheelRef = useRef<() => void>(null);
+	const rootName = className(
+		classes.root,
+		{ active },
+	);
 	const fieldsetName = className(
 		classes.fieldset,
-		{ value: { active, disabled, rounded } },
+		{ disabled, rounded },
 	);
 
 	const onMove = useCallback((delta: number) => {
@@ -113,12 +104,11 @@ export const NumberField: SFC<NumberFieldProps> = (props) => {
 		onMove,
 		onActive: setActive,
 		stopRef: stopGroovedWheelRef,
-		contentColor: groovedWheelColor,
 	};
 	return (
-		<div className={classes.root}>
+		<div className={rootName}>
 			<input {...inputProps} />
-			<fieldset className={fieldsetName} ref={fieldsetRef}>
+			<fieldset className={fieldsetName}>
 				<legend className={classes.legend}>{label}</legend>
 			</fieldset>
 			<div className={classes.groovedWheel}>

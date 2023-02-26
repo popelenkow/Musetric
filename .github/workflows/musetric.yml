@@ -11,8 +11,14 @@ on:
   workflow_dispatch:
     inputs:
       npmPublishTag:
+        type: choice
         description: 'npm publish tag'
         required: false
+        options:
+        - 
+        - latest
+        - beta
+        - next
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,12 +26,12 @@ jobs:
       run:
         working-directory: ./musetric
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
         node-version: '16.x'
         registry-url: 'https://registry.npmjs.org'
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v3
       with:
         python-version: '3.x'
     - run: python ../.github/workflows/setBuildNumber.py

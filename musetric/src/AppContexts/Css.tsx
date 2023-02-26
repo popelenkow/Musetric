@@ -3,14 +3,13 @@ import classNames from 'classnames';
 import { Classes, GenerateId } from 'jss';
 import React, { createContext, useMemo, useState, useEffect } from 'react';
 import { JssProvider, createTheming, createUseStyles, Styles } from 'react-jss';
-import { Platform, getPlatformId } from '../AppBase/Platform';
 import { Theme, ThemeEntry } from '../AppBase/Theme';
-import { useInitializedContext } from '../ReactUtils/Context';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
+import { useInitializedContext } from '../UtilsReact/Context';
+import { useRootElementContext } from './RootElement';
 
 export type Css = {
 	theme: Theme,
-	platform: Platform,
 };
 // eslint-disable-next-line
 export const ThemingContext = createContext<Css>(undefined as any);
@@ -34,29 +33,66 @@ export type CssStore = {
 };
 export const CssContext = createContext<CssStore | undefined>(undefined);
 
-const usePlatform = (): Platform => {
-	const platformId = useMemo(() => getPlatformId(), []);
-	const [innerHeight, setInnerHeight] = useState<number>(window.innerHeight);
+const visualViewport = window.visualViewport ?? window;
 
+const usePlatform = (): void => {
 	useEffect(() => {
 		const resize = (): void => {
-			setInnerHeight(window.innerHeight);
+			const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+			const top = window.visualViewport ? window.visualViewport.offsetTop : 0;
+			document.documentElement.style.setProperty(
+				'--100vh',
+				`${height}px`,
+			);
+			document.documentElement.style.setProperty(
+				'--screenTop',
+				`${top}px`,
+			);
 		};
+		resize();
 
-		window.addEventListener('resize', resize);
-		return () => window.removeEventListener('resize', resize);
-	}, [platformId]);
+		visualViewport.addEventListener('resize', resize);
+		visualViewport.addEventListener('scroll', resize);
+		return (): void => {
+			visualViewport.removeEventListener('resize', resize);
+			visualViewport.removeEventListener('scroll', resize);
+		};
+	}, []);
+};
 
-	const platform: Platform = platformId === 'mobile' ? {
-		platformId,
-		height: `${innerHeight}px`,
-		width: '100vw',
-	} : {
-		platformId,
-		height: '100vh',
-		width: '100vw',
-	};
-	return platform;
+const HoverableInjection: SFC<object, 'none', 'optional'> = () => {
+	const { rootElement } = useRootElementContext();
+
+	useEffect(() => {
+		rootElement.classList.add('hoverable');
+		let isTouch = false;
+		const onTouch = (): void => {
+			if (isTouch) return;
+			isTouch = true;
+			rootElement.classList.add('hoverable');
+		};
+		const onCursor = (): void => {
+			if (!isTouch) return;
+			isTouch = false;
+			rootElement.classList.remove('hoverable');
+		};
+		document.addEventListener('touchstart', onTouch);
+		document.addEventListener('touchmove', onTouch);
+		document.addEventListener('touchend', onTouch);
+		document.addEventListener('mousedown', onCursor);
+		document.addEventListener('mousemove', onCursor);
+		document.addEventListener('mouseup', onCursor);
+		return (): void => {
+			document.removeEventListener('touchstart', onTouch);
+			document.removeEventListener('touchmove', onTouch);
+			document.removeEventListener('touchend', onTouch);
+			document.removeEventListener('mousedown', onCursor);
+			document.removeEventListener('mousemove', onCursor);
+			document.removeEventListener('mouseup', onCursor);
+			rootElement.classList.remove('hoverable');
+		};
+	}, [rootElement]);
+	return null;
 };
 
 export type CssProviderProps = {
@@ -71,17 +107,17 @@ export const CssProvider: SFC<CssProviderProps, 'required'> = (props) => {
 	const [themeId, setThemeId] = useState<string>(initThemeId || allThemeIds[0]);
 	const themeEntry = allThemeEntries.find((x) => x.themeId === themeId);
 	const { theme = allThemeEntries[0].theme } = themeEntry || { };
-	const platform = usePlatform();
+	usePlatform();
 
 	const store: CssStore = useMemo(() => ({
-		css: { theme, platform },
+		css: { theme },
 		themeId,
 		setThemeId: (id: string): void => {
 			setThemeId(id);
 			if (onSetThemeId) onSetThemeId(id);
 		},
 		allThemeIds,
-	}), [allThemeIds, onSetThemeId, platform, theme, themeId]);
+	}), [allThemeIds, onSetThemeId, theme, themeId]);
 
 	const generateId: GenerateId = (rule, sheet) => {
 		const prefix = sheet?.options?.classNamePrefix || '';
@@ -91,8 +127,9 @@ export const CssProvider: SFC<CssProviderProps, 'required'> = (props) => {
 	return (
 		<CssContext.Provider value={store}>
 			<JssProvider generateId={generateId}>
-				<theming.ThemeProvider theme={{ theme, platform }}>
+				<theming.ThemeProvider theme={{ theme }}>
 					{children}
+					<HoverableInjection />
 				</theming.ThemeProvider>
 			</JssProvider>
 		</CssContext.Provider>
@@ -101,23 +138,16 @@ export const CssProvider: SFC<CssProviderProps, 'required'> = (props) => {
 
 export const useCssContext = (): CssStore => useInitializedContext(CssContext, 'useCssContext');
 
-export type ClassNameArg = string | {
-	value?: string | Record<string, boolean | undefined>,
-	default?: string,
-};
+export type ClassNameArg = string | Record<string, boolean | undefined>;
 export const className = (...args: ClassNameArg[]): string => {
 	const resultArr = args.map<Record<string, boolean | undefined>>((arg) => {
 		if (typeof arg === 'string') return { [arg]: true };
-		if (!arg.value) return {};
-		if (arg.value === arg.default) return {};
-		if (typeof arg.value === 'object') return arg.value;
-		return {
-			[arg.value]: true,
-		};
+		if (typeof arg === 'object') return arg;
+		return {};
 	});
 	let resultObj = {};
 	resultArr.forEach((obj) => {
 		resultObj = { ...resultObj, ...obj };
 	});
-	return classNames(resultObj);
+	return classNames(...args);
 };

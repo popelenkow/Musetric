@@ -1,14 +1,19 @@
 import React from 'react';
-import { useIconContext, useLocaleContext } from '../../AppContexts';
-import { Button, ButtonProps } from '../../Controls';
-import { SFC } from '../../UtilityTypes';
+import { useIconContext } from '../../AppContexts/Icon';
+import { useLocaleContext } from '../../AppContexts/Locale';
+import { Button, ButtonProps } from '../../Controls/Button';
+import { SFC } from '../../UtilityTypes/React';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
 
-export type SoundOpenParametersButtonProps = {
-	isOpenParameters: boolean,
-	setIsOpenParameters: (value: boolean) => void,
-};
-export const SoundOpenParametersButton: SFC<SoundOpenParametersButtonProps> = (props) => {
-	const { isOpenParameters, setIsOpenParameters } = props;
+const select = ({
+	isOpenParameters, setIsOpenParameters,
+}: SoundWorkshopSnapshot) => ({
+	isOpenParameters, setIsOpenParameters,
+} as const);
+
+export const SoundOpenParametersButton: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { isOpenParameters, setIsOpenParameters } = store;
 
 	const { ParametersIcon } = useIconContext();
 	const { i18n } = useLocaleContext();
@@ -17,7 +22,7 @@ export const SoundOpenParametersButton: SFC<SoundOpenParametersButtonProps> = (p
 		kind: 'icon',
 		rounded: true,
 		title: i18n.t('Workshop:parameters'),
-		active: isOpenParameters,
+		primary: isOpenParameters,
 		onClick: () => setIsOpenParameters(!isOpenParameters),
 	};
 	return (

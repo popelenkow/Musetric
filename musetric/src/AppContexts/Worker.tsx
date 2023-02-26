@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import { Workers } from '../AppBase/Worker';
-import { useInitializedContext } from '../ReactUtils/Context';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
+import { useInitializedContext } from '../UtilsReact/Context';
 
 export type WorkerStore = Workers;
 export const WorkerContext = createContext<WorkerStore | undefined>(undefined);

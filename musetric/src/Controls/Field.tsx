@@ -1,10 +1,9 @@
 import React from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
 
 export const getFieldClasses = createClasses((css) => {
 	const { theme } = css;
-	const { platformId } = css.platform;
 	return {
 		root: {
 			display: 'flex',
@@ -21,9 +20,9 @@ export const getFieldClasses = createClasses((css) => {
 			'justify-content': 'center',
 			border: '1px solid',
 			'border-color': 'transparent',
-			color: theme.activeContent,
+			color: theme.content,
 			'& path, rect, polygon': {
-				fill: theme.activeContent,
+				fill: theme.content,
 			},
 			'&:focus-visible': {
 				'border-color': theme.divider,
@@ -46,12 +45,6 @@ export const getFieldClasses = createClasses((css) => {
 			'&.right': {
 				'justify-content': 'right',
 			},
-			'&.disabled': {
-				[platformId === 'mobile' ? '&:active' : '&:hover']: {
-					'background-color': theme.hover,
-				},
-				opacity: '0.4',
-			},
 			'&.primary': {
 				color: theme.primary,
 				'& path, rect, polygon': {
@@ -66,7 +59,6 @@ const useClasses = createUseClasses('Field', getFieldClasses);
 export type FieldProps = {
 	kind?: 'simple' | 'icon' | 'full',
 	align?: 'left' | 'center' | 'right',
-	disabled?: boolean,
 	primary?: boolean,
 	rounded?: boolean,
 	classNames?: {
@@ -75,16 +67,16 @@ export type FieldProps = {
 };
 export const Field: SFC<FieldProps, 'required'> = (props) => {
 	const {
-		disabled, primary, rounded,
+		primary, rounded,
 		kind, align, children, classNames,
 	} = props;
 
 	const classes = useClasses();
 	const rootName = className(
 		classNames?.root || classes.root,
-		{ value: kind, default: 'simple' },
-		{ value: align, default: 'center' },
-		{ value: { disabled, primary, rounded } },
+		kind ?? 'simple',
+		align ?? 'center',
+		{ primary, rounded },
 	);
 
 	return (

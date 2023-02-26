@@ -13,7 +13,7 @@ const add = (
 	chunks: Float32Array[],
 	cursor: number,
 ): void => {
-	const { length, channelCount, buffers } = soundBuffer;
+	const { length, channelCount } = soundBuffer;
 	const chunkSize = chunks[0].length;
 	const newSize = cursor + chunkSize;
 	const isNewBuffer = newSize > length;
@@ -21,6 +21,7 @@ const add = (
 		const newLength = 2 ** Math.ceil(Math.log2(newSize));
 		soundBuffer.setLength(newLength);
 	}
+	const { buffers } = soundBuffer;
 	for (let i = 0; i < channelCount; i++) {
 		buffers[i].real.set(chunks[i], cursor);
 	}

@@ -1,9 +1,8 @@
-import className from 'classnames';
 import React, { RefObject, useRef, useMemo, useEffect, useState } from 'react';
 import { createUseClasses, createClasses } from '../../AppContexts/Css';
-import { useAnimation } from '../../ReactUtils/Animation';
-import { SFC } from '../../UtilityTypes';
+import { SFC } from '../../UtilityTypes/React';
 import { mapObject, someObject } from '../../Utils/Object';
+import { useAnimation } from '../../UtilsReact/Animation';
 import {
 	getHorizontalScrollPosition,
 	updateHorizontalScrollPosition,
@@ -25,6 +24,7 @@ export const getScrollAreaClasses = createClasses(() => {
 		},
 		content: {
 			position: 'absolute',
+			'overscroll-behavior': 'none',
 			'box-sizing': 'border-box',
 			overflow: 'auto',
 			inset: '0px',
@@ -98,7 +98,7 @@ const useRefs = (): RefsResult => {
 	const [elements, setElements] = useState<Elements>();
 	useEffect(() => {
 		const getElements = (): undefined | Elements => {
-			const result = mapObject(refs, (ref) => ref.current);
+			const result = mapObject<Refs, Elements>(refs, ([, ref]) => ref.current!);
 			if (!someObject(result, (value): value is HTMLDivElement => !!value)) return undefined;
 			return result;
 		};
@@ -144,14 +144,10 @@ export const ScrollArea: SFC<ScrollAreaProps, 'required'> = (props) => {
 
 	const { refs, elements } = useRefs();
 
-	const rootName = className({
-		[classNames?.root || classes.root]: true,
-	});
-
 	useAnimation(() => {
-		if (!elements) return;
-		updateScrolls(elements);
-	}, [elements]);
+		if (!elements) return undefined;
+		return () => updateScrolls(elements);
+	});
 
 	useEffect(() => {
 		if (!elements) return undefined;
@@ -164,7 +160,7 @@ export const ScrollArea: SFC<ScrollAreaProps, 'required'> = (props) => {
 	}, [elements]);
 
 	return (
-		<div className={rootName}>
+		<div className={classNames?.root || classes.root}>
 			<div ref={refs.content} className={classes.content}>
 				{children}
 			</div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { ChildrenProps, FCResult } from '../UtilityTypes';
+import { ChildrenProps, FCResult } from '../UtilityTypes/React';
 import { getButtonClasses } from './Button';
 import { Field, FieldProps } from './Field';
 
@@ -66,7 +66,6 @@ export const Radio: RadioFC = (props) => {
 	const checked = checkedValue === value;
 	const fieldProps: FieldProps = {
 		kind,
-		disabled,
 		rounded,
 		primary: checked,
 		classNames: { root: classes.button },

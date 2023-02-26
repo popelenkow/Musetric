@@ -1,12 +1,9 @@
 import React from 'react';
 import { createClasses, createUseClasses } from '../../AppContexts/Css';
-import { SFC } from '../../UtilityTypes';
-import {
-	SoundProgress,
-	SoundPlayerButton, SoundPlayerButtonProps,
-	SoundRecorderButton, SoundRecorderButtonProps,
-} from '../Controls';
-import { useSoundWorkshopStore } from '../Store';
+import { SFC } from '../../UtilityTypes/React';
+import { SoundPlayerButton } from '../Controls/SoundPlayerButton';
+import { SoundProgress } from '../Controls/SoundProgress';
+import { SoundRecorderButton } from '../Controls/SoundRecorderButton';
 
 export const getSoundWorkshopToolbarClasses = createClasses((css) => {
 	const { theme } = css;
@@ -20,7 +17,7 @@ export const getSoundWorkshopToolbarClasses = createClasses((css) => {
 			'justify-content': 'center',
 			'align-items': 'center',
 			'column-gap': '4px',
-			'background-color': theme.activeBackground,
+			'background-color': theme.backgroundPanel,
 			'border-top': `1px solid ${theme.divider}`,
 		},
 	};
@@ -30,33 +27,11 @@ const useClasses = createUseClasses('SoundWorkshopToolbar', getSoundWorkshopTool
 export const SoundWorkshopToolbar: SFC = () => {
 	const classes = useClasses();
 
-	const store = useSoundWorkshopStore();
-	const { isLive, isPlaying, isRecording, soundBufferManager } = store;
-
-	const soundPlayerButtonProps: SoundPlayerButtonProps = {
-		disabled: isRecording,
-		soundBufferManager,
-		isPlaying,
-		setIsPlaying: (value) => {
-			store.dispatch({ type: 'setIsPlaying', isPlaying: value });
-		},
-	};
-
-	const soundRecorderButtonProps: SoundRecorderButtonProps = {
-		disabled: isPlaying,
-		soundBufferManager,
-		isLive,
-		isRecording,
-		setIsRecording: (value) => {
-			store.dispatch({ type: 'setIsRecording', isRecording: value });
-		},
-	};
-
 	return (
 		<div className={classes.root}>
-			<SoundPlayerButton {...soundPlayerButtonProps} />
-			<SoundProgress soundBufferManager={soundBufferManager} />
-			<SoundRecorderButton {...soundRecorderButtonProps} />
+			<SoundPlayerButton />
+			<SoundProgress />
+			<SoundRecorderButton />
 		</div>
 	);
 };

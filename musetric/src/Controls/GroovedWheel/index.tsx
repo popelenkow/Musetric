@@ -1,20 +1,32 @@
-import React, { useCallback, useEffect, useMemo, useRef, MutableRefObject } from 'react';
+import React, { useEffect, useMemo, useRef, MutableRefObject } from 'react';
+import { createClasses, createUseClasses } from '../../AppContexts/Css';
 import { Position2D, Size2D, Layout2D, Direction2D } from '../../Rendering/Layout';
-import { SFC } from '../../UtilityTypes';
-import { PixelCanvas, PixelCanvasProps } from '../PixelCanvas';
+import { SFC } from '../../UtilityTypes/React';
 import { createInertia } from './Inertia';
-import { GroovedWheelColors, drawGroovedWheel } from './Rendering';
 import { subscribeInertia } from './SubscribeInertia';
+
+export const getGroovedWheelClasses = createClasses((css) => {
+	const { theme } = css;
+	return {
+		root: {
+			width: '100%',
+			height: '100%',
+			'-webkit-mask-image': "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10'><rect x='4' width='2' height='10' /></svg>\")",
+			'background-color': theme.divider,
+		},
+	};
+});
+const useClasses = createUseClasses('GroovedWheel', getGroovedWheelClasses);
 
 export type GroovedWheelProps = {
 	onMove: (delta: number) => void,
 	onActive: (value: boolean) => void,
 	stopRef: MutableRefObject<(() => void) | null>,
-	contentColor: number,
 };
 export const GroovedWheel: SFC<GroovedWheelProps> = (props) => {
-	const { onMove, onActive, stopRef, contentColor } = props;
+	const { onMove, onActive, stopRef } = props;
 	const ref = useRef<HTMLDivElement>(null);
+	const classes = useClasses();
 
 	const layout = useMemo<Layout2D>(() => {
 		const size: Size2D = { width: 1000, height: 100 };
@@ -22,13 +34,6 @@ export const GroovedWheel: SFC<GroovedWheelProps> = (props) => {
 		return { size, direction };
 	}, []);
 	const shift = useRef(0);
-	const draw = useCallback((output: ImageData) => {
-		const colors: GroovedWheelColors = {
-			background: 0,
-			content: contentColor,
-		};
-		drawGroovedWheel(Math.floor(shift.current), output.data, layout.size, colors);
-	}, [layout, contentColor]);
 	useEffect(() => {
 		if (!ref.current) return undefined;
 		const root = ref.current;
@@ -55,13 +60,13 @@ export const GroovedWheel: SFC<GroovedWheelProps> = (props) => {
 		return () => unsubscribe();
 	}, [layout, onMove, onActive, stopRef]);
 
-	const pixelCanvasProps: PixelCanvasProps = {
-		layout,
-		draw,
-	};
 	return (
-		<div ref={ref} style={{ width: '100%', height: '100%' }}>
-			<PixelCanvas {...pixelCanvasProps} />
-		</div>
+		<div
+			ref={ref}
+			style={{
+				WebkitMaskPositionX: -shift.current,
+			}}
+			className={classes.root}
+		/>
 	);
 };

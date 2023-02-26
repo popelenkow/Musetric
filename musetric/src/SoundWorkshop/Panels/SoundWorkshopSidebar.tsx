@@ -1,16 +1,13 @@
 import React from 'react';
 import { createClasses, createUseClasses } from '../../AppContexts/Css';
-import { SFC } from '../../UtilityTypes';
-import {
-	SoundSaveFileButton, SoundSaveFileButtonProps,
-	SoundOpenFileButton, SoundOpenFileButtonProps,
-	SoundLiveButton, SoundLiveButtonProps,
-	SoundWaveformButton, SoundWaveformButtonProps,
-	SoundFrequencyButton, SoundFrequencyButtonProps,
-	SoundSpectrogramButton, SoundSpectrogramButtonProps,
-	SoundOpenParametersButton, SoundOpenParametersButtonProps,
-} from '../Controls';
-import { useSoundWorkshopStore } from '../Store';
+import { SFC } from '../../UtilityTypes/React';
+import { SoundFrequencyButton } from '../Controls/SoundFrequencyButton';
+import { SoundLiveButton } from '../Controls/SoundLiveButton';
+import { SoundOpenFileButton } from '../Controls/SoundOpenFileButton';
+import { SoundOpenParametersButton } from '../Controls/SoundOpenParametersButton';
+import { SoundSaveFileButton } from '../Controls/SoundSaveFileButton';
+import { SoundSpectrogramButton } from '../Controls/SoundSpectrogramButton';
+import { SoundWaveformButton } from '../Controls/SoundWaveformButton';
 
 export const getSoundWorkshopSidebarClasses = createClasses((css) => {
 	const { theme } = css;
@@ -24,7 +21,7 @@ export const getSoundWorkshopSidebarClasses = createClasses((css) => {
 			'justify-content': 'center',
 			'align-items': 'center',
 			'row-gap': '4px',
-			'background-color': theme.activeBackground,
+			'background-color': theme.backgroundPanel,
 			'border-left': `1px solid ${theme.divider}`,
 		},
 		top: {
@@ -37,6 +34,10 @@ export const getSoundWorkshopSidebarClasses = createClasses((css) => {
 			'flex-direction': 'column',
 			'justify-content': 'center',
 		},
+		bottom: {
+			display: 'flex',
+			'flex-direction': 'column',
+		},
 	};
 });
 const useClasses = createUseClasses('SoundWorkshopSidebar', getSoundWorkshopSidebarClasses);
@@ -44,58 +45,20 @@ const useClasses = createUseClasses('SoundWorkshopSidebar', getSoundWorkshopSide
 export const SoundWorkshopSidebar: SFC = () => {
 	const classes = useClasses();
 
-	const store = useSoundWorkshopStore();
-
-	const soundOpenParametersButtonProps: SoundOpenParametersButtonProps = {
-		isOpenParameters: store.isOpenParameters,
-		setIsOpenParameters: (value) => (
-			store.dispatch({ type: 'setIsOpenParameters', isOpenParameters: value })
-		),
-	};
-
-	const soundLiveButtonProps: SoundLiveButtonProps = {
-		isLive: store.isLive,
-		setIsLive: (value) => {
-			store.dispatch({ type: 'setIsLive', isLive: value });
-		},
-	};
-	const soundWaveformButtonProps: SoundWaveformButtonProps = {
-		soundViewId: store.soundViewId,
-		setSoundViewId: (value) => {
-			store.dispatch({ type: 'setSoundViewId', soundViewId: value });
-		},
-	};
-	const soundFrequencyButtonProps: SoundFrequencyButtonProps = {
-		soundViewId: store.soundViewId,
-		setSoundViewId: (value) => {
-			store.dispatch({ type: 'setSoundViewId', soundViewId: value });
-		},
-	};
-	const soundSpectrogramButtonProps: SoundSpectrogramButtonProps = {
-		soundViewId: store.soundViewId,
-		setSoundViewId: (value) => {
-			store.dispatch({ type: 'setSoundViewId', soundViewId: value });
-		},
-	};
-	const soundOpenFileButtonProps: SoundOpenFileButtonProps = {
-		soundBufferManager: store.soundBufferManager,
-	};
-	const soundSaveFileButtonProps: SoundSaveFileButtonProps = {
-		soundBufferManager: store.soundBufferManager,
-	};
-
 	return (
 		<div className={classes.root}>
 			<div className={classes.top}>
-				<SoundOpenParametersButton {...soundOpenParametersButtonProps} />
+				<SoundOpenFileButton />
+				<SoundSaveFileButton />
 			</div>
 			<div className={classes.middle}>
-				<SoundLiveButton {...soundLiveButtonProps} />
-				<SoundWaveformButton {...soundWaveformButtonProps} />
-				<SoundFrequencyButton {...soundFrequencyButtonProps} />
-				<SoundSpectrogramButton {...soundSpectrogramButtonProps} />
-				<SoundOpenFileButton {...soundOpenFileButtonProps} />
-				<SoundSaveFileButton {...soundSaveFileButtonProps} />
+				<SoundLiveButton />
+				<SoundWaveformButton />
+				<SoundFrequencyButton />
+				<SoundSpectrogramButton />
+			</div>
+			<div className={classes.bottom}>
+				<SoundOpenParametersButton />
 			</div>
 		</div>
 	);

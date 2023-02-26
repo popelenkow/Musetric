@@ -4,20 +4,20 @@ import { useLocaleContext } from '../AppContexts/Locale';
 import { Button, ButtonProps } from '../Controls/Button';
 import { Divider } from '../Controls/Divider';
 import { Dropdown, DropdownProps } from '../Controls/Dropdown';
-import { FCResult } from '../UtilityTypes';
+import { FCResult } from '../UtilityTypes/React';
 
 export type AppViewDivider = {
 	type: 'divider',
 };
-export type AppViewElement<ViewId extends string> = {
+export type AppViewElement<ViewId> = {
 	type: 'view',
 	id: ViewId,
 	name: string,
 	element: ReactNode,
 };
-export type AppViewEntry<ViewId extends string> = AppViewDivider | AppViewElement<ViewId>;
+export type AppViewEntry<ViewId> = AppViewDivider | AppViewElement<ViewId>;
 
-export type AppDropdownProps<ViewId extends string> = {
+export type AppDropdownProps<ViewId> = {
 	viewId: ViewId,
 	setViewId: Dispatch<SetStateAction<ViewId>>,
 	allViewEntries: AppViewEntry<ViewId>[],
@@ -42,13 +42,11 @@ export const AppDropdown: AppDropdownFC = (props) => {
 				setIsOpen(false);
 			};
 			const key = `app-${view.id}`;
-			const active = viewId === view.id;
 			const buttonProps: ButtonProps = {
 				onClick,
 				kind: 'full',
 				align: 'left',
-				active,
-				primary: active,
+				primary: viewId === view.id,
 			};
 			return (
 				<Button key={key} {...buttonProps}>
@@ -61,14 +59,14 @@ export const AppDropdown: AppDropdownFC = (props) => {
 	const renderMenu = (): ReactElement => <>{allViewEntries.map(mapMenu)}</>;
 	const dropdownProps: DropdownProps = {
 		kind: 'icon',
-		active: isOpen,
+		primary: isOpen,
 		rounded: true,
 		title: i18n.t('AppBase:dropdown'),
 		isOpen,
 		setIsOpen,
 		menu: {
 			render: renderMenu,
-			width: '200px',
+			width: '220px',
 		},
 	};
 

@@ -1,32 +1,26 @@
-import React, { useEffect } from 'react';
-import { useIconContext, useLocaleContext } from '../../AppContexts';
-import { Button, ButtonProps } from '../../Controls';
-import { SoundBufferManager } from '../../Sounds';
-import { SFC } from '../../UtilityTypes';
-import { skipPromise } from '../../Utils';
-import { useSoundWorkshopStore } from '../Store';
+import React from 'react';
+import { useIconContext } from '../../AppContexts/Icon';
+import { useLocaleContext } from '../../AppContexts/Locale';
+import { Button, ButtonProps } from '../../Controls/Button';
+import { SFC } from '../../UtilityTypes/React';
+import { skipPromise } from '../../Utils/SkipPromise';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
 
-export type SoundRecorderButtonProps = {
-	disabled: boolean,
-	soundBufferManager: SoundBufferManager,
-	isLive: boolean,
-	isRecording: boolean,
-	setIsRecording: (value: boolean) => void,
-};
-export const SoundRecorderButton: SFC<SoundRecorderButtonProps> = (props) => {
-	const { disabled, isLive, isRecording, setIsRecording } = props;
+const select = ({
+	isPlaying, isRecording, setIsRecording, getRecorder,
+}: SoundWorkshopSnapshot) => ({
+	isPlaying, isRecording, setIsRecording, getRecorder,
+} as const);
+
+export const SoundRecorderButton: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { isPlaying, isRecording, setIsRecording, getRecorder } = store;
 
 	const { RecordIcon } = useIconContext();
 	const { i18n } = useLocaleContext();
 
-	const store = useSoundWorkshopStore();
-
-	useEffect(() => {
-		if (isLive) skipPromise(store.getRecorder());
-	}, [isLive, store]);
-
 	const startRecording = async (): Promise<void> => {
-		const recorder = await store.getRecorder();
+		const recorder = await getRecorder();
 		await recorder.start();
 		setIsRecording(true);
 	};
@@ -38,10 +32,9 @@ export const SoundRecorderButton: SFC<SoundRecorderButtonProps> = (props) => {
 
 	const recorderProps: ButtonProps = {
 		kind: 'icon',
-		disabled,
+		disabled: isPlaying,
 		rounded: true,
 		title: i18n.t('Workshop:record'),
-		active: isRecording,
 		primary: isRecording,
 		onClick: () => {
 			if (isRecording) {

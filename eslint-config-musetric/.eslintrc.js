@@ -93,7 +93,40 @@ module.exports = {
 		{
 			files: ['*.ts', '*.tsx', '*.mts'],
 			rules: {
-				'@typescript-eslint/explicit-function-return-type': 'error',
+				'@typescript-eslint/explicit-function-return-type': [
+					'error',
+				],
+				'@typescript-eslint/comma-dangle': [
+					'error',
+					{
+						arrays: 'always-multiline',
+						objects: 'always-multiline',
+						imports: 'always-multiline',
+						exports: 'always-multiline',
+						functions: 'always-multiline',
+						generics: 'always-multiline',
+						enums: 'always-multiline',
+						tuples: 'always-multiline',
+					},
+				],
+			},
+		},
+		{
+			files: ['*.tsx'],
+			rules: {
+				'@typescript-eslint/comma-dangle': [
+					'error',
+					{
+						arrays: 'always-multiline',
+						objects: 'always-multiline',
+						imports: 'always-multiline',
+						exports: 'always-multiline',
+						functions: 'always-multiline',
+						generics: 'ignore',
+						enums: 'always-multiline',
+						tuples: 'always-multiline',
+					},
+				],
 			},
 		},
 	],

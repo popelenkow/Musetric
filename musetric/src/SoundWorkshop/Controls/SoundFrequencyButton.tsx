@@ -1,15 +1,19 @@
 import React from 'react';
-import { useIconContext, useLocaleContext } from '../../AppContexts';
-import { Button, ButtonProps } from '../../Controls';
-import { SFC } from '../../UtilityTypes';
-import { SoundViewId } from '../Store';
+import { useIconContext } from '../../AppContexts/Icon';
+import { useLocaleContext } from '../../AppContexts/Locale';
+import { Button, ButtonProps } from '../../Controls/Button';
+import { SFC } from '../../UtilityTypes/React';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
 
-export type SoundFrequencyButtonProps = {
-	soundViewId: SoundViewId,
-	setSoundViewId: (value: SoundViewId) => void,
-};
-export const SoundFrequencyButton: SFC<SoundFrequencyButtonProps> = (props) => {
-	const { soundViewId, setSoundViewId } = props;
+const select = ({
+	soundViewId, setSoundViewId,
+}: SoundWorkshopSnapshot) => ({
+	soundViewId, setSoundViewId,
+} as const);
+
+export const SoundFrequencyButton: SFC = () => {
+	const store = useSoundWorkshopStore(select);
+	const { soundViewId, setSoundViewId } = store;
 
 	const { FrequencyIcon } = useIconContext();
 	const { i18n } = useLocaleContext();

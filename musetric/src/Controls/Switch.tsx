@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
-import { ChildrenProps, FCResult } from '../UtilityTypes';
+import { ChildrenProps, FCResult } from '../UtilityTypes/React';
 import { getButtonClasses, Button, ButtonProps } from './Button';
 
 export const getSwitchClasses = createClasses((css) => {

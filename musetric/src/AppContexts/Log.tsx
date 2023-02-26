@@ -1,7 +1,7 @@
 import React, { useMemo, createContext } from 'react';
 import { Log } from '../AppBase/Log';
-import { useInitializedContext } from '../ReactUtils/Context';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
+import { useInitializedContext } from '../UtilsReact/Context';
 
 export type LogStore = {
 	log: Log,

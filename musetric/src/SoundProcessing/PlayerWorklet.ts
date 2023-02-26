@@ -14,6 +14,7 @@ export type PlayerWorklet = {
 
 export type PlayerEvents = {
 	onCursor: { value: number },
+	onStarted: undefined,
 	onStopped: { reset: boolean },
 };
 
@@ -30,6 +31,7 @@ const createPlayerWorklet = (
 	let isPlaying = false;
 	const start = (): void => {
 		isPlaying = true;
+		pushEvent('onStarted', undefined);
 	};
 	const stop = (reset = false): void => {
 		isPlaying = false;

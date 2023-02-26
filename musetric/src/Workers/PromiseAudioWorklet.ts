@@ -1,4 +1,4 @@
-import type { PushEvent } from '../Types';
+import type { PushEvent } from '../Types/Events';
 import type { PromiseWorkerRequest, PromiseWorkerResponse, PromiseWorker } from './PromiseWorker';
 
 /*

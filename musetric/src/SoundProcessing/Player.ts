@@ -1,13 +1,14 @@
-import type { EventHandlers } from '../Types';
-import type { PromiseObjectApi } from '../UtilityTypes';
+import type { EventHandlers } from '../Types/Events';
+import type { PromiseObjectApi } from '../UtilityTypes/PromiseObjectApi';
 import { createPromiseWorkerApi } from '../Workers/PromiseWorkerApi';
 import type { PlayerWorklet, PlayerEvents } from './PlayerWorklet';
 
-export type Player =
+export type Player = (
 	& PromiseObjectApi<PlayerWorklet>
 	& {
 		mediaStream: MediaStream,
-	};
+	}
+);
 
 export const createPlayer = async (
 	workletUrl: URL | string,

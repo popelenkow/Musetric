@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import benchmark from 'benchmark';
 import { createConsoleLog } from '../src/AppBase/Log';
 import { Size2D } from '../src/Rendering/Layout';

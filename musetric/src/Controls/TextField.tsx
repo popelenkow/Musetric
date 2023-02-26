@@ -1,17 +1,22 @@
 import React from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
 
 export const getTextFieldClasses = createClasses((css) => {
-	const { theme, platform } = css;
+	const { theme } = css;
+	const activeSelector = ['&:not(:focus-within):active', '&:not(:focus-within).active', '.hoverable &:not(:focus-within):hover'];
 	return {
 		root: {
 			position: 'relative',
 			height: '42px',
 			'min-height': '42px',
 			'font-family': 'Verdana, Arial, sans-serif',
-			[platform.platformId === 'mobile' ? '&:active > fieldset' : '&:hover > fieldset']: {
-				'border-color': theme.activeContent,
+			[`${activeSelector.map((x) => x.concat(' > fieldset')).join(', ')}`]: {
+				'border-color': theme.content,
+			},
+			'&:focus-within > fieldset': {
+				'border-color': theme.primary,
+				color: theme.primary,
 			},
 		},
 		input: {
@@ -24,13 +29,9 @@ export const getTextFieldClasses = createClasses((css) => {
 			'font-size': '18px',
 			border: '1px solid',
 			'border-color': 'transparent',
-			color: theme.activeContent,
+			color: theme.content,
 			width: '100%',
 			'margin-top': '3px',
-			'&:focus-visible + fieldset': {
-				'border-color': theme.activePrimary,
-				color: theme.activePrimary,
-			},
 			'&.rounded': {
 				'border-radius': '10px',
 			},
@@ -42,16 +43,13 @@ export const getTextFieldClasses = createClasses((css) => {
 			inset: '0px',
 			'background-color': 'transparent',
 			'font-size': '18px',
-			color: theme.activeContent,
+			color: theme.content,
 			border: '1px solid',
 			position: 'absolute',
 			'border-color': theme.divider,
 			'pointer-events': 'none',
 			'&.rounded': {
 				'border-radius': '10px',
-			},
-			'&.active': {
-				'border-color': theme.activeContent,
 			},
 		},
 		legend: {
@@ -67,19 +65,19 @@ export type TextFieldProps = {
 	value: string,
 	label?: string,
 	disabled?: boolean,
-	primary?: boolean,
 	rounded?: boolean,
+	active?: boolean,
 };
 export const TextField: SFC<TextFieldProps> = (props) => {
 	const {
 		value, label,
-		disabled, primary, rounded,
+		disabled, active, rounded,
 	} = props;
 
 	const classes = useClasses();
 	const fieldsetName = className(
 		classes.fieldset,
-		{ value: { disabled, primary, rounded } },
+		{ disabled, rounded, active },
 	);
 
 	return (
