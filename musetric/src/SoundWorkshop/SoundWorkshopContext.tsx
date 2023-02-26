@@ -1,10 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { useWorkerContext } from '../../AppContexts';
-import { NumberRange } from '../../Rendering';
-import { createRecorder, Recorder } from '../../SoundProcessing';
-import { createSoundBufferManager, SoundBufferManager } from '../../Sounds/SoundBufferManager';
-import { ChildrenProps, SFC } from '../../UtilityTypes';
-import { ContextStore, createStore, SetStoreState, useContextStore } from './useStore';
+import { useWorkerContext } from '../AppContexts/Worker';
+import { NumberRange } from '../Rendering';
+import { createRecorder, Recorder } from '../SoundProcessing/Recorder';
+import { createSoundBufferManager, SoundBufferManager } from '../Sounds/SoundBufferManager';
+import { ChildrenProps, SFC } from '../UtilityTypes/React';
+import { ContextStore, createStore, SetStoreState, useContextStore } from '../Utils/useStore';
 
 export type SoundViewId = 'Waveform' | 'Frequency' | 'Spectrogram';
 

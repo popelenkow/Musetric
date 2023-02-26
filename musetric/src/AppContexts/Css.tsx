@@ -5,8 +5,8 @@ import React, { createContext, useMemo, useState, useEffect } from 'react';
 import { JssProvider, createTheming, createUseStyles, Styles } from 'react-jss';
 import { Platform, getPlatformId } from '../AppBase/Platform';
 import { Theme, ThemeEntry } from '../AppBase/Theme';
-import { useInitializedContext } from '../ReactUtils/Context';
-import { SFC } from '../UtilityTypes';
+import { useInitializedContext } from '../UtilsReact/Context';
+import { SFC } from '../UtilityTypes/React';
 
 export type Css = {
 	theme: Theme,

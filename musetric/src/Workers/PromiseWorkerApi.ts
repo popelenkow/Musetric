@@ -1,4 +1,4 @@
-import type { EventHandlers } from '../Types';
+import type { EventHandlers } from '../Types/Events';
 import { createIndexIterator } from '../Utils/IndexIterator';
 import type { PromiseWorker, PromiseWorkerResponse, PromiseWorkerRequest } from './PromiseWorker';
 

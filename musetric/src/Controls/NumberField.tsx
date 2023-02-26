@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { useAnimation } from '../ReactUtils/Animation';
-import { SFC } from '../UtilityTypes';
+import { useAnimation } from '../UtilsReact/Animation';
+import { SFC } from '../UtilityTypes/React';
 import { GroovedWheel, GroovedWheelProps } from './GroovedWheel';
 import { getTextFieldClasses } from './TextField';
 

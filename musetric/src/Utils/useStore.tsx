@@ -1,7 +1,7 @@
 import produce from 'immer';
 import { memoize } from 'proxy-memoize';
 import React, { useMemo, useRef, useLayoutEffect, useState } from 'react';
-import { useInitializedContext } from '../../ReactUtils';
+import { useInitializedContext } from '../UtilsReact/Context';
 
 type SnapshotOnChange = () => void;
 type StoreUnsubscribe = () => void;

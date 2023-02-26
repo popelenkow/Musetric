@@ -1,6 +1,6 @@
 import React, { ButtonHTMLAttributes } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
 
 export const getButtonClasses = createClasses((css) => {
 	const { theme } = css;

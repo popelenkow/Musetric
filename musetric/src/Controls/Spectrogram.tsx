@@ -1,11 +1,16 @@
 import React, { useMemo, useCallback, useEffect, useState, useRef } from 'react';
-import { createClasses, createUseClasses, useCssContext, useWorkerContext } from '../AppContexts';
-import { Position2D, createSpectrogramColors, drawSpectrogram, NumberRange, Layout2D } from '../Rendering';
-import { createSpectrum, SpectrumBufferEvent } from '../SoundProcessing';
-import { SoundBufferEvent } from '../Sounds';
-import { RealArray, SharedRealArray, viewRealArrays } from '../TypedArray';
-import { SFC } from '../UtilityTypes';
-import { skipPromise, EventEmitterCallback, UnsubscribeEventEmitter } from '../Utils';
+import { createClasses, createUseClasses, useCssContext } from '../AppContexts/Css';
+import { useWorkerContext } from '../AppContexts/Worker';
+import { Position2D, NumberRange, Layout2D } from '../Rendering/Layout';
+import { createSpectrogramColors, drawSpectrogram } from '../Rendering/Spectrogram';
+import { createSpectrum } from '../SoundProcessing/Spectrum';
+import { SpectrumBufferEvent } from '../SoundProcessing/SpectrumWorker';
+import { SoundBufferEvent } from '../Sounds/SoundBufferManager';
+import { RealArray, SharedRealArray } from '../TypedArray/RealArray';
+import { viewRealArrays } from '../TypedArray/RealArrays';
+import { SFC } from '../UtilityTypes/React';
+import { EventEmitterCallback, UnsubscribeEventEmitter } from '../Utils/EventEmitter';
+import { skipPromise } from '../Utils/SkipPromise';
 import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 
 export const getSpectrogramClasses = createClasses((css) => {

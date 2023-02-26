@@ -1,7 +1,7 @@
 import React from 'react';
 import { createClasses, createUseClasses } from '../../AppContexts/Css';
-import { SFC } from '../../UtilityTypes';
-import { SoundProgressBar } from '../Components';
+import { SFC } from '../../UtilityTypes/React';
+import { SoundProgressBar } from '../Components/SoundProgressBar';
 
 export const getSoundWorkshopProgressBarClasses = createClasses((css) => {
 	const { theme } = css;

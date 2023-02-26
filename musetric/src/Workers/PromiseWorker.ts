@@ -1,4 +1,4 @@
-import { PushEvent } from '../Types';
+import { PushEvent } from '../Types/Events';
 
 export type PromiseWorkerRequest = {
 	id: string,

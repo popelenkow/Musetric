@@ -1,6 +1,6 @@
 import React, { createContext, useState, useMemo } from 'react';
-import { useInitializedContext } from '../ReactUtils/Context';
-import { SFC } from '../UtilityTypes';
+import { useInitializedContext } from '../UtilsReact/Context';
+import { SFC } from '../UtilityTypes/React';
 
 export type RootElementStore = {
 	rootElement: HTMLElement,

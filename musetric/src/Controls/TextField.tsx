@@ -1,6 +1,6 @@
 import React from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
 
 export const getTextFieldClasses = createClasses((css) => {
 	const { theme, platform } = css;

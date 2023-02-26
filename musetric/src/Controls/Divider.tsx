@@ -1,6 +1,6 @@
 import React from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
 
 export const getDividerClasses = createClasses((css) => {
 	const { theme } = css;

@@ -1,7 +1,7 @@
 import React, { SetStateAction, Dispatch, ReactElement, useEffect, useRef } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 import { useRootElementContext } from '../AppContexts/RootElement';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
 import { Button, ButtonProps } from './Button';
 
 export const getDropdownClasses = createClasses((css) => {

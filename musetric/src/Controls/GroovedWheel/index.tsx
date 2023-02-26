@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, MutableRefObject } from 'react';
-import { createClasses, createUseClasses } from '../../AppContexts';
+import { createClasses, createUseClasses } from '../../AppContexts/Css';
 import { Position2D, Size2D, Layout2D, Direction2D } from '../../Rendering/Layout';
-import { SFC } from '../../UtilityTypes';
+import { SFC } from '../../UtilityTypes/React';
 import { createInertia } from './Inertia';
 import { subscribeInertia } from './SubscribeInertia';
 

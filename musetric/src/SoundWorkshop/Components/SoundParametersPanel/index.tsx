@@ -2,8 +2,8 @@ import React from 'react';
 import { createUseClasses, createClasses } from '../../../AppContexts/Css';
 import { ScrollArea } from '../../../Controls/ScrollArea';
 import { TextField, TextFieldProps } from '../../../Controls/TextField';
-import { SFC } from '../../../UtilityTypes';
-import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../../Store';
+import { SFC } from '../../../UtilityTypes/React';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../../SoundWorkshopContext';
 import { FrequencyRangeParameter } from './frequency';
 
 export const getSoundParametersClasses = createClasses((css) => {

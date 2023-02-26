@@ -1,5 +1,5 @@
 import React from 'react';
-import { SFC } from '../../UtilityTypes';
+import { SFC } from '../../UtilityTypes/React';
 
 /**
  * Licensed by MIT. Based on

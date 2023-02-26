@@ -1,10 +1,11 @@
 import React from 'react';
-import { useIconContext, useLocaleContext } from '../../AppContexts';
-import { Button, ButtonProps } from '../../Controls';
-import { createWav } from '../../Sounds';
-import { SFC } from '../../UtilityTypes';
-import { saveBlobFile } from '../../Utils';
-import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../Store';
+import { useIconContext } from '../../AppContexts/Icon';
+import { useLocaleContext } from '../../AppContexts/Locale';
+import { Button, ButtonProps } from '../../Controls/Button';
+import { createWav } from '../../Sounds/Wav';
+import { SFC } from '../../UtilityTypes/React';
+import { saveBlobFile } from '../../Utils/SaveBlobFile';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
 
 const select = ({
 	soundBufferManager,

@@ -1,15 +1,13 @@
 import React from 'react';
 import { createClasses, createUseClasses } from '../../AppContexts/Css';
-import { SFC } from '../../UtilityTypes';
-import {
-	SoundSaveFileButton,
-	SoundOpenFileButton,
-	SoundLiveButton,
-	SoundWaveformButton,
-	SoundFrequencyButton,
-	SoundSpectrogramButton,
-	SoundOpenParametersButton,
-} from '../Controls';
+import { SFC } from '../../UtilityTypes/React';
+import { SoundFrequencyButton } from '../Controls/SoundFrequencyButton';
+import { SoundLiveButton } from '../Controls/SoundLiveButton';
+import { SoundOpenFileButton } from '../Controls/SoundOpenFileButton';
+import { SoundOpenParametersButton } from '../Controls/SoundOpenParametersButton';
+import { SoundSaveFileButton } from '../Controls/SoundSaveFileButton';
+import { SoundSpectrogramButton } from '../Controls/SoundSpectrogramButton';
+import { SoundWaveformButton } from '../Controls/SoundWaveformButton';
 
 export const getSoundWorkshopSidebarClasses = createClasses((css) => {
 	const { theme } = css;

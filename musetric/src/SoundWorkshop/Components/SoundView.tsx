@@ -4,9 +4,9 @@ import { Spectrogram } from '../../Controls/Spectrogram';
 import { Waveform } from '../../Controls/Waveform';
 import { Size2D, Direction2D, Layout2D } from '../../Rendering/Layout';
 import { SoundBufferManager, SoundBufferEvent } from '../../Sounds/SoundBufferManager';
-import { SFC } from '../../UtilityTypes';
+import { SFC } from '../../UtilityTypes/React';
 import { EventEmitterCallback } from '../../Utils/EventEmitter';
-import { SoundParameters, SoundWorkshopSnapshot, useSoundWorkshopStore } from '../Store';
+import { SoundParameters, SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
 
 export const createWaveformLayout = (): Layout2D => {
 	const size: Size2D = { width: 1024, height: 512 };

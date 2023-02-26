@@ -4,7 +4,7 @@ import { useLocaleContext } from '../AppContexts/Locale';
 import { Button, ButtonProps } from '../Controls/Button';
 import { Divider } from '../Controls/Divider';
 import { Dropdown, DropdownProps } from '../Controls/Dropdown';
-import { FCResult } from '../UtilityTypes';
+import { FCResult } from '../UtilityTypes/React';
 
 export type AppViewDivider = {
 	type: 'divider',

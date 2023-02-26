@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
-import { createUseClasses, createClasses } from '../../AppContexts';
-import { getFieldClasses } from '../../Controls';
-import { useAnimationCallback } from '../../ReactUtils';
-import { SFC } from '../../UtilityTypes';
-import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../Store';
+import { createUseClasses, createClasses } from '../../AppContexts/Css';
+import { getFieldClasses } from '../../Controls/Field';
+import { SFC } from '../../UtilityTypes/React';
+import { useAnimationCallback } from '../../UtilsReact/Animation';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
 
 export const getSoundProgressClasses = createClasses((css) => {
 	const fieldClasses = getFieldClasses(css);

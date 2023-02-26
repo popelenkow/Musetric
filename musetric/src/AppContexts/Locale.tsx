@@ -1,7 +1,7 @@
 import React, { useState, useMemo, createContext } from 'react';
 import { I18n, LocaleEntry } from '../AppBase/Locale';
-import { useInitializedContext } from '../ReactUtils/Context';
-import { SFC } from '../UtilityTypes';
+import { useInitializedContext } from '../UtilsReact/Context';
+import { SFC } from '../UtilityTypes/React';
 
 export type LocaleStore = {
 	i18n: I18n,

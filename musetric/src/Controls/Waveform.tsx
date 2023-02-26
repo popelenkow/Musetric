@@ -2,8 +2,8 @@ import React, { useMemo, useCallback, useRef } from 'react';
 import { createClasses, createUseClasses, useCssContext } from '../AppContexts/Css';
 import { Layout2D, Size2D, Position2D } from '../Rendering/Layout';
 import { Waves, drawWaveform, createWaveformColors, evalWaves } from '../Rendering/Waveform';
-import { SharedRealArray } from '../TypedArray';
-import { SFC } from '../UtilityTypes';
+import { SharedRealArray } from '../TypedArray/RealArray';
+import { SFC } from '../UtilityTypes/React';
 import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 
 export const getWaveformClasses = createClasses((css) => {

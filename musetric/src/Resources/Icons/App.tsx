@@ -1,5 +1,5 @@
 import React from 'react';
-import { SFC } from '../../UtilityTypes';
+import { SFC } from '../../UtilityTypes/React';
 
 export const AppIcon: SFC = () => (
 	<svg width='24' height='24' version='1.1' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>

@@ -1,8 +1,8 @@
 import React, { useMemo, useEffect, useState } from 'react';
-import { useAnimation } from '../ReactUtils/Animation';
+import { useAnimation } from '../UtilsReact/Animation';
 import { rotatePosition2D, Size2D, Layout2D, Position2D, getCanvasCursorPosition2D, drawImage, rotateSize2D } from '../Rendering/Layout';
 import { createPixelCanvasElement } from '../Rendering/PixelCanvasElement';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
 import { Canvas, CanvasProps, CanvasState } from './Canvas';
 
 export type PixelCanvasProps = {

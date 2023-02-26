@@ -1,11 +1,13 @@
 import React from 'react';
-import { useIconContext, useWorkerContext, useLocaleContext } from '../../AppContexts';
-import { Button, ButtonProps } from '../../Controls';
-import { useLazyMemoAsync } from '../../ReactUtils';
-import { createPlayer } from '../../SoundProcessing';
-import { SFC } from '../../UtilityTypes';
-import { skipPromise } from '../../Utils';
-import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../Store';
+import { useIconContext } from '../../AppContexts/Icon';
+import { useLocaleContext } from '../../AppContexts/Locale';
+import { useWorkerContext } from '../../AppContexts/Worker';
+import { Button, ButtonProps } from '../../Controls/Button';
+import { createPlayer } from '../../SoundProcessing/Player';
+import { SFC } from '../../UtilityTypes/React';
+import { skipPromise } from '../../Utils/SkipPromise';
+import { useLazyMemoAsync } from '../../UtilsReact/LazyMemo';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
 
 const select = ({
 	isRecording, isPlaying, setIsPlaying, soundBufferManager,

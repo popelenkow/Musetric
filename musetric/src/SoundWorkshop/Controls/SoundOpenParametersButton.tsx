@@ -1,8 +1,9 @@
 import React from 'react';
-import { useIconContext, useLocaleContext } from '../../AppContexts';
-import { Button, ButtonProps } from '../../Controls';
-import { SFC } from '../../UtilityTypes';
-import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../Store';
+import { useIconContext } from '../../AppContexts/Icon';
+import { useLocaleContext } from '../../AppContexts/Locale';
+import { Button, ButtonProps } from '../../Controls/Button';
+import { SFC } from '../../UtilityTypes/React';
+import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
 
 const select = ({
 	isOpenParameters, setIsOpenParameters,

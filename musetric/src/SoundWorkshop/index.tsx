@@ -1,12 +1,13 @@
 import React from 'react';
 import { createClasses, createUseClasses } from '../AppContexts/Css';
-import { SFC } from '../UtilityTypes';
-import { KeyboardSubscription, SoundParametersPanel, SoundView } from './Components';
-import {
-	SoundWorkshopSidebar, SoundWorkshopToolbar,
-	SoundWorkshopProgressBar,
-} from './Panels';
-import { SoundWorkshopProvider } from './Store';
+import { SFC } from '../UtilityTypes/React';
+import { SoundView } from './Components/SoundView';
+import { KeyboardSubscription } from './Components/KeyboardSubscription';
+import { SoundParametersPanel } from './Components/SoundParametersPanel';
+import { SoundWorkshopProgressBar } from './Panels/SoundWorkshopProgressBar';
+import { SoundWorkshopSidebar } from './Panels/SoundWorkshopSidebar';
+import { SoundWorkshopToolbar } from './Panels/SoundWorkshopToolbar';
+import { SoundWorkshopProvider } from './SoundWorkshopContext';
 
 export const getSoundWorkshopClasses = createClasses((css) => {
 	const { theme } = css;

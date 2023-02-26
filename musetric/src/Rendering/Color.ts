@@ -1,6 +1,6 @@
 import Color from 'color';
 import { Theme } from '../AppBase/Theme';
-import type { ValueObject } from '../UtilityTypes';
+import type { ValueObject } from '../UtilityTypes/ValueObject';
 
 export type Rgb = {
 	r: number,

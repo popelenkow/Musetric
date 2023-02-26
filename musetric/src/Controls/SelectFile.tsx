@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect } from 'react';
 import { createUseClasses, createClasses } from '../AppContexts/Css';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
 import { Button, ButtonProps, getButtonClasses } from './Button';
 
 export const getSelectFileClasses = createClasses((css) => {

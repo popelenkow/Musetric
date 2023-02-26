@@ -1,6 +1,6 @@
 import React from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { SFC } from '../UtilityTypes';
+import { SFC } from '../UtilityTypes/React';
 import { getButtonClasses } from './Button';
 import { Field, FieldProps } from './Field';
 

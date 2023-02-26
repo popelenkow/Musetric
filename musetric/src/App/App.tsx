@@ -2,7 +2,7 @@ import React, { useState, ReactElement, ReactNode, useEffect, useRef } from 'rea
 import { createUseClasses, createClasses } from '../AppContexts/Css';
 import { useIconContext } from '../AppContexts/Icon';
 import { RootElementProvider, useRootElementContext } from '../AppContexts/RootElement';
-import { FCResult } from '../UtilityTypes';
+import { FCResult } from '../UtilityTypes/React';
 import { subscribeDisableZoom } from '../Utils/Zoom';
 import { AppBar } from './AppBar';
 import { AppDropdown, AppDropdownProps, AppViewEntry, AppViewElement } from './AppDropdown';
@@ -26,15 +26,15 @@ export const getAppClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('App', getAppClasses);
 
-type RootProps<ViewId> = {
+type AppProps<ViewId> = {
 	initViewId: ViewId,
 	useViewEntries: () => AppViewEntry<ViewId>[],
 	useAppBarButtons: () => ReactElement,
 };
-type RootFC = (
-	<ViewId extends string>(props: RootProps<ViewId>) => FCResult
+type AppFC = (
+	<ViewId extends string>(props: AppProps<ViewId>) => FCResult
 );
-const Root: RootFC = (props) => {
+const App: AppFC = (props) => {
 	type ViewId = (typeof props)['initViewId'];
 	const { initViewId, useViewEntries, useAppBarButtons } = props;
 	const classes = useClasses();
@@ -80,25 +80,33 @@ export type AppProviders = {
 	icon: AppProvider,
 	worker: AppProvider,
 };
-export type AppProps<ViewId> = {
+type AppContextProps<ViewId> = AppProps<ViewId> & {
 	providers: AppProviders,
-} & RootProps<ViewId>;
-type AppFC = (
-	<ViewId extends string>(props: AppProps<ViewId>) => FCResult
+};
+type AppContextFC = (
+	<ViewId extends string>(props: AppContextProps<ViewId>) => FCResult
 );
-export const App: AppFC = (props) => {
+const AppContext: AppContextFC = (props) => {
 	const { providers } = props;
-	const root = (
-		<RootElementProvider>
-			<Root {...props} />
-		</RootElementProvider>
-	);
-	const arr = [
+
+	const arr: AppProvider[] = [
 		providers.locale,
 		providers.log,
 		providers.css,
 		providers.icon,
 		providers.worker,
+		(children): FCResult => {
+			return (
+				<RootElementProvider>
+					{children}
+				</RootElementProvider>
+			);
+		},
 	];
-	return arr.reduce<ReactElement>((acc, provider) => provider(acc), root);
+	return arr.reduce<ReactElement>((acc, provider) => provider(acc), <App {...props} />);
+};
+
+export {
+	AppContext as App,
+	AppContextProps as AppProps,
 };

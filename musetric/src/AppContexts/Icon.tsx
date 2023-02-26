@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 import { Icons } from '../AppBase/Icon';
-import { useInitializedContext } from '../ReactUtils/Context';
-import { SFC } from '../UtilityTypes';
+import { useInitializedContext } from '../UtilsReact/Context';
+import { SFC } from '../UtilityTypes/React';
 
 export type IconStore = Icons;
 export const IconContext = createContext<IconStore | undefined>(undefined);
