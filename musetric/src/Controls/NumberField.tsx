@@ -24,6 +24,7 @@ export const getNumberFieldClasses = createClasses((css) => {
 		},
 		fieldset: {
 			...textFieldClasses.fieldset,
+			'border-bottom-color': 'transparent !important',
 		},
 		legend: {
 			...textFieldClasses.legend,
@@ -74,7 +75,7 @@ export const NumberField: SFC<NumberFieldProps> = (props) => {
 	);
 	const fieldsetName = className(
 		classes.fieldset,
-		{ disabled, rounded, noBottomBorder: true },
+		{ disabled, rounded },
 	);
 
 	const onMove = useCallback((delta: number) => {

@@ -17,7 +17,7 @@ export const getSoundWorkshopToolbarClasses = createClasses((css) => {
 			'justify-content': 'center',
 			'align-items': 'center',
 			'column-gap': '4px',
-			'background-color': theme.activeBackground,
+			'background-color': theme.backgroundPanel,
 			'border-top': `1px solid ${theme.divider}`,
 		},
 	};

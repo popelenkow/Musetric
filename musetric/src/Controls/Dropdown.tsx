@@ -17,7 +17,7 @@ export const getDropdownClasses = createClasses((css) => {
 			'z-index': '2',
 			right: '0',
 			'margin-top': '3px',
-			'background-color': theme.activeBackground,
+			'background-color': theme.backgroundPanel,
 			'min-width': '140px',
 			'box-shadow': `0px 0px 5px 1px ${theme.shadow}`,
 			'&.open': {

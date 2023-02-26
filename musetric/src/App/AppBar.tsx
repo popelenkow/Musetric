@@ -14,7 +14,7 @@ export const getAppBarClasses = createClasses((css) => {
 			width: '100%',
 			height: '100%',
 			'column-gap': '4px',
-			background: theme.activeBackground,
+			background: theme.backgroundPanel,
 			padding: '0px 4px',
 			'align-items': 'center',
 			'justify-content': 'center',

@@ -1,6 +1,6 @@
 export type Theme = {
 	background: string,
-	activeBackground: string,
+	backgroundPanel: string,
 	content: string,
 	contentHover: string,
 	contentHoverActive: string,

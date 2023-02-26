@@ -10,7 +10,7 @@ export const getSoundParametersClasses = createClasses((css) => {
 	const { theme } = css;
 	return {
 		root: {
-			background: theme.activeBackground,
+			background: theme.backgroundPanel,
 			'box-sizing': 'border-box',
 			'border-top': `1px solid ${theme.divider}`,
 			height: '100%',

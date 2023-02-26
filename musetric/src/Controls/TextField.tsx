@@ -51,9 +51,6 @@ export const getTextFieldClasses = createClasses((css) => {
 			'&.rounded': {
 				'border-radius': '10px',
 			},
-			'&.noBottomBorder': {
-				'border-bottom-color': 'transparent !important',
-			},
 		},
 		legend: {
 			'font-size': '10px',
@@ -70,18 +67,17 @@ export type TextFieldProps = {
 	disabled?: boolean,
 	rounded?: boolean,
 	active?: boolean,
-	noBottomBorder?: boolean,
 };
 export const TextField: SFC<TextFieldProps> = (props) => {
 	const {
 		value, label,
-		disabled, active, rounded, noBottomBorder,
+		disabled, active, rounded,
 	} = props;
 
 	const classes = useClasses();
 	const fieldsetName = className(
 		classes.fieldset,
-		{ disabled, rounded, active, noBottomBorder },
+		{ disabled, rounded, active },
 	);
 
 	return (

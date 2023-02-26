@@ -21,7 +21,7 @@ export const getSoundWorkshopSidebarClasses = createClasses((css) => {
 			'justify-content': 'center',
 			'align-items': 'center',
 			'row-gap': '4px',
-			'background-color': theme.activeBackground,
+			'background-color': theme.backgroundPanel,
 			'border-left': `1px solid ${theme.divider}`,
 		},
 		top: {
