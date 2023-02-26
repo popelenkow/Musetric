@@ -3,8 +3,10 @@ export type Theme = {
 	activeBackground: string,
 	content: string,
 	contentHover: string,
+	contentHoverActive: string,
 	primary: string,
 	primaryHover: string,
+	primaryHoverActive: string,
 	divider: string,
 	shadow: string,
 };

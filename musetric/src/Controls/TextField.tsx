@@ -4,16 +4,14 @@ import { SFC } from '../UtilityTypes/React';
 
 export const getTextFieldClasses = createClasses((css) => {
 	const { theme } = css;
+	const activeSelector = ['&:not(:focus-within):active', '&:not(:focus-within).active', '.hoverable &:not(:focus-within):hover'];
 	return {
 		root: {
 			position: 'relative',
 			height: '42px',
 			'min-height': '42px',
 			'font-family': 'Verdana, Arial, sans-serif',
-			'&:active > fieldset, &.active > fieldset': {
-				'border-color': theme.content,
-			},
-			'.hoverable &:hover:not(:focus-within) > fieldset': {
+			[`${activeSelector.map((x) => x.concat(' > fieldset')).join(', ')}`]: {
 				'border-color': theme.content,
 			},
 			'&:focus-within > fieldset': {

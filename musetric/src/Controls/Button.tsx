@@ -27,19 +27,11 @@ export const getButtonClasses = createClasses((css) => {
 			'& path, rect, polygon': {
 				fill: theme.content,
 			},
-			'&:active': {
+			'.hoverable &:hover:not(:active)': {
 				'background-color': theme.contentHover,
-				color: theme.content,
-				'& path, rect, polygon': {
-					fill: theme.content,
-				},
 			},
-			'.hoverable &:hover': {
-				'background-color': theme.contentHover,
-				color: theme.content,
-				'& path, rect, polygon': {
-					fill: theme.content,
-				},
+			'&:active': {
+				'background-color': theme.contentHoverActive,
 			},
 			'&.rounded': {
 				'border-radius': '10px',
@@ -65,16 +57,6 @@ export const getButtonClasses = createClasses((css) => {
 			'&[disabled]': {
 				cursor: 'default',
 				'&:active, .hoverable &:hover': {
-					color: theme.content,
-					'&.primary': {
-						color: theme.primary,
-						'& path, rect, polygon': {
-							fill: theme.primary,
-						},
-					},
-					'& path, rect, polygon': {
-						fill: theme.content,
-					},
 					'background-color': 'transparent',
 				},
 				opacity: '0.4',
@@ -84,19 +66,11 @@ export const getButtonClasses = createClasses((css) => {
 				'& path, rect, polygon': {
 					fill: theme.primary,
 				},
-				'&:active': {
+				'.hoverable &:hover:not(:active)': {
 					'background-color': theme.primaryHover,
-					color: theme.primary,
-					'& path, rect, polygon': {
-						fill: theme.primary,
-					},
 				},
-				'.hoverable &:hover': {
-					'background-color': theme.primaryHover,
-					color: theme.primary,
-					'& path, rect, polygon': {
-						fill: theme.primary,
-					},
+				'&:active': {
+					'background-color': theme.primaryHoverActive,
 				},
 				'&:focus-visible': {
 					'border-color': theme.primary,

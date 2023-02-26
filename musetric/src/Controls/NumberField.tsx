@@ -8,13 +8,11 @@ import { getTextFieldClasses } from './TextField';
 export const getNumberFieldClasses = createClasses((css) => {
 	const { theme } = css;
 	const textFieldClasses = getTextFieldClasses(css);
+	const activeSelector = ['&:not(:focus-within):active', '&:not(:focus-within).active', '.hoverable &:not(:focus-within):hover'];
 	return {
 		root: {
 			...textFieldClasses.root,
-			'&:active > .NumberField-groovedWheel > *, &.active > .NumberField-groovedWheel > *': {
-				'background-color': theme.content,
-			},
-			'.hoverable &:hover:not(:focus-within) > .NumberField-groovedWheel > *': {
+			[`${activeSelector.map((x) => x.concat(' > .NumberField-groovedWheel > *')).join(', ')}`]: {
 				'background-color': theme.content,
 			},
 			'&:focus-within > .NumberField-groovedWheel > *': {

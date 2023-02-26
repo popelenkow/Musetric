@@ -45,12 +45,6 @@ export const getFieldClasses = createClasses((css) => {
 			'&.right': {
 				'justify-content': 'right',
 			},
-			'&.disabled': {
-				'&:active, .hoverable &:hover': {
-					'background-color': theme.contentHover,
-				},
-				opacity: '0.4',
-			},
 			'&.primary': {
 				color: theme.primary,
 				'& path, rect, polygon': {
@@ -65,7 +59,6 @@ const useClasses = createUseClasses('Field', getFieldClasses);
 export type FieldProps = {
 	kind?: 'simple' | 'icon' | 'full',
 	align?: 'left' | 'center' | 'right',
-	disabled?: boolean,
 	primary?: boolean,
 	rounded?: boolean,
 	classNames?: {
@@ -74,7 +67,7 @@ export type FieldProps = {
 };
 export const Field: SFC<FieldProps, 'required'> = (props) => {
 	const {
-		disabled, primary, rounded,
+		primary, rounded,
 		kind, align, children, classNames,
 	} = props;
 
@@ -83,7 +76,7 @@ export const Field: SFC<FieldProps, 'required'> = (props) => {
 		classNames?.root || classes.root,
 		kind ?? 'simple',
 		align ?? 'center',
-		{ disabled, primary, rounded },
+		{ primary, rounded },
 	);
 
 	return (
