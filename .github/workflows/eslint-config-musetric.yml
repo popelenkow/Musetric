@@ -15,6 +15,7 @@ on:
         description: 'npm publish tag'
         required: false
         options:
+        - 
         - latest
         - beta
         - next

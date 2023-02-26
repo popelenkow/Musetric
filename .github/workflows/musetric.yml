@@ -11,8 +11,14 @@ on:
   workflow_dispatch:
     inputs:
       npmPublishTag:
+        type: choice
         description: 'npm publish tag'
         required: false
+        options:
+        - 
+        - latest
+        - beta
+        - next
 jobs:
   build:
     runs-on: ubuntu-latest
