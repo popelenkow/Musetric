@@ -1,9 +1,5 @@
 export type PlatformId = 'desktop' | 'mobile';
 
-export type Platform = {
-	platformId: PlatformId,
-};
-
 export const getPlatformId = (): PlatformId => {
 	const detectMobile = (): boolean => {
 		const toMatch = [

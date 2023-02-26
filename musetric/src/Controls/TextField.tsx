@@ -3,15 +3,22 @@ import { createUseClasses, createClasses, className } from '../AppContexts/Css';
 import { SFC } from '../UtilityTypes/React';
 
 export const getTextFieldClasses = createClasses((css) => {
-	const { theme, platform } = css;
+	const { theme } = css;
 	return {
 		root: {
 			position: 'relative',
 			height: '42px',
 			'min-height': '42px',
 			'font-family': 'Verdana, Arial, sans-serif',
-			[platform.platformId === 'mobile' ? '&:active > fieldset' : '&:hover > fieldset']: {
+			'&:active > fieldset, &.active > fieldset': {
 				'border-color': theme.content,
+			},
+			'.hoverable &:hover:not(:focus-within) > fieldset': {
+				'border-color': theme.content,
+			},
+			'&:focus-within > fieldset': {
+				'border-color': theme.primary,
+				color: theme.primary,
 			},
 		},
 		input: {
@@ -27,10 +34,6 @@ export const getTextFieldClasses = createClasses((css) => {
 			color: theme.content,
 			width: '100%',
 			'margin-top': '3px',
-			'&:focus-visible + fieldset': {
-				'border-color': theme.primary,
-				color: theme.primary,
-			},
 			'&.rounded': {
 				'border-radius': '10px',
 			},
@@ -50,8 +53,8 @@ export const getTextFieldClasses = createClasses((css) => {
 			'&.rounded': {
 				'border-radius': '10px',
 			},
-			'&.active': {
-				'border-color': theme.content,
+			'&.noBottomBorder': {
+				'border-bottom-color': 'transparent !important',
 			},
 		},
 		legend: {
@@ -67,19 +70,20 @@ export type TextFieldProps = {
 	value: string,
 	label?: string,
 	disabled?: boolean,
-	primary?: boolean,
 	rounded?: boolean,
+	active?: boolean,
+	noBottomBorder?: boolean,
 };
 export const TextField: SFC<TextFieldProps> = (props) => {
 	const {
 		value, label,
-		disabled, primary, rounded,
+		disabled, active, rounded, noBottomBorder,
 	} = props;
 
 	const classes = useClasses();
 	const fieldsetName = className(
 		classes.fieldset,
-		{ disabled, primary, rounded },
+		{ disabled, rounded, active, noBottomBorder },
 	);
 
 	return (

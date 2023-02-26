@@ -1,42 +1,31 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { useAnimation } from '../UtilsReact/Animation';
 import { SFC } from '../UtilityTypes/React';
+import { useAnimation } from '../UtilsReact/Animation';
 import { GroovedWheel, GroovedWheelProps } from './GroovedWheel';
 import { getTextFieldClasses } from './TextField';
 
 export const getNumberFieldClasses = createClasses((css) => {
-	const { theme, platform } = css;
+	const { theme } = css;
 	const textFieldClasses = getTextFieldClasses(css);
-	const rootActive = ['&.active', platform.platformId === 'mobile' ? '&:active' : '&:hover'];
-	const rootActiveSelector = {
-		[rootActive.map((x) => x.concat(' > fieldset')).join(', ')]: {
-			'border-color': theme.content,
-			'border-bottom-color': 'transparent',
-		},
-		[rootActive.map((x) => x.concat('> .NumberField-groovedWheel > *')).join(', ')]: {
-			'background-color': theme.content,
-		},
-	};
 	return {
 		root: {
 			...textFieldClasses.root,
-			// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-			...(rootActiveSelector as unknown as Record<string, string>),
-		},
-		input: {
-			...textFieldClasses.input,
-			'&:focus-visible + fieldset': {
-				...textFieldClasses.input['&:focus-visible + fieldset'],
-				'border-bottom-color': 'transparent',
+			'&:active > .NumberField-groovedWheel > *, &.active > .NumberField-groovedWheel > *': {
+				'background-color': theme.content,
 			},
-			'&:focus-visible ~ .NumberField-groovedWheel > *': {
+			'.hoverable &:hover:not(:focus-within) > .NumberField-groovedWheel > *': {
+				'background-color': theme.content,
+			},
+			'&:focus-within > .NumberField-groovedWheel > *': {
 				'background-color': theme.primary,
 			},
 		},
+		input: {
+			...textFieldClasses.input,
+		},
 		fieldset: {
 			...textFieldClasses.fieldset,
-			'border-bottom-color': 'transparent',
 		},
 		legend: {
 			...textFieldClasses.legend,
@@ -87,7 +76,7 @@ export const NumberField: SFC<NumberFieldProps> = (props) => {
 	);
 	const fieldsetName = className(
 		classes.fieldset,
-		{ disabled, rounded },
+		{ disabled, rounded, noBottomBorder: true },
 	);
 
 	const onMove = useCallback((delta: number) => {

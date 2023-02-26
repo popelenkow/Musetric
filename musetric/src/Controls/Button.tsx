@@ -4,8 +4,6 @@ import { SFC } from '../UtilityTypes/React';
 
 export const getButtonClasses = createClasses((css) => {
 	const { theme } = css;
-	const { platformId } = css.platform;
-	const hoverSelector = platformId === 'mobile' ? '&:active' : '.hoverable &:hover';
 	return {
 		root: {
 			display: 'flex',
@@ -29,7 +27,14 @@ export const getButtonClasses = createClasses((css) => {
 			'& path, rect, polygon': {
 				fill: theme.content,
 			},
-			[hoverSelector]: {
+			'&:active': {
+				'background-color': theme.contentHover,
+				color: theme.content,
+				'& path, rect, polygon': {
+					fill: theme.content,
+				},
+			},
+			'.hoverable &:hover': {
 				'background-color': theme.contentHover,
 				color: theme.content,
 				'& path, rect, polygon': {
@@ -59,7 +64,7 @@ export const getButtonClasses = createClasses((css) => {
 			},
 			'&[disabled]': {
 				cursor: 'default',
-				[hoverSelector]: {
+				'&:active, .hoverable &:hover': {
 					color: theme.content,
 					'&.primary': {
 						color: theme.primary,
@@ -79,7 +84,14 @@ export const getButtonClasses = createClasses((css) => {
 				'& path, rect, polygon': {
 					fill: theme.primary,
 				},
-				[hoverSelector]: {
+				'&:active': {
+					'background-color': theme.primaryHover,
+					color: theme.primary,
+					'& path, rect, polygon': {
+						fill: theme.primary,
+					},
+				},
+				'.hoverable &:hover': {
 					'background-color': theme.primaryHover,
 					color: theme.primary,
 					'& path, rect, polygon': {

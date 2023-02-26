@@ -4,7 +4,6 @@ import { SFC } from '../UtilityTypes/React';
 
 export const getFieldClasses = createClasses((css) => {
 	const { theme } = css;
-	const { platformId } = css.platform;
 	return {
 		root: {
 			display: 'flex',
@@ -47,7 +46,7 @@ export const getFieldClasses = createClasses((css) => {
 				'justify-content': 'right',
 			},
 			'&.disabled': {
-				[platformId === 'mobile' ? '&:active' : '&:hover']: {
+				'&:active, .hoverable &:hover': {
 					'background-color': theme.contentHover,
 				},
 				opacity: '0.4',

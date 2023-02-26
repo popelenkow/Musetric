@@ -3,14 +3,13 @@ import classNames from 'classnames';
 import { Classes, GenerateId } from 'jss';
 import React, { createContext, useMemo, useState, useEffect } from 'react';
 import { JssProvider, createTheming, createUseStyles, Styles } from 'react-jss';
-import { Platform, getPlatformId } from '../AppBase/Platform';
 import { Theme, ThemeEntry } from '../AppBase/Theme';
-import { useInitializedContext } from '../UtilsReact/Context';
 import { SFC } from '../UtilityTypes/React';
+import { useInitializedContext } from '../UtilsReact/Context';
+import { useRootElementContext } from './RootElement';
 
 export type Css = {
 	theme: Theme,
-	platform: Platform,
 };
 // eslint-disable-next-line
 export const ThemingContext = createContext<Css>(undefined as any);
@@ -36,12 +35,7 @@ export const CssContext = createContext<CssStore | undefined>(undefined);
 
 const visualViewport = window.visualViewport ?? window;
 
-const usePlatform = (): Platform => {
-	const platformId = useMemo(() => getPlatformId(), []);
-	const [platform] = useState<Platform>({
-		platformId,
-	});
-
+const usePlatform = (): void => {
 	useEffect(() => {
 		const resize = (): void => {
 			const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
@@ -58,17 +52,47 @@ const usePlatform = (): Platform => {
 		resize();
 
 		visualViewport.addEventListener('resize', resize);
-		visualViewport.addEventListener('scroll', resize, {
-			capture: true,
-			passive: false,
-		});
-		return () => {
+		visualViewport.addEventListener('scroll', resize);
+		return (): void => {
 			visualViewport.removeEventListener('resize', resize);
 			visualViewport.removeEventListener('scroll', resize);
 		};
-	}, [platformId]);
+	}, []);
+};
 
-	return platform;
+const HoverableInjection: SFC<object, 'none', 'optional'> = () => {
+	const { rootElement } = useRootElementContext();
+
+	useEffect(() => {
+		rootElement.classList.add('hoverable');
+		let isTouch = false;
+		const onTouch = (): void => {
+			if (isTouch) return;
+			isTouch = true;
+			rootElement.classList.add('hoverable');
+		};
+		const onCursor = (): void => {
+			if (!isTouch) return;
+			isTouch = false;
+			rootElement.classList.remove('hoverable');
+		};
+		document.addEventListener('touchstart', onTouch);
+		document.addEventListener('touchmove', onTouch);
+		document.addEventListener('touchend', onTouch);
+		document.addEventListener('mousedown', onCursor);
+		document.addEventListener('mousemove', onCursor);
+		document.addEventListener('mouseup', onCursor);
+		return (): void => {
+			document.removeEventListener('touchstart', onTouch);
+			document.removeEventListener('touchmove', onTouch);
+			document.removeEventListener('touchend', onTouch);
+			document.removeEventListener('mousedown', onCursor);
+			document.removeEventListener('mousemove', onCursor);
+			document.removeEventListener('mouseup', onCursor);
+			rootElement.classList.remove('hoverable');
+		};
+	}, [rootElement]);
+	return null;
 };
 
 export type CssProviderProps = {
@@ -83,17 +107,17 @@ export const CssProvider: SFC<CssProviderProps, 'required'> = (props) => {
 	const [themeId, setThemeId] = useState<string>(initThemeId || allThemeIds[0]);
 	const themeEntry = allThemeEntries.find((x) => x.themeId === themeId);
 	const { theme = allThemeEntries[0].theme } = themeEntry || { };
-	const platform = usePlatform();
+	usePlatform();
 
 	const store: CssStore = useMemo(() => ({
-		css: { theme, platform },
+		css: { theme },
 		themeId,
 		setThemeId: (id: string): void => {
 			setThemeId(id);
 			if (onSetThemeId) onSetThemeId(id);
 		},
 		allThemeIds,
-	}), [allThemeIds, onSetThemeId, platform, theme, themeId]);
+	}), [allThemeIds, onSetThemeId, theme, themeId]);
 
 	const generateId: GenerateId = (rule, sheet) => {
 		const prefix = sheet?.options?.classNamePrefix || '';
@@ -103,8 +127,9 @@ export const CssProvider: SFC<CssProviderProps, 'required'> = (props) => {
 	return (
 		<CssContext.Provider value={store}>
 			<JssProvider generateId={generateId}>
-				<theming.ThemeProvider theme={{ theme, platform }}>
+				<theming.ThemeProvider theme={{ theme }}>
 					{children}
+					<HoverableInjection />
 				</theming.ThemeProvider>
 			</JssProvider>
 		</CssContext.Provider>
