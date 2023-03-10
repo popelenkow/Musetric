@@ -17,7 +17,7 @@ export type LocaleProviderProps = {
 	onLocaleId: (localeId: string) => void,
 };
 
-export const LocaleProvider: SFC<LocaleProviderProps, 'required'> = (props) => {
+export const LocaleProvider: SFC<LocaleProviderProps, { children: 'required' }> = (props) => {
 	const { children, i18n, allLocaleEntries, onLocaleId } = props;
 
 	const [localeId, setLocaleId] = useState<string>(i18n.language);

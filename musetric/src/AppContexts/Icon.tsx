@@ -9,7 +9,7 @@ export const IconContext = createContext<IconStore | undefined>(undefined);
 export type IconProviderProps = {
 	icons: Icons,
 };
-export const IconProvider: SFC<IconProviderProps, 'required'> = (props) => {
+export const IconProvider: SFC<IconProviderProps, { children: 'required' }> = (props) => {
 	const { children, icons } = props;
 
 	const store: IconStore = icons;

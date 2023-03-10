@@ -11,15 +11,27 @@ export type ChildrenProps<CType extends ChildrenPropsType = 'required'> = Childr
 type FCResultMap = {
 	required: ReactElement,
 	optional: ReactElement | null,
+	none: null,
 };
 type FCResultType = keyof FCResultMap;
 export type FCResult<Type extends FCResultType = 'required'> = FCResultMap[Type];
 
-/** Strict FC */
+type FCOptions = {
+	children?: ChildrenPropsType,
+	result?: FCResultType,
+};
+type StopChildrenProps = {
+	children?: undefined,
+};
+/** Strict React.FC */
 export type SFC<
-	Props = object,
-	CType extends ChildrenPropsType = 'none',
-	RType extends FCResultType = 'required',
+	Props extends object & StopChildrenProps = object,
+	Options extends FCOptions = { children: 'none', result: 'required' },
 > = (
-	(props: Props & ChildrenProps<CType>) => FCResult<RType>
+	props: (
+		& Props
+		& ChildrenProps<Options['children'] extends ChildrenPropsType ? Options['children'] : 'none'>
+	),
+) => (
+	FCResult<Options['result'] extends FCResultType ? Options['result'] : 'required'>
 );

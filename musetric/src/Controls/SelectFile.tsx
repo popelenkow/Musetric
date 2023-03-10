@@ -22,7 +22,7 @@ export type SelectFileProps = {
 	title?: string,
 	changeFile: (file: File) => void,
 };
-export const SelectFile: SFC<SelectFileProps, 'required'> = (props) => {
+export const SelectFile: SFC<SelectFileProps, { children: 'required' }> = (props) => {
 	const {
 		kind, disabled, primary, rounded,
 		title, changeFile, children,

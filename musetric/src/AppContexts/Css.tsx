@@ -60,7 +60,7 @@ const usePlatform = (): void => {
 	}, []);
 };
 
-const HoverableInjection: SFC<object, 'none', 'optional'> = () => {
+const HoverableInjection: SFC<object, { result: 'none' }> = () => {
 	const { rootElement } = useRootElementContext();
 
 	useEffect(() => {
@@ -100,7 +100,7 @@ export type CssProviderProps = {
 	allThemeEntries: ThemeEntry[],
 	onSetThemeId?: (themeId: string) => void,
 };
-export const CssProvider: SFC<CssProviderProps, 'required'> = (props) => {
+export const CssProvider: SFC<CssProviderProps, { children: 'required' }> = (props) => {
 	const { children, initThemeId, allThemeEntries, onSetThemeId } = props;
 
 	const allThemeIds = allThemeEntries.map((x) => x.themeId);

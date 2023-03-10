@@ -35,7 +35,7 @@ export type CheckboxProps = {
 	onToggle: () => void,
 	checked?: boolean,
 };
-export const Checkbox: SFC<CheckboxProps, 'required'> = (props) => {
+export const Checkbox: SFC<CheckboxProps, { children: 'required' }> = (props) => {
 	const {
 		kind, disabled, rounded,
 		title, onToggle, checked,

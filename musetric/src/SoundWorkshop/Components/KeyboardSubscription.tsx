@@ -37,7 +37,7 @@ const subscribeInput = (
 		rootElement.removeEventListener('wheel', wheelListener);
 	};
 };
-export const KeyboardSubscription: SFC<object, 'none', 'optional'> = () => {
+export const KeyboardSubscription: SFC<object, { result: 'none' }> = () => {
 	const store = useSoundWorkshopStore(select);
 
 	const {

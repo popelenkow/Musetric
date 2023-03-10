@@ -39,7 +39,7 @@ export const getAppBarClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('AppBar', getAppBarClasses);
 
-export const AppBar: SFC<object, 'required'> = (props) => {
+export const AppBar: SFC<object, { children: 'required' }> = (props) => {
 	const { children } = props;
 	const classes = useClasses();
 	const { AppIcon } = useIconContext();

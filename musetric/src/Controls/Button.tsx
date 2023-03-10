@@ -93,7 +93,7 @@ export type ButtonProps = {
 		root?: string,
 	},
 };
-export const Button: SFC<ButtonProps, 'required'> = (props) => {
+export const Button: SFC<ButtonProps, { children: 'required' }> = (props) => {
 	const {
 		kind, align, disabled, primary, rounded,
 		title, onClick, classNames, children,
