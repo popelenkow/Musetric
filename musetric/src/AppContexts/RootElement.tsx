@@ -14,7 +14,7 @@ export type RootElementProviderProps = {
 	initRootElement?: HTMLElement,
 };
 
-export const RootElementProvider: SFC<RootElementProviderProps, 'required'> = (props) => {
+export const RootElementProvider: SFC<RootElementProviderProps, { children: 'required' }> = (props) => {
 	const { children, initRootElement } = props;
 
 	const initElement = initRootElement || document.body;

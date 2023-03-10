@@ -74,7 +74,7 @@ const select = ({
 	soundViewId, isLive, soundBufferManager, soundParameters,
 } as const);
 
-export const SoundView: SFC<object, 'none', 'optional'> = () => {
+export const SoundView: SFC<object, { result: 'optional' }> = () => {
 	const store = useSoundWorkshopStore(select);
 	const { soundViewId, isLive, soundBufferManager, soundParameters } = store;
 

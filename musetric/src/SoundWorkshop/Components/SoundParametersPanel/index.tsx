@@ -58,7 +58,7 @@ const select = ({
 	isOpenParameters,
 } as const);
 
-const WithHidden: SFC<object, 'none', 'optional'> = () => {
+const WithHidden: SFC<object, { result: 'optional' }> = () => {
 	const store = useSoundWorkshopStore(select);
 	const { isOpenParameters } = store;
 

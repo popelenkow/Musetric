@@ -3,7 +3,7 @@ import { useWorkerContext } from '../AppContexts/Worker';
 import { NumberRange } from '../Rendering/Layout';
 import { createRecorder, Recorder } from '../SoundProcessing/Recorder';
 import { createSoundBufferManager, SoundBufferManager } from '../Sounds/SoundBufferManager';
-import { ChildrenProps, SFC } from '../UtilityTypes/React';
+import { SFC } from '../UtilityTypes/React';
 import { Store, createStore, SetStoreState } from '../Utils/Store';
 import { useContextStore } from '../UtilsReact/Store';
 
@@ -92,7 +92,7 @@ type SoundWorkshopStore = Store<SoundWorkshopSnapshot>;
 
 export const SoundWorkshopContext = createContext<SoundWorkshopStore | undefined>(undefined);
 
-export const SoundWorkshopProvider: SFC<ChildrenProps> = (props) => {
+export const SoundWorkshopProvider: SFC<object, { children: 'required' }> = (props) => {
 	const { children } = props;
 
 	const { recorderUrl } = useWorkerContext();

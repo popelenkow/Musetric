@@ -138,7 +138,7 @@ export type ScrollAreaProps = {
 		root?: string,
 	},
 };
-export const ScrollArea: SFC<ScrollAreaProps, 'required'> = (props) => {
+export const ScrollArea: SFC<ScrollAreaProps, { children: 'required' }> = (props) => {
 	const { children, classNames } = props;
 	const classes = useClasses();
 

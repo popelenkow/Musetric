@@ -12,7 +12,7 @@ export type WorkerProviderProps = {
 	workers: Workers,
 };
 
-export const WorkerProvider: SFC<WorkerProviderProps, 'required'> = (props) => {
+export const WorkerProvider: SFC<WorkerProviderProps, { children: 'required' }> = (props) => {
 	const { children, workers } = props;
 
 	const store: WorkerStore = workers;

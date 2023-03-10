@@ -65,7 +65,7 @@ export type FieldProps = {
 		root?: string,
 	},
 };
-export const Field: SFC<FieldProps, 'required'> = (props) => {
+export const Field: SFC<FieldProps, { children: 'required' }> = (props) => {
 	const {
 		primary, rounded,
 		kind, align, children, classNames,

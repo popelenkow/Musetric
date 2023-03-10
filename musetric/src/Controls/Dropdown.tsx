@@ -42,7 +42,7 @@ export type DropdownProps = {
 		width?: string,
 	},
 };
-export const Dropdown: SFC<DropdownProps, 'required'> = (props) => {
+export const Dropdown: SFC<DropdownProps, { children: 'required' }> = (props) => {
 	const {
 		kind, disabled, primary, rounded,
 		title, isOpen, setIsOpen, menu, children,

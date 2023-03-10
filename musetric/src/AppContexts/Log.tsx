@@ -12,7 +12,7 @@ export type LogProviderProps = {
 	log: Log,
 };
 
-export const LogProvider: SFC<LogProviderProps, 'required'> = (props) => {
+export const LogProvider: SFC<LogProviderProps, { children: 'required' }> = (props) => {
 	const { children, log } = props;
 
 	const store: LogStore = useMemo(() => ({ log }), [log]);
