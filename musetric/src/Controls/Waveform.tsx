@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useRef } from 'react';
-import { createClasses, createUseClasses, useCssContext } from '../AppContexts/Css';
+import { createClasses, createUseClasses, useAppCss } from '../App/AppCss';
 import { Layout2D, Size2D, Position2D } from '../Rendering/Layout';
 import { Waves, drawWaveform, createWaveformColors, evalWaves } from '../Rendering/Waveform';
 import { SharedRealArray } from '../TypedArray/RealArray';
@@ -34,8 +34,8 @@ export const Waveform: SFC<WaveformProps> = (props) => {
 	const { getBuffer, getCursor, setCursor, layout } = props;
 
 	const classes = useClasses();
-	const { css } = useCssContext();
-	const colors = useMemo(() => createWaveformColors(css.theme), [css.theme]);
+	const { theme } = useAppCss();
+	const colors = useMemo(() => createWaveformColors(theme), [theme]);
 	const cursorRef = useRef<HTMLDivElement>(null);
 
 	const getWaves = useMemo(() => {

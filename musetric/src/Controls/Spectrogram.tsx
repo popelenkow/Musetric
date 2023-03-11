@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useEffect, useState, useRef } from 'react';
-import { createClasses, createUseClasses, useCssContext } from '../AppContexts/Css';
-import { useWorkerContext } from '../AppContexts/Worker';
+import { useAppWorkers } from '../App/AppContext';
+import { createClasses, createUseClasses, useAppCss } from '../App/AppCss';
 import { Position2D, NumberRange, Layout2D } from '../Rendering/Layout';
 import { createSpectrogramColors, drawSpectrogram } from '../Rendering/Spectrogram';
 import { createSpectrum } from '../SoundProcessing/Spectrum';
@@ -48,9 +48,9 @@ export const Spectrogram: SFC<SpectrogramProps> = (props) => {
 	} = props;
 
 	const classes = useClasses();
-	const { theme } = useCssContext().css;
+	const { theme } = useAppCss();
 	const colors = useMemo(() => createSpectrogramColors(theme), [theme]);
-	const { spectrumUrl } = useWorkerContext();
+	const { spectrumUrl } = useAppWorkers();
 	const cursorRef = useRef<HTMLDivElement>(null);
 
 	const windowSize = useMemo(() => 4096, []);

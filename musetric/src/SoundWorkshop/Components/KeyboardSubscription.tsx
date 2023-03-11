@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { useRootElementContext } from '../../AppContexts/RootElement';
+import { useAppRootElement } from '../../App/AppContext';
 import { NumberRange } from '../../Rendering/Layout';
 import { SFC } from '../../UtilityTypes/React';
 import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
@@ -53,7 +53,7 @@ export const KeyboardSubscription: SFC<object, { result: 'none' }> = () => {
 		})
 	), [setSoundParameters]);
 
-	const { rootElement } = useRootElementContext();
+	const { rootElement } = useAppRootElement();
 	useEffect(() => {
 		return subscribeInput(rootElement, sampleRate, frequencyRange, setFrequencyRange);
 	}, [rootElement, sampleRate, frequencyRange, setFrequencyRange]);

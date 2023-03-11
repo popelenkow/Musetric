@@ -1,7 +1,7 @@
 import React from 'react';
-import { useIconContext } from '../../AppContexts/Icon';
-import { useLocaleContext } from '../../AppContexts/Locale';
+import { useAppLocale } from '../../App/AppContext';
 import { Button, ButtonProps } from '../../Controls/Button';
+import { Icon } from '../../Controls/Icon';
 import { createWav } from '../../Sounds/Wav';
 import { SFC } from '../../UtilityTypes/React';
 import { saveBlobFile } from '../../Utils/SaveBlobFile';
@@ -17,8 +17,7 @@ export const SoundSaveFileButton: SFC = () => {
 	const store = useSoundWorkshopStore(select);
 	const { soundBufferManager } = store;
 
-	const { SaveIcon } = useIconContext();
-	const { i18n } = useLocaleContext();
+	const { i18n } = useAppLocale();
 
 	const getBlob = (): Blob => {
 		const { soundBuffer } = soundBufferManager;
@@ -40,7 +39,7 @@ export const SoundSaveFileButton: SFC = () => {
 	};
 	return (
 		<Button {...saveFileProps}>
-			<SaveIcon />
+			<Icon name='save' />
 		</Button>
 	);
 };

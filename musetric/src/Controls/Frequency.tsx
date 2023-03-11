@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { useCssContext } from '../AppContexts/Css';
+import { useAppCss } from '../App/AppCss';
 import { createFrequencyColors, drawFrequency } from '../Rendering/Frequency';
 import { Layout2D } from '../Rendering/Layout';
 import { createFftRadix4 } from '../Sounds/FftRadix4';
@@ -14,8 +14,8 @@ export type FrequencyProps = {
 };
 export const Frequency: SFC<FrequencyProps> = (props) => {
 	const { getBuffer, getCursor, layout } = props;
-	const { css } = useCssContext();
-	const colors = useMemo(() => createFrequencyColors(css.theme), [css.theme]);
+	const { theme } = useAppCss();
+	const colors = useMemo(() => createFrequencyColors(theme), [theme]);
 
 	const info = useMemo(() => {
 		const windowSize = layout.size.width * 2;

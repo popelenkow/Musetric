@@ -1,6 +1,6 @@
 import React, { SetStateAction, Dispatch, ReactElement, useEffect, useRef } from 'react';
-import { createUseClasses, createClasses, className } from '../AppContexts/Css';
-import { useRootElementContext } from '../AppContexts/RootElement';
+import { useAppRootElement } from '../App/AppContext';
+import { createUseClasses, createClasses, className } from '../App/AppCss';
 import { SFC } from '../UtilityTypes/React';
 import { Button, ButtonProps } from './Button';
 
@@ -49,7 +49,7 @@ export const Dropdown: SFC<DropdownProps, { children: 'required' }> = (props) =>
 	} = props;
 	const classes = useClasses();
 
-	const { rootElement } = useRootElementContext();
+	const { rootElement } = useAppRootElement();
 	const ref = useRef<HTMLDivElement>(null);
 	useEffect(() => {
 		const closeOnOut = (event: MouseEvent | TouchEvent): void => {

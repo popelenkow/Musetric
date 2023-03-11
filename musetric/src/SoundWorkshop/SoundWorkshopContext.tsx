@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { useWorkerContext } from '../AppContexts/Worker';
+import { useAppWorkers } from '../App/AppContext';
 import { NumberRange } from '../Rendering/Layout';
 import { createRecorder, Recorder } from '../SoundProcessing/Recorder';
 import { createSoundBufferManager, SoundBufferManager } from '../Sounds/SoundBufferManager';
@@ -95,7 +95,7 @@ export const SoundWorkshopContext = createContext<SoundWorkshopStore | undefined
 export const SoundWorkshopProvider: SFC<object, { children: 'required' }> = (props) => {
 	const { children } = props;
 
-	const { recorderUrl } = useWorkerContext();
+	const { recorderUrl } = useAppWorkers();
 
 	const [store, setStore] = useState<SoundWorkshopStore>();
 	useEffect(() => {

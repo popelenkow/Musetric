@@ -1,8 +1,7 @@
 import React from 'react';
-import { useIconContext } from '../../AppContexts/Icon';
-import { useLocaleContext } from '../../AppContexts/Locale';
-import { useWorkerContext } from '../../AppContexts/Worker';
+import { useAppLocale, useAppWorkers } from '../../App/AppContext';
 import { Button, ButtonProps } from '../../Controls/Button';
+import { Icon } from '../../Controls/Icon';
 import { createPlayer } from '../../SoundProcessing/Player';
 import { SFC } from '../../UtilityTypes/React';
 import { skipPromise } from '../../Utils/SkipPromise';
@@ -19,9 +18,8 @@ export const SoundPlayerButton: SFC = () => {
 	const store = useSoundWorkshopStore(select);
 	const { isRecording, isPlaying, setIsPlaying, soundBufferManager } = store;
 
-	const { PlayIcon, StopIcon } = useIconContext();
-	const { i18n } = useLocaleContext();
-	const { playerUrl } = useWorkerContext();
+	const { i18n } = useAppLocale();
+	const { playerUrl } = useAppWorkers();
 
 	const getPlayer = useLazyMemoAsync(async () => {
 		const { soundBuffer, cursor } = soundBufferManager;
@@ -71,7 +69,7 @@ export const SoundPlayerButton: SFC = () => {
 	};
 	return (
 		<Button {...buttonProps}>
-			{isPlaying ? <StopIcon /> : <PlayIcon />}
+			{isPlaying ? <Icon name='stop' /> : <Icon name='play' />}
 		</Button>
 	);
 };

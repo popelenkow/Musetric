@@ -1,5 +1,5 @@
 import React from 'react';
-import { createUseClasses, createClasses } from '../AppContexts/Css';
+import { createUseClasses, createClasses } from '../App/AppCss';
 import { SFC } from '../UtilityTypes/React';
 
 export const getDividerClasses = createClasses((css) => {

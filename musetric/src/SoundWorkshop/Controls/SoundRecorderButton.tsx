@@ -1,7 +1,7 @@
 import React from 'react';
-import { useIconContext } from '../../AppContexts/Icon';
-import { useLocaleContext } from '../../AppContexts/Locale';
+import { useAppLocale } from '../../App/AppContext';
 import { Button, ButtonProps } from '../../Controls/Button';
+import { Icon } from '../../Controls/Icon';
 import { SFC } from '../../UtilityTypes/React';
 import { skipPromise } from '../../Utils/SkipPromise';
 import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
@@ -16,8 +16,7 @@ export const SoundRecorderButton: SFC = () => {
 	const store = useSoundWorkshopStore(select);
 	const { isPlaying, isRecording, setIsRecording, getRecorder } = store;
 
-	const { RecordIcon } = useIconContext();
-	const { i18n } = useLocaleContext();
+	const { i18n } = useAppLocale();
 
 	const startRecording = async (): Promise<void> => {
 		const recorder = await getRecorder();
@@ -47,7 +46,7 @@ export const SoundRecorderButton: SFC = () => {
 
 	return (
 		<Button {...recorderProps}>
-			<RecordIcon />
+			<Icon name='record' />
 		</Button>
 	);
 };

@@ -1,10 +1,11 @@
+import { skipPromise } from 'musetric/Utils/SkipPromise';
 import { WorkerUrl } from 'worker-url';
 import type { CreateMusetricApp, CreateMusetricAppOptions } from './App';
+import { getLocalIp } from './ip';
 
 declare const createMusetricApp: CreateMusetricApp;
 declare const getMusetricLocaleEntries: () => CreateMusetricAppOptions['allLocaleEntries'];
 declare const getMusetricThemeEntries: () => CreateMusetricAppOptions['allThemeEntries'];
-declare const getMusetricIcons: () => CreateMusetricAppOptions['icons'];
 const getMusetricWorkers = (): CreateMusetricAppOptions['workers'] => {
 	const playerUrl = new WorkerUrl(new URL('./Player.ts', import.meta.url), {
 		name: 'MusetricPlayer',
@@ -29,17 +30,17 @@ const run = async (): Promise<void> => {
 	const elementId = 'root';
 	const allLocaleEntries = getMusetricLocaleEntries();
 	const allThemeEntries = getMusetricThemeEntries();
-	const icons = getMusetricIcons();
 	const workers = getMusetricWorkers();
 
+	const ip = await getLocalIp();
 	const options: CreateMusetricAppOptions = {
 		elementId,
 		allLocaleEntries,
 		allThemeEntries,
-		icons,
 		workers,
+		apiUrl: `https://${ip}:3005`,
 	};
 	await createMusetricApp(options);
 };
 
-run().finally(() => {});
+skipPromise(run());

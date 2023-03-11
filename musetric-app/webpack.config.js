@@ -95,7 +95,6 @@ const create = (env) => {
 		entry: {
 			MusetricTheme: './src/Theme.ts',
 			MusetricLocale: './src/Locale.ts',
-			MusetricIcon: './src/Icon.tsx',
 			MusetricApp: './src/App.tsx',
 		},
 		output: {
@@ -119,6 +118,7 @@ const create = (env) => {
 				patterns: [
 					{ from: './src/index.html', to: './index.html' },
 					{ from: './src/perf.html', to: './perf.html' },
+					{ from: '../musetric/src/Resources/Icons.svg', to: './Icons.svg' },
 					{ from: './src/coi-serviceworker.min.js', to: './coi-serviceworker.min.js' },
 					{ from: './src/favicon.ico', to: './favicon.ico' },
 					{ from: './package.json', to: './package.json' },

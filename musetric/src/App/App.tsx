@@ -1,10 +1,14 @@
-import React, { useState, ReactElement, ReactNode, useEffect, useRef } from 'react';
-import { createUseClasses, createClasses } from '../AppContexts/Css';
-import { useIconContext } from '../AppContexts/Icon';
-import { RootElementProvider, useRootElementContext } from '../AppContexts/RootElement';
+import React, { useState, ReactElement, useEffect, useRef } from 'react';
+import { I18n } from '../AppBase/Locale';
+import { Log } from '../AppBase/Log';
+import { ThemeEntry } from '../AppBase/Theme';
+import { Workers } from '../AppBase/Worker';
+import { Icon } from '../Controls/Icon';
 import { FCResult } from '../UtilityTypes/React';
 import { subscribeDisableZoom } from '../Utils/Zoom';
 import { AppBar } from './AppBar';
+import { AppProvider, AppProviderProps, useAppRootElement } from './AppContext';
+import { createUseClasses, createClasses, CssProvider, CssProviderProps } from './AppCss';
 import { AppDropdown, AppDropdownProps, AppViewEntry, AppViewElement } from './AppDropdown';
 
 export const getAppClasses = createClasses((css) => {
@@ -26,22 +30,21 @@ export const getAppClasses = createClasses((css) => {
 });
 const useClasses = createUseClasses('App', getAppClasses);
 
-type AppProps<ViewId> = {
+export type AppLayoutProps<ViewId> = {
 	initViewId: ViewId,
 	useViewEntries: () => AppViewEntry<ViewId>[],
 	useAppBarButtons: () => ReactElement,
 };
-type AppFC = (
-	<ViewId extends string>(props: AppProps<ViewId>) => FCResult
+type AppLayoutFC = (
+	<ViewId extends string>(props: AppLayoutProps<ViewId>) => FCResult
 );
-const App: AppFC = (props) => {
+export const AppLayout: AppLayoutFC = (props) => {
 	type ViewId = (typeof props)['initViewId'];
 	const { initViewId, useViewEntries, useAppBarButtons } = props;
 	const classes = useClasses();
-	const { MenuIcon } = useIconContext();
 
 	const allViewEntries = useViewEntries();
-	const { rootElement, setRootElement } = useRootElementContext();
+	const { rootElement, setRootElement } = useAppRootElement();
 	useEffect(() => subscribeDisableZoom(rootElement), [rootElement]);
 
 	const rootElementRef = useRef<HTMLDivElement>(null);
@@ -65,48 +68,55 @@ const App: AppFC = (props) => {
 		<div ref={rootElementRef} className={classes.root}>
 			<AppBar>
 				{buttons}
-				<AppDropdown {...appDropdownProps}><MenuIcon /></AppDropdown>
+				<AppDropdown {...appDropdownProps}><Icon name='menu' /></AppDropdown>
 			</AppBar>
 			{element}
 		</div>
 	);
 };
 
-export type AppProvider = (children: ReactNode) => FCResult;
-export type AppProviders = {
-	locale: AppProvider,
-	log: AppProvider,
-	css: AppProvider,
-	icon: AppProvider,
-	worker: AppProvider,
+export type AppProps<ViewId> = AppLayoutProps<ViewId> & {
+	initRootElement?: HTMLElement,
+	workers: Workers,
+	log: Log,
+	i18n: I18n,
+	allLocaleIds: string[],
+	onLocaleId: (localeId: string) => void,
+	initThemeId?: string,
+	allThemeEntries: ThemeEntry[],
+	onSetThemeId?: (themeId: string) => void,
+	apiUrl: string,
 };
-type AppContextProps<ViewId> = AppProps<ViewId> & {
-	providers: AppProviders,
-};
-type AppContextFC = (
-	<ViewId extends string>(props: AppContextProps<ViewId>) => FCResult
+type AppFC = (
+	<ViewId extends string>(props: AppProps<ViewId>) => FCResult
 );
-const AppContext: AppContextFC = (props) => {
-	const { providers } = props;
+export const App: AppFC = (props) => {
+	const {
+		initRootElement, workers, log,
+		i18n, allLocaleIds, onLocaleId,
+		initThemeId, allThemeEntries, onSetThemeId,
+		apiUrl,
+	} = props;
 
-	const arr: AppProvider[] = [
-		providers.locale,
-		providers.log,
-		providers.css,
-		providers.icon,
-		providers.worker,
-		(children): FCResult => {
-			return (
-				<RootElementProvider>
-					{children}
-				</RootElementProvider>
-			);
-		},
-	];
-	return arr.reduce<ReactElement>((acc, provider) => provider(acc), <App {...props} />);
-};
-
-export {
-	AppContext as App,
-	AppContextProps as AppProps,
+	const appProviderProps: AppProviderProps = {
+		initRootElement,
+		workers,
+		log,
+		i18n,
+		allLocaleIds,
+		onLocaleId,
+		apiUrl,
+	};
+	const cssProviderProps: CssProviderProps = {
+		initThemeId,
+		allThemeEntries,
+		onSetThemeId,
+	};
+	return (
+		<AppProvider {...appProviderProps}>
+			<CssProvider {...cssProviderProps}>
+				<AppLayout {...props} />
+			</CssProvider>
+		</AppProvider>
+	);
 };

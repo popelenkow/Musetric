@@ -1,8 +1,8 @@
 import React from 'react';
-import { createUseClasses, createClasses } from '../AppContexts/Css';
-import { useIconContext } from '../AppContexts/Icon';
 import { getFieldClasses } from '../Controls/Field';
+import { Icon } from '../Controls/Icon';
 import { SFC } from '../UtilityTypes/React';
+import { createUseClasses, createClasses } from './AppCss';
 
 export const getAppBarClasses = createClasses((css) => {
 	const { theme } = css;
@@ -42,11 +42,10 @@ const useClasses = createUseClasses('AppBar', getAppBarClasses);
 export const AppBar: SFC<object, { children: 'required' }> = (props) => {
 	const { children } = props;
 	const classes = useClasses();
-	const { AppIcon } = useIconContext();
 
 	return (
 		<div className={classes.root}>
-			<div className={classes.icon}><AppIcon /></div>
+			<div className={classes.icon}><Icon name='app' /></div>
 			<div className={classes.text}>Musetric</div>
 			{children}
 		</div>

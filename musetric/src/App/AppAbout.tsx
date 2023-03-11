@@ -1,8 +1,8 @@
 import React, { ReactNode, useMemo } from 'react';
-import { createUseClasses, createClasses } from '../AppContexts/Css';
-import { useLocaleContext } from '../AppContexts/Locale';
 import { getFieldClasses } from '../Controls/Field';
 import { SFC } from '../UtilityTypes/React';
+import { useAppLocale } from './AppContext';
+import { createUseClasses, createClasses } from './AppCss';
 
 export const getAppAboutClasses = createClasses((css) => {
 	const { theme } = css;
@@ -35,7 +35,7 @@ export type AppAboutProps = {
 export const AppAbout: SFC<AppAboutProps> = (props) => {
 	const { appVersion, links } = props;
 	const classes = useClasses();
-	const { i18n } = useLocaleContext();
+	const { i18n } = useAppLocale();
 
 	const linksElement = useMemo(() => {
 		const noLinks = !links || links.length === 0;

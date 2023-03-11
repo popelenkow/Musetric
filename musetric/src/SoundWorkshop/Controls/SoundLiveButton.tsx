@@ -1,7 +1,7 @@
 import React from 'react';
-import { useIconContext } from '../../AppContexts/Icon';
-import { useLocaleContext } from '../../AppContexts/Locale';
+import { useAppLocale } from '../../App/AppContext';
 import { Button, ButtonProps } from '../../Controls/Button';
+import { Icon } from '../../Controls/Icon';
 import { SFC } from '../../UtilityTypes/React';
 import { skipPromise } from '../../Utils/SkipPromise';
 import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
@@ -16,8 +16,7 @@ export const SoundLiveButton: SFC = () => {
 	const store = useSoundWorkshopStore(select);
 	const { isLive, setIsLive, getRecorder } = store;
 
-	const { LiveIcon } = useIconContext();
-	const { i18n } = useLocaleContext();
+	const { i18n } = useAppLocale();
 
 	const liveProps: ButtonProps = {
 		kind: 'icon',
@@ -31,7 +30,7 @@ export const SoundLiveButton: SFC = () => {
 	};
 	return (
 		<Button {...liveProps}>
-			<LiveIcon />
+			<Icon name='live' />
 		</Button>
 	);
 };
