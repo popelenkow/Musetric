@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { createUseClasses, createClasses } from '../AppContexts/Css';
-import { useLocaleContext } from '../AppContexts/Locale';
-import { useLogContext } from '../AppContexts/Log';
+import { useAppLocale, useAppLog } from '../App/AppContext';
+import { createUseClasses, createClasses } from '../App/AppCss';
 import { Size2D } from '../Rendering/Layout';
 import { SFC } from '../UtilityTypes/React';
 
@@ -29,8 +28,8 @@ export const Canvas: SFC<CanvasProps> = (props) => {
 	const { size, setState } = props;
 	const classes = useClasses();
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const { i18n } = useLocaleContext();
-	const { log } = useLogContext();
+	const { i18n } = useAppLocale();
+	const log = useAppLog();
 
 	useEffect(() => {
 		const element = canvasRef.current;

@@ -1,10 +1,10 @@
 import React, { ReactNode, SetStateAction, Dispatch, useState, ReactElement } from 'react';
-import { useIconContext } from '../AppContexts/Icon';
-import { useLocaleContext } from '../AppContexts/Locale';
 import { Button, ButtonProps } from '../Controls/Button';
 import { Divider } from '../Controls/Divider';
 import { Dropdown, DropdownProps } from '../Controls/Dropdown';
+import { Icon } from '../Controls/Icon';
 import { FCResult } from '../UtilityTypes/React';
+import { useAppLocale } from './AppContext';
 
 export type AppViewDivider = {
 	type: 'divider',
@@ -28,8 +28,7 @@ type AppDropdownFC = (
 export const AppDropdown: AppDropdownFC = (props) => {
 	type ViewId = (typeof props)['viewId'];
 	const { viewId, setViewId, allViewEntries } = props;
-	const { MenuIcon } = useIconContext();
-	const { i18n } = useLocaleContext();
+	const { i18n } = useAppLocale();
 
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const mapMenu = (view: AppViewEntry<ViewId>, index: number): ReactElement | null => {
@@ -71,6 +70,6 @@ export const AppDropdown: AppDropdownFC = (props) => {
 	};
 
 	return (
-		<Dropdown {...dropdownProps}><MenuIcon /></Dropdown>
+		<Dropdown {...dropdownProps}><Icon name='menu' /></Dropdown>
 	);
 };

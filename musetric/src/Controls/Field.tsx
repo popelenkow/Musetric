@@ -1,5 +1,5 @@
 import React from 'react';
-import { createUseClasses, createClasses, className } from '../AppContexts/Css';
+import { createUseClasses, createClasses, className } from '../App/AppCss';
 import { SFC } from '../UtilityTypes/React';
 
 export const getFieldClasses = createClasses((css) => {
@@ -21,7 +21,7 @@ export const getFieldClasses = createClasses((css) => {
 			border: '1px solid',
 			'border-color': 'transparent',
 			color: theme.content,
-			'& path, rect, polygon': {
+			'& svg': {
 				fill: theme.content,
 			},
 			'&:focus-visible': {
@@ -47,7 +47,7 @@ export const getFieldClasses = createClasses((css) => {
 			},
 			'&.primary': {
 				color: theme.primary,
-				'& path, rect, polygon': {
+				'& svg': {
 					fill: theme.primary,
 				},
 			},

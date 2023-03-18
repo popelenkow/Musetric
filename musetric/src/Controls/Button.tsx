@@ -1,5 +1,5 @@
 import React, { ButtonHTMLAttributes } from 'react';
-import { createUseClasses, createClasses, className } from '../AppContexts/Css';
+import { createUseClasses, createClasses, className } from '../App/AppCss';
 import { SFC } from '../UtilityTypes/React';
 
 export const getButtonClasses = createClasses((css) => {
@@ -24,7 +24,7 @@ export const getButtonClasses = createClasses((css) => {
 			cursor: 'pointer',
 			'-webkit-tap-highlight-color': 'transparent',
 			color: theme.content,
-			'& path, rect, polygon': {
+			'& svg': {
 				fill: theme.content,
 			},
 			'.hoverable &:hover:not(:active)': {
@@ -63,7 +63,7 @@ export const getButtonClasses = createClasses((css) => {
 			},
 			'&.primary': {
 				color: theme.primary,
-				'& path, rect, polygon': {
+				'& svg': {
 					fill: theme.primary,
 				},
 				'.hoverable &:hover:not(:active)': {

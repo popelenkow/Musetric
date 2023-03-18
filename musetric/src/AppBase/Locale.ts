@@ -1,13 +1,13 @@
 import i18next, { i18n as I18nOriginal, ResourceLanguage, Resource, TOptionsBase, StringMap } from 'i18next';
 
-export type Locale = ResourceLanguage;
+export type LocaleResource = ResourceLanguage;
 export type LocaleEntry = {
 	localeId: string,
-	locale: Locale,
+	localeResource: LocaleResource,
 };
 
 export const createLocaleResources = (localeEntries: LocaleEntry[]): Resource => (
-	localeEntries.reduce<Resource>((acc, x) => ({ ...acc, [x.localeId]: x.locale }), {})
+	localeEntries.reduce<Resource>((acc, x) => ({ ...acc, [x.localeId]: x.localeResource }), {})
 );
 
 export type I18n = Omit<I18nOriginal, 't'> & {

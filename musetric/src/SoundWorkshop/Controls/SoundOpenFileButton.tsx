@@ -1,6 +1,6 @@
 import React from 'react';
-import { useIconContext } from '../../AppContexts/Icon';
-import { useLocaleContext } from '../../AppContexts/Locale';
+import { useAppLocale } from '../../App/AppContext';
+import { Icon } from '../../Controls/Icon';
 import { SelectFile, SelectFileProps } from '../../Controls/SelectFile';
 import { decodeFileToWav } from '../../Sounds/Wav';
 import { SFC } from '../../UtilityTypes/React';
@@ -18,8 +18,7 @@ export const SoundOpenFileButton: SFC = () => {
 	const store = useSoundWorkshopStore(select);
 	const { soundBufferManager } = store;
 
-	const { OpenFileIcon } = useIconContext();
-	const { i18n } = useLocaleContext();
+	const { i18n } = useAppLocale();
 
 	const getAudioContext = useLazyAudioContext(soundBufferManager.soundBuffer.sampleRate);
 
@@ -37,7 +36,7 @@ export const SoundOpenFileButton: SFC = () => {
 	};
 	return (
 		<SelectFile {...openFileProps}>
-			<OpenFileIcon />
+			<Icon name='openFile' />
 		</SelectFile>
 	);
 };
