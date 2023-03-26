@@ -24,7 +24,7 @@ export type SoundWorkshopState = {
 	recorder?: Recorder,
 };
 const initialValues = {
-	sampleRate: 48000,
+	sampleRate: 44100,
 	channelCount: 2,
 };
 const initialState: SoundWorkshopState = {

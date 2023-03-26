@@ -13,6 +13,7 @@ export const getSoundProgressClasses = createClasses((css) => {
 			width: 'auto',
 			height: '42px',
 			position: 'relative',
+			gap: '6px',
 		},
 	};
 });
@@ -73,9 +74,7 @@ export const SoundProgress: SFC = () => {
 	return (
 		<div className={classes.root}>
 			<div ref={cursorRef} />
-			<div>
-				{' / '}
-			</div>
+			<div>/</div>
 			<div ref={memorySizeRef} />
 		</div>
 	);
