@@ -126,7 +126,7 @@ export const createHttpClient = (apiUri?: string) => {
 		getJson: <TR>(uri: string) => send<TR>({
 			uri,
 		}),
-		postJson: <TR>(uri: string, data: unknown) => send<TR>({
+		postJson: <TR, Req = unknown>(uri: string, data: Req) => send<TR>({
 			uri,
 			method: 'post',
 			data,

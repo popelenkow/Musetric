@@ -1,4 +1,4 @@
-import produce from 'immer';
+import { produce } from 'immer';
 
 type SnapshotOnChange = () => void;
 type StoreUnsubscribe = () => void;

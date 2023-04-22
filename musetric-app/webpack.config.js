@@ -18,9 +18,6 @@ const createConfig = (env, options) => {
 				path.resolve(__dirname, './src'),
 				path.resolve(__dirname, './node_modules'),
 			],
-			alias: {
-				musetric: path.resolve(__dirname, '../musetric/src/'),
-			},
 		},
 		module: {
 			rules: [

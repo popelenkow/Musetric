@@ -6,6 +6,7 @@ import { Icon } from 'musetric/Controls/Icon';
 import { Karaoke } from 'musetric/Karaoke';
 import { SoundWorkshop } from 'musetric/SoundWorkshop';
 import { skipPromise } from 'musetric/Utils/SkipPromise';
+import { Api } from 'musetric-api/Api';
 import React, { useEffect, useState } from 'react';
 
 export type ViewId = 'soundWorkshop' | 'karaoke' | 'about';
@@ -18,7 +19,7 @@ export const useViewEntries = (): AppViewEntry<ViewId>[] => {
 
 	useEffect(() => {
 		const ping = async (): Promise<void> => {
-			const response = await api.getJson('ping').request();
+			const response = await api.getJson(Api.Ping.route).request();
 			if (response.type !== 'ok') return;
 			setWithServer(true);
 		};

@@ -1,7 +1,7 @@
 {
-	"name": "musetric-backend",
-	"description": "Musetric is javascript music backend",
-	"version": "0.0.1",
+	"name": "musetric-api",
+	"description": "Musetric is a javascript rest api library for building music applications",
+	"version": "0.0.3",
 	"license": "MIT",
 	"main": "index.js",
 	"types": "index.d.ts",
@@ -13,28 +13,25 @@
 		"directory": "musetric"
 	},
 	"keywords": [
-		"musetric",
-		"musetric-backend"
+		"musetric-api"
 	],
+	"engines": {
+		"node": ">=16.0.0"
+	},
 	"scripts": {
-		"dev": "nodemon --watch src src/index.ts",
-		"dev1": "node --watch --loader ts-node/esm --experimental-specifier-resolution node src",
-		"build": "rimraf dist && tsc -p tsconfig.json",
+		"build": "rimraf dist && node scripts/build.js && tsc",
+		"dev": "rimraf dist && node scripts/build.js && tsc --watch",
 		"lint": "eslint **/*.{js,ts,tsx}",
 		"lint:fix": "eslint **/*.{js,ts,tsx} --fix",
 		"lint:config": "rimraf .eslintrc.local.json && eslint --print-config .eslintrc.js >> .eslintrc.local.json"
 	},
+	"resolutions": {
+		"glob-parent": "^6.0.0"
+	},
+	"dependencies": {},
 	"devDependencies": {
-		"@fastify/cors": "8.2.1",
-		"@fastify/multipart": "7.6.0",
-		"@types/node": "18.15.13",
+		"copyfiles": "^2.4.1",
 		"eslint-config-musetric": "0.0.53",
-		"fastify": "4.15.0",
-		"musetric-api": "0.0.2",
-		"nodemon": "2.0.22",
-		"rimraf": "5.0.0",
-		"selfsigned": "2.1.1",
-		"ts-node": "10.9.1",
 		"typescript": "5.0.4"
 	}
 }

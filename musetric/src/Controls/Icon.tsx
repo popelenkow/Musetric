@@ -27,9 +27,11 @@ export type IconName = (
 	| 'performance'
 	| 'play'
 	| 'record'
+	| 'remove'
 	| 'save'
 	| 'spectrogram'
 	| 'stop'
+	| 'storage'
 	| 'waveform'
 );
 export type IconProps = {

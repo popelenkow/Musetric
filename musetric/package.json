@@ -1,7 +1,7 @@
 {
 	"name": "musetric",
 	"description": "Musetric is a javascript library for building music applications",
-	"version": "0.0.40",
+	"version": "0.0.42",
 	"license": "MIT",
 	"main": "index.js",
 	"types": "index.d.ts",
@@ -21,6 +21,7 @@
 	},
 	"scripts": {
 		"build": "rimraf dist && node scripts/build.js && tsc",
+		"dev": "rimraf dist && node scripts/build.js && tsc --watch",
 		"lint": "eslint **/*.{js,ts,tsx}",
 		"lint:fix": "eslint **/*.{js,ts,tsx} --fix",
 		"lint:config": "rimraf .eslintrc.local.json && eslint --print-config .eslintrc.js >> .eslintrc.local.json",
@@ -34,8 +35,9 @@
 	"dependencies": {
 		"classnames": "^2.3.2",
 		"color": "^4.2.3",
-		"i18next": "^22.4.11",
-		"immer": "^9.0.19",
+		"i18next": "^22.4.15",
+		"immer": "^10.0.1",
+		"musetric-api": "^0.0.2",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-jss": "^10.10.0"
@@ -43,19 +45,19 @@
 	"devDependencies": {
 		"@types/benchmark": "2.1.2",
 		"@types/color": "3.0.3",
-		"@types/jest": "29.4.0",
-		"@types/node": "18.15.0",
-		"@types/react": "18.0.28",
+		"@types/jest": "29.5.1",
+		"@types/node": "18.15.13",
+		"@types/react": "18.0.38",
 		"@types/react-dom": "18.0.11",
 		"benchmark": "2.1.4",
 		"copyfiles": "2.4.1",
-		"eslint-config-musetric": "0.0.52",
+		"eslint-config-musetric": "0.0.53",
 		"fft.js": "4.0.4",
 		"i18next-parser": "7.7.0",
 		"jest": "29.5.0",
-		"rimraf": "4.4.0",
-		"ts-jest": "29.0.5",
+		"rimraf": "5.0.0",
+		"ts-jest": "29.1.0",
 		"ts-node": "10.9.1",
-		"typescript": "4.9.5"
+		"typescript": "5.0.4"
 	}
 }
