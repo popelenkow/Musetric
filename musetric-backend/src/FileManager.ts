@@ -6,8 +6,6 @@ import { BusboyFileStream } from '@fastify/busboy';
 
 const pump = util.promisify(pipeline);
 
-export const resourceDir = 'tmp/';
-
 export const createDir = async (dirPath: string): Promise<void> => {
 	await fs.promises.mkdir(dirPath, { recursive: true });
 };

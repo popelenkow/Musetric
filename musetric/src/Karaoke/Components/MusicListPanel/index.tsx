@@ -41,16 +41,16 @@ const select = ({
 	isOpenMusicList,
 	musicList,
 	selectedId,
-	selectMusic,
-	removeMusic,
+	selectTrack,
+	removeTrack,
 	isMusicListLoading,
 	refreshMusicList,
 }: KaraokeSnapshot) => ({
 	isOpenMusicList,
 	musicList,
 	selectedId,
-	selectMusic,
-	removeMusic,
+	selectTrack,
+	removeTrack,
 	isMusicListLoading,
 	refreshMusicList,
 } as const);
@@ -59,7 +59,7 @@ export const MusicListPanel: SFC<object, { result: 'optional' }> = () => {
 	const classes = useClasses();
 
 	const {
-		isOpenMusicList, musicList, selectedId, selectMusic, removeMusic,
+		isOpenMusicList, musicList, selectedId, selectTrack, removeTrack,
 		isMusicListLoading, refreshMusicList,
 	} = useKaraokeStore(select);
 
@@ -77,8 +77,8 @@ export const MusicListPanel: SFC<object, { result: 'optional' }> = () => {
 					const musicItemProps: MusicListItemProps = {
 						item,
 						selectedId,
-						select: selectMusic,
-						remove: (id) => skipPromise(removeMusic(id)),
+						select: (id) => skipPromise(selectTrack(id)),
+						remove: (id) => skipPromise(removeTrack(id)),
 					};
 					return <MusicListItem key={item.id} {...musicItemProps} />;
 				})}

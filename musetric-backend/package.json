@@ -27,10 +27,11 @@
 	"devDependencies": {
 		"@fastify/cors": "8.2.1",
 		"@fastify/multipart": "7.6.0",
+		"@fastify/static": "6.10.1",
 		"@types/node": "18.15.13",
 		"eslint-config-musetric": "0.0.53",
 		"fastify": "4.15.0",
-		"musetric-api": "0.0.2",
+		"musetric-api": "0.0.3",
 		"nodemon": "2.0.22",
 		"rimraf": "5.0.0",
 		"selfsigned": "2.1.1",

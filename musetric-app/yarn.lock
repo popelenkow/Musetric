@@ -3400,21 +3400,21 @@ multicast-dns@^7.2.5:
     dns-packet "^5.2.2"
     thunky "^1.0.2"
 
-musetric-api@0.0.2, musetric-api@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/musetric-api/-/musetric-api-0.0.2.tgz#1b3057f8dd0bad2ecbc377a866c3d0ed23454698"
-  integrity sha512-XyR+LYAdfV16a49C04ToKgBVTsCFV+gKMlmnIbWLfADZuy/gnVfLFK7w6L4En24r7ydBGyndGah8mnPQ8N8pOw==
+musetric-api@0.0.3, musetric-api@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/musetric-api/-/musetric-api-0.0.3.tgz#d36d3482f6afc6c9ff1a9251a8116ca86a0c4c56"
+  integrity sha512-f+r969QZSpEgnxefZ3PfPD8hVx5vTUOdotba93KcZmxSkIhj1KO7EWVChYS/AhqK89cZM2sFf3I8MqNUyaFQaw==
 
-musetric@0.0.41:
-  version "0.0.41"
-  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.41.tgz#120eda5a96e17430f9ffdade5e2e4cfbf1464925"
-  integrity sha512-+DKwLZWvCbwBrfAXCixvzr3fSdUNmQNM3w4YqRc1k0CEAXpIXyH4ikibaYYFo9VL/FcZMBX1NBLhh9fu1loIyQ==
+musetric@0.0.42:
+  version "0.0.42"
+  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.42.tgz#d38315b8388cceba1579c6ce4c61ea05c63ec123"
+  integrity sha512-r6CdkUVVnyI7bNZwGKypzOOpvft4QLoZG0kfYyYfqW3uXSKWjhSrVp4kugiw0gCdTci2u+twe43Ea85q1mA/Fg==
   dependencies:
     classnames "^2.3.2"
     color "^4.2.3"
     i18next "^22.4.15"
     immer "^10.0.1"
-    musetric-api "^0.0.2"
+    musetric-api "^0.0.3"
     react "^18.2.0"
     react-dom "^18.2.0"
     react-jss "^10.10.0"

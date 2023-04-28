@@ -84,11 +84,10 @@ export const createWav = (
 	return audioBlob;
 };
 
-export const decodeFileToWav = async (
+export const decodeArrayBufferToWav = async (
 	audioContext: AudioContext,
-	file: File,
+	arrayBuffer: ArrayBuffer,
 ): Promise<Float32Array[]> => {
-	const arrayBuffer = await file.arrayBuffer();
 	const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 	const channels: Float32Array[] = [];
 	for (let i = 0; i < audioBuffer.numberOfChannels; i++) {

@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppLocale } from '../../App/AppContext';
 import { Icon } from '../../Controls/Icon';
 import { SelectFile, SelectFileProps } from '../../Controls/SelectFile';
-import { decodeFileToWav } from '../../Sounds/Wav';
+import { decodeArrayBufferToWav } from '../../Sounds/Wav';
 import { SFC } from '../../UtilityTypes/React';
 import { skipPromise } from '../../Utils/SkipPromise';
 import { useLazyAudioContext } from '../../UtilsReact/LazyAudioContext';
@@ -24,7 +24,8 @@ export const SoundOpenFileButton: SFC = () => {
 
 	const pushSoundFile = async (file: File): Promise<void> => {
 		const audioContext = getAudioContext();
-		const channels = await decodeFileToWav(audioContext, file);
+		const data = await file.arrayBuffer();
+		const channels = await decodeArrayBufferToWav(audioContext, data);
 		soundBufferManager.push(channels, 'file');
 	};
 

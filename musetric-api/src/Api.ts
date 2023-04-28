@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 
+import { SeparationTrackType } from './Music';
 import { SeparationTaskInfo } from './SeparationTaskInfo';
 
 export namespace Api {
@@ -10,14 +11,22 @@ export namespace Api {
 		export const route = '/separate';
 		export type Response = SeparationTaskInfo;
 	}
-	export namespace Remove {
-		export const route = '/remove';
+	export namespace RemoveTrack {
+		export const route = '/RemoveTrack';
 		export type Request = {
 			id: string,
 		};
 	}
-	export namespace SeparateList {
-		export const route = '/separateList';
+	export namespace SeparatedChunk {
+		export const route = '/SeparatedChunk';
+		export type Request = {
+			id: string,
+			chunkIndex: number,
+			trackType: SeparationTrackType,
+		};
+	}
+	export namespace SeparatedList {
+		export const route = '/SeparatedList';
 		export type Response = SeparationTaskInfo[];
 	}
 }

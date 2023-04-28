@@ -28,6 +28,7 @@ export const runPython = (
 	});
 	task.on('close', (code) => {
 		if (error) {
+			console.error(error);
 			reject(error);
 			return;
 		}

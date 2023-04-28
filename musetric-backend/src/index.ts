@@ -1,14 +1,16 @@
 import path from 'path';
 import cors from '@fastify/cors';
 import multipart from '@fastify/multipart';
+import { fastifyStatic } from '@fastify/static';
 import fastify from 'fastify';
 import { Api } from 'musetric-api/Api';
 import { SeparationTaskInfo } from 'musetric-api/SeparationTaskInfo';
 import { getCert } from './Cert';
-import { getDirectories, readJson, removeDir, resourceDir, writeJson, writeStream } from './FileManager';
+import { getDirectories, readJson, removeDir, writeJson, writeStream } from './FileManager';
 import { getMusicChunksCount } from './GetMusicChunksCount';
 import { getLocalIp } from './Ip';
 import { runLongLoopWorker } from './LongLoopWorker';
+import { resourceDir, separationPaths } from './SeparationPaths';
 
 runLongLoopWorker();
 
@@ -30,6 +32,9 @@ const start = async (): Promise<void> => {
 			fileSize: 50_000_000, // For multipart forms, the max file size in bytes
 		},
 	});
+	await app.register(fastifyStatic, {
+		root: path.join(__dirname, '..'),
+	});
 
 	await app.register(cors, {
 		origin: '*',
@@ -43,10 +48,10 @@ const start = async (): Promise<void> => {
 		const chunkMilliseconds = 5000;
 		const id = data.filename;
 		const ext = path.extname(data.filename);
-		await removeDir(`${resourceDir}${id}/`);
-		await writeStream(`${resourceDir}${id}/input${ext}`, data.file);
-		const dirPath = `${resourceDir}${id}/`;
-		const chunksCount = await getMusicChunksCount(dirPath, ext, chunkMilliseconds);
+		await removeDir(separationPaths.root(id));
+		const trackPath = separationPaths.input(id, ext);
+		await writeStream(trackPath, data.file);
+		const chunksCount = await getMusicChunksCount(trackPath, chunkMilliseconds);
 		const info: SeparationTaskInfo = {
 			id,
 			status: 'created',
@@ -55,25 +60,32 @@ const start = async (): Promise<void> => {
 			chunksDone: [],
 			ext,
 		};
-		await writeJson(`${resourceDir}${data.filename}/info.json`, info);
+		await writeJson(separationPaths.info(id), info);
 		return reply.send(info);
 	});
-	app.post(Api.Remove.route, async (request, reply) => {
+	app.post(Api.RemoveTrack.route, async (request, reply) => {
 		// eslint-disable-next-line
-		const data = request.body as Api.Remove.Request;
+		const data = request.body as Api.RemoveTrack.Request;
 		const { id } = data;
 
-		await removeDir(`${resourceDir}${id}/`);
+		await removeDir(separationPaths.root(id));
 		return reply.send({});
 	});
-	app.get(Api.SeparateList.route, async (_, reply) => {
+	app.post(Api.SeparatedChunk.route, async (request, reply) => {
+		// eslint-disable-next-line
+		const body = JSON.parse(request.body as string) as Api.SeparatedChunk.Request;
+		const { id, chunkIndex, trackType } = body;
+		const filePath = separationPaths.outputChunk(id, chunkIndex, trackType);
+		await reply.sendFile(filePath);
+	});
+	app.get(Api.SeparatedList.route, async (_, reply) => {
 		const dirs = await getDirectories(resourceDir);
-		const infoPaths = dirs.map((x) => `${resourceDir}${x}/info.json`);
+		const infoPaths = dirs.map((id) => separationPaths.info(id));
 		const result = await Promise.all(infoPaths.map((x) => (
 			readJson<SeparationTaskInfo>(x)
 		)));
 		const nonNullable = <T>(value: T | undefined): value is T => Boolean(value);
-		const filtered: Api.SeparateList.Response = result.filter(nonNullable);
+		const filtered: Api.SeparatedList.Response = result.filter(nonNullable);
 		return reply.send(filtered);
 	});
 

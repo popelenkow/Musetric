@@ -142,6 +142,13 @@ export const createHttpClient = (apiUri?: string) => {
 			method: 'post',
 			data: file,
 		}),
+		post: <Req = unknown>(uri: string, data: Req) => send<undefined>({
+			uri,
+			// eslint-disable-next-line @typescript-eslint/require-await
+			toResponse: async () => undefined,
+			method: 'post',
+			data,
+		}),
 		putJson: <TR>(uri: string, data: unknown) => send<TR>({
 			uri,
 			method: 'put',
