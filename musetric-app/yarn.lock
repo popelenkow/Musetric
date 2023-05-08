@@ -3405,10 +3405,10 @@ musetric-api@0.0.3, musetric-api@^0.0.3:
   resolved "https://registry.yarnpkg.com/musetric-api/-/musetric-api-0.0.3.tgz#d36d3482f6afc6c9ff1a9251a8116ca86a0c4c56"
   integrity sha512-f+r969QZSpEgnxefZ3PfPD8hVx5vTUOdotba93KcZmxSkIhj1KO7EWVChYS/AhqK89cZM2sFf3I8MqNUyaFQaw==
 
-musetric@0.0.42:
-  version "0.0.42"
-  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.42.tgz#d38315b8388cceba1579c6ce4c61ea05c63ec123"
-  integrity sha512-r6CdkUVVnyI7bNZwGKypzOOpvft4QLoZG0kfYyYfqW3uXSKWjhSrVp4kugiw0gCdTci2u+twe43Ea85q1mA/Fg==
+musetric@0.0.43:
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.43.tgz#d670c445ee20c158953c8992b2fcda8f0f8627d0"
+  integrity sha512-xOU1I/N4rHG3V6iRXJ9ujxxrfkt2O+vGu90BELPVNvzaXqT1e55fo1jb1Ha+NQXscUme+kNEi1antiQh2u/Qxg==
   dependencies:
     classnames "^2.3.2"
     color "^4.2.3"

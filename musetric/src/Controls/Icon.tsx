@@ -41,7 +41,7 @@ export const Icon: SFC<IconProps> = (props) => {
 	const { name } = props;
 	const classes = useClasses();
 
-	const url = new URL(`/Icons.svg#${name}`, window.location.href);
+	const url = new URL(`Icons.svg#${name}`, window.location.href);
 
 	return (
 		<svg className={classes.root} aria-hidden='true'>
