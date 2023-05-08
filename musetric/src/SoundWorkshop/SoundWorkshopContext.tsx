@@ -1,3 +1,4 @@
+import { commonSampleRate } from 'musetric-api/Music';
 import React, { createContext, useState, useEffect } from 'react';
 import { useAppWorkers } from '../App/AppContext';
 import { NumberRange } from '../Rendering/Layout';
@@ -24,7 +25,7 @@ export type SoundWorkshopState = {
 	recorder?: Recorder,
 };
 const initialValues = {
-	sampleRate: 44100,
+	sampleRate: commonSampleRate,
 	channelCount: 2,
 };
 const initialState: SoundWorkshopState = {

@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect, useState } from 'react';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { Store } from '../Utils/Store';
 import { useInitializedContext } from './Context';
 
@@ -24,29 +24,68 @@ const shallowEqual = (object1: unknown, object2: unknown): boolean => {
 	return true;
 };
 
+type SelectorRef<State, Result> = {
+	state: State,
+	result: Result,
+};
+
+const createSelector = <State, Result>(
+	select: (state: State) => Result,
+	last: {
+		get: () => SelectorRef<State, Result>,
+		set: (ref: SelectorRef<State, Result>) => void,
+	},
+) => {
+	return (state: State): boolean => {
+		const lastRef = last.get();
+		if (lastRef && shallowEqual(lastRef.state, state)) {
+			return true;
+		}
+		let result = select(state);
+		const isSameResult = lastRef && shallowEqual(lastRef.result, result);
+		if (isSameResult) {
+			result = lastRef.result;
+		}
+		last.set({ state, result });
+		return isSameResult;
+	};
+};
+
 export const useContextStore = <Snapshot extends object, R>(
 	StoreContext: React.Context<Store<Snapshot> | undefined>,
 	contextName: string,
-	selector: (snapshot: Snapshot) => R,
+	select: (snapshot: Snapshot) => R,
 ): R => {
 	const store = useInitializedContext(StoreContext, contextName);
 
-	const snapshotRef = useRef<R>();
-	const [, forceUpdate] = useState(false);
+	const prevRef = useRef<SelectorRef<Snapshot, R>>();
 
-	if (!snapshotRef.current) {
-		snapshotRef.current = selector(store.getSnapshot());
+	if (!prevRef.current) {
+		const state = store.getSnapshot();
+		const result = select(state);
+		prevRef.current = {
+			result,
+			state,
+		};
 	}
-	useLayoutEffect(() => {
-		snapshotRef.current = selector(store.getSnapshot());
+
+	const selector = useMemo(() => createSelector(select, {
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		get: () => prevRef.current!,
+		set: (ref) => {
+			prevRef.current = ref;
+		},
+	}), [select]);
+
+	const [, forceUpdate] = useState({});
+	useEffect(() => {
 		const unsubscribe = store.subscribe(() => {
-			const snapshot = selector(store.getSnapshot());
-			if (shallowEqual(snapshotRef.current, snapshot)) return;
-			snapshotRef.current = snapshot;
-			forceUpdate((x) => !x);
+			const isSame = selector(store.getSnapshot());
+			if (isSame) return;
+			forceUpdate({});
 		});
 		return unsubscribe;
 	}, [store, selector]);
 
-	return snapshotRef.current;
+	return prevRef.current.result;
 };
