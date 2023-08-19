@@ -20,8 +20,8 @@
 		"node": ">=16.0.0"
 	},
 	"scripts": {
-		"build": "rimraf dist && node scripts/build.js && tsc",
-		"dev": "rimraf dist && node scripts/build.js && tsc --watch",
+		"build": "node scripts/build.js && tsc",
+		"dev": "node scripts/build.js && tsc --watch",
 		"lint": "eslint **/*.{js,ts,tsx}",
 		"lint:fix": "eslint **/*.{js,ts,tsx} --fix",
 		"lint:config": "rimraf .eslintrc.local.json && eslint --print-config .eslintrc.js >> .eslintrc.local.json",

@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const copyfiles = require('copyfiles');
 
 const createDist = (dirPath) => {
 	if (fs.existsSync(dirPath)) {
@@ -17,5 +16,3 @@ const copyFileToDist = (dirPath, fileName) => {
 copyFileToDist('..', 'package.json');
 copyFileToDist('../..', 'license.md');
 copyFileToDist('..', 'readme.md');
-const err = (error) => error && console.error(error);
-copyfiles(['src/**/*.json', 'dist'], 1, err);
