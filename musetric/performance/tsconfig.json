@@ -1,5 +1,5 @@
 {
-	"extends": "../../eslint-config-musetric/tsconfig.base",
+	"extends": "../node_modules/eslint-config-musetric/tsconfig.base",
 	"compilerOptions": {
 		"types": ["node"],
 	},

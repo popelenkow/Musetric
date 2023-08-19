@@ -4,6 +4,10 @@
 
 This package provides musetric's .eslintrc as an extensible shared config.
 
+## Develop
+
+Write custom eslint rules. Check it by https://astexplorer.net/
+
 ## Usage
 
 We export three ESLint configurations for musetric project usage.

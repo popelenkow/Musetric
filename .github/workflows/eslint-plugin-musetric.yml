@@ -1,13 +1,13 @@
-name: eslint-config-musetric
+name: eslint-plugin-musetric
 on:
   push:
     branches: [main]
     paths:
-      - eslint-config-musetric/**
+      - eslint-plugin-musetric/**
   pull_request:
     branches: [main]
     paths:
-      - eslint-config-musetric/**
+      - eslint-plugin-musetric/**
   workflow_dispatch:
     inputs:
       npmPublishTag:
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./eslint-config-musetric
+        working-directory: ./eslint-plugin-musetric
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -39,7 +39,9 @@ jobs:
         npmPublishTag: ${{ github.event.inputs.npmPublishTag }}
         buildNumber: ${{ github.run_number }}
     - run: yarn
+    - run: yarn build
     - run: yarn publish --tag ${{ github.event.inputs.npmPublishTag }} --no-git-tag-version
+      working-directory: ./eslint-plugin-musetric/dist
       if: github.event.inputs.npmPublishTag == 'next' || github.event.inputs.npmPublishTag == 'beta' || github.event.inputs.npmPublishTag == 'latest'
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
