@@ -16,3 +16,5 @@ const copyFileToDist = (dirPath, fileName) => {
 copyFileToDist('..', 'package.json');
 copyFileToDist('../..', 'license.md');
 copyFileToDist('..', 'readme.md');
+copyFileToDist('..', 'utils.js');
+copyFileToDist('..', 'tsconfig.base.json');

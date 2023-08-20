@@ -1,4 +1,4 @@
-import i18next, { i18n as I18nOriginal, ResourceLanguage, Resource, TOptionsBase, StringMap } from 'i18next';
+import i18next, { i18n as I18nOriginal, ResourceLanguage, Resource, TOptionsBase } from 'i18next';
 
 export type LocaleResource = ResourceLanguage;
 export type LocaleEntry = {
@@ -11,7 +11,7 @@ export const createLocaleResources = (localeEntries: LocaleEntry[]): Resource =>
 );
 
 export type I18n = Omit<I18nOriginal, 't'> & {
-	t: (key: string, options?: TOptionsBase & StringMap) => string,
+	t: (key: string, options?: TOptionsBase & Record<string, string>) => string,
 };
 export const createI18n = async (
 	initLocaleId: string,

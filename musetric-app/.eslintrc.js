@@ -1,8 +1,11 @@
-const { getIgnorePatterns } = require('eslint-config-musetric/utils');
+const { getIgnorePatterns } = require('eslint-plugin-musetric/utils');
 
 module.exports = {
-	extends: [
+	plugins: [
 		'musetric',
+	],
+	extends: [
+		'plugin:musetric/recommended',
 	],
 	rules: {
 		'import/no-extraneous-dependencies': 0,

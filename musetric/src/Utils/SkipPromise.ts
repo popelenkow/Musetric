@@ -1,3 +1,4 @@
 export const skipPromise = (promise: Promise<unknown>): void => {
-	promise.finally(() => {});
+	// eslint-disable-next-line @typescript-eslint/no-floating-promises
+	promise.then(() => {});
 };

@@ -7,6 +7,7 @@ import { createFftRadix2Base } from 'musetric/Sounds/FftRadix2';
 import { createFftRadix4Base } from 'musetric/Sounds/FftRadix4';
 import { createComplexArray } from 'musetric/TypedArray/ComplexArray';
 import { createComplexIndexable } from 'musetric/TypedArray/ComplexIndexable';
+import { skipPromise } from 'musetric/Utils/SkipPromise';
 
 const add = (dt: number, t1: number, t2: number): number => {
 	return 0.95 * dt + 0.05 * (t2 - t1);
@@ -202,4 +203,4 @@ export const run = async (): Promise<void> => {
 	});
 };
 
-run().finally(() => { });
+skipPromise(run());

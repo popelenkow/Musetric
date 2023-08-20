@@ -1,5 +1,5 @@
 {
-	"extends": "./node_modules/eslint-config-musetric/tsconfig.base",
+	"extends": "./node_modules/eslint-plugin-musetric/tsconfig.base",
 	"compilerOptions": {
 		/* Basic Options */
 		"declaration": false, /* Generates corresponding '.d.ts' file. */
