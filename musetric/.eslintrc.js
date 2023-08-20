@@ -1,8 +1,12 @@
-const { getIgnorePatterns, getTsPath } = require('eslint-config-musetric/utils');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { getIgnorePatterns, getTsPath } = require('eslint-plugin-musetric/utils');
 
 module.exports = {
-	extends: [
+	plugins: [
 		'musetric',
+	],
+	extends: [
+		'plugin:musetric/recommended',
 	],
 	rules: {
 		'react-hooks/exhaustive-deps': ['error', {

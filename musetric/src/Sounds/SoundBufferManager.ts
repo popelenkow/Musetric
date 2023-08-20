@@ -49,10 +49,10 @@ const overwrite = (
 	}
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const createSoundBufferManager = (
 	sampleRate: number,
 	channelCount: number,
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {
 	const soundBuffer = createSoundBuffer(sampleRate, channelCount);
 	const soundCircularBuffer = createSoundBuffer(sampleRate, channelCount, sampleRate * 5);
