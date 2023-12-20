@@ -1,7 +1,6 @@
-import { Api } from 'musetric-api/Api';
-import { commonSampleRate } from 'musetric-api/Music';
-import { SeparationTaskInfo } from 'musetric-api/SeparationTaskInfo';
 import React, { createContext, useState, useEffect } from 'react';
+import { Api } from '../Api/Api';
+import { SoundInfo, commonSampleRate } from '../Api/SoundInfo';
 import { useAppApi } from '../App/AppContext';
 import { HttpClient } from '../AppBase/HttpClient';
 import { decodeArrayBufferToWav } from '../Sounds/Wav';
@@ -13,11 +12,11 @@ import { useContextStore } from '../UtilsReact/Store';
 export type KaraokeState = {
 	isOpenMusicList?: boolean,
 	isMusicListLoading?: boolean,
-	musicList: SeparationTaskInfo[],
+	soundList: SoundInfo[],
 	selectedId?: string,
 };
 const initialState: KaraokeState = {
-	musicList: [],
+	soundList: [],
 };
 
 const createActions = (
@@ -25,48 +24,40 @@ const createActions = (
 	api: HttpClient,
 	getAudioContext: () => AudioContext,
 ) => ({
-	setIsOpenMusicList: (isOpen: boolean) => setState((state) => {
+	setIsOpenSoundList: (isOpen: boolean) => setState((state) => {
 		state.isOpenMusicList = isOpen;
 	}),
-	refreshMusicList: async () => {
+	refreshSoundList: async () => {
 		setState((state) => {
 			state.isMusicListLoading = true;
 		});
-		const response = await api.getJson<Api.SeparatedList.Response>(
-			Api.SeparatedList.route,
-		).request();
+		const response = await api.getJson<Api.GetSoundList.Response>(Api.GetSoundList.route).request();
 		setState((state) => {
 			state.isMusicListLoading = false;
 			if (response.type !== 'ok') return;
-			state.musicList = response.result;
+			state.soundList = response.result;
 		});
 	},
-	selectTrack: async (id?: string) => {
+	removeSound: async (id: string): Promise<void> => {
+		const response = await api.delete(Api.RemoveSound.route(id)).request();
+
+		if (response.type !== 'ok') return;
+		setState((state) => {
+			state.soundList = state.soundList.filter((x) => x.id !== id);
+		});
+	},
+	selectSound: async (id?: string) => {
 		setState((state) => {
 			state.selectedId = id;
 		});
 		if (!id) return;
-		const response = await api.post<Api.SeparatedChunk.Request>(
-			Api.SeparatedChunk.route,
-			{ id, chunkIndex: 49, trackType: 'vocals' },
-		).request();
+		const response = await api.get(Api.GetSoundTrack.route(id, 'vocals', 4)).request();
 		if (response.type !== 'ok') return;
 		const blob = await response.raw.blob();
 		const data = await blob.arrayBuffer();
 		const audioContext = getAudioContext();
-		const channels = decodeArrayBufferToWav(audioContext, data);
+		const channels = await decodeArrayBufferToWav(audioContext, data);
 		console.log(channels);
-	},
-	removeTrack: async (id: string): Promise<void> => {
-		const response = await api.postJson<unknown, Api.RemoveTrack.Request>(
-			Api.RemoveTrack.route,
-			{ id },
-		).request();
-
-		if (response.type !== 'ok') return;
-		setState((state) => {
-			state.musicList = state.musicList.filter((x) => x.id !== id);
-		});
 	},
 } as const);
 type Actions = ReturnType<typeof createActions>;

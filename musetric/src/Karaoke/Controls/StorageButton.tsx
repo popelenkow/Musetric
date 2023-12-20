@@ -6,7 +6,7 @@ import { SFC } from '../../UtilityTypes/React';
 import { KaraokeSnapshot, useKaraokeStore } from '../KaraokeContext';
 
 const select = ({
-	isOpenMusicList, setIsOpenMusicList,
+	isOpenMusicList, setIsOpenSoundList: setIsOpenMusicList,
 }: KaraokeSnapshot) => ({
 	isOpenMusicList, setIsOpenMusicList,
 } as const);

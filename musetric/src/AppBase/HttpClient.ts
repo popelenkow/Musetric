@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 export const concatUrls = (...urls: (string | undefined)[]): string => {
 	const skipNullOrEmpty = (value?: string): value is string => !!value;
 	const trimLeft = (value: string, char: string): string => (
@@ -22,10 +21,10 @@ type ErrorResponse = {
 	raw: Response,
 };
 
-type OkResponse<TR> = {
+type OkResponse<TResponse> = {
 	type: 'ok',
 	status: number,
-	result: TR,
+	result: TResponse,
 	raw: Response,
 };
 
@@ -33,9 +32,13 @@ type CancelResponse = {
 	type: 'cancel',
 };
 
-export type TypedResponse<TR = void> = CancelResponse | ErrorResponse | OkResponse<TR>;
-export type TypedFetch<TR = void> = {
-	request: () => Promise<TypedResponse<TR>>,
+export type TypedResponse<TResponse = void> = (
+	| OkResponse<TResponse>
+	| CancelResponse
+	| ErrorResponse
+);
+export type TypedFetch<TResponse = void> = {
+	request: () => Promise<TypedResponse<TResponse>>,
 	cancel: () => void,
 };
 
@@ -54,21 +57,24 @@ const isAbortError = (error: unknown): error is DOMException => isClassicError(e
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const createHttpClient = (apiUri?: string) => {
-	type Options<TR> = {
+	type Options<TResponse> = {
 		uri: string,
+		method: string,
 		toRequest?: (data: unknown) => BodyInit,
-		toResponse?: (response: Response) => Promise<TR>,
-		method?: string,
+		toResponse?: (response: Response) => Promise<TResponse>,
 		data?: unknown,
 		headers?: HeadersInit,
 		signal?: RequestInit['signal'],
 	};
-	const sendBase = async <TR>(options: Options<TR>): Promise<TypedResponse<TR>> => {
+	const sendBase = async <TResponse>(
+		options: Options<TResponse>,
+	): Promise<TypedResponse<TResponse>> => {
 		const {
 			uri,
+			method,
 			toRequest = (x): BodyInit => JSON.stringify(x),
-			toResponse = (x): Promise<TR> => x.json(),
-			method = 'get',
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+			toResponse = (x): Promise<TResponse> => x.json(),
 			data,
 			headers: requestHeaders = {},
 			signal,
@@ -94,13 +100,13 @@ export const createHttpClient = (apiUri?: string) => {
 		return { type: 'ok', status: raw.status, result, raw };
 	};
 
-	const send = <TR>(options: Options<TR>): TypedFetch<TR> => {
+	const send = <TResponse>(options: Options<TResponse>): TypedFetch<TResponse> => {
 		const controller = new AbortController();
 		const { signal } = controller;
 
-		const request = async (): Promise<TypedResponse<TR>> => {
+		const request = async (): Promise<TypedResponse<TResponse>> => {
 			try {
-				const response = await sendBase<TR>({ ...options, signal });
+				const response = await sendBase<TResponse>({ ...options, signal });
 				return response;
 			}
 			catch (error) {
@@ -123,33 +129,38 @@ export const createHttpClient = (apiUri?: string) => {
 
 	return {
 		apiUri,
-		getJson: <TR>(uri: string) => send<TR>({
+		getJson: <TResponse>(uri: string) => send<TResponse>({
 			uri,
+			method: 'get',
 		}),
-		postJson: <TR, Req = unknown>(uri: string, data: Req) => send<TR>({
+		get: (uri: string) => send({
+			uri,
+			method: 'get',
+			toResponse: () => Promise.resolve(undefined),
+		}),
+		postJson: <TResponse, TRquest = unknown>(uri: string, data: TRquest) => send<TResponse>({
 			uri,
 			method: 'post',
 			data,
 			headers: { Accept: 'application/json', 'content-type': 'application/json' },
 		}),
-		postFile: <TR>(uri: string, file: File) => send<TR>({
+		postFile: <TResponse>(uri: string, file: File) => send<TResponse>({
 			uri,
 			toRequest: () => {
 				const formData = new FormData();
-				formData.append(file.name, file);
+				formData.append('file', file);
 				return formData;
 			},
 			method: 'post',
 			data: file,
 		}),
-		post: <Req = unknown>(uri: string, data: Req) => send<undefined>({
+		post: <TRquest = unknown>(uri: string, data: TRquest) => send<undefined>({
 			uri,
-			// eslint-disable-next-line @typescript-eslint/require-await
-			toResponse: async () => undefined,
+			toResponse: () => Promise.resolve(undefined),
 			method: 'post',
 			data,
 		}),
-		putJson: <TR>(uri: string, data: unknown) => send<TR>({
+		putJson: <TResponse>(uri: string, data: unknown) => send<TResponse>({
 			uri,
 			method: 'put',
 			data,

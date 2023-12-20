@@ -5,3 +5,5 @@ tmp/
 .eslintrc.local.json
 yarn-error.log
 tsconfig.tsbuildinfo
+.venv/
+__pycache__/

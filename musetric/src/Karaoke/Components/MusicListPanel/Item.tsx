@@ -1,5 +1,5 @@
-import { SeparationTaskInfo } from 'musetric-api/SeparationTaskInfo';
 import React from 'react';
+import { SoundInfo } from '../../../Api/SoundInfo';
 import { createClasses, createUseClasses } from '../../../App/AppCss';
 import { Button, ButtonProps } from '../../../Controls/Button';
 import { Icon } from '../../../Controls/Icon';
@@ -26,38 +26,36 @@ export const getMusicListItemClasses = createClasses(() => {
 const useClasses = createUseClasses('MusicListItem', getMusicListItemClasses);
 
 export type MusicListItemProps = {
-	item: SeparationTaskInfo,
+	info: SoundInfo,
 	selectedId?: string,
 	select: (id: string) => void,
 	remove: (id: string) => void,
 };
 export const MusicListItem: SFC<MusicListItemProps> = (props) => {
-	const { item, selectedId, select, remove } = props;
+	const { info, selectedId, select, remove } = props;
 	const classes = useClasses();
 
 	const selectProps: ButtonProps = {
-		onClick: () => select(item.id),
+		onClick: () => select(info.id),
 		kind: 'full',
 		align: 'left',
-		primary: selectedId === item.id,
+		primary: selectedId === info.id,
 	};
 
 	const removeProps: ButtonProps = {
-		onClick: () => remove(item.id),
+		onClick: () => remove(info.id),
 		kind: 'icon',
-		primary: selectedId === item.id,
+		primary: selectedId === info.id,
 	};
 
 	return (
 		<div className={classes.root}>
 			<Button {...selectProps}>
 				<div className={classes.id}>
-					{item.id}
+					{info.fileName}
 				</div>
 				<div className={classes.progress}>
-					<div>{item.chunksDone.length}</div>
-					<div>/</div>
-					<div>{item.chunksCount}</div>
+					<div>{info.id}</div>
 				</div>
 			</Button>
 			<Button {...removeProps}>

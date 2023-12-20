@@ -43,7 +43,6 @@
 		"i18next-parser": "8.6.0",
 		"immer": "10.0.2",
 		"musetric": "0.0.44",
-		"musetric-api": "0.0.3",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"react-jss": "10.10.0",

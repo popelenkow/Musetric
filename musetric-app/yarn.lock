@@ -3486,7 +3486,7 @@ multicast-dns@^7.2.5:
     dns-packet "^5.2.2"
     thunky "^1.0.2"
 
-musetric-api@0.0.3, musetric-api@^0.0.3:
+musetric-api@^0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/musetric-api/-/musetric-api-0.0.3.tgz#d36d3482f6afc6c9ff1a9251a8116ca86a0c4c56"
   integrity sha512-f+r969QZSpEgnxefZ3PfPD8hVx5vTUOdotba93KcZmxSkIhj1KO7EWVChYS/AhqK89cZM2sFf3I8MqNUyaFQaw==

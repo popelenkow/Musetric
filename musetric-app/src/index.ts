@@ -38,7 +38,7 @@ const run = async (): Promise<void> => {
 		allLocaleEntries,
 		allThemeEntries,
 		workers,
-		apiUrl: `https://${ip}:3005`,
+		apiUrl: `http://${ip}:3001`,
 	};
 	await createMusetricApp(options);
 };
