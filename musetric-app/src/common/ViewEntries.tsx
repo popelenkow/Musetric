@@ -1,3 +1,4 @@
+import { Api } from 'musetric/Api/Api';
 import { AppAbout, AppAboutProps } from 'musetric/App/AppAbout';
 import { useAppApi, useAppLocale } from 'musetric/App/AppContext';
 import { AppViewEntry } from 'musetric/App/AppDropdown';
@@ -6,7 +7,6 @@ import { Icon } from 'musetric/Controls/Icon';
 import { Karaoke } from 'musetric/Karaoke';
 import { SoundWorkshop } from 'musetric/SoundWorkshop';
 import { skipPromise } from 'musetric/Utils/SkipPromise';
-import { Api } from 'musetric-api/Api';
 import React, { useEffect, useState } from 'react';
 
 export type ViewId = 'soundWorkshop' | 'karaoke' | 'about';
