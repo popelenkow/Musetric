@@ -3486,21 +3486,15 @@ multicast-dns@^7.2.5:
     dns-packet "^5.2.2"
     thunky "^1.0.2"
 
-musetric-api@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/musetric-api/-/musetric-api-0.0.3.tgz#d36d3482f6afc6c9ff1a9251a8116ca86a0c4c56"
-  integrity sha512-f+r969QZSpEgnxefZ3PfPD8hVx5vTUOdotba93KcZmxSkIhj1KO7EWVChYS/AhqK89cZM2sFf3I8MqNUyaFQaw==
-
-musetric@0.0.44:
-  version "0.0.44"
-  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.44.tgz#ee32b046d81366d3e9373adc97fc7ac25aecad11"
-  integrity sha512-LtnnjVnw4EH86/VDGta8j0wL3H6+BwApM4iLnfNPKJIUmHStg25yHVSrYDSDGfDErhlcCLtz3KcQ0AJOKTfx+A==
+musetric@0.0.44-beta.322:
+  version "0.0.44-beta.322"
+  resolved "https://registry.yarnpkg.com/musetric/-/musetric-0.0.44-beta.322.tgz#f52303b06b9ccf8aeb20914fae8364acb9eac284"
+  integrity sha512-sBBw2tXCPHfgAXvZjnu8JEB8GpcmQw9uTlGuscGq3Ma1ZuShvAA3sraTMONJZW2nm40GC6QHVWtOdy/Ah+oezA==
   dependencies:
     classnames "^2.3.2"
     color "^4.2.3"
     i18next "^23.4.4"
     immer "^10.0.2"
-    musetric-api "^0.0.3"
     react "^18.2.0"
     react-dom "^18.2.0"
     react-jss "^10.10.0"
