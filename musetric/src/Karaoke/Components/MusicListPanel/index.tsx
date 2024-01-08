@@ -39,15 +39,15 @@ const useClasses = createUseClasses('MusicListPanel', getMusicListPanelClasses);
 
 const select = ({
 	isOpenMusicList,
-	musicList,
+	soundList,
 	selectedId,
-	selectTrack,
-	removeTrack,
+	selectSound: selectTrack,
+	removeSound: removeTrack,
 	isMusicListLoading,
-	refreshMusicList,
+	refreshSoundList: refreshMusicList,
 }: KaraokeSnapshot) => ({
 	isOpenMusicList,
-	musicList,
+	soundList,
 	selectedId,
 	selectTrack,
 	removeTrack,
@@ -59,7 +59,7 @@ export const MusicListPanel: SFC<object, { result: 'optional' }> = () => {
 	const classes = useClasses();
 
 	const {
-		isOpenMusicList, musicList, selectedId, selectTrack, removeTrack,
+		isOpenMusicList, soundList, selectedId, selectTrack, removeTrack,
 		isMusicListLoading, refreshMusicList,
 	} = useKaraokeStore(select);
 
@@ -73,14 +73,14 @@ export const MusicListPanel: SFC<object, { result: 'optional' }> = () => {
 		<div className={classes.root}>
 			{isMusicListLoading && <TopLoader />}
 			<div className={classes.list}>
-				{musicList.map((item) => {
+				{soundList.map((info) => {
 					const musicItemProps: MusicListItemProps = {
-						item,
+						info,
 						selectedId,
 						select: (id) => skipPromise(selectTrack(id)),
 						remove: (id) => skipPromise(removeTrack(id)),
 					};
-					return <MusicListItem key={item.id} {...musicItemProps} />;
+					return <MusicListItem key={info.id} {...musicItemProps} />;
 				})}
 			</div>
 		</div>

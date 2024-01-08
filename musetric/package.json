@@ -1,7 +1,7 @@
 {
 	"name": "musetric",
 	"description": "Musetric is a javascript library for building music applications",
-	"version": "0.0.44",
+	"version": "0.0.45",
 	"license": "MIT",
 	"main": "index.js",
 	"types": "index.d.ts",
@@ -37,7 +37,6 @@
 		"color": "^4.2.3",
 		"i18next": "^23.4.4",
 		"immer": "^10.0.2",
-		"musetric-api": "^0.0.3",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-jss": "^10.10.0"

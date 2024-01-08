@@ -60,9 +60,6 @@ const createConfig = (env, options) => {
 		/** @type {DevServerConfiguration} */
 		devServer: {
 			port: 3000,
-			server: {
-				type: 'https',
-			},
 			headers: {
 				'Cross-Origin-Opener-Policy': 'same-origin',
 				'Cross-Origin-Embedder-Policy': 'require-corp',
@@ -116,7 +113,6 @@ const create = (env) => {
 					{ from: './src/index.html', to: './index.html' },
 					{ from: './src/perf.html', to: './perf.html' },
 					{ from: '../musetric/src/Resources/Icons.svg', to: './Icons.svg' },
-					{ from: './src/coi-serviceworker.min.js', to: './coi-serviceworker.min.js' },
 					{ from: './src/favicon.ico', to: './favicon.ico' },
 					{ from: './package.json', to: './package.json' },
 					{ from: '../license.md', to: './license.md' },

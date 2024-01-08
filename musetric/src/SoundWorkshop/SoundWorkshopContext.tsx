@@ -1,5 +1,5 @@
-import { commonSampleRate } from 'musetric-api/Music';
 import React, { createContext, useState, useEffect } from 'react';
+import { commonSampleRate } from '../Api/SoundInfo';
 import { useAppWorkers } from '../App/AppContext';
 import { NumberRange } from '../Rendering/Layout';
 import { createRecorder, Recorder } from '../SoundProcessing/Recorder';

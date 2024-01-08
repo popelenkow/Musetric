@@ -1,5 +1,5 @@
-import { Api } from 'musetric-api/Api';
 import React from 'react';
+import { Api } from '../../Api/Api';
 import { useAppApi, useAppLocale } from '../../App/AppContext';
 import { Icon } from '../../Controls/Icon';
 import { SelectFile, SelectFileProps } from '../../Controls/SelectFile';
@@ -11,7 +11,7 @@ export const UploadButton: SFC = () => {
 	const api = useAppApi();
 
 	const separate = async (file: File): Promise<void> => {
-		await api.postFile(Api.Separate.route, file).request();
+		await api.postFile(Api.AddSound.route, file).request();
 	};
 	const openFileProps: SelectFileProps = {
 		kind: 'icon',

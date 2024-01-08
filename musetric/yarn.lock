@@ -3937,11 +3937,6 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-musetric-api@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/musetric-api/-/musetric-api-0.0.3.tgz#d36d3482f6afc6c9ff1a9251a8116ca86a0c4c56"
-  integrity sha512-f+r969QZSpEgnxefZ3PfPD8hVx5vTUOdotba93KcZmxSkIhj1KO7EWVChYS/AhqK89cZM2sFf3I8MqNUyaFQaw==
-
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
