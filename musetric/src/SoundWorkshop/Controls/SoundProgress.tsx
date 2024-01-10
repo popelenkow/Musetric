@@ -1,23 +1,32 @@
 import React, { useRef } from 'react';
-import { createUseClasses, createClasses } from '../../App/AppCss';
-import { getFieldClasses } from '../../Controls/Field';
+import { createUseClasses } from '../../App/AppCss';
+import { themeVariables } from '../../AppBase/Theme';
 import { SFC } from '../../UtilityTypes/React';
 import { useAnimationCallback } from '../../UtilsReact/Animation';
 import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
 
-export const getSoundProgressClasses = createClasses((css) => {
-	const fieldClasses = getFieldClasses(css);
-	return {
-		root: {
-			...fieldClasses.root,
-			width: 'auto',
-			height: '42px',
-			position: 'relative',
-			gap: '6px',
-		},
-	};
+const useClasses = createUseClasses('SoundProgress', {
+	root: {
+		display: 'flex',
+		margin: '0',
+		outline: 'none',
+		'font-family': 'Verdana, Arial, sans-serif',
+		'box-sizing': 'border-box',
+		'align-items': 'center',
+		padding: '0 6px',
+		'background-color': 'transparent',
+		height: '42px',
+		'min-height': '42px',
+		'font-size': '18px',
+		'justify-content': 'center',
+		border: '1px solid',
+		'border-color': 'transparent',
+		color: `var(${themeVariables.content})`,
+		width: 'auto',
+		position: 'relative',
+		gap: '6px',
+	},
 });
-const useClasses = createUseClasses('SoundProgress', getSoundProgressClasses);
 
 const select = ({
 	soundBufferManager,

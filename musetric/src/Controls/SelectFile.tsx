@@ -1,17 +1,6 @@
 import React, { useMemo, useEffect } from 'react';
-import { createUseClasses, createClasses } from '../App/AppCss';
 import { SFC } from '../UtilityTypes/React';
-import { Button, ButtonProps, getButtonClasses } from './Button';
-
-export const getSelectFileClasses = createClasses((css) => {
-	const buttonClasses = getButtonClasses(css);
-	return {
-		root: {
-			...buttonClasses.root,
-		},
-	};
-});
-const useClasses = createUseClasses('SelectFile', getSelectFileClasses);
+import { Button, ButtonProps } from './Button';
 
 export type SelectFileProps = {
 	kind?: 'simple' | 'icon' | 'full',
@@ -27,7 +16,6 @@ export const SelectFile: SFC<SelectFileProps, { children: 'required' }> = (props
 		kind, disabled, primary, rounded,
 		title, changeFile, children,
 	} = props;
-	const classes = useClasses();
 
 	const input = useMemo(() => {
 		const result = document.createElement('input');
@@ -55,7 +43,6 @@ export const SelectFile: SFC<SelectFileProps, { children: 'required' }> = (props
 		rounded,
 		title,
 		onClick: () => input.click(),
-		classNames: { root: classes.root },
 	};
 
 	return (

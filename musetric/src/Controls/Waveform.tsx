@@ -1,28 +1,25 @@
 import React, { useMemo, useCallback, useRef } from 'react';
-import { createClasses, createUseClasses, useAppCss } from '../App/AppCss';
+import { createUseClasses, useAppCss } from '../App/AppCss';
+import { themeVariables } from '../AppBase/Theme';
 import { Layout2D, Size2D, Position2D } from '../Rendering/Layout';
 import { Waves, drawWaveform, createWaveformColors, evalWaves } from '../Rendering/Waveform';
 import { SharedRealArray } from '../TypedArray/RealArray';
 import { SFC } from '../UtilityTypes/React';
 import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 
-export const getWaveformClasses = createClasses((css) => {
-	const { theme } = css;
-	return {
-		root: {
-			width: '100%',
-			height: '100%',
-			position: 'relative',
-		},
-		cursor: {
-			height: '100%',
-			'border-left': `1px solid ${theme.primary}`,
-			position: 'absolute',
-			'pointer-events': 'none',
-		},
-	};
+const useClasses = createUseClasses('Waveform', {
+	root: {
+		width: '100%',
+		height: '100%',
+		position: 'relative',
+	},
+	cursor: {
+		height: '100%',
+		'border-left': `1px solid var(${themeVariables.primary})`,
+		position: 'absolute',
+		'pointer-events': 'none',
+	},
 });
-const useClasses = createUseClasses('Waveform', getWaveformClasses);
 
 export type WaveformProps = {
 	getBuffer: () => SharedRealArray<'float32'>,

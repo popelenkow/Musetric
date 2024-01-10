@@ -1,29 +1,26 @@
 import React from 'react';
 import { SoundInfo } from '../../../Api/SoundInfo';
-import { createClasses, createUseClasses } from '../../../App/AppCss';
+import { createUseClasses } from '../../../App/AppCss';
 import { Button, ButtonProps } from '../../../Controls/Button';
 import { Icon } from '../../../Controls/Icon';
 import { SFC } from '../../../UtilityTypes/React';
 
-export const getMusicListItemClasses = createClasses(() => {
-	return {
-		root: {
-			display: 'flex',
-			'flex-direction': 'row',
-			width: '100%',
-		},
-		id: {
-			width: '100%',
-			'text-align': 'left',
-		},
-		progress: {
-			display: 'flex',
-			'flex-direction': 'row',
-			gap: '6px',
-		},
-	};
+const useClasses = createUseClasses('MusicListItem', {
+	root: {
+		display: 'flex',
+		'flex-direction': 'row',
+		width: '100%',
+	},
+	id: {
+		width: '100%',
+		'text-align': 'left',
+	},
+	progress: {
+		display: 'flex',
+		'flex-direction': 'row',
+		gap: '6px',
+	},
 });
-const useClasses = createUseClasses('MusicListItem', getMusicListItemClasses);
 
 export type MusicListItemProps = {
 	info: SoundInfo,

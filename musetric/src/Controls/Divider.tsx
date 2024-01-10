@@ -1,17 +1,14 @@
 import React from 'react';
-import { createUseClasses, createClasses } from '../App/AppCss';
+import { createUseClasses } from '../App/AppCss';
+import { themeVariables } from '../AppBase/Theme';
 import { SFC } from '../UtilityTypes/React';
 
-export const getDividerClasses = createClasses((css) => {
-	const { theme } = css;
-	return {
-		root: {
-			width: '100%',
-			'border-top': `1px solid ${theme.divider}`,
-		},
-	};
+const useClasses = createUseClasses('Divider', {
+	root: {
+		width: '100%',
+		'border-top': `1px solid var(${themeVariables.divider})`,
+	},
 });
-const useClasses = createUseClasses('Divider', getDividerClasses);
 
 export const Divider: SFC = () => {
 	const classes = useClasses();

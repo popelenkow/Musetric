@@ -1,5 +1,6 @@
 import React from 'react';
-import { createClasses, createUseClasses } from '../../../App/AppCss';
+import { createUseClasses } from '../../../App/AppCss';
+import { themeVariables } from '../../../AppBase/Theme';
 import { TopLoader } from '../../../Controls/TopLoader';
 import { SFC } from '../../../UtilityTypes/React';
 import { skipPromise } from '../../../Utils/SkipPromise';
@@ -7,35 +8,31 @@ import { useLoopCallback } from '../../../UtilsReact/Loop';
 import { KaraokeSnapshot, useKaraokeStore } from '../../KaraokeContext';
 import { MusicListItem, MusicListItemProps } from './Item';
 
-export const getMusicListPanelClasses = createClasses((css) => {
-	const { theme } = css;
-	return {
-		root: {
-			background: theme.backgroundPanel,
-			'box-sizing': 'border-box',
-			height: '100%',
-			width: '100%',
-			position: 'relative',
-		},
-		list: {
-			display: 'flex',
-			'flex-direction': 'column',
-		},
-		item: {
-			display: 'flex',
-			'flex-direction': 'row',
-			width: '100%',
-		},
-		itemId: {
-			width: '100%',
-			'text-align': 'left',
-		},
-		itemProgress: {
-			width: '30px',
-		},
-	};
+const useClasses = createUseClasses('MusicListPanel', {
+	root: {
+		background: `var(${themeVariables.backgroundPanel})`,
+		'box-sizing': 'border-box',
+		height: '100%',
+		width: '100%',
+		position: 'relative',
+	},
+	list: {
+		display: 'flex',
+		'flex-direction': 'column',
+	},
+	item: {
+		display: 'flex',
+		'flex-direction': 'row',
+		width: '100%',
+	},
+	itemId: {
+		width: '100%',
+		'text-align': 'left',
+	},
+	itemProgress: {
+		width: '30px',
+	},
 });
-const useClasses = createUseClasses('MusicListPanel', getMusicListPanelClasses);
 
 const select = ({
 	isOpenMusicList,

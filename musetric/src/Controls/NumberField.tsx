@@ -1,45 +1,80 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { createUseClasses, createClasses, className } from '../App/AppCss';
+import { createUseClasses, className } from '../App/AppCss';
+import { themeVariables } from '../AppBase/Theme';
 import { SFC } from '../UtilityTypes/React';
 import { useAnimation } from '../UtilsReact/Animation';
 import { GroovedWheel, GroovedWheelProps } from './GroovedWheel';
-import { getTextFieldClasses } from './TextField';
 
-export const getNumberFieldClasses = createClasses((css) => {
-	const { theme } = css;
-	const textFieldClasses = getTextFieldClasses(css);
-	const activeSelector = ['&:not(:focus-within):active', '&:not(:focus-within).active', '.hoverable &:not(:focus-within):hover'];
-	return {
-		root: {
-			...textFieldClasses.root,
-			[`${activeSelector.map((x) => x.concat(' > .NumberField-groovedWheel > *')).join(', ')}`]: {
-				'background-color': theme.content,
-			},
-			'&:focus-within > .NumberField-groovedWheel > *': {
-				'background-color': theme.primary,
-			},
+const activeSelector = ['&:not(:focus-within):active', '&:not(:focus-within).active', '.hoverable &:not(:focus-within):hover'];
+
+const useClasses = createUseClasses('NumberField', {
+	root: {
+		position: 'relative',
+		height: '42px',
+		'min-height': '42px',
+		'font-family': 'Verdana, Arial, sans-serif',
+		[`${activeSelector.map((x) => x.concat(' > fieldset')).join(', ')}`]: {
+			'border-color': `var(${themeVariables.content})`,
 		},
-		input: {
-			...textFieldClasses.input,
+		'&:focus-within > fieldset': {
+			'border-color': `var(${themeVariables.primary})`,
+			color: `var(${themeVariables.primary})`,
 		},
-		fieldset: {
-			...textFieldClasses.fieldset,
-			'border-bottom-color': 'transparent !important',
+		[`${activeSelector.map((x) => x.concat(' > .NumberField__groovedWheel > *')).join(', ')}`]: {
+			'background-color': `var(${themeVariables.content})`,
 		},
-		legend: {
-			...textFieldClasses.legend,
+		'&:focus-within > .NumberField__groovedWheel > *': {
+			'background-color': `var(${themeVariables.primary})`,
 		},
-		groovedWheel: {
-			position: 'absolute',
-			cursor: 'ew-resize',
-			bottom: '0px',
-			height: '8px',
-			left: '12px',
-			right: '12px',
+	},
+	input: {
+		margin: '0',
+		outline: 'none',
+		'box-sizing': 'border-box',
+		padding: '0 12px',
+		'background-color': 'transparent',
+		height: '100%',
+		'font-size': '18px',
+		border: '1px solid',
+		'border-color': 'transparent',
+		color: `var(${themeVariables.content})`,
+		width: '100%',
+		'margin-top': '3px',
+		'&.rounded': {
+			'border-radius': '10px',
 		},
-	};
+	},
+	fieldset: {
+		margin: '0',
+		outline: 'none',
+		'box-sizing': 'border-box',
+		inset: '0px',
+		'background-color': 'transparent',
+		'font-size': '18px',
+		color: `var(${themeVariables.content})`,
+		border: '1px solid',
+		position: 'absolute',
+		'border-color': `var(${themeVariables.divider})`,
+		'border-bottom-color': 'transparent !important',
+		'pointer-events': 'none',
+		'&.rounded': {
+			'border-radius': '10px',
+		},
+	},
+	legend: {
+		'font-size': '10px',
+		padding: '0 6px',
+		'pointer-events': 'auto',
+	},
+	groovedWheel: {
+		position: 'absolute',
+		cursor: 'ew-resize',
+		bottom: '0px',
+		height: '8px',
+		left: '12px',
+		right: '12px',
+	},
 });
-const useClasses = createUseClasses('NumberField', getNumberFieldClasses);
 
 export type NumberFieldProps = {
 	value: number,

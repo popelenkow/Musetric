@@ -1,16 +1,13 @@
 import React from 'react';
-import { createUseClasses, createClasses } from '../App/AppCss';
+import { createUseClasses } from '../App/AppCss';
 import { SFC } from '../UtilityTypes/React';
 
-export const getIconClasses = createClasses(() => {
-	return {
-		root: {
-			width: '24px',
-			height: '24px',
-		},
-	};
+const useClasses = createUseClasses('Icon', {
+	root: {
+		width: '24px',
+		height: '24px',
+	},
 });
-const useClasses = createUseClasses('Icon', getIconClasses);
 
 export type IconName = (
 	| 'app'

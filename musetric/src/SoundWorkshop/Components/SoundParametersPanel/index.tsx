@@ -1,30 +1,27 @@
 import React from 'react';
-import { createUseClasses, createClasses } from '../../../App/AppCss';
+import { createUseClasses } from '../../../App/AppCss';
+import { themeVariables } from '../../../AppBase/Theme';
 import { ScrollArea } from '../../../Controls/ScrollArea';
 import { TextField, TextFieldProps } from '../../../Controls/TextField';
 import { SFC } from '../../../UtilityTypes/React';
 import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../../SoundWorkshopContext';
 import { FrequencyRangeParameter } from './frequency';
 
-export const getSoundParametersClasses = createClasses((css) => {
-	const { theme } = css;
-	return {
-		root: {
-			background: theme.backgroundPanel,
-			'box-sizing': 'border-box',
-			'border-top': `1px solid ${theme.divider}`,
-			height: '100%',
-			width: '100%',
-		},
-		list: {
-			padding: '15px',
-			display: 'flex',
-			'flex-direction': 'column',
-			'row-gap': '15px',
-		},
-	};
+const useClasses = createUseClasses('SoundParameters', {
+	root: {
+		background: `var(${themeVariables.backgroundPanel})`,
+		'box-sizing': 'border-box',
+		'border-top': `1px solid var(${themeVariables.divider})`,
+		height: '100%',
+		width: '100%',
+	},
+	list: {
+		padding: '15px',
+		display: 'flex',
+		'flex-direction': 'column',
+		'row-gap': '15px',
+	},
 });
-const useClasses = createUseClasses('SoundParameters', getSoundParametersClasses);
 
 const SoundParametersPanel: SFC = () => {
 	const classes = useClasses();
