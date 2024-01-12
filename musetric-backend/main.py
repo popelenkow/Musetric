@@ -66,10 +66,6 @@ backgroundThread = threading.Thread(target=runBackgroundThread)
 backgroundThread.setDaemon(True)
 backgroundThread.start()
 
-@app.get('/ping')
-async def ping():
-    return ''
-
 @app.get('/')
 async def main(request: Request):
     htmlContent = f"""
@@ -80,6 +76,10 @@ async def main(request: Request):
     </html>
     """
     return HTMLResponse(content=htmlContent, status_code=200)
+
+@app.get('/api/ping')
+async def ping():
+    return ''
 
 @app.get('/api/sound/list')
 async def getList():
