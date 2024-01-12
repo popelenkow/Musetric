@@ -2,7 +2,7 @@ import { ComplexIndexable, createComplexIndexable } from '../TypedArray/ComplexI
 import { normComplexIndexable } from '../TypedArray/ComplexUtils';
 import { RealIndexable, createRealIndexable } from '../TypedArray/RealIndexable';
 import { mapAmplitudeToDecibel } from './AmplitudeToDecibel';
-import { gaussWindowFilter } from './WindowFilters';
+import { rectangularWindowFilter } from './WindowFilters';
 
 export type SpectrometerBase = {
     forward: (input: ComplexIndexable, output: ComplexIndexable) => void,
@@ -26,7 +26,7 @@ export const createSpectrometer = (windowSize: number, base: SpectrometerBase): 
     const window = createComplexIndexable('float64', windowSize);
     const buf = createRealIndexable('float64', windowSize / 2);
     const frequency = createComplexIndexable('list', windowSize);
-    const filter = gaussWindowFilter('float64', windowSize);
+    const filter = rectangularWindowFilter('float64', windowSize);
 
     const api: Spectrometer = {
         forward,
@@ -42,7 +42,7 @@ export const createSpectrometer = (windowSize: number, base: SpectrometerBase): 
                 window.imag[i] = 0;
             }
             forward(window, frequency);
-            normComplexIndexable(frequency, output, 1 / windowSize);
+            normComplexIndexable(frequency, output, 2 / windowSize);
             convert(output);
         },
         byteFrequency: (

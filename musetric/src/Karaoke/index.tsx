@@ -74,6 +74,14 @@ const Karaoke: SFC = () => {
             <div className={classes.main}>
                 <MusicListPanel />
                 <KaraokePanel />
+                <div style={{ position: 'absolute', color: 'white' }}>
+                    <canvas id='myChart' style={{ width: '50vw', height: '100px', border: 'solid red' }} />
+                    <div id='1' style={{ fontSize: 30 }}>123</div>
+                    <div id='2' style={{ fontSize: 30 }}>123</div>
+                    <div id='3' style={{ fontSize: 30 }}>123</div>
+                    <div id='4' style={{ fontSize: 30 }}>123</div>
+                </div>
+
             </div>
             <div className={classes.sidebar}>
                 <div className={classes.sidebarTop}>

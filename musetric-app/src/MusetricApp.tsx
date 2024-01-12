@@ -34,7 +34,7 @@ export const MusetricApp: SFC<MusetricAppProps> = (props) => {
     const appProps: AppProps<ViewId> = {
         rootElement,
         appBarButtonsSlot: <AppBarButtons />,
-        initViewId: 'soundWorkshop',
+        initViewId: 'karaoke',
         useViewEntries,
         workers,
         log,
