@@ -1,14 +1,14 @@
 {
-	"extends": "../node_modules/eslint-plugin-musetric/tsconfig.base",
-	"compilerOptions": {
-		"types": ["node"],
-	},
-	"include": [
-		"./**/*",
-		"./src/**/*",
-		"./src/**/*.json",
-	],
-	"exclude": [
-		"./node_modules"
-	],
+    "extends": "../node_modules/eslint-plugin-musetric/tsconfig.base",
+    "compilerOptions": {
+        "types": ["node"],
+    },
+    "include": [
+        "./**/*",
+        "./src/**/*",
+        "./src/**/*.json",
+    ],
+    "exclude": [
+        "./node_modules"
+    ],
 }

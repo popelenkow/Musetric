@@ -1,58 +1,58 @@
 {
-	"name": "musetric-app",
-	"description": "Musetric is javascript music application",
-	"version": "0.0.52",
-	"license": "MIT",
-	"main": "musetricApp.js",
-	"types": "musetricApp.d.ts",
-	"homepage": "https://github.com/popelenkow/Musetric",
-	"bugs": "https://github.com/popelenkow/Musetric/issues",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/popelenkow/Musetric",
-		"directory": "musetric"
-	},
-	"keywords": [
-		"musetric",
-		"musetric-app"
-	],
-	"scripts": {
-		"dev": "webpack-dev-server --env dev",
-		"build": "rimraf dist && webpack",
-		"lint": "eslint **/*.{js,ts,tsx}",
-		"lint:fix": "eslint **/*.{js,ts,tsx} --fix",
-		"lint:config": "rimraf .eslintrc.local.json && eslint --print-config .eslintrc.js >> .eslintrc.local.json",
-		"parse-locale": "i18next -c ./i18next.parser.config.js"
-	},
-	"resolutions": {
-		"glob-parent": "^6.0.0"
-	},
-	"devDependencies": {
-		"@types/color": "3.0.6",
-		"@types/react": "18.2.47",
-		"@types/react-dom": "18.2.18",
-		"chart.js": "4.4.1",
-		"classnames": "2.5.1",
-		"color": "4.2.3",
-		"copy-webpack-plugin": "12.0.1",
-		"copyfiles": "2.4.1",
-		"dts-bundle-generator": "9.2.4",
-		"eslint-plugin-musetric": "0.0.3-beta.17",
-		"fft.js": "4.0.4",
-		"i18next": "23.7.16",
-		"i18next-parser": "8.12.0",
-		"immer": "10.0.3",
-		"musetric": "0.0.45-beta.332",
-		"react": "18.2.0",
-		"react-dom": "18.2.0",
-		"react-jss": "10.10.0",
-		"rimraf": "5.0.5",
-		"ts-loader": "9.5.1",
-		"typescript": "5.3.3",
-		"webpack": "5.89.0",
-		"webpack-cli": "5.1.4",
-		"webpack-dev-server": "4.15.1",
-		"webpack-merge": "5.10.0",
-		"worker-url": "1.1.0"
-	}
+    "name": "musetric-app",
+    "description": "Musetric is javascript music application",
+    "version": "0.0.52",
+    "license": "MIT",
+    "main": "musetricApp.js",
+    "types": "musetricApp.d.ts",
+    "homepage": "https://github.com/popelenkow/Musetric",
+    "bugs": "https://github.com/popelenkow/Musetric/issues",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/popelenkow/Musetric",
+        "directory": "musetric"
+    },
+    "keywords": [
+        "musetric",
+        "musetric-app"
+    ],
+    "scripts": {
+        "dev": "webpack-dev-server --env dev",
+        "build": "rimraf dist && webpack",
+        "lint": "eslint **/*.{js,ts,tsx}",
+        "lint:fix": "eslint **/*.{js,ts,tsx} --fix",
+        "lint:config": "rimraf .eslintrc.local.json && eslint --print-config .eslintrc.js >> .eslintrc.local.json",
+        "parse-locale": "i18next -c ./i18next.parser.config.js"
+    },
+    "resolutions": {
+        "glob-parent": "^6.0.0"
+    },
+    "devDependencies": {
+        "@types/color": "3.0.6",
+        "@types/react": "18.2.47",
+        "@types/react-dom": "18.2.18",
+        "chart.js": "4.4.1",
+        "classnames": "2.5.1",
+        "color": "4.2.3",
+        "copy-webpack-plugin": "12.0.1",
+        "copyfiles": "2.4.1",
+        "dts-bundle-generator": "9.2.4",
+        "eslint-plugin-musetric": "0.0.3-beta.20",
+        "fft.js": "4.0.4",
+        "i18next": "23.7.16",
+        "i18next-parser": "8.12.0",
+        "immer": "10.0.3",
+        "musetric": "0.0.45-beta.332",
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "react-jss": "10.10.0",
+        "rimraf": "5.0.5",
+        "ts-loader": "9.5.1",
+        "typescript": "5.3.3",
+        "webpack": "5.89.0",
+        "webpack-cli": "5.1.4",
+        "webpack-dev-server": "4.15.1",
+        "webpack-merge": "5.10.0",
+        "worker-url": "1.1.0"
+    }
 }

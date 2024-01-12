@@ -11,54 +11,54 @@ import React, { useEffect, useState } from 'react';
 
 export type ViewId = 'soundWorkshop' | 'karaoke' | 'about';
 export const useViewEntries = (): AppViewEntry<ViewId>[] => {
-	const { i18n } = useAppLocale();
+    const { i18n } = useAppLocale();
 
-	const api = useAppApi();
+    const api = useAppApi();
 
-	const [withServer, setWithServer] = useState(false);
+    const [withServer, setWithServer] = useState(false);
 
-	useEffect(() => {
-		const ping = async (): Promise<void> => {
-			const response = await api.getJson(Api.Ping.route).request();
-			if (response.type !== 'ok') return;
-			setWithServer(true);
-		};
-		skipPromise(ping());
-	}, [api]);
+    useEffect(() => {
+        const ping = async (): Promise<void> => {
+            const response = await api.getJson(Api.Ping.route).request();
+            if (response.type !== 'ok') return;
+            setWithServer(true);
+        };
+        skipPromise(ping());
+    }, [api]);
 
-	const githubProps: ButtonProps = {
-		kind: 'icon',
-		rounded: true,
-		primary: true,
-		onClick: () => {
-			window.location.href = 'https://github.com/popelenkow/Musetric';
-		},
-	};
-	const performanceProps: ButtonProps = {
-		kind: 'icon',
-		rounded: true,
-		primary: true,
-		onClick: () => {
-			window.location.href = `${window.location.origin}/perf.html`;
-		},
-	};
-	const aboutInfoProps: AppAboutProps = {
-		appVersion: process.env.APP_VERSION || '???',
-		links: [
-			<Button {...githubProps}><Icon name='github' /></Button>,
-			<Button {...performanceProps}><Icon name='performance' /></Button>,
-		],
-	};
+    const githubProps: ButtonProps = {
+        kind: 'icon',
+        rounded: true,
+        primary: true,
+        onClick: () => {
+            window.location.href = 'https://github.com/popelenkow/Musetric';
+        },
+    };
+    const performanceProps: ButtonProps = {
+        kind: 'icon',
+        rounded: true,
+        primary: true,
+        onClick: () => {
+            window.location.href = `${window.location.origin}/perf.html`;
+        },
+    };
+    const aboutInfoProps: AppAboutProps = {
+        appVersion: process.env.APP_VERSION || '???',
+        links: [
+            <Button {...githubProps}><Icon name='github' /></Button>,
+            <Button {...performanceProps}><Icon name='performance' /></Button>,
+        ],
+    };
 
-	const result: AppViewEntry<ViewId>[] = [
-		{ type: 'view', id: 'soundWorkshop', name: i18n.t('App:soundWorkshop'), element: <SoundWorkshop /> },
-		{ type: 'view', id: 'karaoke', name: i18n.t('App:karaoke'), element: <Karaoke /> },
-		{ type: 'divider' },
-		{ type: 'view', id: 'about', name: i18n.t('App:about'), element: <AppAbout {...aboutInfoProps} /> },
-	];
-	return result.filter((x) => {
-		if (x.type !== 'view') return true;
-		if (x.id === 'karaoke') return withServer;
-		return true;
-	});
+    const result: AppViewEntry<ViewId>[] = [
+        { type: 'view', id: 'soundWorkshop', name: i18n.t('App:soundWorkshop'), element: <SoundWorkshop /> },
+        { type: 'view', id: 'karaoke', name: i18n.t('App:karaoke'), element: <Karaoke /> },
+        { type: 'divider' },
+        { type: 'view', id: 'about', name: i18n.t('App:about'), element: <AppAbout {...aboutInfoProps} /> },
+    ];
+    return result.filter((x) => {
+        if (x.type !== 'view') return true;
+        if (x.id === 'karaoke') return withServer;
+        return true;
+    });
 };

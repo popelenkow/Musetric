@@ -1,11 +1,11 @@
 {
-	"files.exclude": {
-		"**/node_modules": true
-	},
-	"editor.tabCompletion": "on",
-	"editor.tabSize": 4,
-	"editor.insertSpaces": false,
-	"editor.detectIndentation": false,
-	"editor.renderWhitespace": "all",
-	"files.eol": "\n",
+    "files.exclude": {
+        "**/node_modules": true
+    },
+    "editor.tabCompletion": "on",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.renderWhitespace": "all",
+    "files.eol": "\n",
 }

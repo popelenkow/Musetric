@@ -4,13 +4,13 @@ import { RealIndexableType } from './RealType';
 
 export type ComplexIndexableMap = ComplexArrayMap & ComplexListMap;
 export type ComplexIndexable<K extends RealIndexableType = RealIndexableType> =
-	ComplexIndexableMap[K];
+    ComplexIndexableMap[K];
 export const createComplexIndexable = <K extends RealIndexableType>(
-	type: K,
-	length: number,
+    type: K,
+    length: number,
 ): ComplexIndexable<K> => {
-	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-	if (type === 'list') return createComplexList(length) as ComplexIndexable<K>;
-	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-	return createComplexArray(type, length) as ComplexIndexable<K>;
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    if (type === 'list') return createComplexList(length) as ComplexIndexable<K>;
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    return createComplexArray(type, length) as ComplexIndexable<K>;
 };

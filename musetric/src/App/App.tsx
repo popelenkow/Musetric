@@ -12,107 +12,107 @@ import { createUseClasses, CssProvider, CssProviderProps } from './AppCss';
 import { AppDropdown, AppDropdownProps, AppViewEntry, AppViewElement } from './AppDropdown';
 
 const useClasses = createUseClasses('App', {
-	root: {
-		position: 'absolute',
-		'overscroll-behavior': 'none',
-		top: 'var(--screenTop, 0px)',
-		height: 'var(--100vh, 100vh)',
-		width: '100%',
-		'box-sizing': 'border-box',
-		display: 'grid',
-		'grid-template-rows': ' 50px 1fr',
-		'grid-template-columns': '1fr',
-		'background-color': `var(${themeVariables.background})`,
-	},
+    root: {
+        position: 'absolute',
+        'overscroll-behavior': 'none',
+        top: 'var(--screenTop, 0px)',
+        height: 'var(--100vh, 100vh)',
+        width: '100%',
+        'box-sizing': 'border-box',
+        display: 'grid',
+        'grid-template-rows': ' 50px 1fr',
+        'grid-template-columns': '1fr',
+        'background-color': `var(${themeVariables.background})`,
+    },
 });
 
 export type AppLayoutProps<ViewId> = {
-	initViewId: ViewId,
-	useViewEntries: () => AppViewEntry<ViewId>[],
-	useAppBarButtons: () => ReactElement,
+    initViewId: ViewId,
+    useViewEntries: () => AppViewEntry<ViewId>[],
+    useAppBarButtons: () => ReactElement,
 };
 type AppLayoutFC = (
-	<ViewId extends string>(props: AppLayoutProps<ViewId>) => FCResult
+    <ViewId extends string>(props: AppLayoutProps<ViewId>) => FCResult
 );
 export const AppLayout: AppLayoutFC = (props) => {
-	type ViewId = (typeof props)['initViewId'];
-	const { initViewId, useViewEntries, useAppBarButtons } = props;
-	const classes = useClasses();
+    type ViewId = (typeof props)['initViewId'];
+    const { initViewId, useViewEntries, useAppBarButtons } = props;
+    const classes = useClasses();
 
-	const allViewEntries = useViewEntries();
-	const { rootElement, setRootElement } = useAppRootElement();
-	useEffect(() => subscribeDisableZoom(rootElement), [rootElement]);
+    const allViewEntries = useViewEntries();
+    const { rootElement, setRootElement } = useAppRootElement();
+    useEffect(() => subscribeDisableZoom(rootElement), [rootElement]);
 
-	const rootElementRef = useRef<HTMLDivElement>(null);
-	useEffect(() => {
-		if (rootElementRef.current) setRootElement(rootElementRef.current);
-	}, [setRootElement]);
+    const rootElementRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        if (rootElementRef.current) setRootElement(rootElementRef.current);
+    }, [setRootElement]);
 
-	const [viewId, setViewId] = useState<ViewId>(initViewId);
-	const appDropdownProps: AppDropdownProps<ViewId> = {
-		viewId,
-		setViewId,
-		allViewEntries,
-	};
+    const [viewId, setViewId] = useState<ViewId>(initViewId);
+    const appDropdownProps: AppDropdownProps<ViewId> = {
+        viewId,
+        setViewId,
+        allViewEntries,
+    };
 
-	const { element } = allViewEntries
-		.filter((x): x is AppViewElement<ViewId> => x.type === 'view')
-		.find((view) => view.id === viewId) || {};
+    const { element } = allViewEntries
+        .filter((x): x is AppViewElement<ViewId> => x.type === 'view')
+        .find((view) => view.id === viewId) || {};
 
-	const buttons = useAppBarButtons();
-	return (
-		<div ref={rootElementRef} className={classes.root}>
-			<AppBar>
-				{buttons}
-				<AppDropdown {...appDropdownProps}><Icon name='menu' /></AppDropdown>
-			</AppBar>
-			{element}
-		</div>
-	);
+    const buttons = useAppBarButtons();
+    return (
+        <div ref={rootElementRef} className={classes.root}>
+            <AppBar>
+                {buttons}
+                <AppDropdown {...appDropdownProps}><Icon name='menu' /></AppDropdown>
+            </AppBar>
+            {element}
+        </div>
+    );
 };
 
 export type AppProps<ViewId> = AppLayoutProps<ViewId> & {
-	initRootElement?: HTMLElement,
-	workers: Workers,
-	log: Log,
-	i18n: I18n,
-	allLocaleIds: string[],
-	onLocaleId: (localeId: string) => void,
-	initThemeId?: string,
-	allThemeEntries: ThemeEntry[],
-	onSetThemeId?: (themeId: string) => void,
-	apiUrl: string,
+    initRootElement?: HTMLElement,
+    workers: Workers,
+    log: Log,
+    i18n: I18n,
+    allLocaleIds: string[],
+    onLocaleId: (localeId: string) => void,
+    initThemeId?: string,
+    allThemeEntries: ThemeEntry[],
+    onSetThemeId?: (themeId: string) => void,
+    apiUrl: string,
 };
 type AppFC = (
-	<ViewId extends string>(props: AppProps<ViewId>) => FCResult
+    <ViewId extends string>(props: AppProps<ViewId>) => FCResult
 );
 export const App: AppFC = (props) => {
-	const {
-		initRootElement, workers, log,
-		i18n, allLocaleIds, onLocaleId,
-		initThemeId, allThemeEntries, onSetThemeId,
-		apiUrl,
-	} = props;
+    const {
+        initRootElement, workers, log,
+        i18n, allLocaleIds, onLocaleId,
+        initThemeId, allThemeEntries, onSetThemeId,
+        apiUrl,
+    } = props;
 
-	const appProviderProps: AppProviderProps = {
-		initRootElement,
-		workers,
-		log,
-		i18n,
-		allLocaleIds,
-		onLocaleId,
-		apiUrl,
-	};
-	const cssProviderProps: CssProviderProps = {
-		initThemeId,
-		allThemeEntries,
-		onSetThemeId,
-	};
-	return (
-		<AppProvider {...appProviderProps}>
-			<CssProvider {...cssProviderProps}>
-				<AppLayout {...props} />
-			</CssProvider>
-		</AppProvider>
-	);
+    const appProviderProps: AppProviderProps = {
+        initRootElement,
+        workers,
+        log,
+        i18n,
+        allLocaleIds,
+        onLocaleId,
+        apiUrl,
+    };
+    const cssProviderProps: CssProviderProps = {
+        initThemeId,
+        allThemeEntries,
+        onSetThemeId,
+    };
+    return (
+        <AppProvider {...appProviderProps}>
+            <CssProvider {...cssProviderProps}>
+                <AppLayout {...props} />
+            </CssProvider>
+        </AppProvider>
+    );
 };

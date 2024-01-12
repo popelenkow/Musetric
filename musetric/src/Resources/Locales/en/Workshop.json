@@ -1,12 +1,12 @@
 {
-	"frequency": "Frequency",
-	"live": "Live",
-	"open": "Open",
-	"parameters": "",
-	"play": "Play",
-	"record": "Record",
-	"save": "Save",
-	"spectrogram": "Spectrogram",
-	"stop": "Stop",
-	"waveform": "Waveform"
+    "frequency": "Frequency",
+    "live": "Live",
+    "open": "Open",
+    "parameters": "",
+    "play": "Play",
+    "record": "Record",
+    "save": "Save",
+    "spectrogram": "Spectrogram",
+    "stop": "Stop",
+    "waveform": "Waveform"
 }
