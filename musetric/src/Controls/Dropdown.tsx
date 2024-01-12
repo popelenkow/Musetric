@@ -1,32 +1,29 @@
 import React, { SetStateAction, Dispatch, ReactElement, useEffect, useRef } from 'react';
 import { useAppRootElement } from '../App/AppContext';
-import { createUseClasses, createClasses, className } from '../App/AppCss';
+import { createUseClasses, className } from '../App/AppCss';
+import { themeVariables } from '../AppBase/Theme';
 import { SFC } from '../UtilityTypes/React';
 import { Button, ButtonProps } from './Button';
 
-export const getDropdownClasses = createClasses((css) => {
-	const { theme } = css;
-	return {
-		root: {
-			position: 'relative',
-			display: 'inline-block',
+const useClasses = createUseClasses('Dropdown', {
+	root: {
+		position: 'relative',
+		display: 'inline-block',
+	},
+	menu: {
+		display: 'none',
+		position: 'absolute',
+		'z-index': '2',
+		right: '0',
+		'margin-top': '3px',
+		'background-color': `var(${themeVariables.backgroundPanel})`,
+		'min-width': '140px',
+		'box-shadow': `0px 0px 5px 1px var(${themeVariables.shadow})`,
+		'&.open': {
+			display: 'block',
 		},
-		menu: {
-			display: 'none',
-			position: 'absolute',
-			'z-index': '2',
-			right: '0',
-			'margin-top': '3px',
-			'background-color': theme.backgroundPanel,
-			'min-width': '140px',
-			'box-shadow': `0px 0px 5px 1px ${theme.shadow}`,
-			'&.open': {
-				display: 'block',
-			},
-		},
-	};
+	},
 });
-const useClasses = createUseClasses('Dropdown', getDropdownClasses);
 
 export type DropdownProps = {
 	kind?: 'simple' | 'icon' | 'full',

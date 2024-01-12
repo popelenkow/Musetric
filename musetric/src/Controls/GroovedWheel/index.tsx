@@ -1,22 +1,19 @@
 import React, { useEffect, useMemo, useRef, MutableRefObject } from 'react';
-import { createClasses, createUseClasses } from '../../App/AppCss';
+import { createUseClasses } from '../../App/AppCss';
+import { themeVariables } from '../../AppBase/Theme';
 import { Position2D, Size2D, Layout2D, Direction2D } from '../../Rendering/Layout';
 import { SFC } from '../../UtilityTypes/React';
 import { createInertia } from './Inertia';
 import { subscribeInertia } from './SubscribeInertia';
 
-export const getGroovedWheelClasses = createClasses((css) => {
-	const { theme } = css;
-	return {
-		root: {
-			width: '100%',
-			height: '100%',
-			'-webkit-mask-image': "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10'><rect x='4' width='2' height='10' /></svg>\")",
-			'background-color': theme.divider,
-		},
-	};
+const useClasses = createUseClasses('GroovedWheel', {
+	root: {
+		width: '100%',
+		height: '100%',
+		'-webkit-mask-image': "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10'><rect x='4' width='2' height='10' /></svg>\")",
+		'background-color': `var(${themeVariables.divider})`,
+	},
 });
-const useClasses = createUseClasses('GroovedWheel', getGroovedWheelClasses);
 
 export type GroovedWheelProps = {
 	onMove: (delta: number) => void,

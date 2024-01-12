@@ -2,26 +2,31 @@ import classNames from 'classnames';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Classes, GenerateId } from 'jss';
 import React, { createContext, useMemo, useState, useEffect } from 'react';
-import { JssProvider, createTheming, createUseStyles, Styles } from 'react-jss';
-import { Theme, ThemeEntry } from '../AppBase/Theme';
+import { JssProvider, createUseStyles, Styles } from 'react-jss';
+import { Theme, ThemeEntry, themeVariables } from '../AppBase/Theme';
 import { SFC } from '../UtilityTypes/React';
 import { useInitializedContext } from '../UtilsReact/Context';
 import { useAppRootElement } from './AppContext';
 
-export type Css = {
-	theme: Theme,
-};
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-export const theming = createTheming(createContext<Css>(undefined!));
-
-type CreateClasses = <T>(create: (css: Css) => T) => ((css: Css) => T);
-export const createClasses: CreateClasses = (create) => (css: Css) => create(css);
+const useStyles = createUseStyles((theme: Theme) => ({
+	'@global': {
+		':root': Object.entries(themeVariables).reduce((acc, [key, variable]) => ({
+			...acc,
+			// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+			[variable]: theme[key as keyof Theme],
+		}), {}),
+	},
+}));
 
 export const createUseClasses = <C extends string, Props>(
 	name: string,
-	styles: Styles<C, Props, Css> | ((theme: Css) => Styles<C, Props, undefined>),
-): (data?: Props & { theme?: Css }) => Classes<C> => {
-	return createUseStyles(styles, { name, theming });
+	styles: Styles<C, Props>,
+): (data?: Props & { theme?: undefined }) => Classes<C> => {
+	const generateId: GenerateId = (rule) => {
+		if (rule.key === 'root') return name;
+		return `${name}__${rule.key}`;
+	};
+	return createUseStyles(styles, { name, generateId });
 };
 
 export type CssStore = {
@@ -95,12 +100,6 @@ const HoverableInjection: SFC<object, { result: 'none' }> = () => {
 	return null;
 };
 
-const generateId: GenerateId = (rule, sheet) => {
-	const prefix = sheet?.options?.classNamePrefix || '';
-	if (prefix && rule.key === 'root') return prefix.slice(0, prefix.length - 1);
-	return `${prefix}${rule.key}`;
-};
-
 export type CssProviderProps = {
 	initThemeId?: string,
 	allThemeEntries: ThemeEntry[],
@@ -112,7 +111,9 @@ export const CssProvider: SFC<CssProviderProps, { children: 'required' }> = (pro
 	const allThemeIds = allThemeEntries.map((x) => x.themeId);
 	const [themeId, setThemeId] = useState<string>(initThemeId || allThemeIds[0]);
 	const themeEntry = allThemeEntries.find((x) => x.themeId === themeId);
-	const { theme = allThemeEntries[0].theme } = themeEntry || {};
+	const { theme } = themeEntry ?? allThemeEntries[0];
+
+	useStyles({ theme });
 
 	const store: CssStore = useMemo(() => ({
 		theme,
@@ -126,12 +127,10 @@ export const CssProvider: SFC<CssProviderProps, { children: 'required' }> = (pro
 
 	return (
 		<CssContext.Provider value={store}>
-			<JssProvider generateId={generateId}>
-				<theming.ThemeProvider theme={{ theme }}>
-					{children}
-					<HoverableInjection />
-					<AppSizeInjection />
-				</theming.ThemeProvider>
+			<JssProvider>
+				{children}
+				<HoverableInjection />
+				<AppSizeInjection />
 			</JssProvider>
 		</CssContext.Provider>
 	);

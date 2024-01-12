@@ -1,34 +1,30 @@
 import React, { useState, ReactElement, useEffect, useRef } from 'react';
 import { I18n } from '../AppBase/Locale';
 import { Log } from '../AppBase/Log';
-import { ThemeEntry } from '../AppBase/Theme';
+import { ThemeEntry, themeVariables } from '../AppBase/Theme';
 import { Workers } from '../AppBase/Worker';
 import { Icon } from '../Controls/Icon';
 import { FCResult } from '../UtilityTypes/React';
 import { subscribeDisableZoom } from '../Utils/Zoom';
 import { AppBar } from './AppBar';
 import { AppProvider, AppProviderProps, useAppRootElement } from './AppContext';
-import { createUseClasses, createClasses, CssProvider, CssProviderProps } from './AppCss';
+import { createUseClasses, CssProvider, CssProviderProps } from './AppCss';
 import { AppDropdown, AppDropdownProps, AppViewEntry, AppViewElement } from './AppDropdown';
 
-export const getAppClasses = createClasses((css) => {
-	const { theme } = css;
-	return {
-		root: {
-			position: 'absolute',
-			'overscroll-behavior': 'none',
-			top: 'var(--screenTop, 0px)',
-			height: 'var(--100vh, 100vh)',
-			width: '100%',
-			'box-sizing': 'border-box',
-			display: 'grid',
-			'grid-template-rows': ' 50px 1fr',
-			'grid-template-columns': '1fr',
-			'background-color': theme.background,
-		},
-	};
+const useClasses = createUseClasses('App', {
+	root: {
+		position: 'absolute',
+		'overscroll-behavior': 'none',
+		top: 'var(--screenTop, 0px)',
+		height: 'var(--100vh, 100vh)',
+		width: '100%',
+		'box-sizing': 'border-box',
+		display: 'grid',
+		'grid-template-rows': ' 50px 1fr',
+		'grid-template-columns': '1fr',
+		'background-color': `var(${themeVariables.background})`,
+	},
 });
-const useClasses = createUseClasses('App', getAppClasses);
 
 export type AppLayoutProps<ViewId> = {
 	initViewId: ViewId,

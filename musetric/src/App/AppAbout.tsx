@@ -1,32 +1,39 @@
 import React, { ReactNode, useMemo } from 'react';
-import { getFieldClasses } from '../Controls/Field';
+import { themeVariables } from '../AppBase/Theme';
 import { SFC } from '../UtilityTypes/React';
 import { useAppLocale } from './AppContext';
-import { createUseClasses, createClasses } from './AppCss';
+import { createUseClasses } from './AppCss';
 
-export const getAppAboutClasses = createClasses((css) => {
-	const { theme } = css;
-	const fieldClasses = getFieldClasses(css);
-	return {
-		root: {
-			...fieldClasses.root,
-			width: '100%',
-			height: '100%',
-			'background-color': theme.background,
-		},
-		container: {
-			width: '280px',
-			height: 'auto',
-			display: 'flex',
-			'flex-direction': 'column',
-		},
-		links: {
-			display: 'flex',
-			'flex-direction': 'row',
-		},
-	};
+const useClasses = createUseClasses('AppAbout', {
+	root: {
+		display: 'flex',
+		margin: '0',
+		outline: 'none',
+		'font-family': 'Verdana, Arial, sans-serif',
+		'box-sizing': 'border-box',
+		'align-items': 'center',
+		padding: '0 6px',
+		'min-height': '42px',
+		'font-size': '18px',
+		'justify-content': 'center',
+		border: '1px solid',
+		'border-color': 'transparent',
+		color: `var(${themeVariables.content})`,
+		width: '100%',
+		height: '100%',
+		'background-color': `var(${themeVariables.background})`,
+	},
+	container: {
+		width: '280px',
+		height: 'auto',
+		display: 'flex',
+		'flex-direction': 'column',
+	},
+	links: {
+		display: 'flex',
+		'flex-direction': 'row',
+	},
 });
-const useClasses = createUseClasses('AppAbout', getAppAboutClasses);
 
 export type AppAboutProps = {
 	appVersion: string,

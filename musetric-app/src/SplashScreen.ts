@@ -3,9 +3,9 @@ import { getStorageThemeId, ThemeEntry } from 'musetric/AppBase/Theme';
 declare const getMusetricThemeEntries: () => ThemeEntry[];
 
 const runSplashScreen = (): void => {
-	const themeId = getStorageThemeId() || 'dark';
+	const themeId = getStorageThemeId() ?? 'dark';
 	const allThemeEntries = getMusetricThemeEntries();
-	const { theme } = allThemeEntries.find((x) => x.themeId === themeId) || {};
+	const { theme } = allThemeEntries.find((x) => x.themeId === themeId) ?? {};
 	if (!theme) return;
 	const root = document.getElementById('root');
 	if (!root) return;

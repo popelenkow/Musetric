@@ -1,6 +1,6 @@
 export default {
 	background: 'rgb(255, 255, 255)',
-	backgroundPanel: 'rgb(248, 248, 248)',
+	backgroundPanel: 'rgb(228 228 228)',
 	content: 'rgb(20, 20, 20)',
 	contentHover: 'rgba(20, 20, 20, 0.05)',
 	contentHoverActive: 'rgba(20, 20, 20, 0.1)',

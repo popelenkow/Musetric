@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
-import { createClasses, createUseClasses } from '../App/AppCss';
 import { ChildrenProps, FCResult } from '../UtilityTypes/React';
-import { getButtonClasses, Button, ButtonProps } from './Button';
-
-export const getSwitchClasses = createClasses((css) => {
-	const buttonClasses = getButtonClasses(css);
-	return {
-		root: {
-			...buttonClasses.root,
-		},
-	};
-});
-const useClasses = createUseClasses('Switch', getSwitchClasses);
+import { Button, ButtonProps } from './Button';
 
 export type SwitchProps<T> = {
 	kind?: 'simple' | 'icon' | 'full',
@@ -39,7 +28,6 @@ export const Switch: SwitchFC = (props) => {
 		set,
 		children,
 	} = props;
-	const classes = useClasses();
 
 	const [id, setId] = useState(currentId);
 
@@ -58,7 +46,6 @@ export const Switch: SwitchFC = (props) => {
 		rounded,
 		title,
 		onClick: next,
-		classNames: { root: classes.root },
 	};
 	return (
 		<Button {...buttonProps}>

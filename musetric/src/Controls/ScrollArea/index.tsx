@@ -1,5 +1,5 @@
 import React, { RefObject, useRef, useMemo, useEffect, useState } from 'react';
-import { createUseClasses, createClasses } from '../../App/AppCss';
+import { createUseClasses } from '../../App/AppCss';
 import { SFC } from '../../UtilityTypes/React';
 import { mapObject, someObject } from '../../Utils/Object';
 import { useAnimation } from '../../UtilsReact/Animation';
@@ -14,68 +14,65 @@ import {
 	subscribeVerticalEvents,
 } from './VerticalScroll';
 
-export const getScrollAreaClasses = createClasses(() => {
-	return {
-		root: {
-			position: 'relative',
-			width: '100%',
-			height: '100%',
-			'box-sizing': 'border-box',
+const useClasses = createUseClasses('ScrollArea', {
+	root: {
+		position: 'relative',
+		width: '100%',
+		height: '100%',
+		'box-sizing': 'border-box',
+	},
+	content: {
+		position: 'absolute',
+		'overscroll-behavior': 'none',
+		'box-sizing': 'border-box',
+		overflow: 'auto',
+		inset: '0px',
+		'&::-webkit-scrollbar, &::-webkit-scrollbar-corner': {
+			display: 'none !important',
+			width: '0px !important',
+			height: '0px !important',
+			visibility: 'hidden !important',
+			background: 'transparent !important',
 		},
-		content: {
-			position: 'absolute',
-			'overscroll-behavior': 'none',
-			'box-sizing': 'border-box',
-			overflow: 'auto',
-			inset: '0px',
-			'&::-webkit-scrollbar, &::-webkit-scrollbar-corner': {
-				display: 'none !important',
-				width: '0px !important',
-				height: '0px !important',
-				visibility: 'hidden !important',
-				background: 'transparent !important',
-			},
-			// Firefox
-			'scrollbar-width': 'none !important',
+		// Firefox
+		'scrollbar-width': 'none !important',
+	},
+	horizontalTrack: {
+		position: 'absolute',
+		height: '10px',
+		left: '0',
+		right: '0',
+		bottom: '0',
+		background: 'rgba(100,100,100,0.3)',
+		'&.hidden': {
+			display: 'none',
 		},
-		horizontalTrack: {
-			position: 'absolute',
-			height: '10px',
-			left: '0',
-			right: '0',
-			bottom: '0',
-			background: 'rgba(100,100,100,0.3)',
-			'&.hidden': {
-				display: 'none',
-			},
+	},
+	horizontalThumb: {
+		position: 'absolute',
+		'z-index': '1',
+		height: '10px',
+		background: 'rgba(100,100,100,0.6)',
+	},
+	verticalTrack: {
+		position: 'absolute',
+		width: '10px',
+		top: '0',
+		bottom: '0',
+		right: '0',
+		background: 'rgba(100,100,100,0.3)',
+		'&.hidden': {
+			display: 'none',
 		},
-		horizontalThumb: {
-			position: 'absolute',
-			'z-index': '1',
-			height: '10px',
-			background: 'rgba(100,100,100,0.6)',
-		},
-		verticalTrack: {
-			position: 'absolute',
-			width: '10px',
-			top: '0',
-			bottom: '0',
-			right: '0',
-			background: 'rgba(100,100,100,0.3)',
-			'&.hidden': {
-				display: 'none',
-			},
-		},
-		verticalThumb: {
-			position: 'absolute',
-			'z-index': '1',
-			width: '10px',
-			background: 'rgba(100,100,100,0.6)',
-			'pointer-events': 'all',
-		},
-	};
+	},
+	verticalThumb: {
+		position: 'absolute',
+		'z-index': '1',
+		width: '10px',
+		background: 'rgba(100,100,100,0.6)',
+		'pointer-events': 'all',
+	},
 });
-const useClasses = createUseClasses('ScrollArea', getScrollAreaClasses);
 
 type ElementType = 'content' | 'horizontalTrack' | 'horizontalThumb' | 'verticalTrack' | 'verticalThumb';
 type Elements = Record<ElementType, HTMLDivElement>;

@@ -1,65 +1,63 @@
 import React from 'react';
-import { createUseClasses, createClasses, className } from '../App/AppCss';
+import { createUseClasses, className } from '../App/AppCss';
+import { themeVariables } from '../AppBase/Theme';
 import { SFC } from '../UtilityTypes/React';
 
-export const getTextFieldClasses = createClasses((css) => {
-	const { theme } = css;
-	const activeSelector = ['&:not(:focus-within):active', '&:not(:focus-within).active', '.hoverable &:not(:focus-within):hover'];
-	return {
-		root: {
-			position: 'relative',
-			height: '42px',
-			'min-height': '42px',
-			'font-family': 'Verdana, Arial, sans-serif',
-			[`${activeSelector.map((x) => x.concat(' > fieldset')).join(', ')}`]: {
-				'border-color': theme.content,
-			},
-			'&:focus-within > fieldset': {
-				'border-color': theme.primary,
-				color: theme.primary,
-			},
+const activeSelector = ['&:not(:focus-within):active', '&:not(:focus-within).active', '.hoverable &:not(:focus-within):hover'];
+
+const useClasses = createUseClasses('TextField', {
+	root: {
+		position: 'relative',
+		height: '42px',
+		'min-height': '42px',
+		'font-family': 'Verdana, Arial, sans-serif',
+		[`${activeSelector.map((x) => x.concat(' > fieldset')).join(', ')}`]: {
+			'border-color': `var(${themeVariables.content})`,
 		},
-		input: {
-			margin: '0',
-			outline: 'none',
-			'box-sizing': 'border-box',
-			padding: '0 12px',
-			'background-color': 'transparent',
-			height: '100%',
-			'font-size': '18px',
-			border: '1px solid',
-			'border-color': 'transparent',
-			color: theme.content,
-			width: '100%',
-			'margin-top': '3px',
-			'&.rounded': {
-				'border-radius': '10px',
-			},
+		'&:focus-within > fieldset': {
+			'border-color': `var(${themeVariables.primary})`,
+			color: `var(${themeVariables.primary})`,
 		},
-		fieldset: {
-			margin: '0',
-			outline: 'none',
-			'box-sizing': 'border-box',
-			inset: '0px',
-			'background-color': 'transparent',
-			'font-size': '18px',
-			color: theme.content,
-			border: '1px solid',
-			position: 'absolute',
-			'border-color': theme.divider,
-			'pointer-events': 'none',
-			'&.rounded': {
-				'border-radius': '10px',
-			},
+	},
+	input: {
+		margin: '0',
+		outline: 'none',
+		'box-sizing': 'border-box',
+		padding: '0 12px',
+		'background-color': 'transparent',
+		height: '100%',
+		'font-size': '18px',
+		border: '1px solid',
+		'border-color': 'transparent',
+		color: `var(${themeVariables.content})`,
+		width: '100%',
+		'margin-top': '3px',
+		'&.rounded': {
+			'border-radius': '10px',
 		},
-		legend: {
-			'font-size': '10px',
-			padding: '0 6px',
-			'pointer-events': 'auto',
+	},
+	fieldset: {
+		margin: '0',
+		outline: 'none',
+		'box-sizing': 'border-box',
+		inset: '0px',
+		'background-color': 'transparent',
+		'font-size': '18px',
+		color: `var(${themeVariables.content})`,
+		border: '1px solid',
+		position: 'absolute',
+		'border-color': `var(${themeVariables.divider})`,
+		'pointer-events': 'none',
+		'&.rounded': {
+			'border-radius': '10px',
 		},
-	};
+	},
+	legend: {
+		'font-size': '10px',
+		padding: '0 6px',
+		'pointer-events': 'auto',
+	},
 });
-const useClasses = createUseClasses('TextField', getTextFieldClasses);
 
 export type TextFieldProps = {
 	value: string,

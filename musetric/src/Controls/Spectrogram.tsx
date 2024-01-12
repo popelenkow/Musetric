@@ -1,6 +1,7 @@
 import React, { useMemo, useCallback, useEffect, useState, useRef } from 'react';
 import { useAppWorkers } from '../App/AppContext';
-import { createClasses, createUseClasses, useAppCss } from '../App/AppCss';
+import { createUseClasses, useAppCss } from '../App/AppCss';
+import { themeVariables } from '../AppBase/Theme';
 import { Position2D, NumberRange, Layout2D } from '../Rendering/Layout';
 import { createSpectrogramColors, drawSpectrogram } from '../Rendering/Spectrogram';
 import { createSpectrum } from '../SoundProcessing/Spectrum';
@@ -13,23 +14,19 @@ import { EventEmitterCallback, UnsubscribeEventEmitter } from '../Utils/EventEmi
 import { skipPromise } from '../Utils/SkipPromise';
 import { PixelCanvas, PixelCanvasProps } from './PixelCanvas';
 
-export const getSpectrogramClasses = createClasses((css) => {
-	const { theme } = css;
-	return {
-		root: {
-			width: '100%',
-			height: '100%',
-			position: 'relative',
-		},
-		cursor: {
-			height: '100%',
-			'border-left': `1px solid ${theme.primary}`,
-			position: 'absolute',
-			'pointer-events': 'none',
-		},
-	};
+const useClasses = createUseClasses('Spectrogram', {
+	root: {
+		width: '100%',
+		height: '100%',
+		position: 'relative',
+	},
+	cursor: {
+		height: '100%',
+		'border-left': `1px solid var(${themeVariables.primary})`,
+		position: 'absolute',
+		'pointer-events': 'none',
+	},
 });
-const useClasses = createUseClasses('Spectrogram', getSpectrogramClasses);
 
 export type SpectrogramProps = {
 	getBuffer: () => SharedRealArray<'float32'>,

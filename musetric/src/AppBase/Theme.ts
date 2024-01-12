@@ -10,6 +10,19 @@ export type Theme = {
 	divider: string,
 	shadow: string,
 };
+export const themeVariables: Theme = {
+	background: '--background',
+	backgroundPanel: '--background-panel',
+	content: '--content',
+	contentHover: '--content-hover',
+	contentHoverActive: '--content-hover-active',
+	primary: '--primary',
+	primaryHover: '--primary-hover',
+	primaryHoverActive: '--primary-hover-active',
+	divider: '--divider',
+	shadow: '--shadow',
+};
+
 export type ThemeEntry = {
 	themeId: string,
 	theme: Theme,
