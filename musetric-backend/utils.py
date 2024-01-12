@@ -31,14 +31,14 @@ def makeMinusStem(dict):
     return minus
 
 def separateSound(dirPath, fileName):
-    separator6 = demucs.api.Separator(model='htdemucs_6s', device='cuda', progress=True)
-    _, separated6 = separator6.separate_audio_file(os.path.join(dirPath, fileName))
-    separated6['minus'] = makeMinusStem(separated6)
-    for stem, source in separated6.items():
-        demucs.api.save_audio(source, os.path.join(dirPath, f'6_{stem}.flac'), samplerate=separator6.samplerate)
+    # separator6 = demucs.api.Separator(model='htdemucs_6s', device='cuda', progress=True)
+    # _, separated6 = separator6.separate_audio_file(os.path.join(dirPath, fileName))
+    # separated6['minus'] = makeMinusStem(separated6)
+    # for stem, source in separated6.items():
+    #     demucs.api.save_audio(source, os.path.join(dirPath, f'6_{stem}.mp3'), samplerate=separator6.samplerate)
 
     separator = demucs.api.Separator(model='htdemucs_ft', device='cuda', progress=True)
     _, separated = separator.separate_audio_file(os.path.join(dirPath, fileName))
     separated['minus'] = makeMinusStem(separated)
     for stem, source in separated.items():
-        demucs.api.save_audio(source, os.path.join(dirPath, f'4_{stem}.flac'), samplerate=separator.samplerate)
+        demucs.api.save_audio(source, os.path.join(dirPath, f'{fileName}_{stem}.mp3'), samplerate=separator.samplerate)

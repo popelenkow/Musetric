@@ -2,6 +2,7 @@ import React from 'react';
 import { createUseClasses } from '../../App/AppCss';
 import { themeVariables } from '../../AppBase/Theme';
 import { SFC } from '../../UtilityTypes/React';
+import { Check } from '../Controls/Check';
 import { SoundPlayerButton } from '../Controls/SoundPlayerButton';
 import { SoundProgress } from '../Controls/SoundProgress';
 import { SoundRecorderButton } from '../Controls/SoundRecorderButton';
@@ -26,6 +27,7 @@ export const SoundWorkshopToolbar: SFC = () => {
 
     return (
         <div className={classes.root}>
+            <Check />
             <SoundPlayerButton />
             <SoundProgress />
             <SoundRecorderButton />

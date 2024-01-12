@@ -1,0 +1,14 @@
+{
+    "pages": {
+        "login": {
+            "login": "Login"
+        },
+        "notFound": {
+            "goHome": "Back to home",
+            "label": "Page not found"
+        },
+        "projects": {
+            "logout": "Logout"
+        }
+    }
+}

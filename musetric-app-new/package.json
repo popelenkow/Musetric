@@ -1,0 +1,47 @@
+{
+    "name": "musetric-app",
+    "description": "Musetric is javascript music application",
+    "version": "0.0.52",
+    "license": "MIT",
+    "type": "module",
+    "homepage": "https://github.com/popelenkow/Musetric",
+    "bugs": "https://github.com/popelenkow/Musetric/issues",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/popelenkow/Musetric",
+        "directory": "musetric"
+    },
+    "keywords": [
+        "musetric",
+        "musetric-app"
+    ],
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "checkTs": "tsc",
+        "preview": "vite preview",
+        "lint": "eslint **/*.{js,ts,tsx}",
+        "lint:fix": "eslint **/*.{js,ts,tsx} --fix",
+        "lint:config": "rimraf .eslintrc.local.json && eslint --print-config .eslintrc.js >> .eslintrc.local.json",
+        "gen-translations": "i18next -c ./i18next.parser.config.js"
+    },
+    "devDependencies": {
+        "@emotion/react": "11.13.0",
+        "@emotion/styled": "11.13.0",
+        "@mui/material": "5.16.6",
+        "@types/react": "18.3.3",
+        "@types/react-dom": "18.3.0",
+        "@vitejs/plugin-react": "4.3.1",
+        "eslint-plugin-musetric": "0.0.3-beta.27",
+        "i18next": "23.12.2",
+        "i18next-parser": "9.0.1",
+        "react": "18.3.1",
+        "react-dom": "18.3.1",
+        "react-i18next": "15.0.0",
+        "react-router-dom": "6.25.1",
+        "typescript": "5.5.4",
+        "vite": "5.3.5",
+        "vite-plugin-static-copy": "1.0.6",
+        "zustand": "4.5.4"
+    }
+}

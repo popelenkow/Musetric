@@ -1,0 +1,15 @@
+{
+    "extends": "./node_modules/eslint-plugin-musetric/tsconfig.base",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "moduleResolution": "bundler",
+        "noEmit": true,
+        "jsx": "react-jsx",
+    },
+    "include": [
+        "./src",
+    ],
+    "exclude": [
+        "./node_modules"
+    ],
+}

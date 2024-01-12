@@ -6,7 +6,7 @@
         "lib": ["ES2022", "DOM"], /* Specify library files to be included in the compilation. */
         "allowJs": true, /* Allow javascript files to be compiled. */
         "resolveJsonModule": true,
-        "jsx": "react", /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
+        "jsx": "react-jsx", /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
         /* Strict Type-Checking Options */
         "strict": true, /* Enable all strict type-checking options. */
         "noImplicitAny": true, /* Raise error on expressions and declarations with an implied 'any' type. */

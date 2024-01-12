@@ -17,7 +17,8 @@
     ],
     "scripts": {
         "dev": "vite",
-        "build": "tsc && vite build",
+        "build": "vite build",
+        "checkTs": "tsc",
         "preview": "vite preview",
         "lint": "eslint **/*.{js,ts,tsx}",
         "lint:fix": "eslint **/*.{js,ts,tsx} --fix",
