@@ -1,9 +1,9 @@
 {
 	"compilerOptions": {
 		/* Basic Options */
-		"target": "ES6", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
-		"module": "commonjs", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
-		"lib": ["ES6", "DOM"], /* Specify library files to be included in the compilation. */
+		"target": "ES2022", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
+		"module": "ES2022", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
+		"lib": ["ES2022", "DOM"], /* Specify library files to be included in the compilation. */
 		"allowJs": true, /* Allow javascript files to be compiled. */
 		"resolveJsonModule": true,
 		"jsx": "react", /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
@@ -22,7 +22,7 @@
 		"noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
 		"noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
 		/* Module Resolution Options */
-		"moduleResolution": "Node", /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
+		"moduleResolution": "Bundler", /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
 		"baseUrl": "./", /* Base directory to resolve non-absolute module names. */
 		"esModuleInterop": true, /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
 	},
