@@ -1,37 +1,37 @@
 {
-	"name": "eslint-plugin-musetric",
-	"description": "Musetric's ESLint plugin, following our styleguide",
-	"version": "0.0.3",
-	"license": "MIT",
-	"main": "index.js",
-	"homepage": "https://github.com/popelenkow/Musetric",
-	"bugs": "https://github.com/popelenkow/Musetric/issues",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/popelenkow/Musetric",
-		"directory": "musetric"
-	},
-	"keywords": [
-		"eslint",
-		"plugin",
-		"musetric"
-	],
-	"scripts": {
-		"build": "node scripts/build.js && tsc"
-	},
-	"dependencies": {
-		"@typescript-eslint/eslint-plugin": "6.12.0",
-		"@typescript-eslint/parser": "6.12.0",
-		"eslint": "8.56.0",
-		"eslint-config-airbnb": "19.0.4",
-		"eslint-config-airbnb-typescript": "17.1.0",
-		"eslint-plugin-import": "2.29.1",
-		"eslint-plugin-jsx-a11y": "6.8.0",
-		"eslint-plugin-react": "7.33.2",
-		"eslint-plugin-react-hooks": "4.6.0"
-	},
-	"devDependencies": {
-		"@typescript-eslint/utils": "6.12.0",
-		"typescript": "5.2.2"
-	}
+    "name": "eslint-plugin-musetric",
+    "description": "Musetric's ESLint plugin, following our styleguide",
+    "version": "0.0.3",
+    "license": "MIT",
+    "main": "index.js",
+    "homepage": "https://github.com/popelenkow/Musetric",
+    "bugs": "https://github.com/popelenkow/Musetric/issues",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/popelenkow/Musetric",
+        "directory": "musetric"
+    },
+    "keywords": [
+        "eslint",
+        "plugin",
+        "musetric"
+    ],
+    "scripts": {
+        "build": "node scripts/build.js && tsc"
+    },
+    "dependencies": {
+        "@typescript-eslint/eslint-plugin": "6.12.0",
+        "@typescript-eslint/parser": "6.12.0",
+        "eslint": "8.56.0",
+        "eslint-config-airbnb": "19.0.4",
+        "eslint-config-airbnb-typescript": "17.1.0",
+        "eslint-plugin-import": "2.29.1",
+        "eslint-plugin-jsx-a11y": "6.8.0",
+        "eslint-plugin-react": "7.33.2",
+        "eslint-plugin-react-hooks": "4.6.0"
+    },
+    "devDependencies": {
+        "@typescript-eslint/utils": "6.12.0",
+        "typescript": "5.2.2"
+    }
 }

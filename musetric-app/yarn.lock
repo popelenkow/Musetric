@@ -1886,10 +1886,10 @@ eslint-plugin-jsx-a11y@6.8.0:
     object.entries "^1.1.7"
     object.fromentries "^2.0.7"
 
-eslint-plugin-musetric@0.0.3-beta.17:
-  version "0.0.3-beta.17"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-musetric/-/eslint-plugin-musetric-0.0.3-beta.17.tgz#0e1bbd279a777aab075fb4b815be2e70ffd0c3cc"
-  integrity sha512-se+lVLU2hxrYb+oCHMo/fQV7xIegi2vOFzNwMMuBsu15l1bO4AdLqjR+D+xvzgZaN+sXV3CW7OLiZa7uuhfRxg==
+eslint-plugin-musetric@0.0.3-beta.20:
+  version "0.0.3-beta.20"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-musetric/-/eslint-plugin-musetric-0.0.3-beta.20.tgz#e5887b3347cb093cbd128d64f4aa99b1a2249fbc"
+  integrity sha512-vyoWX+iDR0BzNaKfXBP5l9NY1Hy605e5ANy9eg+Yfs+EHusmKqTbTHe5YIiQ0TjZfuD6ZJBUE9RXrh4GYSZ52Q==
   dependencies:
     "@typescript-eslint/eslint-plugin" "6.12.0"
     "@typescript-eslint/parser" "6.12.0"

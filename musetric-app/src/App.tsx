@@ -11,39 +11,39 @@ import { useAppBarButtons } from './common/AppBarButtons';
 import { ViewId, useViewEntries } from './common/ViewEntries';
 
 export type CreateMusetricAppOptions = {
-	elementId: string,
-	allLocaleEntries: LocaleEntry[],
-	allThemeEntries: ThemeEntry[],
-	apiUrl: string,
-	workers: Workers,
+    elementId: string,
+    allLocaleEntries: LocaleEntry[],
+    allThemeEntries: ThemeEntry[],
+    apiUrl: string,
+    workers: Workers,
 };
 export type CreateMusetricApp = (options: CreateMusetricAppOptions) => Promise<void>;
 export const createMusetricApp: CreateMusetricApp = async (options) => {
-	const { elementId, allLocaleEntries, allThemeEntries, apiUrl, workers } = options;
+    const { elementId, allLocaleEntries, allThemeEntries, apiUrl, workers } = options;
 
-	const initLocaleId = getStorageLocaleId() || 'en';
-	const i18n = await createI18n(initLocaleId, allLocaleEntries);
+    const initLocaleId = getStorageLocaleId() || 'en';
+    const i18n = await createI18n(initLocaleId, allLocaleEntries);
 
-	const log = createConsoleLog();
-	const initThemeId = getStorageThemeId() || 'dark';
+    const log = createConsoleLog();
+    const initThemeId = getStorageThemeId() || 'dark';
 
-	const appProps: AppProps<ViewId> = {
-		useAppBarButtons,
-		initViewId: 'soundWorkshop',
-		useViewEntries,
-		workers,
-		log,
-		i18n,
-		allLocaleIds: allLocaleEntries.map((x) => x.localeId),
-		onLocaleId: setStorageLocaleId,
-		initThemeId,
-		allThemeEntries,
-		onSetThemeId: setStorageThemeId,
-		apiUrl,
-	};
+    const appProps: AppProps<ViewId> = {
+        useAppBarButtons,
+        initViewId: 'soundWorkshop',
+        useViewEntries,
+        workers,
+        log,
+        i18n,
+        allLocaleIds: allLocaleEntries.map((x) => x.localeId),
+        onLocaleId: setStorageLocaleId,
+        initThemeId,
+        allThemeEntries,
+        onSetThemeId: setStorageThemeId,
+        apiUrl,
+    };
 
-	const rootElement = document.getElementById(elementId);
-	if (!rootElement) throw new Error();
-	const root = createRoot(rootElement);
-	root.render(<StrictMode><App {...appProps} /></StrictMode>);
+    const rootElement = document.getElementById(elementId);
+    if (!rootElement) throw new Error();
+    const root = createRoot(rootElement);
+    root.render(<StrictMode><App {...appProps} /></StrictMode>);
 };

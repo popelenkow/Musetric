@@ -6,26 +6,26 @@ import { SFC } from '../../UtilityTypes/React';
 import { KaraokeSnapshot, useKaraokeStore } from '../KaraokeContext';
 
 const select = ({
-	isOpenMusicList, setIsOpenSoundList: setIsOpenMusicList,
+    isOpenMusicList, setIsOpenSoundList: setIsOpenMusicList,
 }: KaraokeSnapshot) => ({
-	isOpenMusicList, setIsOpenMusicList,
+    isOpenMusicList, setIsOpenMusicList,
 } as const);
 
 export const StorageButton: SFC = () => {
-	const { i18n } = useAppLocale();
+    const { i18n } = useAppLocale();
 
-	const { isOpenMusicList, setIsOpenMusicList } = useKaraokeStore(select);
+    const { isOpenMusicList, setIsOpenMusicList } = useKaraokeStore(select);
 
-	const openMusicList: ButtonProps = {
-		kind: 'icon',
-		rounded: true,
-		title: i18n.t('Karaoke:open'),
-		onClick: () => setIsOpenMusicList(!isOpenMusicList),
-		primary: isOpenMusicList,
-	};
-	return (
-		<Button {...openMusicList}>
-			<Icon name='storage' />
-		</Button>
-	);
+    const openMusicList: ButtonProps = {
+        kind: 'icon',
+        rounded: true,
+        title: i18n.t('Karaoke:open'),
+        onClick: () => setIsOpenMusicList(!isOpenMusicList),
+        primary: isOpenMusicList,
+    };
+    return (
+        <Button {...openMusicList}>
+            <Icon name='storage' />
+        </Button>
+    );
 };

@@ -6,27 +6,27 @@ import { SFC } from '../../UtilityTypes/React';
 import { SoundWorkshopSnapshot, useSoundWorkshopStore } from '../SoundWorkshopContext';
 
 const select = ({
-	soundViewId, setSoundViewId,
+    soundViewId, setSoundViewId,
 }: SoundWorkshopSnapshot) => ({
-	soundViewId, setSoundViewId,
+    soundViewId, setSoundViewId,
 } as const);
 
 export const SoundFrequencyButton: SFC = () => {
-	const store = useSoundWorkshopStore(select);
-	const { soundViewId, setSoundViewId } = store;
+    const store = useSoundWorkshopStore(select);
+    const { soundViewId, setSoundViewId } = store;
 
-	const { i18n } = useAppLocale();
+    const { i18n } = useAppLocale();
 
-	const frequencyButtonProps: ButtonProps = {
-		kind: 'icon',
-		rounded: true,
-		title: i18n.t('Workshop:frequency'),
-		primary: soundViewId === 'Frequency',
-		onClick: () => setSoundViewId('Frequency'),
-	};
-	return (
-		<Button {...frequencyButtonProps}>
-			<Icon name='frequency' />
-		</Button>
-	);
+    const frequencyButtonProps: ButtonProps = {
+        kind: 'icon',
+        rounded: true,
+        title: i18n.t('Workshop:frequency'),
+        primary: soundViewId === 'Frequency',
+        onClick: () => setSoundViewId('Frequency'),
+    };
+    return (
+        <Button {...frequencyButtonProps}>
+            <Icon name='frequency' />
+        </Button>
+    );
 };

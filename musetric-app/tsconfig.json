@@ -1,17 +1,17 @@
 {
-	"extends": "./node_modules/eslint-plugin-musetric/tsconfig.base",
-	"compilerOptions": {
-		/* Basic Options */
-		"declaration": false, /* Generates corresponding '.d.ts' file. */
-		"outDir": "./dist", /* Redirect output structure to the directory. */
-		"rootDirs": [
-			"./src",
-		],
-	},
-	"include": [
-		"./src/**/*",
-	],
-	"exclude": [
-		"./node_modules"
-	],
+    "extends": "./node_modules/eslint-plugin-musetric/tsconfig.base",
+    "compilerOptions": {
+        /* Basic Options */
+        "declaration": false, /* Generates corresponding '.d.ts' file. */
+        "outDir": "./dist", /* Redirect output structure to the directory. */
+        "rootDirs": [
+            "./src",
+        ],
+    },
+    "include": [
+        "./src/**/*",
+    ],
+    "exclude": [
+        "./node_modules"
+    ],
 }

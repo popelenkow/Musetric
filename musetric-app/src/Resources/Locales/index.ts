@@ -5,6 +5,6 @@ import en from './en';
 import ru from './ru';
 
 export const allLocaleEntries: LocaleEntry[] = [
-	{ localeId: 'en', localeResource: { ...commonEn, ...en } },
-	{ localeId: 'ru', localeResource: { ...commonRu, ...ru } },
+    { localeId: 'en', localeResource: { ...commonEn, ...en } },
+    { localeId: 'ru', localeResource: { ...commonRu, ...ru } },
 ];

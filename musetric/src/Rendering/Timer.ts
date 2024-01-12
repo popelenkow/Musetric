@@ -1,15 +1,15 @@
 export type Timer = {
-	timeIsUp: () => boolean,
+    timeIsUp: () => boolean,
 };
 export const createTimer = (ms: number): Timer => {
-	const startAt = new Date().getTime();
-	let isEnded = false;
-	return {
-		timeIsUp: (): boolean => {
-			if (isEnded) return true;
-			const elapsed = new Date().getTime() - startAt;
-			isEnded = elapsed > ms;
-			return isEnded;
-		},
-	};
+    const startAt = new Date().getTime();
+    let isEnded = false;
+    return {
+        timeIsUp: (): boolean => {
+            if (isEnded) return true;
+            const elapsed = new Date().getTime() - startAt;
+            isEnded = elapsed > ms;
+            return isEnded;
+        },
+    };
 };

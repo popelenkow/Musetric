@@ -26,11 +26,11 @@ yarn add --dev eslint-plugin-musetric
 
 ```js
 module.exports = {
-	plugins: [
-		'musetric',
-	],
-	extends: [
-		'plugin:musetric/recommended',
-	],
+    plugins: [
+        'musetric',
+    ],
+    extends: [
+        'plugin:musetric/recommended',
+    ],
 }
 ```

@@ -3,7 +3,7 @@ export const commonSampleRate = 44100;
 
 export type SoundSeparationStatus = 'progress' | 'done';
 export type SoundInfo = {
-	id: string,
-	fileName: string,
-	status: SoundSeparationStatus,
+    id: string,
+    fileName: string,
+    status: SoundSeparationStatus,
 };

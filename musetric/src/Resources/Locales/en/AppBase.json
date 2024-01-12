@@ -1,10 +1,10 @@
 {
-	"dropdown": "Menu",
-	"licensed": "This software is MIT licensed",
-	"locale": "English",
-	"theme": {
-		"dark": "Dark",
-		"light": "Light"
-	},
-	"version": "Version"
+    "dropdown": "Menu",
+    "licensed": "This software is MIT licensed",
+    "locale": "English",
+    "theme": {
+        "dark": "Dark",
+        "light": "Light"
+    },
+    "version": "Version"
 }
