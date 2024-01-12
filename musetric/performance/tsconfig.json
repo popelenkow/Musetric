@@ -2,6 +2,8 @@
 	"extends": "../node_modules/eslint-plugin-musetric/tsconfig.base",
 	"compilerOptions": {
 		"types": ["node"],
+		"module": "Node16",
+		"moduleResolution": "Node16",
 	},
 	"include": [
 		"./**/*",
