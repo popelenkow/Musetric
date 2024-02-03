@@ -1,8 +1,9 @@
 import React, { SetStateAction, Dispatch, ReactElement, useEffect, useRef } from 'react';
 import { useAppRootElement } from '../App/AppContext';
-import { createUseClasses, className } from '../App/AppCss';
+import { createUseClasses } from '../App/AppCss';
 import { themeVariables } from '../AppBase/Theme';
 import { SFC } from '../UtilityTypes/React';
+import { getClassNames } from '../Utils/ClassName';
 import { Button, ButtonProps } from './Button';
 
 const useClasses = createUseClasses('Dropdown', {
@@ -19,7 +20,7 @@ const useClasses = createUseClasses('Dropdown', {
         'background-color': `var(${themeVariables.backgroundPanel})`,
         'min-width': '140px',
         'box-shadow': `0px 0px 5px 1px var(${themeVariables.shadow})`,
-        '&.open': {
+        '&--open': {
             display: 'block',
         },
     },
@@ -41,8 +42,15 @@ export type DropdownProps = {
 };
 export const Dropdown: SFC<DropdownProps, { children: 'required' }> = (props) => {
     const {
-        kind, disabled, primary, rounded,
-        title, isOpen, setIsOpen, menu, children,
+        kind,
+        disabled,
+        primary,
+        rounded,
+        title,
+        isOpen,
+        setIsOpen,
+        menu,
+        children,
     } = props;
     const classes = useClasses();
 
@@ -80,10 +88,9 @@ export const Dropdown: SFC<DropdownProps, { children: 'required' }> = (props) =>
         };
     }, [rootElement, setIsOpen]);
 
-    const menuName = className(
-        classes.menu,
-        { open: isOpen },
-    );
+    const menuName = getClassNames(classes.menu, {
+        open: isOpen,
+    });
     const click = (): void => {
         setIsOpen(!isOpen);
     };

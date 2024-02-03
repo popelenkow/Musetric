@@ -1,8 +1,8 @@
 import React from 'react';
-import { createUseClasses, className } from '../App/AppCss';
+import { createUseClasses } from '../App/AppCss';
 import { themeVariables } from '../AppBase/Theme';
 import { ChildrenProps, FCResult } from '../UtilityTypes/React';
-import { Field, FieldProps } from './Field';
+import { getClassNames } from '../Utils/ClassName';
 
 const useClasses = createUseClasses('Radio', {
     root: {
@@ -43,22 +43,22 @@ const useClasses = createUseClasses('Radio', {
         '&:active': {
             'background-color': `var(${themeVariables.contentHoverActive})`,
         },
-        '&.rounded': {
+        '&--rounded': {
             'border-radius': '10px',
         },
-        '&.icon': {
+        '&--icon': {
             padding: '0',
             width: '42px',
             'min-width': '42px',
         },
-        '&.full': {
+        '&--full': {
             padding: '0 6px',
             width: '100%',
         },
-        '&.left': {
+        '&--left': {
             'justify-content': 'left',
         },
-        '&.right': {
+        '&--right': {
             'justify-content': 'right',
         },
         '&:focus-visible': {
@@ -71,7 +71,7 @@ const useClasses = createUseClasses('Radio', {
             },
             opacity: '0.4',
         },
-        '&.primary': {
+        '&--primary': {
             color: `var(${themeVariables.primary})`,
             '& svg': {
                 fill: `var(${themeVariables.primary})`,
@@ -100,9 +100,6 @@ export type RadioProps<Value extends string> = {
     label: string,
     value: Value,
     checkedValue: Value,
-    classNames?: {
-        root?: string,
-    },
 };
 type RadioFC = (
     <Value extends string>(props: RadioProps<Value> & ChildrenProps) => FCResult
@@ -111,32 +108,29 @@ export const Radio: RadioFC = (props) => {
     type Value = (typeof props)['value'];
     const {
         kind,
+        align,
         disabled,
+        primary,
         rounded,
         title,
         onSelected,
         label,
         value,
         checkedValue,
-        classNames,
         children,
     } = props;
     const classes = useClasses();
 
-    const rootName = className(
-        classNames?.root || classes.root,
-    );
-
     const checked = checkedValue === value;
-    const fieldProps: FieldProps = {
-        kind,
+    const buttonName = getClassNames(classes.button, {
+        [kind ?? 'simple']: true,
+        [align ?? 'center']: true,
+        primary,
         rounded,
-        primary: checked,
-        classNames: { root: classes.button },
-    };
+    });
 
     return (
-        <label className={rootName} title={title}>
+        <label className={classes.root} title={title}>
             <input
                 className={classes.input}
                 type='radio'
@@ -149,9 +143,9 @@ export const Radio: RadioFC = (props) => {
                 }}
                 checked={checked}
             />
-            <Field {...fieldProps}>
+            <div className={buttonName}>
                 {children}
-            </Field>
+            </div>
         </label>
     );
 };

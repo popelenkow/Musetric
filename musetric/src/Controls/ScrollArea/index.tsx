@@ -130,13 +130,8 @@ const updateScrolls = (elements: Elements): void => {
     }
 };
 
-export type ScrollAreaProps = {
-    classNames?: {
-        root?: string,
-    },
-};
-export const ScrollArea: SFC<ScrollAreaProps, { children: 'required' }> = (props) => {
-    const { children, classNames } = props;
+export const ScrollArea: SFC<object, { children: 'required' }> = (props) => {
+    const { children } = props;
     const classes = useClasses();
 
     const { refs, elements } = useRefs();
@@ -157,7 +152,7 @@ export const ScrollArea: SFC<ScrollAreaProps, { children: 'required' }> = (props
     }, [elements]);
 
     return (
-        <div className={classNames?.root || classes.root}>
+        <div className={classes.root}>
             <div ref={refs.content} className={classes.content}>
                 {children}
             </div>

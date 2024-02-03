@@ -1,3 +1,5 @@
+import { mapObject } from '../Utils/Object';
+
 export type Theme = {
     background: string,
     backgroundPanel: string,
@@ -23,15 +25,8 @@ export const themeVariables: Theme = {
     shadow: '--shadow',
 };
 
-export type ThemeEntry = {
-    themeId: string,
-    theme: Theme,
-};
-
-export const getStorageThemeId = (): string | undefined => {
-    const themeId = localStorage.getItem('theme') || undefined;
-    return themeId;
-};
-export const setStorageThemeId = (themeId: string): void => {
-    localStorage.setItem('theme', themeId);
-};
+export const getComputedTheme = (rootElement: HTMLElement): Theme => (
+    mapObject(themeVariables, ([, variable]) => (
+        getComputedStyle(rootElement).getPropertyValue(variable)
+    ))
+);

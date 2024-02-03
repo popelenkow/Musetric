@@ -35,14 +35,6 @@ export const createI18n = async (
     };
 };
 
-export const getStorageLocaleId = (): string | undefined => {
-    const localeId = localStorage.getItem('locale') ?? undefined;
-    return localeId;
-};
-export const setStorageLocaleId = (localeId: string): void => {
-    localStorage.setItem('locale', localeId);
-};
-
 export const localizeLocaleId = (lng: string, i18n: I18n): string | undefined => {
     const res = i18n.t('AppBase:locale', { lng });
     return res;

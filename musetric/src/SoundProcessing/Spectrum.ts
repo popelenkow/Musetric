@@ -5,8 +5,8 @@ import type { SpectrumWorker } from './SpectrumWorker';
 export type Spectrum =
     & PromiseObjectApi<SpectrumWorker>
     & { destroy: () => void };
-export const createSpectrum = (workerUrl: URL | string): Spectrum => {
-    const worker = new Worker(workerUrl);
+export const createSpectrum = (createWorker: () => Worker): Spectrum => {
+    const worker = createWorker();
     const request = createPromiseWorkerApi<SpectrumWorker, unknown>(worker, {});
     return {
         setup: (...args) => request('setup', args),

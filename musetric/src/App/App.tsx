@@ -1,7 +1,7 @@
-import React, { useState, ReactElement, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { I18n } from '../AppBase/Locale';
 import { Log } from '../AppBase/Log';
-import { ThemeEntry, themeVariables } from '../AppBase/Theme';
+import { themeVariables } from '../AppBase/Theme';
 import { Workers } from '../AppBase/Worker';
 import { Icon } from '../Controls/Icon';
 import { FCResult } from '../UtilityTypes/React';
@@ -29,14 +29,14 @@ const useClasses = createUseClasses('App', {
 export type AppLayoutProps<ViewId> = {
     initViewId: ViewId,
     useViewEntries: () => AppViewEntry<ViewId>[],
-    useAppBarButtons: () => ReactElement,
+    appBarButtonsSlot: React.JSX.Element,
 };
 type AppLayoutFC = (
     <ViewId extends string>(props: AppLayoutProps<ViewId>) => FCResult
 );
 export const AppLayout: AppLayoutFC = (props) => {
     type ViewId = (typeof props)['initViewId'];
-    const { initViewId, useViewEntries, useAppBarButtons } = props;
+    const { initViewId, useViewEntries, appBarButtonsSlot } = props;
     const classes = useClasses();
 
     const allViewEntries = useViewEntries();
@@ -59,11 +59,10 @@ export const AppLayout: AppLayoutFC = (props) => {
         .filter((x): x is AppViewElement<ViewId> => x.type === 'view')
         .find((view) => view.id === viewId) || {};
 
-    const buttons = useAppBarButtons();
     return (
         <div ref={rootElementRef} className={classes.root}>
             <AppBar>
-                {buttons}
+                {appBarButtonsSlot}
                 <AppDropdown {...appDropdownProps}><Icon name='menu' /></AppDropdown>
             </AppBar>
             {element}
@@ -72,15 +71,15 @@ export const AppLayout: AppLayoutFC = (props) => {
 };
 
 export type AppProps<ViewId> = AppLayoutProps<ViewId> & {
-    initRootElement?: HTMLElement,
+    rootElement: HTMLElement,
     workers: Workers,
     log: Log,
     i18n: I18n,
     allLocaleIds: string[],
     onLocaleId: (localeId: string) => void,
-    initThemeId?: string,
-    allThemeEntries: ThemeEntry[],
-    onSetThemeId?: (themeId: string) => void,
+    themeId: string,
+    allThemeIds: string[],
+    setThemeId: (themeId: string) => void,
     apiUrl: string,
 };
 type AppFC = (
@@ -88,14 +87,23 @@ type AppFC = (
 );
 export const App: AppFC = (props) => {
     const {
-        initRootElement, workers, log,
-        i18n, allLocaleIds, onLocaleId,
-        initThemeId, allThemeEntries, onSetThemeId,
+        initViewId,
+        useViewEntries,
+        appBarButtonsSlot,
+        rootElement,
+        workers,
+        log,
+        i18n,
+        allLocaleIds,
+        onLocaleId,
+        themeId,
+        allThemeIds,
+        setThemeId,
         apiUrl,
     } = props;
 
     const appProviderProps: AppProviderProps = {
-        initRootElement,
+        rootElement,
         workers,
         log,
         i18n,
@@ -104,14 +112,19 @@ export const App: AppFC = (props) => {
         apiUrl,
     };
     const cssProviderProps: CssProviderProps = {
-        initThemeId,
-        allThemeEntries,
-        onSetThemeId,
+        themeId,
+        allThemeIds,
+        setThemeId,
+    };
+    const appLayoutProps: AppLayoutProps<typeof initViewId> = {
+        initViewId,
+        useViewEntries,
+        appBarButtonsSlot,
     };
     return (
         <AppProvider {...appProviderProps}>
             <CssProvider {...cssProviderProps}>
-                <AppLayout {...props} />
+                <AppLayout {...appLayoutProps} />
             </CssProvider>
         </AppProvider>
     );

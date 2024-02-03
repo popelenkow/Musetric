@@ -1,11 +1,12 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { createUseClasses, className } from '../App/AppCss';
+import { createUseClasses } from '../App/AppCss';
 import { themeVariables } from '../AppBase/Theme';
 import { SFC } from '../UtilityTypes/React';
+import { getClassNames } from '../Utils/ClassName';
 import { useAnimation } from '../UtilsReact/Animation';
 import { GroovedWheel, GroovedWheelProps } from './GroovedWheel';
 
-const activeSelector = ['&:not(:focus-within):active', '&:not(:focus-within).active', '.hoverable &:not(:focus-within):hover'];
+const activeSelector = ['&:not(:focus-within):active', '&--active', '.hoverable &:not(:focus-within):hover'];
 
 const useClasses = createUseClasses('NumberField', {
     root: {
@@ -57,7 +58,7 @@ const useClasses = createUseClasses('NumberField', {
         'border-color': `var(${themeVariables.divider})`,
         'border-bottom-color': 'transparent !important',
         'pointer-events': 'none',
-        '&.rounded': {
+        '&--rounded': {
             'border-radius': '10px',
         },
     },
@@ -85,8 +86,11 @@ export type NumberFieldProps = {
 };
 export const NumberField: SFC<NumberFieldProps> = (props) => {
     const {
-        value, setValue, label,
-        disabled, rounded,
+        value,
+        setValue,
+        label,
+        disabled,
+        rounded,
     } = props;
 
     const classes = useClasses();
@@ -104,14 +108,13 @@ export const NumberField: SFC<NumberFieldProps> = (props) => {
     });
 
     const stopGroovedWheelRef = useRef<() => void>(null);
-    const rootName = className(
-        classes.root,
-        { active },
-    );
-    const fieldsetName = className(
-        classes.fieldset,
-        { disabled, rounded },
-    );
+    const rootName = getClassNames(classes.root, {
+        active,
+    });
+    const fieldsetName = getClassNames(classes.fieldset, {
+        disabled,
+        rounded,
+    });
 
     const onMove = useCallback((delta: number) => {
         valueRef.current += delta;

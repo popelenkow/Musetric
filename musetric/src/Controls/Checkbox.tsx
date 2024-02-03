@@ -2,7 +2,7 @@ import React from 'react';
 import { createUseClasses } from '../App/AppCss';
 import { themeVariables } from '../AppBase/Theme';
 import { SFC } from '../UtilityTypes/React';
-import { Field, FieldProps } from './Field';
+import { getClassNames } from '../Utils/ClassName';
 
 const useClasses = createUseClasses('Checkbox', {
     root: {
@@ -43,22 +43,22 @@ const useClasses = createUseClasses('Checkbox', {
         '&:active': {
             'background-color': `var(${themeVariables.contentHoverActive})`,
         },
-        '&.rounded': {
+        '&--rounded': {
             'border-radius': '10px',
         },
-        '&.icon': {
+        '&--icon': {
             padding: '0',
             width: '42px',
             'min-width': '42px',
         },
-        '&.full': {
+        '&--full': {
             padding: '0 6px',
             width: '100%',
         },
-        '&.left': {
+        '&--left': {
             'justify-content': 'left',
         },
-        '&.right': {
+        '&--right': {
             'justify-content': 'right',
         },
         '&:focus-visible': {
@@ -71,7 +71,7 @@ const useClasses = createUseClasses('Checkbox', {
             },
             opacity: '0.4',
         },
-        '&.primary': {
+        '&--primary': {
             color: `var(${themeVariables.primary})`,
             '& svg': {
                 fill: `var(${themeVariables.primary})`,
@@ -101,18 +101,21 @@ export type CheckboxProps = {
 };
 export const Checkbox: SFC<CheckboxProps, { children: 'required' }> = (props) => {
     const {
-        kind, disabled, rounded,
-        title, onToggle, checked,
+        kind,
+        disabled,
+        rounded,
+        title,
+        onToggle,
+        checked,
         children,
     } = props;
     const classes = useClasses();
 
-    const fieldProps: FieldProps = {
-        kind,
-        rounded,
+    const buttonName = getClassNames(classes.button, {
+        [kind ?? 'simple']: true,
         primary: checked,
-        classNames: { root: classes.button },
-    };
+        rounded,
+    });
 
     return (
         <label className={classes.root} title={title}>
@@ -123,9 +126,9 @@ export const Checkbox: SFC<CheckboxProps, { children: 'required' }> = (props) =>
                 checked={checked}
                 disabled={disabled}
             />
-            <Field {...fieldProps}>
+            <div className={buttonName}>
                 {children}
-            </Field>
+            </div>
         </label>
     );
 };

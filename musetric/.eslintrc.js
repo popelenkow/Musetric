@@ -1,5 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-const { getIgnorePatterns, getTsPath } = require('eslint-plugin-musetric/utils');
+const { getTsPath } = require('eslint-plugin-musetric/utils');
+
+const extensions = ['js', 'ts', 'jsx', 'tsx'];
 
 module.exports = {
     plugins: [
@@ -13,7 +15,7 @@ module.exports = {
             additionalHooks: '(useLazyMemo)',
         }],
     },
-    ignorePatterns: getIgnorePatterns(['dist'], []),
+    ignorePatterns: extensions.map((ext) => `**/dist/**/*.${ext}`),
     overrides: [
         getTsPath(__dirname, '.'),
         {

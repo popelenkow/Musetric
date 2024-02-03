@@ -22,3 +22,5 @@ copyFileToDist('../..', 'license.md');
 copyFileToDist('..', 'readme.md');
 const err = (error) => error && console.error(error);
 copyfiles(['src/**/*.json', 'dist'], 1, err);
+copyfiles(['src/**/*.css', 'dist'], 1, err);
+copyfiles(['src/**/*.svg', 'dist'], 1, err);

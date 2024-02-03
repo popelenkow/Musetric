@@ -1,13 +1,16 @@
 import benchmark from 'benchmark';
 import { createConsoleLog } from '../src/AppBase/Log';
+import { parseColor } from '../src/Rendering/Color';
 import { Size2D } from '../src/Rendering/Layout';
-import { drawWaveform, evalWaves, Waves, createWaveformColors } from '../src/Rendering/Waveform';
-import theme from '../src/Resources/Themes/light';
+import { drawWaveform, evalWaves, Waves, WaveformColors } from '../src/Rendering/Waveform';
 
 const log = createConsoleLog();
 export const performanceWaveform = (): void => {
     const suite = new benchmark.Suite();
-    const colors = createWaveformColors(theme);
+    const colors: WaveformColors = {
+        background: parseColor('uint32', 'black'),
+        content: parseColor('uint32', 'white'),
+    };
     const run = (width: number, height: number, sec: number): void => {
         const frame: Size2D = {
             width,

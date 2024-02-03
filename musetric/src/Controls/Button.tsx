@@ -1,7 +1,8 @@
 import React, { ButtonHTMLAttributes } from 'react';
-import { createUseClasses, className } from '../App/AppCss';
+import { createUseClasses } from '../App/AppCss';
 import { themeVariables } from '../AppBase/Theme';
 import { SFC } from '../UtilityTypes/React';
+import { getClassNames } from '../Utils/ClassName';
 
 const useClasses = createUseClasses('Button', {
     root: {
@@ -32,22 +33,22 @@ const useClasses = createUseClasses('Button', {
         '&:active': {
             'background-color': `var(${themeVariables.contentHoverActive})`,
         },
-        '&.rounded': {
+        '&--rounded': {
             'border-radius': '10px',
         },
-        '&.icon': {
+        '&--icon': {
             padding: '0',
             width: '42px',
             'min-width': '42px',
         },
-        '&.full': {
+        '&--full': {
             padding: '0 6px',
             width: '100%',
         },
-        '&.left': {
+        '&--left': {
             'justify-content': 'left',
         },
-        '&.right': {
+        '&--right': {
             'justify-content': 'right',
         },
         '&:focus-visible': {
@@ -60,7 +61,7 @@ const useClasses = createUseClasses('Button', {
             },
             opacity: '0.4',
         },
-        '&.primary': {
+        '&--primary': {
             color: `var(${themeVariables.primary})`,
             '& svg': {
                 fill: `var(${themeVariables.primary})`,
@@ -86,23 +87,26 @@ export type ButtonProps = {
     rounded?: boolean,
     title?: string,
     onClick: () => void,
-    classNames?: {
-        root?: string,
-    },
 };
 export const Button: SFC<ButtonProps, { children: 'required' }> = (props) => {
     const {
-        kind, align, disabled, primary, rounded,
-        title, onClick, classNames, children,
+        kind,
+        align,
+        disabled,
+        primary,
+        rounded,
+        title,
+        onClick,
+        children,
     } = props;
 
     const classes = useClasses();
-    const rootName = className(
-        classNames?.root || classes.root,
-        kind ?? 'simple',
-        align ?? 'center',
-        { primary, rounded },
-    );
+    const rootName = getClassNames(classes.root, {
+        [kind ?? 'simple']: true,
+        [align ?? 'center']: true,
+        primary,
+        rounded,
+    });
 
     const buttonProps: ButtonHTMLAttributes<HTMLButtonElement> = {
         className: rootName,
