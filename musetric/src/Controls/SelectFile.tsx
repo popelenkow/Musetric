@@ -13,8 +13,13 @@ export type SelectFileProps = {
 };
 export const SelectFile: SFC<SelectFileProps, { children: 'required' }> = (props) => {
     const {
-        kind, disabled, primary, rounded,
-        title, changeFile, children,
+        kind,
+        disabled,
+        primary,
+        rounded,
+        title,
+        changeFile,
+        children,
     } = props;
 
     const input = useMemo(() => {

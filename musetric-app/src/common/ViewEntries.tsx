@@ -8,6 +8,7 @@ import { Karaoke } from 'musetric/Karaoke';
 import { SoundWorkshop } from 'musetric/SoundWorkshop';
 import { skipPromise } from 'musetric/Utils/SkipPromise';
 import React, { useEffect, useState } from 'react';
+import { envs } from '../envs';
 
 export type ViewId = 'soundWorkshop' | 'karaoke' | 'about';
 export const useViewEntries = (): AppViewEntry<ViewId>[] => {
@@ -43,7 +44,7 @@ export const useViewEntries = (): AppViewEntry<ViewId>[] => {
         },
     };
     const aboutInfoProps: AppAboutProps = {
-        appVersion: process.env.APP_VERSION || '???',
+        appVersion: envs.APP_VERSION || '???',
         links: [
             <Button {...githubProps}><Icon name='github' /></Button>,
             <Button {...performanceProps}><Icon name='performance' /></Button>,

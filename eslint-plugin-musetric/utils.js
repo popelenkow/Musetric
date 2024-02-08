@@ -9,14 +9,5 @@ const getTsPath = (root, directory) => {
         },
     };
 };
-const getTsPaths = (root, directories) => {
-    return directories.map((directory) => getTsPath(root, directory));
-};
-const getIgnorePatterns = (directories, patterns) => {
-    return [
-        ...patterns,
-        ...directories.map((dir) => extensions.map((ext) => `**/${dir}/**/*.${ext}`)).flat(),
-    ];
-};
 
-module.exports = { extensions, getTsPath, getTsPaths, getIgnorePatterns };
+module.exports = { getTsPath };

@@ -41,7 +41,7 @@ type AppStore = Store<AppSnapshot>;
 export const AppContext = createContext<AppStore | undefined>(undefined);
 
 export type AppProviderProps = {
-    initRootElement?: HTMLElement,
+    rootElement: HTMLElement,
     workers: Workers,
     log: Log,
     i18n: I18n,
@@ -51,8 +51,13 @@ export type AppProviderProps = {
 };
 export const AppProvider: SFC<AppProviderProps, { children: 'required' }> = (props) => {
     const {
-        initRootElement, workers, log,
-        i18n, allLocaleIds, onLocaleId, apiUrl,
+        rootElement,
+        workers,
+        log,
+        i18n,
+        allLocaleIds,
+        onLocaleId,
+        apiUrl,
         children,
     } = props;
 
@@ -60,7 +65,7 @@ export const AppProvider: SFC<AppProviderProps, { children: 'required' }> = (pro
 
     useEffect(() => {
         const initialState: AppState = {
-            rootElement: initRootElement || document.body,
+            rootElement,
             workers,
             log,
             i18n,
@@ -73,7 +78,7 @@ export const AppProvider: SFC<AppProviderProps, { children: 'required' }> = (pro
         ));
         setStore(currentStore);
         return () => {};
-    }, [initRootElement, workers, log, i18n, allLocaleIds, onLocaleId, apiUrl]);
+    }, [rootElement, workers, log, i18n, allLocaleIds, onLocaleId, apiUrl]);
 
     return (
         <AppContext.Provider value={store}>

@@ -1,4 +1,6 @@
 {
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "javascript.preferences.importModuleSpecifier": "relative",
     "files.exclude": {
         "**/node_modules": true
     },

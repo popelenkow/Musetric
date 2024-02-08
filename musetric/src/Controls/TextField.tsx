@@ -1,9 +1,10 @@
 import React from 'react';
-import { createUseClasses, className } from '../App/AppCss';
+import { createUseClasses } from '../App/AppCss';
 import { themeVariables } from '../AppBase/Theme';
 import { SFC } from '../UtilityTypes/React';
+import { getClassNames } from '../Utils/ClassName';
 
-const activeSelector = ['&:not(:focus-within):active', '&:not(:focus-within).active', '.hoverable &:not(:focus-within):hover'];
+const activeSelector = ['&:not(:focus-within):active', '&--active', '.hoverable &:not(:focus-within):hover'];
 
 const useClasses = createUseClasses('TextField', {
     root: {
@@ -48,7 +49,7 @@ const useClasses = createUseClasses('TextField', {
         position: 'absolute',
         'border-color': `var(${themeVariables.divider})`,
         'pointer-events': 'none',
-        '&.rounded': {
+        '&--rounded': {
             'border-radius': '10px',
         },
     },
@@ -68,15 +69,19 @@ export type TextFieldProps = {
 };
 export const TextField: SFC<TextFieldProps> = (props) => {
     const {
-        value, label,
-        disabled, active, rounded,
+        value,
+        label,
+        disabled,
+        active,
+        rounded,
     } = props;
 
     const classes = useClasses();
-    const fieldsetName = className(
-        classes.fieldset,
-        { disabled, rounded, active },
-    );
+    const fieldsetName = getClassNames(classes.fieldset, {
+        disabled,
+        rounded,
+        active,
+    });
 
     return (
         <div className={classes.root}>

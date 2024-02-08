@@ -1,22 +1,11 @@
-import classNames from 'classnames';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Classes, GenerateId } from 'jss';
-import React, { createContext, useMemo, useState, useEffect } from 'react';
+import React, { createContext, useMemo, useEffect } from 'react';
 import { JssProvider, createUseStyles, Styles } from 'react-jss';
-import { Theme, ThemeEntry, themeVariables } from '../AppBase/Theme';
+import { Theme, getComputedTheme } from '../AppBase/Theme';
 import { SFC } from '../UtilityTypes/React';
 import { useInitializedContext } from '../UtilsReact/Context';
 import { useAppRootElement } from './AppContext';
-
-const useStyles = createUseStyles((theme: Theme) => ({
-    '@global': {
-        ':root': Object.entries(themeVariables).reduce((acc, [key, variable]) => ({
-            ...acc,
-            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-            [variable]: theme[key as keyof Theme],
-        }), {}),
-    },
-}));
 
 export const createUseClasses = <C extends string, Props>(
     name: string,
@@ -101,29 +90,24 @@ const HoverableInjection: SFC<object, { result: 'none' }> = () => {
 };
 
 export type CssProviderProps = {
-    initThemeId?: string,
-    allThemeEntries: ThemeEntry[],
-    onSetThemeId?: (themeId: string) => void,
+    themeId: string,
+    allThemeIds: string[],
+    setThemeId: (themeId: string) => void,
 };
 export const CssProvider: SFC<CssProviderProps, { children: 'required' }> = (props) => {
-    const { children, initThemeId, allThemeEntries, onSetThemeId } = props;
+    const { children, themeId, allThemeIds, setThemeId } = props;
 
-    const allThemeIds = allThemeEntries.map((x) => x.themeId);
-    const [themeId, setThemeId] = useState<string>(initThemeId || allThemeIds[0]);
-    const themeEntry = allThemeEntries.find((x) => x.themeId === themeId);
-    const { theme } = themeEntry ?? allThemeEntries[0];
+    const { rootElement } = useAppRootElement();
 
-    useStyles({ theme });
-
-    const store: CssStore = useMemo(() => ({
-        theme,
-        themeId,
-        setThemeId: (id: string): void => {
-            setThemeId(id);
-            if (onSetThemeId) onSetThemeId(id);
-        },
-        allThemeIds,
-    }), [allThemeIds, onSetThemeId, theme, themeId]);
+    const store = useMemo((): CssStore => {
+        const theme = getComputedTheme(rootElement);
+        return {
+            theme,
+            themeId,
+            setThemeId,
+            allThemeIds,
+        };
+    }, [allThemeIds, setThemeId, rootElement, themeId]);
 
     return (
         <CssContext.Provider value={store}>
@@ -137,17 +121,3 @@ export const CssProvider: SFC<CssProviderProps, { children: 'required' }> = (pro
 };
 
 export const useAppCss = (): CssStore => useInitializedContext(CssContext, 'useCssContext');
-
-export type ClassNameArg = string | Record<string, boolean | undefined>;
-export const className = (...args: ClassNameArg[]): string => {
-    const resultArr = args.map<Record<string, boolean | undefined>>((arg) => {
-        if (typeof arg === 'string') return { [arg]: true };
-        if (typeof arg === 'object') return arg;
-        return {};
-    });
-    let resultObj = {};
-    resultArr.forEach((obj) => {
-        resultObj = { ...resultObj, ...obj };
-    });
-    return classNames(...args);
-};

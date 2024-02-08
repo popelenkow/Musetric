@@ -1,27 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Chart, { ChartConfiguration, ChartData, ScatterDataPoint } from 'chart.js/auto';
 import FFT from 'fft.js';
-import { getStorageThemeId } from 'musetric/AppBase/Theme';
-import { allThemeEntries } from 'musetric/Resources/Themes';
+import { getComputedTheme } from 'musetric/AppBase/Theme';
 import { createFftRadix2Base } from 'musetric/Sounds/FftRadix2';
 import { createFftRadix4Base } from 'musetric/Sounds/FftRadix4';
 import { createComplexArray } from 'musetric/TypedArray/ComplexArray';
 import { createComplexIndexable } from 'musetric/TypedArray/ComplexIndexable';
 import { skipPromise } from 'musetric/Utils/SkipPromise';
+import { getStorageThemeId } from './LocalStore';
 
 const add = (dt: number, t1: number, t2: number): number => {
     return 0.95 * dt + 0.05 * (t2 - t1);
 };
 
 export const run = async (): Promise<void> => {
-    const root = document.getElementById('root');
-    if (!root) throw new Error();
-    const themeId = getStorageThemeId() || 'dark';
-    const { theme } = allThemeEntries.find((x) => x.themeId === themeId) ?? allThemeEntries[0];
-    root.style.backgroundColor = theme.background;
-    root.style.display = 'flex';
-    root.style.flexDirection = 'column';
-    root.style.minHeight = `${window.innerHeight}px`;
+    const rootElement = document.getElementById('root')!;
+    const initThemeId = getStorageThemeId() || 'dark';
+    rootElement.setAttribute('data-theme', initThemeId);
+
+    document.getElementById('splashScreen')!.style.display = 'none';
+    const theme = getComputedTheme(rootElement);
+    rootElement.style.backgroundColor = theme.background;
+    rootElement.style.display = 'flex';
+    rootElement.style.flexDirection = 'column';
+    rootElement.style.minHeight = `${window.innerHeight}px`;
 
     type PerfData = {
         windowSize: number,
@@ -139,10 +141,10 @@ export const run = async (): Promise<void> => {
     const textDiv = document.createElement('div');
     textDiv.style.color = theme.content;
 
-    root.innerHTML = '';
-    root.appendChild(links);
-    root.appendChild(canvas);
-    root.appendChild(textDiv);
+    rootElement.innerHTML = '';
+    rootElement.appendChild(links);
+    rootElement.appendChild(canvas);
+    rootElement.appendChild(textDiv);
 
     const arr: PerfData[] = [];
     const plot = (size: number): void => {

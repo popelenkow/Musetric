@@ -40,18 +40,23 @@ export type SpectrogramProps = {
 };
 export const Spectrogram: SFC<SpectrogramProps> = (props) => {
     const {
-        getBuffer, getCursor, setCursor, subscribeBufferEvents,
-        frequencyRange, sampleRate, layout,
+        getBuffer,
+        getCursor,
+        setCursor,
+        subscribeBufferEvents,
+        frequencyRange,
+        sampleRate,
+        layout,
     } = props;
 
     const classes = useClasses();
     const { theme } = useAppCss();
     const colors = useMemo(() => createSpectrogramColors(theme), [theme]);
-    const { spectrumUrl } = useAppWorkers();
+    const { createSpectrumWorker } = useAppWorkers();
     const cursorRef = useRef<HTMLDivElement>(null);
 
     const windowSize = useMemo(() => 4096, []);
-    const spectrum = useMemo(() => createSpectrum(spectrumUrl), [spectrumUrl]);
+    const spectrum = useMemo(() => createSpectrum(createSpectrumWorker), [createSpectrumWorker]);
 
     useEffect(() => {
         skipPromise(spectrum.start());

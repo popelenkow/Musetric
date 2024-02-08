@@ -1,7 +1,8 @@
 import React from 'react';
-import { createUseClasses, className } from '../App/AppCss';
+import { createUseClasses } from '../App/AppCss';
 import { themeVariables } from '../AppBase/Theme';
 import { SFC } from '../UtilityTypes/React';
+import { getClassNames } from '../Utils/ClassName';
 
 const useClasses = createUseClasses('Field', {
     root: {
@@ -26,25 +27,25 @@ const useClasses = createUseClasses('Field', {
         '&:focus-visible': {
             'border-color': `var(${themeVariables.divider})`,
         },
-        '&.rounded': {
+        '&--rounded': {
             'border-radius': '10px',
         },
-        '&.icon': {
+        '&--icon': {
             padding: '0',
             width: '42px',
             'min-width': '42px',
         },
-        '&.full': {
+        '&--full': {
             padding: '0 6px',
             width: '100%',
         },
-        '&.left': {
+        '&--left': {
             'justify-content': 'left',
         },
-        '&.right': {
+        '&--right': {
             'justify-content': 'right',
         },
-        '&.primary': {
+        '&--primary': {
             color: `var(${themeVariables.primary})`,
             '& svg': {
                 fill: `var(${themeVariables.primary})`,
@@ -58,23 +59,23 @@ export type FieldProps = {
     align?: 'left' | 'center' | 'right',
     primary?: boolean,
     rounded?: boolean,
-    classNames?: {
-        root?: string,
-    },
 };
 export const Field: SFC<FieldProps, { children: 'required' }> = (props) => {
     const {
-        primary, rounded,
-        kind, align, children, classNames,
+        kind,
+        align,
+        primary,
+        rounded,
+        children,
     } = props;
 
     const classes = useClasses();
-    const rootName = className(
-        classNames?.root || classes.root,
-        kind ?? 'simple',
-        align ?? 'center',
-        { primary, rounded },
-    );
+    const rootName = getClassNames(classes.root, {
+        [kind ?? 'simple']: true,
+        [align ?? 'center']: true,
+        primary,
+        rounded,
+    });
 
     return (
         <div className={rootName}>

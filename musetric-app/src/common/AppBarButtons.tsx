@@ -3,10 +3,11 @@ import { useAppCss } from 'musetric/App/AppCss';
 import { localizeLocaleId, localizeThemeId } from 'musetric/AppBase/Locale';
 import { Icon } from 'musetric/Controls/Icon';
 import { Switch, SwitchProps } from 'musetric/Controls/Switch';
+import { SFC } from 'musetric/UtilityTypes/React';
 import { skipPromise } from 'musetric/Utils/SkipPromise';
-import React, { ReactElement, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
-export const useAppBarButtons = (): ReactElement => {
+export const AppBarButtons: SFC = () => {
     const { localeId, setLocaleId, allLocaleIds, i18n } = useAppLocale();
     const { themeId, setThemeId, allThemeIds } = useAppCss();
 
