@@ -1,6 +1,7 @@
 import path from 'path';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import mkcert from 'vite-plugin-mkcert';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import musetricAppPackage from './package.json';
 
@@ -16,6 +17,7 @@ export default defineConfig(({ mode }) => ({
                 { src: '../license.md', dest: '' },
             ],
         }),
+        mkcert(),
     ],
     build: {
         assetsDir: '',
@@ -35,10 +37,19 @@ export default defineConfig(({ mode }) => ({
         },
     },
     server: {
+        host: '0.0.0.0',
         port: 3000,
+        https: true,
         headers: {
             'Cross-Origin-Opener-Policy': 'same-origin',
             'Cross-Origin-Embedder-Policy': 'require-corp',
+        },
+        proxy: {
+            '/api': {
+                target: 'http://localhost:3001',
+                changeOrigin: true,
+                rewrite: (urlPath) => urlPath.replace(/^\/api/, ''),
+            },
         },
     },
 }));

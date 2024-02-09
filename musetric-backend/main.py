@@ -1,6 +1,8 @@
-from fastapi import FastAPI, UploadFile, Request
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi import FastAPI, UploadFile
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from starlette.middleware.base import BaseHTTPMiddleware
 import aiofiles
 import os
 import json
@@ -66,22 +68,11 @@ backgroundThread = threading.Thread(target=runBackgroundThread)
 backgroundThread.setDaemon(True)
 backgroundThread.start()
 
-@app.get('/')
-async def main(request: Request):
-    htmlContent = f"""
-    <html>
-        <body>
-            <a href="{str(request.url)}docs">{str(request.url)}docs</a>
-        </body>
-    </html>
-    """
-    return HTMLResponse(content=htmlContent, status_code=200)
-
-@app.get('/api/ping')
+@app.get('/ping')
 async def ping():
     return ''
 
-@app.get('/api/sound/list')
+@app.get('/sound/list')
 async def getList():
     def getInfo(id):
         with open(os.path.join(soundPath, id, infoFileName)) as infoFile:
@@ -92,7 +83,7 @@ async def getList():
         list = [getInfo(id) for id in getDirectoryList(soundPath)]
         return list
 
-@app.post('/api/sound')
+@app.post('/sound')
 async def addSound(file: UploadFile):
     with soundLock:
         id = getSoundNextId(soundPath)
@@ -112,12 +103,12 @@ async def addSound(file: UploadFile):
         writeJson(os.path.join(dirPath, infoFileName), info)
         return info
 
-@app.delete('/api/sound/{id}')
+@app.delete('/sound/{id}')
 async def removeSound(id: str):
     with soundLock:
         shutil.rmtree(os.path.join(soundPath, id))
 
-@app.get('/api/sound/{id}/{stem}/{stemCount}')
+@app.get('/sound/{id}/{stem}/{stemCount}')
 async def getSoundStem(id, stem, stemCount):
     fileName = f'{stemCount}_{stem}.flac'
     path = os.path.join(soundPath, id, fileName)
