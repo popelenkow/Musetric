@@ -2,7 +2,6 @@ import { createI18n } from 'musetric/AppBase/Locale';
 import { skipPromise } from 'musetric/Utils/SkipPromise';
 import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { getLocalIp } from './ip';
 import { getStorageLocaleId, getStorageThemeId } from './LocalStore';
 import { MusetricApp, MusetricAppProps } from './MusetricApp';
 import { allLocaleEntries } from './Resources/Locales';
@@ -17,10 +16,9 @@ const run = async (): Promise<void> => {
     const initThemeId = getStorageThemeId() || 'dark';
     rootElement.setAttribute('data-theme', initThemeId);
 
-    const ip = await getLocalIp();
     const props: MusetricAppProps = {
         rootElement,
-        apiUrl: `http://${ip}:3001`,
+        apiUrl: '',
         i18n,
         initThemeId,
     };
