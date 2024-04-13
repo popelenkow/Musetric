@@ -10,4 +10,5 @@
     "editor.detectIndentation": false,
     "editor.renderWhitespace": "all",
     "files.eol": "\n",
+    "svg.preview.background": "transparent",
 }
