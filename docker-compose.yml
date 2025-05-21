@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  musetric:
+    container_name: musetric-container
+    image: musetric
+    ports:
+      - '80:80'
+    restart: unless-stopped
+    volumes:
+      - database:/backend/database
+
+volumes:
+  database:
+    driver: local

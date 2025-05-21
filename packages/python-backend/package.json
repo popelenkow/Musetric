@@ -1,0 +1,10 @@
+{
+  "name": "@musetric/python-backend",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "uv run dev.py 3001",
+    "lint:fix": "uv run lint.py"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "noEmit": true
+  },
+  "references": [
+    { "path": "packages/api" },
+    { "path": "packages/backend" },
+    { "path": "packages/eslint-config" },
+    { "path": "packages/fastify-type-provider-zod" },
+    { "path": "packages/frontend" },
+    { "path": "packages/python-backend" }
+  ]
+}

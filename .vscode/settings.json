@@ -1,10 +1,6 @@
 {
   "typescript.preferences.importModuleSpecifier": "relative",
   "javascript.preferences.importModuleSpecifier": "relative",
-  "files.exclude": {
-    "**/node_modules": true,
-    "**/__pycache__": true
-  },
   "[javascript]": {
     "editor.tabSize": 2
   },
@@ -22,6 +18,11 @@
   "editor.detectIndentation": false,
   "editor.renderWhitespace": "all",
   "files.eol": "\n",
-  "svg.preview.background": "transparent",
   "python.analysis.autoImportCompletions": true,
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.yarn": true,
+    "**/yarn.lock": true,
+    "**/.pnp.*": true
+  }
 }

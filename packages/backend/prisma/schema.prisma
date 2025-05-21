@@ -1,0 +1,49 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum ProjectStage {
+  init
+  pending
+  progress
+  done
+}
+
+model Project {
+  id      Int       @id @default(autoincrement())
+  name    String
+  stage   ProjectStage
+  sounds  Sound[]
+  preview Preview?
+}
+
+enum SoundType {
+  original
+  vocal
+  instrumental
+}
+
+model Sound {
+  id          Int       @id @default(autoincrement())
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId   Int
+  type        SoundType
+  data        Bytes
+  filename    String
+  contentType String
+  @@index([projectId, type])
+}
+
+model Preview {
+  id          Int       @id @default(autoincrement())
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId   Int       @unique
+  data        Bytes
+  filename    String
+  contentType String
+}

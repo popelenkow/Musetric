@@ -1,0 +1,22 @@
+{
+  "name": "@musetric/api",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "checkTs": "tsc --noEmit",
+    "build": "tsc --build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "peerDependencies": {
+    "zod": "^3.0.0"
+  },
+  "devDependencies": {
+    "@musetric/eslint-config": "workspace:*",
+    "eslint": "9.28.0",
+    "typescript": "5.8.3",
+    "zod": "3.25.48"
+  }
+}
