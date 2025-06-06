@@ -2,6 +2,9 @@
   "name": "@musetric/backend",
   "version": "0.1.0",
   "license": "MIT",
+  "prisma": {
+    "schema": "./prisma/schema.prisma"
+  },
   "scripts": {
     "postinstall": "prisma generate",
     "dev": "tsx watch src/index.ts",
