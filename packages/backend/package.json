@@ -3,14 +3,13 @@
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "checkTs": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev --name init --preview-feature",
     "prisma:studio": "prisma studio"
   },
   "devDependencies": {

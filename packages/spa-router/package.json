@@ -5,8 +5,8 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
+    "build": "tsc",
     "checkTs": "tsc --noEmit",
-    "build": "tsc --build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

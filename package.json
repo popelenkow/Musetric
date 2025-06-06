@@ -10,9 +10,11 @@
     "build": "yarn workspaces foreach --all --topological run build",
     "checkTs": "yarn workspaces foreach --all --topological run checkTs",
     "lint": "yarn workspaces foreach --all --topological run lint && prettier --check .",
-    "lint:fix": "yarn workspaces foreach --all --topological run lint:fix && prettier . --write"
+    "lint:fix": "yarn workspaces foreach --all --topological run lint:fix && prettier . --write",
+    "peer-errors": "yarn explain peer-requirements | npx grep-cli \"✘\""
   },
   "devDependencies": {
+    "grep-cli": "0.2.1",
     "prettier": "3.5.3"
   }
 }
