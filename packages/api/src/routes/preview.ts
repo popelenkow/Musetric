@@ -9,8 +9,10 @@ export namespace get {
   export const endpoint = (previewId: number) =>
     endpointify(route, { previewId });
   export const paramsSchema = z.object({ previewId: z.coerce.number() });
-  export const responseSchema = z.object({ id: z.number() });
-  export type Response = z.infer<typeof responseSchema>;
+  // Server returns the preview file data directly, so the response schema
+  // should match the uploaded item schema instead of an object with an id.
+  export const responseSchema = itemSchema;
+  export type Response = Item;
 }
 
 export namespace upload {
