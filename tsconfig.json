@@ -10,6 +10,7 @@
     { "path": "packages/eslint-config" },
     { "path": "packages/fastify-type-provider-zod" },
     { "path": "packages/frontend" },
+    { "path": "packages/spa-router" },
     { "path": "packages/python-backend" }
   ]
 }

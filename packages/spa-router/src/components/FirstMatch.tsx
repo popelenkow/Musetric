@@ -7,7 +7,7 @@ import {
   ReactElement,
   ReactNode,
 } from 'react';
-import { useMemoLocation } from './locationEvent';
+import { useMemoLocation } from '../common/locationEvent';
 import { isMatchComponent } from './Match';
 
 type MatchItem = {

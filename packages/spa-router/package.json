@@ -1,0 +1,25 @@
+{
+  "name": "@musetric/spa-router",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "checkTs": "tsc --noEmit",
+    "build": "tsc --build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@musetric/eslint-config": "workspace:*",
+    "@types/react": "19.1.6",
+    "eslint": "9.28.0",
+    "react": "19.1.0",
+    "typescript": "5.8.3",
+    "zustand": "5.0.5"
+  }
+}

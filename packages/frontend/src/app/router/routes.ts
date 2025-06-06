@@ -1,5 +1,5 @@
+import { createSpaRoute } from '@musetric/spa-router';
 import { z } from 'zod/v4';
-import { createSpaRoute } from '../../common/spaRouter/routes/spaRoute';
 
 const toNumber = z.string().transform(Number).pipe(z.number());
 

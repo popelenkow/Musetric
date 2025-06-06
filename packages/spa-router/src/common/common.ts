@@ -1,5 +1,3 @@
-export type IsEmptyObject<Obj> = keyof Obj extends never ? true : false;
-
 export type NativeParams = Record<string, string>;
 
 export const getLocationHash = (): string => {

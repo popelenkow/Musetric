@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { NativeParams } from '../common';
+import { NativeParams } from '../common/common';
 import { createHashRoute, HashRoute, HashRouteOptions } from './hashRoute';
 import { createPathRoute, PathRoute, PathRouteOptions } from './pathRoute';
 import { Route, createRoute } from './route';
