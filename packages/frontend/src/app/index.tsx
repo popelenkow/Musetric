@@ -2,7 +2,6 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { FC } from 'react';
 import { I18nextProvider } from 'react-i18next';
-import { BrowserRouter } from 'react-router';
 import { queryClient } from '../api/queryClient';
 import { i18n } from '../translations';
 import { AppRouter } from './router/AppRouter';
@@ -14,9 +13,7 @@ export const App: FC = () => {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={appTheme}>
           <CssBaseline />
-          <BrowserRouter>
-            <AppRouter />
-          </BrowserRouter>
+          <AppRouter />
         </ThemeProvider>
       </QueryClientProvider>
     </I18nextProvider>

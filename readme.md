@@ -4,16 +4,10 @@ Musetric is a vocal training application.
 
 ## Docker
 
-Build app
-
 ```bash
-docker build -t musetric .
-```
-
-Run app
-
-```bash
-docker compose up -d
+yarn build:frontend
+yarn build:docker
+yarn start:docker
 ```
 
 ## License

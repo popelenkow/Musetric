@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  check:
+  docker:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,6 +15,5 @@ jobs:
       - run: corepack enable
       - run: corepack prepare yarn@4.9.1 --activate
       - run: yarn
-      - run: yarn db:sync
-      - run: yarn checkTs
-      - run: yarn lint
+      - run: yarn build:frontend
+      - run: yarn build:docker

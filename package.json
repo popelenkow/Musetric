@@ -3,12 +3,18 @@
   "private": true,
   "type": "module",
   "packageManager": "yarn@4.9.1",
+  "engines": {
+    "node": "22.16.0"
+  },
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "dev": "yarn workspaces foreach --all --include @musetric/backend --include @musetric/frontend --parallel --interlaced run dev",
-    "build": "yarn workspaces foreach --all --topological run build",
+    "build:frontend": "yarn workspace @musetric/frontend build && npx ncp packages/frontend/dist packages/backend/public",
+    "build:docker": "yarn workspace @musetric/backend build:docker",
+    "start:docker": "yarn workspace @musetric/backend start:docker",
+    "db:sync": "yarn workspace @musetric/backend db:sync",
     "checkTs": "yarn workspaces foreach --all --topological run checkTs",
     "lint": "yarn workspaces foreach --all --topological run lint && prettier --check .",
     "lint:fix": "yarn workspaces foreach --all --topological run lint:fix && prettier . --write",
@@ -16,6 +22,7 @@
   },
   "devDependencies": {
     "grep-cli": "0.2.1",
+    "ncp": "2.0.0",
     "prettier": "3.5.3"
   }
 }

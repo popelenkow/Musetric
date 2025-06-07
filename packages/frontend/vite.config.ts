@@ -4,6 +4,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
   base: './',
+  mode: 'production',
   plugins: [
     react(),
     viteStaticCopy({
@@ -16,6 +17,7 @@ export default defineConfig({
   build: {
     target: 'es2022',
     assetsDir: '',
+    chunkSizeWarningLimit: 1024,
     rollupOptions: {
       input: {
         index: 'index.html',
@@ -24,10 +26,10 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 3000,
+    port: 3001,
     proxy: {
       '/api': {
-        target: 'http://localhost:3001/',
+        target: 'http://localhost:3000/',
         changeOrigin: true,
       },
     },
