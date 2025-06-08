@@ -15,6 +15,7 @@ __snapshots__/
 .DS_Store
 *.egg-info/
 generated/
+public/
 
 .yarn/*
 !.yarn/cache

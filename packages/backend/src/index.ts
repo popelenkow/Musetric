@@ -1,4 +1,6 @@
+import path from 'node:path';
 import { fastifyMultipart } from '@fastify/multipart';
+import { fastifyStatic } from '@fastify/static';
 import {
   serializerCompiler,
   validatorCompiler,
@@ -34,6 +36,17 @@ export const startServer = async () => {
         });
         part.value = file;
       },
+    });
+    app.register(fastifyStatic, {
+      root: path.join(__dirname, '../public'),
+      prefix: '/',
+      index: ['index.html'],
+    });
+    app.setNotFoundHandler((request, reply) => {
+      if (request.raw.method === 'GET') {
+        return reply.sendFile('index.html');
+      }
+      return reply.callNotFound();
     });
     await registerSwagger(app);
     app.setValidatorCompiler(validatorCompiler);

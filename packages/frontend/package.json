@@ -9,7 +9,6 @@
     "checkTs": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "vitest",
     "gen-translations": "i18next -c ./i18next.parser.config.js"
   },
   "devDependencies": {
@@ -36,11 +35,9 @@
     "react-dom": "19.1.0",
     "react-hook-form": "7.57.0",
     "react-i18next": "15.5.2",
-    "react-router": "7.6.1",
     "typescript": "5.8.3",
     "vite": "6.3.5",
     "vite-plugin-static-copy": "3.0.0",
-    "vitest": "3.2.0",
     "zod": "3.25.48",
     "zustand": "5.0.5"
   }
