@@ -6,9 +6,9 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "checkTs": "tsc --noEmit",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "check:ts": "tsc --noEmit",
+    "check:lint": "eslint .",
+    "fix:lint": "eslint . --fix"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -16,8 +16,8 @@
   },
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
-    "@types/react": "19.1.6",
-    "eslint": "9.28.0",
+    "@types/react": "19.1.8",
+    "eslint": "9.29.0",
     "react": "19.1.0",
     "typescript": "5.8.3",
     "zustand": "5.0.5"

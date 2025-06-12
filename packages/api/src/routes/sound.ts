@@ -10,7 +10,7 @@ export namespace upload {
     method: 'post',
     path: '/api/sound/project/:projectId/upload',
     paramsSchema: z.object({
-      projectId: z.coerce.number(),
+      projectId: z.number(),
     }),
     requestSchema: z.object({
       file: z.file(),

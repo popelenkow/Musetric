@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import z from 'zod/v4';
 import { ApiRoute, RequestMethod } from './apiRoute';
+import { coerceSchema } from './coerceSchema';
 import { error } from './error';
 
 export const fastifyRoute = <
@@ -19,24 +21,24 @@ export const fastifyRoute = <
     responseSchema,
     isMultipart,
   } = route;
-  const getParams = () => {
+  const getParams = (): ParamsSchema => {
     if (paramsSchema instanceof z.ZodVoid) {
-      return z.object({});
+      return z.object({}) as ParamsSchema;
     }
     return paramsSchema;
   };
-  const getBody = () => {
+  const getBody = (): RequestSchema => {
     if (method === 'get') {
-      return undefined;
+      return undefined as RequestSchema;
     }
     if (requestSchema instanceof z.ZodVoid) {
-      return undefined;
+      return undefined as RequestSchema;
     }
     return requestSchema;
   };
-  const getResponse = () => {
+  const getResponse = (): ResponseSchema => {
     if (responseSchema instanceof z.ZodVoid) {
-      return z.null();
+      return z.null() as ResponseSchema;
     }
     return responseSchema;
   };
@@ -44,14 +46,11 @@ export const fastifyRoute = <
     method,
     url: path,
     schema: {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      params: getParams() as ParamsSchema,
+      params: coerceSchema(getParams()),
       consumes: isMultipart ? ['multipart/form-data'] : undefined,
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      body: getBody() as RequestSchema,
+      body: isMultipart ? coerceSchema(getBody()) : getBody(),
       response: {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        200: getResponse() as ResponseSchema,
+        200: getResponse(),
         400: error.responseSchema,
         404: error.responseSchema,
       },

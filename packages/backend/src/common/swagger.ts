@@ -1,8 +1,8 @@
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
-import { jsonSchemaTransform } from '@musetric/fastify-type-provider-zod';
 import axios from 'axios';
 import { FastifyInstance } from 'fastify';
+import { jsonSchemaTransform } from 'fastify-type-provider-zod';
 import { envs } from './envs';
 
 export const registerSwagger = async (app: FastifyInstance) => {

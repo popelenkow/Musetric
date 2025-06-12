@@ -1,11 +1,11 @@
 import path from 'node:path';
 import { fastifyMultipart } from '@fastify/multipart';
 import { fastifyStatic } from '@fastify/static';
+import { fastify, FastifyInstance } from 'fastify';
 import {
   serializerCompiler,
   validatorCompiler,
-} from '@musetric/fastify-type-provider-zod';
-import { fastify, FastifyInstance } from 'fastify';
+} from 'fastify-type-provider-zod';
 import { envs } from './common/envs';
 import { logger } from './common/logger';
 import { registerSwagger } from './common/swagger';
@@ -23,6 +23,12 @@ export const startServer = async () => {
   try {
     const app: FastifyInstance = fastify({
       logger,
+    });
+    const delay = (ms: number) =>
+      new Promise<void>((resolve) => setTimeout(resolve, ms));
+
+    app.addHook('preHandler', async () => {
+      await delay(1000);
     });
     app.addHook('onRoute', (routeOptions) => {
       routeOptions.logLevel = 'warn';

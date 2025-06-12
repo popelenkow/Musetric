@@ -2,14 +2,7 @@ import { api } from '@musetric/api';
 import { QueryClient, queryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 import { mutationOptions } from '../queryClient';
-import { getProjectInfosApi } from './project';
-
-export const getPreviewUrl = <T extends number | undefined>(
-  previewId: T,
-): T extends number ? string : undefined =>
-  // ToDO: https://github.com/microsoft/TypeScript/issues/33912
-  // eslint-disable-next-line
-  (previewId ? `/api/preview/${previewId}` : undefined) as any;
+import { getProjectsApi } from './project';
 
 export const getPreviewApi = (previewId: number) =>
   queryOptions({
@@ -29,7 +22,7 @@ export const changePreviewApi = (queryClient: QueryClient, projectId: number) =>
         data: { file },
       }),
     onSuccess: (newPreview) => {
-      queryClient.setQueryData(getProjectInfosApi().queryKey, (projects) =>
+      queryClient.setQueryData(getProjectsApi().queryKey, (projects) =>
         projects?.map((x) =>
           x.id === projectId ? { ...x, previewId: newPreview.id } : x,
         ),

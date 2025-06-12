@@ -7,8 +7,11 @@ export const resources: Resource = {
 
 export const i18n = i18next;
 
-export const initI18next = () =>
-  i18next.init({
+export const initI18next = () => {
+  const queries = new URLSearchParams(window.location.search);
+  const lng = queries.get('lng') ?? 'en';
+  return i18next.init({
     resources,
-    lng: 'en',
+    lng,
   });
+};

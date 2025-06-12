@@ -1,6 +1,5 @@
-import path from 'node:path';
 import { api } from '@musetric/api';
-import { FastifyPluginAsyncZod } from '@musetric/fastify-type-provider-zod';
+import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { prisma } from '../common/prisma';
 
 export const projectRouter: FastifyPluginAsyncZod = async (app) => {
@@ -14,10 +13,13 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.project.list.route,
     handler: () =>
       prisma.$transaction(async (tx) => {
-        const all = await tx.project.findMany({ include: { preview: true } });
-        return all.map((project) => ({
+        const all = await tx.project.findMany({
+          orderBy: { id: 'desc' },
+          include: { preview: true },
+        });
+        return all.map((project): api.project.list.Response[number] => ({
           ...project,
-          previewId: project.preview?.id,
+          previewUrl: api.preview.get.url(project.preview?.id),
         }));
       }),
   });
@@ -35,10 +37,11 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
           reply.code(404);
           return { message: `Project with id ${projectId} not found` };
         }
-        return {
+        const result: api.project.get.Response = {
           ...found,
-          previewId: found.preview?.id,
+          previewUrl: api.preview.get.url(found.preview?.id),
         };
+        return result;
       }),
   });
 
@@ -46,28 +49,39 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.project.create.route,
     handler: (request) =>
       prisma.$transaction(async (tx) => {
-        const { file } = request.body;
-        const name = path.parse(file.name).name;
+        const { song, name, preview } = request.body;
         const created = await tx.project.create({
           data: { name, stage: 'init' },
         });
-        const arrayBuffer = await file.arrayBuffer();
-        const data = Buffer.from(arrayBuffer);
+        const songArrayBuffer = await song.arrayBuffer();
+        const songData = Buffer.from(songArrayBuffer);
         await tx.sound.create({
           data: {
             projectId: created.id,
-            data,
-            filename: file.name,
-            contentType: file.type,
+            data: songData,
+            filename: song.name,
+            contentType: song.type,
             type: 'original',
           },
         });
+        if (preview) {
+          const previewArrayBuffer = await preview.arrayBuffer();
+          const previewData = Buffer.from(previewArrayBuffer);
+          await tx.preview.create({
+            data: {
+              projectId: created.id,
+              data: previewData,
+              filename: preview.name,
+              contentType: preview.type,
+            },
+          });
+        }
         return created;
       }),
   });
 
   app.route({
-    ...api.project.rename.route,
+    ...api.project.edit.route,
     handler: (request, reply) =>
       prisma.$transaction(async (tx) => {
         const { projectId } = request.params;
