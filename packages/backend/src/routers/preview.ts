@@ -1,12 +1,11 @@
+import crypto from 'crypto';
 import { api } from '@musetric/api';
-import { FastifyPluginAsyncZod } from '@musetric/fastify-type-provider-zod';
+import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { prisma } from '../common/prisma';
 
 export const previewRouter: FastifyPluginAsyncZod = async (app) => {
-  app.addHook('onRoute', (routeOptions) => {
-    if (routeOptions.schema) {
-      routeOptions.schema.tags = ['preview'];
-    }
+  app.addHook('onRoute', (opts) => {
+    if (opts.schema) opts.schema.tags = ['preview'];
   });
 
   app.route({
@@ -14,7 +13,6 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
     handler: (request, reply) =>
       prisma.$transaction(async (tx) => {
         const { previewId } = request.params;
-
         const preview = await tx.preview.findUnique({
           where: { id: previewId },
         });
@@ -24,59 +22,24 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
           return { message: `Preview with id ${previewId} not found` };
         }
 
-        reply.header('Content-Type', preview.contentType);
-        reply.header(
-          'Content-Disposition',
-          `attachment; filename="${preview.filename}"`,
-        );
+        const etag = crypto
+          .createHash('md5')
+          .update(preview.data)
+          .digest('hex');
 
-        // eslint-disable-next-line
-        return preview.data as any;
-      }),
-  });
-
-  app.route({
-    ...api.preview.upload.route,
-    handler: (request, reply) =>
-      prisma.$transaction(async (tx) => {
-        const { projectId } = request.params;
-        const { file } = request.body;
-
-        const project = await tx.project.findUnique({
-          where: { id: projectId },
+        reply.headers({
+          'content-type': preview.contentType,
+          'content-disposition': `attachment; filename*=UTF-8''${encodeURIComponent(preview.filename)}`,
+          'cache-control': 'public, max-age=86400',
+          etag,
         });
 
-        if (!project) {
-          reply.code(404);
-          return { message: `Project with id ${projectId} not found` };
+        if (request.headers['if-none-match'] === etag) {
+          reply.code(304);
+          return;
         }
 
-        if (!file) {
-          reply.code(400);
-          return { message: 'No file was uploaded' };
-        }
-
-        const existingPreview = await tx.preview.findFirst({
-          where: { projectId },
-        });
-        if (existingPreview) {
-          await tx.preview.delete({
-            where: { id: existingPreview.id },
-          });
-        }
-
-        const arrayBuffer = await file.arrayBuffer();
-        const data = Buffer.from(arrayBuffer);
-        const preview = await tx.preview.create({
-          data: {
-            projectId,
-            data,
-            filename: file.name,
-            contentType: file.type,
-          },
-        });
-
-        return { id: preview.id };
+        return preview.data;
       }),
   });
 };

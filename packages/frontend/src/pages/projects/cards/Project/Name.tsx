@@ -12,9 +12,9 @@ export const ProjectCardName: FC<ProjectCardNameProps> = (props) => {
     <AnimatePresence mode='wait' initial={false}>
       <motion.div
         key={name}
-        initial={{ clipPath: 'inset(0% 0% 100% 0%)' }}
+        initial={{ clipPath: 'inset(0% 100% 0% 0%)' }}
         animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
-        exit={{ clipPath: 'inset(0% 0% 100% 0%)' }}
+        exit={{ clipPath: 'inset(0% 100% 0% 0%)' }}
         transition={{ duration: 0.5 }}
         style={{ overflow: 'hidden' }}
       >

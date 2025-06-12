@@ -3,15 +3,15 @@ import { QueryClient, queryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 import { mutationOptions } from '../queryClient';
 
-export const getProjectInfosApi = () =>
+export const getProjectsApi = () =>
   queryOptions({
-    queryKey: ['getProjectInfosApi'],
+    queryKey: ['getProjectsApi'],
     queryFn: () => api.project.list.request(axios, {}),
   });
 
-export const getProjectInfoApi = (projectId: number) =>
+export const getProjectApi = (projectId: number) =>
   queryOptions({
-    queryKey: ['getProjectInfoApi', projectId],
+    queryKey: ['getProjectApi', projectId],
     queryFn: () =>
       api.project.get.request(axios, {
         params: { projectId },
@@ -21,28 +21,28 @@ export const getProjectInfoApi = (projectId: number) =>
 export const createProjectApi = (queryClient: QueryClient) =>
   mutationOptions({
     mutationKey: ['createProjectApi'],
-    mutationFn: (file: File) =>
+    mutationFn: (data: api.project.create.Request) =>
       api.project.create.request(axios, {
-        data: { file },
+        data,
       }),
     onSuccess: (newProject) => {
-      queryClient.setQueryData(
-        getProjectInfosApi().queryKey,
-        (projects = []) => [newProject, ...projects],
-      );
+      queryClient.setQueryData(getProjectsApi().queryKey, (projects = []) => [
+        newProject,
+        ...projects,
+      ]);
     },
   });
 
-export const renameProjectApi = (queryClient: QueryClient, projectId: number) =>
+export const editProjectApi = (queryClient: QueryClient, projectId: number) =>
   mutationOptions({
-    mutationKey: ['renameProjectApi', projectId],
-    mutationFn: (name: string) =>
-      api.project.rename.request(axios, {
+    mutationKey: ['editProjectApi', projectId],
+    mutationFn: (data: api.project.edit.Request) =>
+      api.project.edit.request(axios, {
         params: { projectId },
-        data: { name },
+        data,
       }),
     onSuccess: (newProject) => {
-      queryClient.setQueryData(getProjectInfosApi().queryKey, (projects) =>
+      queryClient.setQueryData(getProjectsApi().queryKey, (projects) =>
         projects?.map((x) => (x.id === newProject.id ? newProject : x)),
       );
     },
@@ -56,7 +56,7 @@ export const deleteProjectApi = (queryClient: QueryClient, projectId: number) =>
         params: { projectId },
       }),
     onSuccess: () => {
-      queryClient.setQueryData(getProjectInfosApi().queryKey, (projects) =>
+      queryClient.setQueryData(getProjectsApi().queryKey, (projects) =>
         projects?.filter((x) => x.id !== projectId),
       );
     },

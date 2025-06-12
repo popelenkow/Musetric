@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Dialog,
   DialogTitle,
@@ -8,43 +9,63 @@ import {
   Stack,
 } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { FC, FormEvent, useRef, useState } from 'react';
+import { TFunction } from 'i18next';
+import { FC } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { z } from 'zod/v4';
 import { createProjectApi } from '../../../api/endpoints/project';
 import { routes } from '../../../app/router/routes';
+import { stripExt } from '../../../common/stripExt';
+import { SongPlayer } from '../common/SongPlayer';
+import { NameField } from '../fields/Name';
+import { nameValueSchema } from '../fields/Name/schema';
+import { PreviewField } from '../fields/Preview';
+import { previewValueSchema } from '../fields/Preview/schema';
+import { SongField } from '../fields/Song';
+import { songValueSchema } from '../fields/Song/schema';
+
+const schema = (t: TFunction) =>
+  z.object({
+    song: songValueSchema(),
+    name: nameValueSchema(t),
+    preview: previewValueSchema().optional(),
+  });
+type FormValue = z.infer<ReturnType<typeof schema>>;
 
 export const CreateDialog: FC = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [file, setFile] = useState<File>();
-
   const create = useMutation(createProjectApi(queryClient));
 
-  const close = () => {
-    routes.projects.navigate();
-  };
+  const {
+    watch,
+    setValue,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValue>({
+    resolver: zodResolver(schema(t)),
+  });
 
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    if (!file) return;
-    await create.mutateAsync(file);
+  const close = () => routes.projects.navigate();
+  const onSubmit = async (value: FormValue) => {
+    await create.mutateAsync({
+      song: value.song.file,
+      name: value.name,
+      preview: value.preview?.file,
+    });
     close();
   };
+
+  const song = watch('song');
 
   return (
     <Dialog
       open
       component='form'
-      onSubmit={handleSubmit}
       onClose={close}
-      slotProps={{
-        transition: {
-          onEntered: () => {
-            inputRef.current?.focus();
-          },
-        },
-      }}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <DialogTitle>
         <Stack direction='row' alignItems='center' gap={2}>
@@ -53,48 +74,63 @@ export const CreateDialog: FC = () => {
           </Typography>
         </Stack>
       </DialogTitle>
-
-      <DialogContent
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          pt: '8px !important',
-          width: 400,
-        }}
-      >
-        <input
-          type='file'
-          accept='audio/*'
-          ref={inputRef}
-          hidden
-          onChange={(e) => {
-            const picked = e.target.files?.[0];
-            if (picked) setFile(picked);
-          }}
-        />
-        <Button
-          variant='outlined'
-          onClick={() => inputRef.current?.click()}
-          disabled={create.isPending}
-        >
-          {t('pages.projects.dialogs.create.selectFile')}
-        </Button>
-        {file && (
-          <Typography variant='body2' noWrap>
-            {file.name}
-          </Typography>
-        )}
+      <DialogContent sx={{ width: 400 }}>
+        <Stack gap={2}>
+          {song && (
+            <>
+              <Controller
+                name='preview'
+                control={control}
+                render={({ field }) => (
+                  <PreviewField
+                    value={field.value}
+                    setValue={field.onChange}
+                    loading={create.isPending}
+                  />
+                )}
+              />
+              <Controller
+                name='name'
+                control={control}
+                render={({ field }) => (
+                  <NameField
+                    value={field.value}
+                    setValue={field.onChange}
+                    error={errors.name?.message}
+                    disabled={create.isPending}
+                  />
+                )}
+              />
+              <SongPlayer url={song.url} />
+            </>
+          )}
+          {!song && (
+            <Controller
+              name='song'
+              control={control}
+              render={({ field }) => (
+                <SongField
+                  value={field.value}
+                  setValue={(newSong) => {
+                    field.onChange(newSong);
+                    setValue('name', stripExt(newSong.file.name));
+                  }}
+                  disabled={create.isPending}
+                />
+              )}
+            />
+          )}
+        </Stack>
       </DialogContent>
-
-      <DialogActions sx={{ mt: 2 }}>
-        <Button onClick={close} disabled={create.isPending}>
+      <DialogActions>
+        <Button color='primary' onClick={close} disabled={create.isPending}>
           {t('pages.projects.dialogs.create.cancel')}
         </Button>
         <Button
           type='submit'
+          color='primary'
           variant='contained'
-          disabled={!file || create.isPending}
+          disabled={!song || create.isPending}
           loading={create.isPending}
         >
           {t('pages.projects.dialogs.create.create')}

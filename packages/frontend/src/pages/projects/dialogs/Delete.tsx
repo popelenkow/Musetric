@@ -11,14 +11,12 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getPreviewUrl } from '../../../api/endpoints/preview';
 import {
   deleteProjectApi,
-  getProjectInfoApi,
+  getProjectApi,
 } from '../../../api/endpoints/project';
 import { routes } from '../../../app/router/routes';
 import { ProjectPreview } from '../cards/Preview';
-import { contentPlaceholderPattern } from '../common/cardBackgroundPattern';
 
 export type DeleteDialogProps = {
   projectId: number;
@@ -28,7 +26,7 @@ export const DeleteDialog: FC<DeleteDialogProps> = (props) => {
 
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const projectInfo = useQuery(getProjectInfoApi(projectId));
+  const projectInfo = useQuery(getProjectApi(projectId));
 
   const close = () => {
     routes.projects.navigate();
@@ -68,7 +66,7 @@ export const DeleteDialog: FC<DeleteDialogProps> = (props) => {
           width: 400,
         }}
       >
-        <ProjectPreview url={getPreviewUrl(projectInfo.data?.previewId)}>
+        <ProjectPreview url={projectInfo.data?.previewUrl}>
           {projectInfo.isPending && (
             <CircularProgress sx={{ color: 'text.primary' }} />
           )}
@@ -81,25 +79,25 @@ export const DeleteDialog: FC<DeleteDialogProps> = (props) => {
             WebkitLineClamp: 3,
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            height: '4.5em',
-            background: projectInfo.isPending
-              ? contentPlaceholderPattern
-              : undefined,
           }}
         >
           {projectInfo.data?.name}
         </Typography>
       </DialogContent>
       <DialogActions>
-        <Button onClick={close} disabled={deleteProject.isPending}>
+        <Button
+          color='primary'
+          onClick={close}
+          disabled={deleteProject.isPending}
+        >
           {t('pages.projects.dialogs.delete.cancel')}
         </Button>
         <Button
           type='submit'
-          disabled={deleteProject.isPending || !projectInfo.isSuccess}
-          loading={deleteProject.isPending}
           variant='contained'
           color='error'
+          disabled={deleteProject.isPending || !projectInfo.isSuccess}
+          loading={deleteProject.isPending}
         >
           {t('pages.projects.dialogs.delete.delete')}
         </Button>

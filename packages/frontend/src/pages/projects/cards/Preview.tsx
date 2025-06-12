@@ -22,7 +22,7 @@ export const ProjectPreview: FC<Props> = (props) => {
           background: contentPlaceholderPattern,
         }}
       >
-        {children ?? <AudiotrackIcon sx={{ fontSize: '46px' }} />}
+        {children || <AudiotrackIcon sx={{ fontSize: '46px' }} />}
       </Stack>
     );
   }

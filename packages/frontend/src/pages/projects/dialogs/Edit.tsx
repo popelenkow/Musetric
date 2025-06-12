@@ -1,53 +1,34 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DrawIcon from '@mui/icons-material/Draw';
-import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Button,
-  TextField,
   Typography,
   Stack,
-  Box,
-  CircularProgress,
 } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TFunction } from 'i18next';
-import { FC, useEffect, useRef } from 'react';
+import { FC, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
-import {
-  changePreviewApi,
-  getPreviewUrl,
-} from '../../../api/endpoints/preview';
-import {
-  getProjectInfoApi,
-  renameProjectApi,
-} from '../../../api/endpoints/project';
+import { z } from 'zod/v4';
+import { getProjectApi, editProjectApi } from '../../../api/endpoints/project';
 import { routes } from '../../../app/router/routes';
 import { QueryError } from '../../../common/QueryView/QueryError';
-import { ProjectPreview } from '../cards/Preview';
+import { NameField } from '../fields/Name';
+import { nameValueSchema } from '../fields/Name/schema';
+import { PreviewField } from '../fields/Preview';
+import { previewValueSchema } from '../fields/Preview/schema';
 
 const schema = (t: TFunction) =>
   z.object({
-    name: z
-      .string()
-      .trim()
-      .min(1, {
-        message: t('pages.projects.dialogs.rename.error.emptyName'),
-      }),
-    preview: z.object({
-      type: z.union([z.literal('default'), z.literal('form')]),
-      url: z.string().optional(),
-      file: z.custom<File>((value) => typeof value === 'object').optional(),
-    }),
+    name: nameValueSchema(t),
+    preview: previewValueSchema().optional(),
   });
 
-type FormData = z.infer<ReturnType<typeof schema>>;
+type FormValue = z.infer<ReturnType<typeof schema>>;
 
 export type EditDialogProps = {
   projectId: number;
@@ -57,147 +38,75 @@ export const EditDialog: FC<EditDialogProps> = (props) => {
 
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const projectInfo = useQuery(getProjectInfoApi(projectId));
-  const previewInputRef = useRef<HTMLInputElement>(null);
+  const project = useQuery(getProjectApi(projectId));
+  const edit = useMutation(editProjectApi(queryClient, projectId));
 
   const {
     reset,
     control,
-    watch,
-    setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
-    defaultValues: { preview: {} },
+  } = useForm<FormValue>({
     resolver: zodResolver(schema(t)),
   });
 
   useEffect(() => {
-    if (!projectInfo.data) return;
-    const { name, previewId } = projectInfo.data;
-    const url = getPreviewUrl(previewId);
-    reset({ name, preview: { type: 'default', url } });
-  }, [projectInfo.data, reset]);
-
-  const preview = watch('preview');
-
-  useEffect(() => {
-    return () => {
-      if (preview.type === 'form' && preview.url) {
-        URL.revokeObjectURL(preview.url);
-      }
-    };
-  }, [preview]);
+    if (!project.data) return;
+    const { name, previewUrl } = project.data;
+    reset({ name, preview: { url: previewUrl } });
+  }, [project.data, reset]);
 
   const close = () => {
     routes.projects.navigate();
   };
 
-  const rename = useMutation(renameProjectApi(queryClient, projectId));
-
-  const changePreview = useMutation(changePreviewApi(queryClient, projectId));
-
-  const onSubmit = async (data: FormData) => {
-    await rename.mutateAsync(data.name);
-    if (preview.type === 'form') {
-      await changePreview.mutateAsync(data.preview.file!);
-    }
+  const onSubmit = async (value: FormValue) => {
+    const isNameChanged = value.name !== project.data?.name;
+    const isPreviewChanged = value.preview?.url !== project.data?.previewUrl;
+    await edit.mutateAsync({
+      name: isNameChanged ? value.name : undefined,
+      preview: isPreviewChanged ? value.preview?.file : undefined,
+      withoutPreview: isPreviewChanged ? !value.preview?.url : undefined,
+    });
     close();
   };
 
   const renderContent = () => {
-    if (projectInfo.isError) {
-      return <QueryError error={projectInfo.error} />;
+    if (project.isError) {
+      return <QueryError error={project.error} />;
     }
     return (
-      <>
-        <Stack>
-          <ProjectPreview url={preview.url}>
-            {projectInfo.isPending ? (
-              <CircularProgress sx={{ color: 'text.primary' }} />
-            ) : null}
-          </ProjectPreview>
-          <input
-            type='file'
-            ref={previewInputRef}
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-              if (!file) return;
-              setValue('preview', {
-                type: 'form',
-                file,
-                url: URL.createObjectURL(file),
-              });
-            }}
-            style={{ display: 'none' }}
-          />
-          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
-            {preview.url ? (
-              <Button
-                color='error'
-                startIcon={<DeleteIcon />}
-                onClick={() => {
-                  setValue('preview', {
-                    type: 'form',
-                  });
-                }}
-              >
-                {t('pages.projects.dialogs.edit.erasePreview')}
-              </Button>
-            ) : (
-              <Box />
-            )}
-            <Button startIcon={<KeyboardDoubleArrowUpIcon />} disabled>
-              {t('pages.projects.dialogs.edit.dragFile')}
-            </Button>
-            <Button
-              startIcon={<DrawIcon />}
-              disabled={projectInfo.isPending}
-              onClick={() => previewInputRef.current?.click()}
-            >
-              {t('pages.projects.dialogs.edit.selectFile')}
-            </Button>
-          </Box>
-        </Stack>
+      <Stack direction='column' gap={2}>
+        <Controller
+          name='preview'
+          control={control}
+          render={({ field }) => (
+            <PreviewField
+              value={field.value}
+              setValue={field.onChange}
+              loading={project.isPending}
+            />
+          )}
+        />
         <Controller
           name='name'
           control={control}
           render={({ field }) => (
-            <TextField
-              {...field}
-              multiline
-              rows={3}
-              size='small'
-              label={t('pages.projects.dialogs.edit.name')}
-              disabled={projectInfo.isPending || rename.isPending}
-              error={!!errors.name}
-              helperText={errors.name?.message}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  event.preventDefault();
-                }
-              }}
-              onChange={(event) => {
-                const text = event.target.value;
-                const newValue = text.replace(/(\r\n|\n|\r)/g, ' ');
-                field.onChange(newValue);
-              }}
+            <NameField
+              value={field.value}
+              setValue={field.onChange}
+              error={errors.name?.message}
+              disabled={project.isPending || edit.isPending}
             />
           )}
         />
-      </>
+      </Stack>
     );
   };
 
   return (
     <Dialog
       open
-      scroll='body'
       component='form'
       onSubmit={handleSubmit(onSubmit)}
       onClose={close}
@@ -220,13 +129,14 @@ export const EditDialog: FC<EditDialogProps> = (props) => {
         {renderContent()}
       </DialogContent>
       <DialogActions>
-        <Button onClick={close} disabled={rename.isPending}>
+        <Button color='primary' onClick={close} disabled={edit.isPending}>
           {t('pages.projects.dialogs.edit.cancel')}
         </Button>
         <Button
           type='submit'
-          disabled={rename.isPending || !projectInfo.isSuccess}
-          loading={rename.isPending}
+          disabled={edit.isPending || !project.isSuccess}
+          loading={edit.isPending}
+          color='primary'
           variant='contained'
         >
           {t('pages.projects.dialogs.edit.save')}
