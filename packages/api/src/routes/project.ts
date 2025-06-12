@@ -1,5 +1,6 @@
 import { z } from 'zod/v4';
-import { endpointify } from './common';
+import { fastifyRoute, createApiRoute } from './common';
+import { axiosRequest } from './common/axiosRequest';
 
 export const itemSchema = z.object({
   id: z.number(),
@@ -10,44 +11,79 @@ export const itemSchema = z.object({
 export type Item = z.infer<typeof itemSchema>;
 
 export namespace list {
-  export const route = '/api/project/list';
-  export const endpoint = () => route;
-  export const responseSchema = z.array(itemSchema);
-  export type Response = z.infer<typeof responseSchema>;
+  export const base = createApiRoute({
+    method: 'get',
+    path: '/api/project/list',
+    paramsSchema: z.void(),
+    requestSchema: z.void(),
+    responseSchema: z.array(itemSchema),
+  });
+  export const route = fastifyRoute(base);
+  export const request = axiosRequest(base);
+  export type Params = z.infer<typeof base.paramsSchema>;
+  export type Request = z.infer<typeof base.requestSchema>;
+  export type Response = z.infer<typeof base.responseSchema>;
 }
 
 export namespace get {
-  export const route = '/api/project/:projectId';
-  export const endpoint = (projectId: number) =>
-    endpointify(route, { projectId });
-  export const paramsSchema = z.object({ projectId: z.coerce.number() });
-  export const responseSchema = itemSchema;
-  export type Response = z.infer<typeof responseSchema>;
+  export const base = createApiRoute({
+    method: 'get',
+    path: '/api/project/:projectId',
+    paramsSchema: z.object({ projectId: z.coerce.number() }),
+    requestSchema: z.void(),
+    responseSchema: itemSchema,
+  });
+  export const route = fastifyRoute(base);
+  export const request = axiosRequest(base);
+  export type Params = z.infer<typeof base.paramsSchema>;
+  export type Request = z.infer<typeof base.requestSchema>;
+  export type Response = z.infer<typeof base.responseSchema>;
 }
 
 export namespace create {
-  export const route = '/api/project';
-  export const endpoint = () => route;
-  export const requestSchema = itemSchema.pick({ name: true });
-  export type Request = z.infer<typeof requestSchema>;
-  export const responseSchema = itemSchema;
-  export type Response = z.infer<typeof responseSchema>;
+  export const base = createApiRoute({
+    method: 'post',
+    path: '/api/project/create',
+    paramsSchema: z.void(),
+    requestSchema: z.object({
+      file: z.file(),
+    }),
+    responseSchema: itemSchema,
+    isMultipart: true,
+  });
+  export const route = fastifyRoute(base);
+  export const request = axiosRequest(base);
+  export type Params = z.infer<typeof base.paramsSchema>;
+  export type Request = z.infer<typeof base.requestSchema>;
+  export type Response = z.infer<typeof base.responseSchema>;
 }
 
 export namespace rename {
-  export const route = '/api/project/:projectId/rename';
-  export const endpoint = (projectId: number) =>
-    endpointify(route, { projectId });
-  export const paramsSchema = z.object({ projectId: z.coerce.number() });
-  export const requestSchema = itemSchema.pick({ name: true });
-  export type Request = z.infer<typeof requestSchema>;
-  export const responseSchema = itemSchema;
-  export type Response = z.infer<typeof responseSchema>;
+  export const base = createApiRoute({
+    method: 'post',
+    path: '/api/project/:projectId/rename',
+    paramsSchema: z.object({ projectId: z.coerce.number() }),
+    requestSchema: itemSchema.pick({ name: true }),
+    responseSchema: itemSchema,
+  });
+  export const route = fastifyRoute(base);
+  export const request = axiosRequest(base);
+  export type Params = z.infer<typeof base.paramsSchema>;
+  export type Request = z.infer<typeof base.requestSchema>;
+  export type Response = z.infer<typeof base.responseSchema>;
 }
 
 export namespace remove {
-  export const route = '/api/project/:projectId';
-  export const endpoint = (projectId: number) =>
-    endpointify(route, { projectId });
-  export const paramsSchema = z.object({ projectId: z.coerce.number() });
+  export const base = createApiRoute({
+    method: 'delete',
+    path: '/api/project/:projectId/remove',
+    paramsSchema: z.object({ projectId: z.coerce.number() }),
+    requestSchema: z.void(),
+    responseSchema: z.void(),
+  });
+  export const route = fastifyRoute(base);
+  export const request = axiosRequest(base);
+  export type Params = z.infer<typeof base.paramsSchema>;
+  export type Request = z.infer<typeof base.requestSchema>;
+  export type Response = z.infer<typeof base.responseSchema>;
 }

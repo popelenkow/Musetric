@@ -29,6 +29,9 @@ export const startServer = async () => {
     });
     app.register(fastifyMultipart, {
       attachFieldsToBody: 'keyValues',
+      limits: {
+        fileSize: 20 * 1024 * 1024,
+      },
       onFile: async (part) => {
         const buff = await part.toBuffer();
         const file = new File([buff], part.filename, {

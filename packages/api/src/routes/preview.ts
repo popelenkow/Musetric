@@ -1,27 +1,38 @@
 import { z } from 'zod/v4';
-import { endpointify } from './common';
+import { fastifyRoute, createApiRoute } from './common';
+import { axiosRequest } from './common/axiosRequest';
 
 export const itemSchema = z.file({});
 export type Item = z.infer<typeof itemSchema>;
 
 export namespace get {
-  export const route = '/api/preview/:previewId';
-  export const endpoint = (previewId: number) =>
-    endpointify(route, { previewId });
-  export const paramsSchema = z.object({ previewId: z.coerce.number() });
-  export const responseSchema = z.object({ id: z.number() });
-  export type Response = z.infer<typeof responseSchema>;
+  export const base = createApiRoute({
+    method: 'get',
+    path: '/api/preview/:previewId',
+    paramsSchema: z.object({ previewId: z.coerce.number() }),
+    requestSchema: z.void(),
+    responseSchema: z.any(),
+  });
+  export const route = fastifyRoute(base);
+  export const request = axiosRequest(base);
+  export type Params = z.infer<typeof base.paramsSchema>;
+  export type Request = z.infer<typeof base.requestSchema>;
+  export type Response = z.infer<typeof base.responseSchema>;
 }
 
 export namespace upload {
-  export const route = '/api/preview/project/:projectId';
-  export const endpoint = (projectId: number) =>
-    endpointify(route, { projectId });
-  export const paramsSchema = z.object({ projectId: z.coerce.number() });
-  export const requestSchema = z.object({
-    file: itemSchema,
+  export const base = createApiRoute({
+    method: 'post',
+    path: '/api/preview/project/:projectId',
+    paramsSchema: z.object({ projectId: z.coerce.number() }),
+    requestSchema: z.object({
+      file: itemSchema,
+    }),
+    responseSchema: z.object({ id: z.number() }),
   });
-  export type Request = z.infer<typeof requestSchema>;
-  export const responseSchema = z.object({ id: z.number() });
-  export type Response = z.infer<typeof responseSchema>;
+  export const route = fastifyRoute(base);
+  export const request = axiosRequest(base);
+  export type Params = z.infer<typeof base.paramsSchema>;
+  export type Request = z.infer<typeof base.requestSchema>;
+  export type Response = z.infer<typeof base.responseSchema>;
 }

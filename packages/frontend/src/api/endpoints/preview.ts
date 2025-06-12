@@ -1,4 +1,4 @@
-import { api, ProjectInfo } from '@musetric/api';
+import { api } from '@musetric/api';
 import { QueryClient, queryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 import { mutationOptions } from '../queryClient';
@@ -14,31 +14,20 @@ export const getPreviewUrl = <T extends number | undefined>(
 export const getPreviewApi = (previewId: number) =>
   queryOptions({
     queryKey: ['getPreviewApi', previewId],
-    queryFn: async () => {
-      const response = await axios.get<unknown>(getPreviewUrl(previewId));
-      return response.data;
-    },
+    queryFn: () =>
+      api.preview.get.request(axios, {
+        params: { previewId },
+      }),
   });
 
 export const changePreviewApi = (queryClient: QueryClient, projectId: number) =>
   mutationOptions({
     mutationKey: ['changePreviewApi', projectId],
-    mutationFn: async (fileBody?: File) => {
-      if (!fileBody) {
-        const response = await axios.post<api.preview.upload.Response>(
-          api.preview.upload.endpoint(projectId),
-        );
-        return response.data;
-      }
-      const formData = new FormData();
-      formData.append('file', fileBody);
-      const response = await axios.post<ProjectInfo>(
-        api.preview.upload.endpoint(projectId),
-        formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } },
-      );
-      return response.data;
-    },
+    mutationFn: (file: File) =>
+      api.preview.upload.request(axios, {
+        params: { projectId },
+        data: { file },
+      }),
     onSuccess: (newPreview) => {
       queryClient.setQueryData(getProjectInfosApi().queryKey, (projects) =>
         projects?.map((x) =>
