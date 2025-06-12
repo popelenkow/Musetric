@@ -100,7 +100,7 @@ export const EditDialog: FC<EditDialogProps> = (props) => {
   const onSubmit = async (data: FormData) => {
     await rename.mutateAsync(data.name);
     if (preview.type === 'form') {
-      await changePreview.mutateAsync(data.preview.file);
+      await changePreview.mutateAsync(data.preview.file!);
     }
     close();
   };

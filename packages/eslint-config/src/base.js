@@ -5,7 +5,6 @@ import tsEslint from 'typescript-eslint';
 export const baseConfig = {
   extends: [eslint.configs.recommended, ...tsEslint.configs.recommended],
   files: ['**/*.ts'],
-  ignores: ['dist'],
   languageOptions: {
     ecmaVersion: 2024,
     sourceType: 'module',

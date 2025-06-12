@@ -1,5 +1,5 @@
 import { Card, CardActions } from '@mui/material';
-import { ProjectInfo } from '@musetric/api';
+import { api } from '@musetric/api';
 import { motion } from 'framer-motion';
 import { FC } from 'react';
 import { ProjectCardMenu } from './Menu';
@@ -7,7 +7,7 @@ import { ProjectCardName } from './Name';
 import { ProjectCardPreview } from './Preview';
 
 export type ProjectCardProps = {
-  projectInfo: ProjectInfo;
+  projectInfo: api.project.Item;
 };
 export const ProjectCard: FC<ProjectCardProps> = (props) => {
   const { projectInfo } = props;

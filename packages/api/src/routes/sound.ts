@@ -1,17 +1,25 @@
 import { z } from 'zod/v4';
+import { fastifyRoute, createApiRoute } from './common';
+import { axiosRequest } from './common/axiosRequest';
 
-export const itemSchema = z.object({
-  data: z.instanceof(Uint8Array),
-  filename: z.string(),
-  contentType: z.string(),
-});
-export type Item = z.infer<typeof itemSchema>;
+export const typeSchema = z.enum(['original', 'vocal', 'instrumental']);
+export type Type = z.infer<typeof typeSchema>;
 
 export namespace upload {
-  export const route = '/preview/project/:projectId';
-  export const paramsSchema = z.object({ projectId: z.coerce.number() });
-  export const requestSchema = itemSchema;
-  export type Request = z.infer<typeof requestSchema>;
-  export const responseSchema = z.object({ id: z.number() });
-  export type Response = z.infer<typeof responseSchema>;
+  export const base = createApiRoute({
+    method: 'post',
+    path: '/api/sound/project/:projectId/upload',
+    paramsSchema: z.object({
+      projectId: z.coerce.number(),
+    }),
+    requestSchema: z.object({
+      file: z.file(),
+    }),
+    responseSchema: z.object({ id: z.number() }),
+  });
+  export const route = fastifyRoute(base);
+  export const request = axiosRequest(base);
+  export type Params = z.infer<typeof base.paramsSchema>;
+  export type Request = z.infer<typeof base.requestSchema>;
+  export type Response = z.infer<typeof base.responseSchema>;
 }

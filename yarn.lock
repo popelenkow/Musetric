@@ -1090,6 +1090,7 @@ __metadata:
   resolution: "@musetric/api@workspace:packages/api"
   dependencies:
     "@musetric/eslint-config": "workspace:*"
+    axios: "npm:1.9.0"
     eslint: "npm:9.28.0"
     typescript: "npm:5.8.3"
     zod: "npm:3.25.48"

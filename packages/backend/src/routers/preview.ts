@@ -9,14 +9,9 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
     }
   });
 
-  app.get(
-    api.preview.get.route,
-    {
-      schema: {
-        params: api.preview.get.paramsSchema,
-      },
-    },
-    (request, reply) =>
+  app.route({
+    ...api.preview.get.route,
+    handler: (request, reply) =>
       prisma.$transaction(async (tx) => {
         const { previewId } = request.params;
 
@@ -35,24 +30,14 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
           `attachment; filename="${preview.filename}"`,
         );
 
-        return preview.data;
+        // eslint-disable-next-line
+        return preview.data as any;
       }),
-  );
+  });
 
-  app.post(
-    api.preview.upload.route,
-    {
-      schema: {
-        consumes: ['multipart/form-data'],
-        body: api.preview.upload.requestSchema,
-        params: api.preview.upload.paramsSchema,
-        response: {
-          200: api.preview.upload.responseSchema,
-          404: api.common.error.responseSchema,
-        },
-      },
-    },
-    (request, reply) =>
+  app.route({
+    ...api.preview.upload.route,
+    handler: (request, reply) =>
       prisma.$transaction(async (tx) => {
         const { projectId } = request.params;
         const { file } = request.body;
@@ -93,5 +78,5 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
 
         return { id: preview.id };
       }),
-  );
+  });
 };

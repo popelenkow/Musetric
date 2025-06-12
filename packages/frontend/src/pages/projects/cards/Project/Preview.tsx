@@ -1,5 +1,5 @@
 import { CardActionArea } from '@mui/material';
-import { ProjectInfo } from '@musetric/api';
+import { api } from '@musetric/api';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FC, useEffect } from 'react';
 import { getPreviewUrl } from '../../../../api/endpoints/preview';
@@ -15,7 +15,7 @@ const usePreloadImage = (previewUrl?: string) => {
 };
 
 export type ProjectCardPreviewProps = {
-  projectInfo: ProjectInfo;
+  projectInfo: api.project.Item;
 };
 
 export const ProjectCardPreview: FC<ProjectCardPreviewProps> = (props) => {
