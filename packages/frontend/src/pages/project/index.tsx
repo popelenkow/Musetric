@@ -1,12 +1,39 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { CardMedia, IconButton, Stack, Typography } from '@mui/material';
-import { FC } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getSoundApi } from '../../api/endpoints/sound';
 import { routes } from '../../app/router/routes';
+import { QueryPending } from '../../common/QueryView/QueryPending';
 import favicon from '../../favicon.ico';
+import { Player } from './Player';
+import { PlayerWaveform } from './PlayerWaveform';
+import { usePlayerStore } from './store';
 
 export const ProjectPage: FC = () => {
   const { t } = useTranslation();
+
+  const { projectId } = routes.project.useAssertMatch();
+  const { data } = useQuery(getSoundApi(projectId, 'original'));
+
+  const init = usePlayerStore((s) => s.mount);
+  const load = usePlayerStore((s) => s.load);
+  const initialized = usePlayerStore((s) => s.initialized);
+
+  useEffect(() => {
+    const unmount = init();
+    return unmount;
+  }, [init]);
+
+  useEffect(() => {
+    if (!initialized || !data) return;
+    load(data);
+  }, [data, load, initialized]);
+
+  if (!initialized || !data) {
+    return <QueryPending />;
+  }
 
   return (
     <Stack
@@ -33,6 +60,10 @@ export const ProjectPage: FC = () => {
           }}
         />
         <Typography variant='h4'>{t('pages.project.title')}</Typography>
+      </Stack>
+      <Stack gap={1} width='100%' sx={{ mt: 'auto' }} alignItems='center'>
+        <PlayerWaveform />
+        <Player />
       </Stack>
     </Stack>
   );
