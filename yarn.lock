@@ -1236,6 +1236,7 @@ __metadata:
     typescript: "npm:5.8.3"
     vite: "npm:6.3.5"
     vite-plugin-static-copy: "npm:3.0.0"
+    wavesurfer.js: "npm:7.9.5"
     zod: "npm:3.25.64"
     zustand: "npm:5.0.5"
   languageName: unknown
@@ -7407,6 +7408,13 @@ __metadata:
     matcher-collection: "npm:^2.0.0"
     minimatch: "npm:^3.0.4"
   checksum: 10c0/45fe284ffa28440f0d3d0a136b3c3fe2a0f55bf207db22c481eea9e7ab7cef6d820491485d76e9f1af9dab7489c6d7a0efbd1ebf45b43dbf871f046f0b4760bd
+  languageName: node
+  linkType: hard
+
+"wavesurfer.js@npm:7.9.5":
+  version: 7.9.5
+  resolution: "wavesurfer.js@npm:7.9.5"
+  checksum: 10c0/ec1703c7b49b51e1ac75712588054276a0275604bd47ac576ecfa4f3f274c5a174d77391833b16b3e73b9aecd87374741daed5951d85276f6502cd18709e927c
   languageName: node
   linkType: hard
 

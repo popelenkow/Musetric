@@ -1,4 +1,5 @@
 import { api } from '@musetric/api';
+import { Prisma } from '@prisma/client';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { prisma } from '../common/prisma';
 import { changePreview, createPreview } from '../db/preview';
@@ -13,22 +14,24 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   app.route({
     ...api.project.list.route,
     handler: () =>
-      prisma.$transaction(async (tx) => {
+      prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         const all = await tx.project.findMany({
           orderBy: { id: 'desc' },
           include: { preview: true },
         });
-        return all.map((project): api.project.list.Response[number] => ({
-          ...project,
-          previewUrl: api.preview.get.url(project.preview?.id),
-        }));
+        return all.map(
+          (project: Prisma.Project & { preview: Prisma.Preview | null }) => ({
+            ...project,
+            previewUrl: api.preview.get.url(project.preview?.id),
+          }),
+        );
       }),
   });
 
   app.route({
     ...api.project.get.route,
     handler: (request, reply) =>
-      prisma.$transaction(async (tx) => {
+      prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         const { projectId } = request.params;
         const found = await tx.project.findUnique({
           where: { id: projectId },
@@ -49,7 +52,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   app.route({
     ...api.project.create.route,
     handler: (request) =>
-      prisma.$transaction(async (tx) => {
+      prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         const { song, name, preview } = request.body;
         const created = await tx.project.create({
           data: { name, stage: 'init' },
@@ -78,7 +81,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   app.route({
     ...api.project.edit.route,
     handler: (request, reply) =>
-      prisma.$transaction(async (tx) => {
+      prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         const { projectId } = request.params;
         const { name, preview, withoutPreview } = request.body;
         const existing = await tx.project.findUnique({
@@ -109,7 +112,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   app.route({
     ...api.project.remove.route,
     handler: (request, reply) =>
-      prisma.$transaction(async (tx) => {
+      prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         const { projectId } = request.params;
         const existing = await tx.project.findUnique({
           where: { id: projectId },

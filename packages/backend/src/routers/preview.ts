@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { api } from '@musetric/api';
+import { Prisma } from '@prisma/client';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { prisma } from '../common/prisma';
 
@@ -11,7 +12,7 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
   app.route({
     ...api.preview.get.route,
     handler: (request, reply) =>
-      prisma.$transaction(async (tx) => {
+      prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         const { previewId } = request.params;
         const preview = await tx.preview.findUnique({
           where: { id: previewId },

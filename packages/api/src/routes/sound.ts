@@ -5,6 +5,26 @@ import { axiosRequest } from './common/axiosRequest';
 export const typeSchema = z.enum(['original', 'vocal', 'instrumental']);
 export type Type = z.infer<typeof typeSchema>;
 
+export namespace get {
+  export const base = createApiRoute({
+    method: 'get',
+    path: '/api/sound/project/:projectId/:type',
+    paramsSchema: z.object({
+      projectId: z.number(),
+      type: typeSchema,
+    }),
+    requestSchema: z.void(),
+    responseSchema: z.instanceof(Uint8Array<ArrayBufferLike>),
+  });
+  export const url = (projectId: number, type: Type) =>
+    base.endpoint({ projectId, type });
+  export const route = fastifyRoute(base);
+  export const request = axiosRequest(base);
+  export type Params = z.infer<typeof base.paramsSchema>;
+  export type Request = z.infer<typeof base.requestSchema>;
+  export type Response = z.infer<typeof base.responseSchema>;
+}
+
 export namespace upload {
   export const base = createApiRoute({
     method: 'post',
