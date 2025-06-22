@@ -15,6 +15,7 @@ jobs:
       - run: corepack enable
       - run: corepack prepare yarn@4.9.1 --activate
       - run: yarn
-      - run: yarn db:sync
-      - run: yarn checkTs
-      - run: yarn lint
+      - run: yarn gen:db
+      - run: yarn check:ts
+      - run: yarn check:lint
+      - run: yarn check:format

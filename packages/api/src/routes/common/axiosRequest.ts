@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
 /* eslint-disable @typescript-eslint/no-empty-object-type */
+/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { AxiosInstance } from 'axios';
 import z from 'zod/v4';
 import { ApiRoute, RequestMethod } from './apiRoute';
@@ -34,7 +34,7 @@ export const axiosRequest = <
     const response = await axios.request<z.infer<ResponseSchema>>({
       method: route.method,
       url: route.endpoint(params),
-      data,
+      data: route.request(data),
     });
 
     return response.data;

@@ -1,11 +1,11 @@
 import path from 'node:path';
 import { fastifyMultipart } from '@fastify/multipart';
 import { fastifyStatic } from '@fastify/static';
+import { fastify, FastifyInstance } from 'fastify';
 import {
   serializerCompiler,
   validatorCompiler,
-} from '@musetric/fastify-type-provider-zod';
-import { fastify, FastifyInstance } from 'fastify';
+} from 'fastify-type-provider-zod';
 import { envs } from './common/envs';
 import { logger } from './common/logger';
 import { registerSwagger } from './common/swagger';

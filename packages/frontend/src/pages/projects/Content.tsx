@@ -2,14 +2,13 @@ import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence } from 'framer-motion';
 import { FC } from 'react';
-import { getProjectInfosApi } from '../../api/endpoints/project';
+import { getProjectsApi } from '../../api/endpoints/project';
 import { QueryError } from '../../common/QueryView/QueryError';
-import { CreateCard } from './cards/Create';
 import { PlaceholderCard } from './cards/Placeholder';
 import { ProjectCard } from './cards/Project';
 
 export const ProjectsContent: FC = () => {
-  const projectList = useQuery(getProjectInfosApi());
+  const projectList = useQuery(getProjectsApi());
 
   if (projectList.isError) {
     return <QueryError error={projectList.error} />;
@@ -32,7 +31,6 @@ export const ProjectsContent: FC = () => {
         Array.from({ length: 6 }).map((_, i) => <PlaceholderCard key={i} />)
       ) : (
         <AnimatePresence initial={false}>
-          <CreateCard />
           {projectList.data.map((projectInfo) => (
             <ProjectCard key={projectInfo.id} projectInfo={projectInfo} />
           ))}
