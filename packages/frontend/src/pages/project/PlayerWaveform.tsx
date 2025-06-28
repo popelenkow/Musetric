@@ -1,6 +1,6 @@
-import { useTheme } from '@mui/material';
-import { Waveform } from '@musetric/audio-view';
-import { FC } from 'react';
+import { Box, useTheme } from '@mui/material';
+import { Waveform, WaveformColors } from '@musetric/audio-view';
+import { FC, useMemo } from 'react';
 import { usePlayerStore } from './store';
 
 export const PlayerWaveform: FC = () => {
@@ -9,13 +9,24 @@ export const PlayerWaveform: FC = () => {
   const seek = usePlayerStore((s) => s.seek);
   const theme = useTheme();
 
+  const colors = useMemo(
+    (): WaveformColors => ({
+      played: theme.palette.primary.main,
+      unplayed: theme.palette.default.main,
+    }),
+    [theme],
+  );
+
   return (
-    <Waveform
-      buffer={buffer?.getChannelData(0)}
-      progress={progress}
-      onSeek={seek}
-      playedColor={theme.palette.primary.main}
-      unplayedColor={theme.palette.default.dark}
-    />
+    <Box height='80px' width='100%'>
+      {buffer && (
+        <Waveform
+          buffer={buffer?.getChannelData(0)}
+          progress={progress}
+          onSeek={seek}
+          colors={colors}
+        />
+      )}
+    </Box>
   );
 };
