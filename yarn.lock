@@ -1162,6 +1162,33 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@musetric/audio-in-out@workspace:*, @musetric/audio-in-out@workspace:packages/audio-in-out":
+  version: 0.0.0-use.local
+  resolution: "@musetric/audio-in-out@workspace:packages/audio-in-out"
+  dependencies:
+    "@musetric/eslint-config": "workspace:*"
+    "@types/audioworklet": "npm:0.0.77"
+    eslint: "npm:9.29.0"
+    typescript: "npm:5.8.3"
+  languageName: unknown
+  linkType: soft
+
+"@musetric/audio-view@workspace:*, @musetric/audio-view@workspace:packages/audio-view":
+  version: 0.0.0-use.local
+  resolution: "@musetric/audio-view@workspace:packages/audio-view"
+  dependencies:
+    "@musetric/eslint-config": "workspace:*"
+    "@types/react": "npm:19.1.8"
+    eslint: "npm:9.29.0"
+    react: "npm:19.1.0"
+    react-dom: "npm:19.1.0"
+    typescript: "npm:5.8.3"
+  peerDependencies:
+    react: ^19.0.0
+    react-dom: ^19.0.0
+  languageName: unknown
+  linkType: soft
+
 "@musetric/backend@workspace:packages/backend":
   version: 0.0.0-use.local
   resolution: "@musetric/backend@workspace:packages/backend"
@@ -1180,6 +1207,7 @@ __metadata:
     fastify-type-provider-zod: "npm:5.0.1"
     pino-pretty: "npm:13.0.0"
     prisma: "npm:6.9.0"
+    selfsigned: "npm:2.4.1"
     tsx: "npm:4.20.3"
     typescript: "npm:5.8.3"
     zod: "npm:3.25.64"
@@ -1216,6 +1244,8 @@ __metadata:
     "@mui/icons-material": "npm:7.1.1"
     "@mui/material": "npm:7.1.1"
     "@musetric/api": "workspace:*"
+    "@musetric/audio-in-out": "workspace:*"
+    "@musetric/audio-view": "workspace:*"
     "@musetric/eslint-config": "workspace:*"
     "@musetric/spa-router": "workspace:*"
     "@tanstack/react-query": "npm:5.80.7"
@@ -1235,6 +1265,7 @@ __metadata:
     react-i18next: "npm:15.5.3"
     typescript: "npm:5.8.3"
     vite: "npm:6.3.5"
+    vite-plugin-mkcert: "npm:1.17.8"
     vite-plugin-static-copy: "npm:3.0.0"
     zod: "npm:3.25.64"
     zustand: "npm:5.0.5"
@@ -1598,6 +1629,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/audioworklet@npm:0.0.77":
+  version: 0.0.77
+  resolution: "@types/audioworklet@npm:0.0.77"
+  checksum: 10c0/9f6d55e57dc60d7c81472cbaeb468bf41589d2d77112738a95f4512ed6b8e28abba6392af92bf185234da635c354a25b12358970bcf4cdb9338b253506514fb3
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7.20.5":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -1657,6 +1695,24 @@ __metadata:
   version: 3.0.5
   resolution: "@types/minimatch@npm:3.0.5"
   checksum: 10c0/a1a19ba342d6f39b569510f621ae4bbe972dc9378d15e9a5e47904c440ee60744f5b09225bc73be1c6490e3a9c938eee69eb53debf55ce1f15761201aa965f97
+  languageName: node
+  linkType: hard
+
+"@types/node-forge@npm:^1.3.0":
+  version: 1.3.11
+  resolution: "@types/node-forge@npm:1.3.11"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/3d7d23ca0ba38ac0cf74028393bd70f31169ab9aba43f21deb787840170d307d662644bac07287495effe2812ddd7ac8a14dbd43f16c2936bbb06312e96fc3b9
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:*":
+  version: 24.0.4
+  resolution: "@types/node@npm:24.0.4"
+  dependencies:
+    undici-types: "npm:~7.8.0"
+  checksum: 10c0/590e8cb0ec59fb9cd566402120e690d87ecbdf57f1ee2b8493266121ed33aa4b25949a0c6156b84a6ffb9250baaf1f80e9af142da542ed603e6ee73fc4d1115f
   languageName: node
   linkType: hard
 
@@ -2292,6 +2348,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^1.8.3":
+  version: 1.10.0
+  resolution: "axios@npm:1.10.0"
+  dependencies:
+    follow-redirects: "npm:^1.15.6"
+    form-data: "npm:^4.0.0"
+    proxy-from-env: "npm:^1.1.0"
+  checksum: 10c0/2239cb269cc789eac22f5d1aabd58e1a83f8f364c92c2caa97b6f5cbb4ab2903d2e557d9dc670b5813e9bcdebfb149e783fb8ab3e45098635cd2f559b06bd5d8
+  languageName: node
+  linkType: hard
+
 "b4a@npm:^1.6.4":
   version: 1.6.7
   resolution: "b4a@npm:1.6.7"
@@ -2812,7 +2879,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.4.1":
+"debug@npm:4, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.4.0, debug@npm:^4.4.1":
   version: 4.4.1
   resolution: "debug@npm:4.4.1"
   dependencies:
@@ -5358,6 +5425,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-forge@npm:^1":
+  version: 1.3.1
+  resolution: "node-forge@npm:1.3.1"
+  checksum: 10c0/e882819b251a4321f9fc1d67c85d1501d3004b4ee889af822fd07f64de3d1a8e272ff00b689570af0465d65d6bf5074df9c76e900e0aff23e60b847f2a46fbe8
+  languageName: node
+  linkType: hard
+
 "node-gyp@npm:latest":
   version: 11.2.0
   resolution: "node-gyp@npm:11.2.0"
@@ -6419,6 +6493,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"selfsigned@npm:2.4.1":
+  version: 2.4.1
+  resolution: "selfsigned@npm:2.4.1"
+  dependencies:
+    "@types/node-forge": "npm:^1.3.0"
+    node-forge: "npm:^1"
+  checksum: 10c0/521829ec36ea042f7e9963bf1da2ed040a815cf774422544b112ec53b7edc0bc50a0f8cc2ae7aa6cc19afa967c641fd96a15de0fc650c68651e41277d2e1df09
+  languageName: node
+  linkType: hard
+
 "semver@npm:^6.3.1":
   version: 6.3.1
   resolution: "semver@npm:6.3.1"
@@ -7318,6 +7402,19 @@ __metadata:
     replace-ext: "npm:^2.0.0"
     teex: "npm:^1.0.1"
   checksum: 10c0/566ab41a84c1a167023a07cb94110d40a07835a5239297e3266a11b0e9c522969a1e623ec2a4f9b05ac7fef596cf47685b410359e5b2ca00bd77400657808816
+  languageName: node
+  linkType: hard
+
+"vite-plugin-mkcert@npm:1.17.8":
+  version: 1.17.8
+  resolution: "vite-plugin-mkcert@npm:1.17.8"
+  dependencies:
+    axios: "npm:^1.8.3"
+    debug: "npm:^4.4.0"
+    picocolors: "npm:^1.1.1"
+  peerDependencies:
+    vite: ">=3"
+  checksum: 10c0/75769450dc54d756da3d0d00e005572dcdce84c12bd90f6b598fdba98be1e9fd59acea3854e30702bc198bf9c84e6235a91c0c2c521e885ada350b63d5686f68
   languageName: node
   linkType: hard
 

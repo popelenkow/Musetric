@@ -3,6 +3,7 @@
 import { AxiosInstance } from 'axios';
 import z from 'zod/v4';
 import { ApiRoute, RequestMethod } from './apiRoute';
+import { isUint8ArraySchema } from './uint8ArraySchema';
 
 type AxiosParams<ParamsSchema> = ParamsSchema extends z.ZodVoid
   ? {}
@@ -31,12 +32,18 @@ export const axiosRequest = <
     const params = (options as { params: z.infer<ParamsSchema> }).params;
     const data = (options as { data: z.infer<RequestSchema> }).data;
 
+    const isUint8Array = isUint8ArraySchema(route.responseSchema);
     const response = await axios.request<z.infer<ResponseSchema>>({
       method: route.method,
       url: route.endpoint(params),
       data: route.request(data),
+      responseType: isUint8Array ? 'arraybuffer' : 'json',
     });
 
+    if (isUint8Array) {
+      const result = new Uint8Array(response.data as ArrayBuffer);
+      return result as z.infer<ResponseSchema>;
+    }
     return response.data;
   };
 };

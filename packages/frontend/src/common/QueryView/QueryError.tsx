@@ -18,7 +18,7 @@ export const QueryError: FC<QueryErrorProps> = (props) => {
     >
       <ReportGmailerrorredIcon color='error' fontSize='large' />
       <Typography color='error'>{t('common.queryView.error')}</Typography>
-      {error ? <Typography color='error'>{String(error)}</Typography> : null}
+      {!!error && <Typography color='error'>{String(error)}</Typography>}
     </Stack>
   );
 };

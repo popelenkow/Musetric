@@ -8,7 +8,7 @@ export type SongPlayerProps = {
 };
 export const SongPlayer: FC<SongPlayerProps> = (props) => {
   const { url } = props;
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(undefined);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 

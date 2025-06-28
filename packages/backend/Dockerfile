@@ -11,6 +11,8 @@ RUN yarn workspaces focus @musetric/backend
 RUN yarn gen:db
 
 WORKDIR /app/packages/backend
+ENV PROTOCOL=http
 ENV PORT=80
 EXPOSE 80
+
 CMD ["yarn", "dev"]

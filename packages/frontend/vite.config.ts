@@ -1,9 +1,10 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import mkcert from 'vite-plugin-mkcert';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
-  base: './',
+  base: '/',
   mode: 'production',
   plugins: [
     react(),
@@ -13,6 +14,7 @@ export default defineConfig({
         { src: './readme.md', dest: '' },
       ],
     }),
+    mkcert(),
   ],
   build: {
     target: 'es2022',
@@ -29,8 +31,9 @@ export default defineConfig({
     port: 3001,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000/',
+        target: 'https://localhost:3000/',
         changeOrigin: true,
+        secure: false,
       },
     },
   },
