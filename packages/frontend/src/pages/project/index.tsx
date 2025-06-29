@@ -8,6 +8,7 @@ import { routes } from '../../app/router/routes';
 import { QueryPending } from '../../common/QueryView/QueryPending';
 import favicon from '../../favicon.ico';
 import { Player } from './Player';
+import { PlayerSpectrogram } from './PlayerSpectrogram';
 import { PlayerWaveform } from './PlayerWaveform';
 import { usePlayerStore } from './store';
 
@@ -62,6 +63,7 @@ export const ProjectPage: FC = () => {
         <Typography variant='h4'>{t('pages.project.title')}</Typography>
       </Stack>
       <Stack gap={1} width='100%' sx={{ mt: 'auto' }} alignItems='center'>
+        <PlayerSpectrogram />
         <PlayerWaveform />
         <Player />
       </Stack>

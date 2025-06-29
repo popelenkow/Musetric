@@ -18,6 +18,7 @@ yarn gen:db
 yarn check:ts
 yarn check:lint
 yarn check:format
+yarn test
 ```
 
 ### Audio player package
