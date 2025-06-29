@@ -21,16 +21,6 @@ yarn check:format
 yarn test
 ```
 
-### Audio player package
-
-For `@musetric/audio-in-out` you can run the same checks only for this
-package:
-
-```bash
-yarn workspace @musetric/audio-in-out check:ts
-yarn workspace @musetric/audio-in-out check:lint
-```
-
 ## Docker
 
 ```bash

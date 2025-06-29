@@ -1,16 +1,18 @@
 import eslint from '@eslint/js';
 import importPlugin from 'eslint-plugin-import-x';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tsEslint from 'typescript-eslint';
 
 export const baseConfig = {
   extends: [eslint.configs.recommended, ...tsEslint.configs.recommended],
-  files: ['**/*.ts'],
+  files: ['**/*.ts', '**/*.js'],
   languageOptions: {
     ecmaVersion: 2024,
     sourceType: 'module',
   },
   plugins: {
     'import-x': importPlugin,
+    'simple-import-sort': simpleImportSort,
   },
   settings: {
     'import-x/resolver': { typescript: true },
@@ -36,5 +38,6 @@ export const baseConfig = {
         'newlines-between': 'never',
       },
     ],
+    'simple-import-sort/exports': 'error',
   },
 };

@@ -1,6 +1,6 @@
 export const calcMagnitudeToNormalizedDecibel = (
   magnitudes: Float32Array,
-  minDecibel = -60,
+  minDecibel = -40,
 ): void => {
   let maxMagnitude = 0;
   for (let i = 0; i < magnitudes.length; i++) {

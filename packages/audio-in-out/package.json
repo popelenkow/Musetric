@@ -13,7 +13,7 @@
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
     "@types/audioworklet": "0.0.77",
-    "eslint": "9.29.0",
+    "eslint": "9.30.0",
     "typescript": "5.8.3"
   }
 }

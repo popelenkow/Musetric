@@ -22,17 +22,17 @@
     "@fastify/swagger-ui": "5.2.3",
     "@musetric/api": "workspace:*",
     "@musetric/eslint-config": "workspace:*",
-    "@prisma/client": "6.9.0",
-    "@types/node": "24.0.1",
-    "axios": "1.9.0",
-    "eslint": "9.29.0",
+    "@prisma/client": "6.11.0",
+    "@types/node": "24.0.8",
+    "axios": "1.10.0",
+    "eslint": "9.30.0",
     "fastify": "5.4.0",
     "fastify-type-provider-zod": "5.0.1",
     "pino-pretty": "13.0.0",
-    "prisma": "6.9.0",
+    "prisma": "6.11.0",
     "selfsigned": "2.4.1",
     "tsx": "4.20.3",
     "typescript": "5.8.3",
-    "zod": "3.25.64"
+    "zod": "3.25.67"
   }
 }
