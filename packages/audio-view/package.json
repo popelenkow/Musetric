@@ -5,6 +5,7 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
+    "postinstall": "node ./scripts/install-playwright.js",
     "build": "tsc",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint .",
@@ -18,7 +19,10 @@
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
     "@types/react": "19.1.8",
+    "@vitest/browser": "3.2.4",
+    "@webgpu/types": "0.1.63",
     "eslint": "9.30.0",
+    "playwright": "1.42.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "typescript": "5.8.3",

@@ -8,7 +8,6 @@ COPY . .
 RUN find /app -maxdepth 3 | sed 's|/app/||g'
  
 RUN yarn workspaces focus @musetric/backend
-RUN yarn gen:db
 
 WORKDIR /app/packages/backend
 ENV PROTOCOL=http

@@ -1,6 +1,6 @@
 export const subscribeResizeObserver = (
   element: Element,
-  callback: () => void,
+  callback: () => Promise<void>,
 ) => {
   callback();
   const observer = new ResizeObserver(callback);

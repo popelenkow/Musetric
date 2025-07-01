@@ -7,7 +7,8 @@
     "declaration": true,
     "declarationMap": true,
     "moduleResolution": "node",
-    "outDir": "dist"
+    "outDir": "dist",
+    "types": ["@webgpu/types"]
   },
   "include": ["src"]
 }

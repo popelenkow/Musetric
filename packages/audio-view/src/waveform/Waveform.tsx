@@ -17,7 +17,7 @@ export const Waveform: FC<WaveformProps> = (props) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    return subscribeResizeObserver(canvas, () => {
+    return subscribeResizeObserver(canvas, async () => {
       const segments = generateSegments(buffer, canvas.clientWidth);
       drawWaveform(canvas, segments, progress, colors);
     });

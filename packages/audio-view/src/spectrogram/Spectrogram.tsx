@@ -6,8 +6,9 @@ import {
   createGradient,
   SpectrogramParameters,
   SpectrogramGradients,
+  drawSpectrogramImage,
 } from './common';
-import { drawSpectrogram } from './common/drawSpectrogram';
+import { createSpectrogramPipeline } from './prepare';
 
 export type SpectrogramProps = {
   buffer: Float32Array;
@@ -37,8 +38,17 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    return subscribeResizeObserver(canvas, () => {
-      drawSpectrogram(canvas, buffer, parameters, progress, gradients);
+
+    return subscribeResizeObserver(canvas, async () => {
+      const pipeline = await createSpectrogramPipeline(
+        parameters,
+        canvas.clientWidth,
+        canvas.clientHeight,
+        'gpu',
+      );
+      const output: Uint8Array[] = [];
+      await pipeline.process(buffer, output);
+      drawSpectrogramImage(canvas, output, progress, gradients);
     });
   }, [buffer, parameters, progress, gradients]);
 
