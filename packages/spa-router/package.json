@@ -17,9 +17,9 @@
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
     "@types/react": "19.1.8",
-    "eslint": "9.29.0",
+    "eslint": "9.30.0",
     "react": "19.1.0",
     "typescript": "5.8.3",
-    "zustand": "5.0.5"
+    "zustand": "5.0.6"
   }
 }

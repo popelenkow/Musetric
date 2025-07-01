@@ -1,7 +1,7 @@
-import globals from 'globals';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactRefreshPlugin from 'eslint-plugin-react-refresh';
+import globals from 'globals';
 import tsEslint from 'typescript-eslint';
 import { baseConfig } from './base.js';
 
