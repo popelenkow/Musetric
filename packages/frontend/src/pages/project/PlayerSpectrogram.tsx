@@ -25,7 +25,7 @@ export const PlayerSpectrogram: FC = () => {
   const parameters = useMemo((): SpectrogramParameters | undefined => {
     if (!buffer) return;
     return {
-      windowSize: 16384,
+      windowSize: 2048,
       sampleRate: buffer.sampleRate,
       minFrequency: buffer.sampleRate * 0.001,
       maxFrequency: buffer.sampleRate * 0.1,

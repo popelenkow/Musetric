@@ -20,7 +20,6 @@
     "fix:lint": "yarn workspaces foreach --all --topological run fix:lint",
     "fix:format": "prettier . --write",
     "test": "yarn workspaces foreach --all --topological run test",
-    "gen:db": "yarn workspace @musetric/backend gen:db",
     "gen:translations": "yarn workspaces foreach --all --topological run gen:translations",
     "show:peer": "yarn explain peer-requirements | npx grep-cli \"✘\""
   },

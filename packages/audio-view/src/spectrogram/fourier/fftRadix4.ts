@@ -1,9 +1,4 @@
 import { ComplexArray } from '../../common';
-import {
-  SpectrometerBase,
-  Spectrometer,
-  createSpectrometer,
-} from './spectrometer';
 
 /* Licensed by MIT. Based on https://github.com/indutny/fft.js/tree/4a18cf88fcdbd4ad5acca6eaea06a0b462047835 */
 
@@ -242,7 +237,7 @@ const getWidth = (windowSize: number): number => {
   return width - 1;
 };
 
-export const createFftRadix4Base = (windowSize: number): SpectrometerBase => {
+export const createFftRadix4 = (windowSize: number) => {
   if (windowSize <= 1 || (windowSize & (windowSize - 1)) !== 0) {
     throw new Error('FFT size must be a power of two and bigger than 1');
   }
@@ -251,10 +246,9 @@ export const createFftRadix4Base = (windowSize: number): SpectrometerBase => {
 
   const width = getWidth(windowSize);
 
-  // Pre-compute bit-reversal patterns
   const reverseTable = createReverseTable(width);
 
-  const api: SpectrometerBase = {
+  return {
     forward: (input: ComplexArray, output: ComplexArray) => {
       transform4({
         input,
@@ -282,11 +276,4 @@ export const createFftRadix4Base = (windowSize: number): SpectrometerBase => {
       }
     },
   };
-  return api;
-};
-
-export const createFftRadix4 = (windowSize: number): Spectrometer => {
-  const base = createFftRadix4Base(windowSize);
-  const api: Spectrometer = createSpectrometer(windowSize, base);
-  return api;
 };

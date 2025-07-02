@@ -5,7 +5,8 @@
     "lib": ["ES2024", "DOM"],
     "jsx": "react-jsx",
     "moduleResolution": "bundler",
-    "outDir": "dist"
+    "outDir": "dist",
+    "types": ["@webgpu/types"]
   },
   "include": ["src", "src/**/*.json"]
 }

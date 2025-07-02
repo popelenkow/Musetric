@@ -6,7 +6,6 @@ Musetric is a vocal training application.
 
 ```bash
 yarn
-yarn gen:db
 yarn dev
 ```
 
@@ -14,7 +13,6 @@ yarn dev
 
 ```bash
 yarn
-yarn gen:db
 yarn check:ts
 yarn check:lint
 yarn check:format
