@@ -1,4 +1,5 @@
-import { ComplexArray } from '../../common';
+import { ComplexArray } from '../complexArray';
+import { Fourier } from '../fourier';
 
 /* Licensed by MIT. Based on https://github.com/indutny/fft.js/tree/4a18cf88fcdbd4ad5acca6eaea06a0b462047835 */
 
@@ -94,11 +95,11 @@ type Transform4Options = {
   windowSize: number;
   width: number;
   reverseTable: Uint32Array;
-  table: Float32Array;
+  trigTable: Float32Array;
 };
 /** radix-4 implementation */
 const transform4 = (options: Transform4Options): void => {
-  const { input, output, inverse, windowSize, width, reverseTable, table } =
+  const { input, output, inverse, windowSize, width, reverseTable, trigTable } =
     options;
 
   // Initial step (permute and transform)
@@ -149,18 +150,18 @@ const transform4 = (options: Transform4Options): void => {
         const MAr = Ar;
         const MAi = Ai;
 
-        const tableBr = table[k];
-        const tableBi = sign * table[k + 1];
+        const tableBr = trigTable[k];
+        const tableBi = sign * trigTable[k + 1];
         const MBr = Br * tableBr - Bi * tableBi;
         const MBi = Br * tableBi + Bi * tableBr;
 
-        const tableCr = table[2 * k];
-        const tableCi = sign * table[2 * k + 1];
+        const tableCr = trigTable[2 * k];
+        const tableCi = sign * trigTable[2 * k + 1];
         const MCr = Cr * tableCr - Ci * tableCi;
         const MCi = Cr * tableCi + Ci * tableCr;
 
-        const tableDr = table[3 * k];
-        const tableDi = sign * table[3 * k + 1];
+        const tableDr = trigTable[3 * k];
+        const tableDi = sign * trigTable[3 * k + 1];
         const MDr = Dr * tableDr - Di * tableDi;
         const MDi = Dr * tableDi + Di * tableDr;
 
@@ -213,7 +214,7 @@ const createReverseTable = (width: number): Uint32Array => {
   return reverseTable;
 };
 
-const createTable = (windowSize: number): Float32Array => {
+const createTrigTable = (windowSize: number): Float32Array => {
   const table = new Float32Array(2 * windowSize);
   for (let i = 0; i < table.length; i += 2) {
     const angle = (Math.PI * i) / windowSize;
@@ -237,43 +238,58 @@ const getWidth = (windowSize: number): number => {
   return width - 1;
 };
 
-export const createFftRadix4 = (windowSize: number) => {
+export const createFftRadix4Cpu = async (
+  windowSize: number,
+): Promise<Fourier> => {
   if (windowSize <= 1 || (windowSize & (windowSize - 1)) !== 0) {
     throw new Error('FFT size must be a power of two and bigger than 1');
   }
 
-  const table = createTable(windowSize);
+  const trigTable = createTrigTable(windowSize);
 
   const width = getWidth(windowSize);
 
   const reverseTable = createReverseTable(width);
 
-  return {
-    forward: (input: ComplexArray, output: ComplexArray) => {
+  const transform = async (
+    input: ComplexArray,
+    output: ComplexArray,
+    inverse: boolean,
+  ) => {
+    const numWindows = input.real.length / windowSize;
+    for (let w = 0; w < numWindows; w++) {
+      const inSlice: ComplexArray = {
+        real: input.real.subarray(w * windowSize, (w + 1) * windowSize),
+        imag: input.imag.subarray(w * windowSize, (w + 1) * windowSize),
+      };
+      const outSlice: ComplexArray = {
+        real: output.real.subarray(w * windowSize, (w + 1) * windowSize),
+        imag: output.imag.subarray(w * windowSize, (w + 1) * windowSize),
+      };
       transform4({
-        input,
-        output,
-        inverse: false,
+        input: inSlice,
+        output: outSlice,
+        inverse,
         windowSize,
         width,
         reverseTable,
-        table,
+        trigTable,
       });
-    },
-    inverse: (input: ComplexArray, output: ComplexArray) => {
-      transform4({
-        input,
-        output,
-        inverse: true,
-        windowSize,
-        width,
-        reverseTable,
-        table,
-      });
-      for (let i = 0; i < windowSize; i++) {
-        output.real[i] /= windowSize;
-        output.imag[i] /= windowSize;
+      if (inverse) {
+        for (let i = 0; i < windowSize; i++) {
+          outSlice.real[i] /= windowSize;
+          outSlice.imag[i] /= windowSize;
+        }
       }
+    }
+  };
+
+  return {
+    forward: async (input: ComplexArray, output: ComplexArray) => {
+      await transform(input, output, false);
+    },
+    inverse: async (input: ComplexArray, output: ComplexArray) => {
+      await transform(input, output, true);
     },
   };
 };

@@ -1,19 +1,23 @@
-import { ComplexArray, normComplexArray } from '../../common';
-import { SpectrogramParameters } from '../common/spectrogramParameters';
-import { createDftGpu, createFftRadix4 } from '../fourier';
+import {
+  ComplexArray,
+  FourierMode,
+  fouriers,
+  normComplexArray,
+} from '../../fourier';
 import { calcMagnitudeToNormalizedDecibel } from './calcMagnitudeToNormalizedDecibel';
-
-export type SpectrogramMode = 'cpu' | 'gpu';
+import { SpectrogramParameters } from './spectrogramParameters';
 
 export type SpectrogramPipeline = {
   process: (input: Float32Array, output: Uint8Array[]) => Promise<void>;
 };
 export const createSpectrogramPipeline = async (
-  { sampleRate, windowSize, minFrequency, maxFrequency }: SpectrogramParameters,
+  parameters: SpectrogramParameters,
   width: number,
   height: number,
-  backend: SpectrogramMode,
+  mode: FourierMode,
 ): Promise<SpectrogramPipeline> => {
+  const { sampleRate, windowSize, minFrequency, maxFrequency } = parameters;
+
   const fullBins = windowSize / 2;
   const calcStep = (len: number) => (len - windowSize) / width;
   const maxBin = Math.min(
@@ -28,20 +32,17 @@ export const createSpectrogramPipeline = async (
   const logRange = Math.log(maxBin + 1) - logMin;
 
   const frequency: ComplexArray = {
-    real: new Float32Array(windowSize),
-    imag: new Float32Array(windowSize),
+    real: new Float32Array(windowSize * width),
+    imag: new Float32Array(windowSize * width),
   };
   const magnitude = new Float32Array(fullBins);
 
   const wave: ComplexArray = {
-    real: new Float32Array(windowSize),
-    imag: new Float32Array(windowSize),
+    real: new Float32Array(windowSize * width),
+    imag: new Float32Array(windowSize * width),
   };
 
-  const fft =
-    backend === 'gpu'
-      ? await createDftGpu(windowSize)
-      : createFftRadix4(windowSize);
+  const fourier = await fouriers[mode](windowSize);
 
   return {
     process: async (input, output) => {
@@ -50,10 +51,18 @@ export const createSpectrogramPipeline = async (
       for (let x = 0; x < width; x++) {
         const start = Math.floor(x * step);
         const slice = input.subarray(start, start + windowSize);
-        wave.real.set(slice);
-        wave.imag.fill(0);
-        await fft.forward(wave, frequency);
-        normComplexArray(frequency, magnitude);
+        wave.real.set(slice, x * windowSize);
+        wave.imag.fill(0, x * windowSize, (x + 1) * windowSize);
+      }
+
+      await fourier.forward(wave, frequency);
+
+      for (let x = 0; x < width; x++) {
+        const slice: ComplexArray = {
+          real: frequency.real.subarray(x * windowSize, (x + 1) * windowSize),
+          imag: frequency.imag.subarray(x * windowSize, (x + 1) * windowSize),
+        };
+        normComplexArray(slice, magnitude);
         calcMagnitudeToNormalizedDecibel(magnitude);
 
         const column = new Uint8Array(height);

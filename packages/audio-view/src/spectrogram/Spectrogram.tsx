@@ -1,5 +1,6 @@
 import { FC, useEffect, useMemo, useRef } from 'react';
 import { subscribeResizeObserver } from '../common';
+import { FourierMode } from '../fourier';
 import {
   SpectrogramColors,
   parseHexColor,
@@ -7,8 +8,10 @@ import {
   SpectrogramParameters,
   SpectrogramGradients,
   drawSpectrogramImage,
+  createSpectrogramPipeline,
 } from './common';
-import { createSpectrogramPipeline } from './prepare';
+
+export const fourierMode: FourierMode = 'fftRadix2Gpu';
 
 export type SpectrogramProps = {
   buffer: Float32Array;
@@ -44,7 +47,7 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
         parameters,
         canvas.clientWidth,
         canvas.clientHeight,
-        'gpu',
+        fourierMode,
       );
       const output: Uint8Array[] = [];
       await pipeline.process(buffer, output);
