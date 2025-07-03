@@ -1,5 +1,6 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { CardMedia, IconButton, Stack, Typography } from '@mui/material';
+import { fourierMode } from '@musetric/audio-view';
 import { useQuery } from '@tanstack/react-query';
 import { FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -61,6 +62,9 @@ export const ProjectPage: FC = () => {
           }}
         />
         <Typography variant='h4'>{t('pages.project.title')}</Typography>
+        <Typography variant='h6' sx={{ ml: 'auto' }}>
+          {fourierMode}
+        </Typography>
       </Stack>
       <Stack gap={1} width='100%' sx={{ mt: 'auto' }} alignItems='center'>
         <PlayerSpectrogram />
