@@ -1,1 +1,1 @@
-export * from './subscribeResizeObserver';
+export * from './resizeObserver';

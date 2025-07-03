@@ -1,6 +1,5 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { CardMedia, IconButton, Stack, Typography } from '@mui/material';
-import { fourierMode } from '@musetric/audio-view';
 import { useQuery } from '@tanstack/react-query';
 import { FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +8,7 @@ import { routes } from '../../app/router/routes';
 import { QueryPending } from '../../common/QueryView/QueryPending';
 import favicon from '../../favicon.ico';
 import { Player } from './Player';
-import { PlayerSpectrogram } from './PlayerSpectrogram';
+import { fourierMode, PlayerSpectrogram } from './PlayerSpectrogram';
 import { PlayerWaveform } from './PlayerWaveform';
 import { usePlayerStore } from './store';
 

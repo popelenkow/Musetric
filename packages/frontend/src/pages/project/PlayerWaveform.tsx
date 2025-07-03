@@ -1,5 +1,5 @@
 import { Box, useTheme } from '@mui/material';
-import { Waveform, WaveformColors } from '@musetric/audio-view';
+import { Waveform, waveform } from '@musetric/audio-view';
 import { FC, useMemo } from 'react';
 import { usePlayerStore } from './store';
 
@@ -10,7 +10,7 @@ export const PlayerWaveform: FC = () => {
   const theme = useTheme();
 
   const colors = useMemo(
-    (): WaveformColors => ({
+    (): waveform.Colors => ({
       played: theme.palette.primary.main,
       unplayed: theme.palette.default.main,
     }),

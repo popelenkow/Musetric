@@ -1,2 +1,2 @@
-export * from './common';
+export * as spectrogram from './indexJoin';
 export * from './Spectrogram';

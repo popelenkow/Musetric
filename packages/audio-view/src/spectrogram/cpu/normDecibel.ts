@@ -1,4 +1,4 @@
-export const calcMagnitudeToNormalizedDecibel = (
+export const normDecibel = (
   magnitudes: Float32Array,
   minDecibel = -40,
 ): void => {
