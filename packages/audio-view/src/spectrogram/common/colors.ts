@@ -1,16 +1,22 @@
-export type RGB = {
+export type Colors = {
+  played: string;
+  unplayed: string;
+  background: string;
+};
+
+export type Rgb = {
   red: number;
   green: number;
   blue: number;
 };
 
-export type RGBGradient = {
+export type RgbGradient = {
   red: Uint8ClampedArray;
   green: Uint8ClampedArray;
   blue: Uint8ClampedArray;
 };
 
-export const parseHexColor = (hex: string): RGB => {
+export const parseHexColor = (hex: string): Rgb => {
   let h = hex.startsWith('#') ? hex.slice(1) : hex;
   if (h.length === 3) {
     h = h
@@ -22,7 +28,7 @@ export const parseHexColor = (hex: string): RGB => {
   return { red: (n >> 16) & 255, green: (n >> 8) & 255, blue: n & 255 };
 };
 
-export const createGradient = (from: RGB, to: RGB): RGBGradient => {
+export const createGradient = (from: Rgb, to: Rgb): RgbGradient => {
   const red = new Uint8ClampedArray(256);
   const green = new Uint8ClampedArray(256);
   const blue = new Uint8ClampedArray(256);
@@ -35,7 +41,7 @@ export const createGradient = (from: RGB, to: RGB): RGBGradient => {
   return { red, green, blue };
 };
 
-export type SpectrogramGradients = {
-  played: RGBGradient;
-  unplayed: RGBGradient;
+export type Gradients = {
+  played: RgbGradient;
+  unplayed: RgbGradient;
 };

@@ -1,2 +1,2 @@
-export * from './common';
+export * as waveform from './common';
 export * from './Waveform';

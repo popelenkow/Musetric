@@ -1,59 +1,45 @@
-import { FC, useEffect, useMemo, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { subscribeResizeObserver } from '../common';
-import { FourierMode } from '../fourier';
-import {
-  SpectrogramColors,
-  parseHexColor,
-  createGradient,
-  SpectrogramParameters,
-  SpectrogramGradients,
-  drawSpectrogramImage,
-  createSpectrogramPipeline,
-} from './common';
-
-export const fourierMode: FourierMode = 'fftRadix2Gpu';
+import { FourierMode, isGpuFourierMode } from '../fourier';
+import { Parameters, Gradients } from './common';
+import { cpu } from './cpu';
+import { gpu } from './gpu';
 
 export type SpectrogramProps = {
   buffer: Float32Array;
-  parameters: SpectrogramParameters;
+  parameters: Parameters;
   progress: number;
-  colors: SpectrogramColors;
   onSeek?: (fraction: number) => void;
+  gradients: Gradients;
+  fourierMode: FourierMode;
 };
 export const Spectrogram: FC<SpectrogramProps> = (props) => {
-  const { buffer, parameters, progress, colors, onSeek } = props;
+  const { buffer, parameters, progress, onSeek, gradients, fourierMode } =
+    props;
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const gradients: SpectrogramGradients = useMemo(
-    () => ({
-      played: createGradient(
-        parseHexColor(colors.background),
-        parseHexColor(colors.played),
-      ),
-      unplayed: createGradient(
-        parseHexColor(colors.background),
-        parseHexColor(colors.unplayed),
-      ),
-    }),
-    [colors],
-  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     return subscribeResizeObserver(canvas, async () => {
-      const pipeline = await createSpectrogramPipeline(
+      if (isGpuFourierMode(fourierMode)) {
+        const pipeline = await gpu.createPipeline(
+          canvas,
+          parameters,
+          fourierMode,
+        );
+        await pipeline.render(buffer, progress, gradients);
+        return;
+      }
+      const pipeline = await cpu.createPipeline(
+        canvas,
         parameters,
-        canvas.clientWidth,
-        canvas.clientHeight,
         fourierMode,
       );
-      const output: Uint8Array[] = [];
-      await pipeline.process(buffer, output);
-      drawSpectrogramImage(canvas, output, progress, gradients);
+      await pipeline.render(buffer, progress, gradients);
     });
-  }, [buffer, parameters, progress, gradients]);
+  }, [buffer, parameters, progress, gradients, fourierMode]);
 
   return (
     <canvas

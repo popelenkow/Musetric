@@ -1,13 +1,12 @@
 import { FC, useEffect, useRef } from 'react';
 import { subscribeResizeObserver } from '../common';
-import { drawWaveform, generateSegments } from './common';
-import { WaveformColors } from './common/waveformColors';
+import { createDrawer, generateSegments, Colors } from './common';
 
 export type WaveformProps = {
   buffer: Float32Array;
   progress: number;
   onSeek: (fraction: number) => void;
-  colors: WaveformColors;
+  colors: Colors;
 };
 export const Waveform: FC<WaveformProps> = (props) => {
   const { buffer, progress, onSeek, colors } = props;
@@ -17,9 +16,10 @@ export const Waveform: FC<WaveformProps> = (props) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    const drawer = createDrawer(canvas);
     return subscribeResizeObserver(canvas, async () => {
       const segments = generateSegments(buffer, canvas.clientWidth);
-      drawWaveform(canvas, segments, progress, colors);
+      drawer.render(segments, progress, colors);
     });
   }, [buffer, progress, colors]);
 

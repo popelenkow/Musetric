@@ -1,22 +1,31 @@
 import {
   ComplexArray,
-  FourierMode,
-  fouriers,
+  CpuFourierMode,
+  cpuFouriers,
   normComplexArray,
 } from '../../fourier';
-import { calcMagnitudeToNormalizedDecibel } from './calcMagnitudeToNormalizedDecibel';
-import { SpectrogramParameters } from './spectrogramParameters';
+import { Gradients, Parameters } from '../common';
+import { createDrawer } from './drawer';
+import { normDecibel } from './normDecibel';
 
-export type SpectrogramPipeline = {
-  process: (input: Float32Array, output: Uint8Array[]) => Promise<void>;
+export type PipelineRender = (
+  input: Float32Array,
+  progress: number,
+  gradients: Gradients,
+) => Promise<void>;
+
+export type Pipeline = {
+  render: PipelineRender;
 };
-export const createSpectrogramPipeline = async (
-  parameters: SpectrogramParameters,
-  width: number,
-  height: number,
-  mode: FourierMode,
-): Promise<SpectrogramPipeline> => {
+export const createPipeline = async (
+  canvas: HTMLCanvasElement,
+  parameters: Parameters,
+  mode: CpuFourierMode,
+): Promise<Pipeline> => {
   const { sampleRate, windowSize, minFrequency, maxFrequency } = parameters;
+
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
 
   const fullBins = windowSize / 2;
   const calcStep = (len: number) => (len - windowSize) / width;
@@ -42,10 +51,16 @@ export const createSpectrogramPipeline = async (
     imag: new Float32Array(windowSize * width),
   };
 
-  const fourier = await fouriers[mode](windowSize);
+  const createFourier = cpuFouriers[mode];
+  const fourier = await createFourier(windowSize);
+  const drawer = createDrawer(canvas);
+
+  const columns: Uint8Array[] = new Array(width)
+    .fill(0)
+    .map(() => new Uint8Array(height));
 
   return {
-    process: async (input, output) => {
+    render: async (input, progress, gradients) => {
       const step = calcStep(input.length);
 
       for (let x = 0; x < width; x++) {
@@ -63,9 +78,10 @@ export const createSpectrogramPipeline = async (
           imag: frequency.imag.subarray(x * windowSize, (x + 1) * windowSize),
         };
         normComplexArray(slice, magnitude);
-        calcMagnitudeToNormalizedDecibel(magnitude);
+        normDecibel(magnitude);
+        const decibel = magnitude;
 
-        const column = new Uint8Array(height);
+        const column = columns[x];
         for (let y = 0; y < height; y++) {
           const ratio = 1 - y / (height - 1);
           const raw = Math.exp(logMin + logRange * ratio);
@@ -73,10 +89,11 @@ export const createSpectrogramPipeline = async (
             minBin,
             Math.min(Math.floor(raw) - 1, maxBin - 1),
           );
-          column[y] = Math.round(magnitude[idx] * 255);
+          column[y] = Math.round(decibel[idx] * 255);
         }
-        output.push(column);
       }
+
+      drawer.render(columns, progress, gradients);
     },
   };
 };
