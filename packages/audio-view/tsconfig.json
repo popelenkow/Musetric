@@ -10,5 +10,5 @@
     "outDir": "dist",
     "types": ["@webgpu/types"]
   },
-  "include": ["src"]
+  "include": ["src", "test"]
 }

@@ -1,4 +1,4 @@
 export * from './common';
 export * from './fourier';
-export * from './spectrogram';
-export * from './waveform';
+export * as spectrogram from './spectrogram';
+export * as waveform from './waveform';

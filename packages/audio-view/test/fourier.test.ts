@@ -1,11 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import {
-  ComplexArray,
-  createFftRadix4Gpu,
-  fourierModes,
-  fouriers,
-} from '../src';
+import { ComplexArray, fourierModes, fouriers } from '../src';
 import { fourierFixtures } from './fixtures/fourier';
+
+const getGpuDevice = async () => {
+  const adapter = await navigator.gpu?.requestAdapter();
+  if (!adapter) {
+    throw new Error('WebGPU adapter not available');
+  }
+  const device = await adapter.requestDevice();
+  return device;
+};
 
 export const assertArrayClose = (
   name: string,
@@ -20,7 +24,8 @@ export const assertArrayClose = (
 
 fourierModes.forEach((mode) => {
   const createFourier = fouriers[mode];
-  describe(mode, () => {
+  describe(mode, async () => {
+    const device = await getGpuDevice();
     describe('forward', () => {
       fourierFixtures.forEach((fixture) => {
         it(fixture.name, async () => {
@@ -28,7 +33,11 @@ fourierModes.forEach((mode) => {
             real: new Float32Array(fixture.windowSize),
             imag: new Float32Array(fixture.windowSize),
           };
-          const fourier = await createFourier(fixture.windowSize);
+          const fourier = await createFourier({
+            windowSize: fixture.windowSize,
+            windowCount: 1,
+            device,
+          });
           await fourier.forward(fixture.input, output);
           assertArrayClose('real', output.real, fixture.output.real);
           assertArrayClose('imag', output.imag, fixture.output.imag);
@@ -43,8 +52,12 @@ fourierModes.forEach((mode) => {
             real: new Float32Array(fixture.windowSize),
             imag: new Float32Array(fixture.windowSize),
           };
-          const fft = await createFftRadix4Gpu(fixture.windowSize);
-          await fft.inverse(fixture.output, output);
+          const fourier = await createFourier({
+            windowSize: fixture.windowSize,
+            windowCount: 1,
+            device,
+          });
+          await fourier.inverse(fixture.output, output);
           assertArrayClose('real', output.real, fixture.input.real);
           assertArrayClose('imag', output.imag, fixture.input.imag);
         });

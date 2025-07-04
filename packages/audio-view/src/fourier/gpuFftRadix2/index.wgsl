@@ -1,7 +1,7 @@
 struct Params {
   windowSize: u32,
+  windowCount: u32,
   inverse: u32,
-  numWindows: u32,
 };
 
 @group(0) @binding(0) var<storage, read> inputReal: array<f32>;
@@ -22,7 +22,7 @@ fn main(
   @builtin(local_invocation_id) localId: vec3<u32>,
 ) {
   let currentWindowIndex = workgroupId.x;
-  if (currentWindowIndex >= params.numWindows) {
+  if (currentWindowIndex >= params.windowCount) {
     return;
   }
 

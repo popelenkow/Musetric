@@ -1,7 +1,7 @@
 struct Params {
   windowSize : u32,
+  windowCount : u32,
   inverse : u32,
-  numWindows : u32,
 };
 
 @group(0) @binding(0) var<storage, read>  inputReal  : array<f32>;
@@ -21,7 +21,7 @@ fn sign() -> f32 {
 fn main(@builtin(global_invocation_id) gid : vec3<u32>) {
   let k = gid.x;
   let window = gid.y;
-  if (k >= params.windowSize || window >= params.numWindows) {
+  if (k >= params.windowSize || window >= params.windowCount) {
     return;
   }
   let offset = window * params.windowSize;

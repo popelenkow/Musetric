@@ -1,98 +1,56 @@
-import {
-  ComplexArray,
-  GpuFourierMode,
-  gpuFouriers,
-  normComplexArray,
-} from '../../fourier';
-import { Gradients, Parameters } from '../common';
-import { cpu } from '../cpu';
+import { Colors, cpu, Pipeline, PipelineRender } from '../';
+import { createCallLatest } from '../../common';
+import { GpuFourierMode, gpuFouriers } from '../../fourier';
+import { renderPipeline } from './renderPipeline';
 
-export type PipelineRender = (
-  input: Float32Array,
-  progress: number,
-  gradients: Gradients,
-) => Promise<void>;
-
-export type Pipeline = {
-  render: PipelineRender;
+export type CreatePipelineOptions = {
+  canvas: HTMLCanvasElement;
+  windowSize: number;
+  fourierMode: GpuFourierMode;
+  colors: Colors;
+  device: GPUDevice;
 };
-export const createPipeline = async (
-  canvas: HTMLCanvasElement,
-  parameters: Parameters,
-  mode: GpuFourierMode,
-): Promise<Pipeline> => {
-  const { sampleRate, windowSize, minFrequency, maxFrequency } = parameters;
+export type CreatePipeline = (
+  options: CreatePipelineOptions,
+) => Promise<Pipeline>;
 
-  const width = canvas.clientWidth;
-  const height = canvas.clientHeight;
+export const createPipeline: CreatePipeline = async (options) => {
+  const { canvas, windowSize, fourierMode, colors, device } = options;
 
-  const fullBins = windowSize / 2;
-  const calcStep = (len: number) => (len - windowSize) / width;
-  const maxBin = Math.min(
-    Math.floor((maxFrequency / sampleRate) * windowSize),
-    fullBins,
-  );
-  const minBin = Math.max(
-    Math.floor((minFrequency / sampleRate) * windowSize),
-    0,
-  );
-  const logMin = Math.log(minBin + 1);
-  const logRange = Math.log(maxBin + 1) - logMin;
+  const drawer = cpu.createDrawer(canvas, colors);
+  const createFourier = gpuFouriers[fourierMode];
+  const fourier = await createFourier({
+    windowSize,
+    windowCount: drawer.width,
+    device,
+  });
 
-  const frequency: ComplexArray = {
-    real: new Float32Array(windowSize * width),
-    imag: new Float32Array(windowSize * width),
+  let isResizeRequested = false;
+  let buffers = cpu.createPipelineBuffers(windowSize, drawer.width);
+
+  const resize = () => {
+    drawer.resize();
+    buffers = cpu.createPipelineBuffers(windowSize, drawer.width);
+    fourier.resize(drawer.width);
   };
-  const magnitude = new Float32Array(fullBins);
-
-  const wave: ComplexArray = {
-    real: new Float32Array(windowSize * width),
-    imag: new Float32Array(windowSize * width),
-  };
-
-  const createFourier = gpuFouriers[mode];
-  const fourier = await createFourier(windowSize);
-  const drawer = await cpu.createDrawer(canvas);
-
-  const columns: Uint8Array[] = new Array(width)
-    .fill(0)
-    .map(() => new Uint8Array(height));
 
   return {
-    render: async (input, progress, gradients) => {
-      const step = calcStep(input.length);
-
-      for (let x = 0; x < width; x++) {
-        const start = Math.floor(x * step);
-        const slice = input.subarray(start, start + windowSize);
-        wave.real.set(slice, x * windowSize);
-        wave.imag.fill(0, x * windowSize, (x + 1) * windowSize);
-      }
-
-      await fourier.forward(wave, frequency);
-
-      for (let x = 0; x < width; x++) {
-        const slice: ComplexArray = {
-          real: frequency.real.subarray(x * windowSize, (x + 1) * windowSize),
-          imag: frequency.imag.subarray(x * windowSize, (x + 1) * windowSize),
-        };
-        normComplexArray(slice, magnitude);
-        cpu.normDecibel(magnitude);
-        const decibel = magnitude;
-
-        const column = columns[x];
-        for (let y = 0; y < height; y++) {
-          const ratio = 1 - y / (height - 1);
-          const raw = Math.exp(logMin + logRange * ratio);
-          const idx = Math.max(
-            minBin,
-            Math.min(Math.floor(raw) - 1, maxBin - 1),
-          );
-          column[y] = Math.round(decibel[idx] * 255);
-        }
-      }
-
-      drawer.render(columns, progress, gradients);
+    resize: () => {
+      isResizeRequested = true;
     },
+    render: createCallLatest<PipelineRender>(async (input, parameters) => {
+      if (isResizeRequested) {
+        isResizeRequested = false;
+        resize();
+      }
+      await renderPipeline({
+        input,
+        parameters,
+        windowSize,
+        drawer,
+        buffers,
+        fourier,
+      });
+    }),
   };
 };

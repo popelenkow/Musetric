@@ -17,4 +17,4 @@ const runApp = async () => {
   splashScreen.style.display = 'none';
 };
 
-runApp();
+void runApp();

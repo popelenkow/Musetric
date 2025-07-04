@@ -1,16 +1,16 @@
-import { createDftGpu } from './dftGpu';
-import { createFftRadix2Gpu } from './fftRadix2Gpu';
-import { createFftRadix4Cpu } from './fftRadix4Cpu';
-import { createFftRadix4Gpu } from './fftRadix4Gpu';
+import { createCpuFftRadix4 } from './cpuFftRadix4';
+import { createGpuDft } from './gpuDft';
+import { createGpuFftRadix2 } from './gpuFftRadix2';
+import { createGpuFftRadix4 } from './gpuFftRadix4';
 
 export const cpuFouriers = {
-  fftRadix4Cpu: createFftRadix4Cpu,
+  cpuFftRadix4: createCpuFftRadix4,
 } as const;
 
 export const gpuFouriers = {
-  dftGpu: createDftGpu,
-  fftRadix2Gpu: createFftRadix2Gpu,
-  fftRadix4Gpu: createFftRadix4Gpu,
+  gpuDft: createGpuDft,
+  gpuFftRadix2: createGpuFftRadix2,
+  gpuFftRadix4: createGpuFftRadix4,
 } as const;
 
 export const fouriers = {

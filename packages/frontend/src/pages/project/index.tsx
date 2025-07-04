@@ -1,5 +1,5 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { CardMedia, IconButton, Stack, Typography } from '@mui/material';
+import { Box, CardMedia, IconButton, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,9 +8,9 @@ import { routes } from '../../app/router/routes';
 import { QueryPending } from '../../common/QueryView/QueryPending';
 import favicon from '../../favicon.ico';
 import { Player } from './Player';
-import { fourierMode, PlayerSpectrogram } from './PlayerSpectrogram';
-import { PlayerWaveform } from './PlayerWaveform';
+import { fourierMode, Spectrogram } from './Spectrogram';
 import { usePlayerStore } from './store';
+import { Waveform } from './Waveform';
 
 export const ProjectPage: FC = () => {
   const { t } = useTranslation();
@@ -29,7 +29,7 @@ export const ProjectPage: FC = () => {
 
   useEffect(() => {
     if (!initialized || !data) return;
-    load(data);
+    void load(data);
   }, [data, load, initialized]);
 
   if (!initialized || !data) {
@@ -66,8 +66,12 @@ export const ProjectPage: FC = () => {
         </Typography>
       </Stack>
       <Stack gap={1} width='100%' sx={{ mt: 'auto' }} alignItems='center'>
-        <PlayerSpectrogram />
-        <PlayerWaveform />
+        <Box height='512px' width='100%'>
+          <Spectrogram />
+        </Box>
+        <Box height='80px' width='100%'>
+          <Waveform />
+        </Box>
         <Player />
       </Stack>
     </Stack>

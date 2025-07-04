@@ -5,10 +5,12 @@ import tsEslint from 'typescript-eslint';
 
 export const baseConfig = {
   extends: [eslint.configs.recommended, ...tsEslint.configs.recommended],
-  files: ['**/*.ts', '**/*.js'],
+  files: ['**/*.ts'],
+  ignores: ['**/*.config.ts'],
   languageOptions: {
     ecmaVersion: 2024,
     sourceType: 'module',
+    parserOptions: { project: true },
   },
   plugins: {
     'import-x': importPlugin,
@@ -29,6 +31,7 @@ export const baseConfig = {
     '@typescript-eslint/no-useless-constructor': ['error'],
     '@typescript-eslint/no-shadow': ['error'],
     '@typescript-eslint/no-namespace': 'off',
+    '@typescript-eslint/no-floating-promises': 'error',
     'func-style': ['error'],
     'func-names': ['error'],
     'import-x/order': [
