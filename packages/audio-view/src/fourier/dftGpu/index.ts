@@ -2,15 +2,16 @@ import { ComplexArray } from '../complexArray';
 import { Fourier } from '../fourier';
 import shaderCode from './index.wgsl?raw';
 
-export const createDftGpu = async (windowSize: number): Promise<Fourier> => {
-  const adapter = await navigator.gpu.requestAdapter();
-  if (!adapter) {
-    throw new Error('WebGPU adapter not available');
-  }
-  const device = await adapter.requestDevice();
-
-  const module = device.createShaderModule({ code: shaderCode });
+export const createDftGpu = async (
+  windowSize: number,
+  device: GPUDevice,
+): Promise<Fourier> => {
+  const module = device.createShaderModule({
+    label: 'dft-shader',
+    code: shaderCode,
+  });
   const pipeline = device.createComputePipeline({
+    label: 'dft-pipeline',
     layout: 'auto',
     compute: { module, entryPoint: 'main' },
   });
@@ -23,40 +24,47 @@ export const createDftGpu = async (windowSize: number): Promise<Fourier> => {
     const numWindows = input.real.length / windowSize;
     const totalSize = input.real.length * Float32Array.BYTES_PER_ELEMENT;
 
-    const inputBufferReal = device.createBuffer({
+    const inputRealBuffer = device.createBuffer({
+      label: 'dft-input-real',
       size: totalSize,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
     });
-    const inputBufferImag = device.createBuffer({
+    const inputImagBuffer = device.createBuffer({
+      label: 'dft-input-imag',
       size: totalSize,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
     });
 
-    const outputBufferReal = device.createBuffer({
+    const outputRealBuffer = device.createBuffer({
+      label: 'dft-output-real',
       size: totalSize,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
     });
-    const outputBufferImag = device.createBuffer({
+    const outputImagBuffer = device.createBuffer({
+      label: 'dft-output-imag',
       size: totalSize,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
     });
 
-    const readBufferReal = device.createBuffer({
+    const readRealBuffer = device.createBuffer({
+      label: 'dft-read-real',
       size: totalSize,
       usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
     });
-    const readBufferImag = device.createBuffer({
+    const readImagBuffer = device.createBuffer({
+      label: 'dft-read-imag',
       size: totalSize,
       usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
     });
 
     const paramsBuffer = device.createBuffer({
+      label: 'dft-params',
       size: 3 * Uint32Array.BYTES_PER_ELEMENT,
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
 
-    device.queue.writeBuffer(inputBufferReal, 0, input.real);
-    device.queue.writeBuffer(inputBufferImag, 0, input.imag);
+    device.queue.writeBuffer(inputRealBuffer, 0, input.real);
+    device.queue.writeBuffer(inputImagBuffer, 0, input.imag);
     device.queue.writeBuffer(
       paramsBuffer,
       0,
@@ -64,18 +72,19 @@ export const createDftGpu = async (windowSize: number): Promise<Fourier> => {
     );
 
     const bindGroup = device.createBindGroup({
+      label: 'dft-bind-group',
       layout: pipeline.getBindGroupLayout(0),
       entries: [
-        { binding: 0, resource: { buffer: inputBufferReal } },
-        { binding: 1, resource: { buffer: inputBufferImag } },
-        { binding: 2, resource: { buffer: outputBufferReal } },
-        { binding: 3, resource: { buffer: outputBufferImag } },
+        { binding: 0, resource: { buffer: inputRealBuffer } },
+        { binding: 1, resource: { buffer: inputImagBuffer } },
+        { binding: 2, resource: { buffer: outputRealBuffer } },
+        { binding: 3, resource: { buffer: outputImagBuffer } },
         { binding: 4, resource: { buffer: paramsBuffer } },
       ],
     });
 
-    const encoder = device.createCommandEncoder();
-    const pass = encoder.beginComputePass();
+    const encoder = device.createCommandEncoder({ label: 'dft-encoder' });
+    const pass = encoder.beginComputePass({ label: 'dft-pass' });
     pass.setPipeline(pipeline);
     pass.setBindGroup(0, bindGroup);
 
@@ -85,16 +94,16 @@ export const createDftGpu = async (windowSize: number): Promise<Fourier> => {
     pass.end();
 
     encoder.copyBufferToBuffer(
-      outputBufferReal,
+      outputRealBuffer,
       0,
-      readBufferReal,
+      readRealBuffer,
       0,
       totalSize,
     );
     encoder.copyBufferToBuffer(
-      outputBufferImag,
+      outputImagBuffer,
       0,
-      readBufferImag,
+      readImagBuffer,
       0,
       totalSize,
     );
@@ -102,13 +111,13 @@ export const createDftGpu = async (windowSize: number): Promise<Fourier> => {
     device.queue.submit([encoder.finish()]);
     await device.queue.onSubmittedWorkDone();
 
-    await readBufferReal.mapAsync(GPUMapMode.READ);
-    output.real.set(new Float32Array(readBufferReal.getMappedRange()));
-    readBufferReal.unmap();
+    await readRealBuffer.mapAsync(GPUMapMode.READ);
+    output.real.set(new Float32Array(readRealBuffer.getMappedRange()));
+    readRealBuffer.unmap();
 
-    await readBufferImag.mapAsync(GPUMapMode.READ);
-    output.imag.set(new Float32Array(readBufferImag.getMappedRange()));
-    readBufferImag.unmap();
+    await readImagBuffer.mapAsync(GPUMapMode.READ);
+    output.imag.set(new Float32Array(readImagBuffer.getMappedRange()));
+    readImagBuffer.unmap();
   };
 
   return {

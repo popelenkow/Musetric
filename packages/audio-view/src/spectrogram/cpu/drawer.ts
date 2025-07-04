@@ -1,25 +1,54 @@
-import { Gradients } from '../common';
+import { Colors, createGradient, Gradients, parseHexColor } from '../colors';
 
-export type DrawerRender = (
-  columns: Uint8Array[],
-  progress: number,
-  gradients: Gradients,
-) => void;
+export type DrawerRender = (progress: number) => void;
 
 export type Drawer = {
+  width: number;
+  height: number;
+  columns: Uint8Array[];
+  resize: () => void;
   render: DrawerRender;
 };
-export const createDrawer = (canvas: HTMLCanvasElement): Drawer => {
+export const createDrawer = (
+  canvas: HTMLCanvasElement,
+  colors: Colors,
+): Drawer => {
   const context = canvas.getContext('2d');
   if (!context) {
     throw new Error('Context 2D not available on the canvas');
   }
-  return {
-    render: (columns, progress, gradients) => {
-      const width = columns.length;
-      const height = columns[0]?.length ?? 0;
 
-      const image = context.createImageData(width, height);
+  const gradients: Gradients = {
+    played: createGradient(
+      parseHexColor(colors.background),
+      parseHexColor(colors.played),
+    ),
+    unplayed: createGradient(
+      parseHexColor(colors.background),
+      parseHexColor(colors.unplayed),
+    ),
+  };
+
+  let image = context.createImageData(canvas.clientWidth, canvas.clientHeight);
+
+  const resize = () => {
+    drawer.width = canvas.clientWidth;
+    drawer.height = canvas.clientHeight;
+    image = context.createImageData(drawer.width, drawer.height);
+    drawer.columns = Array.from(
+      { length: drawer.width },
+      () => new Uint8Array(drawer.height),
+    );
+  };
+
+  const drawer: Drawer = {
+    width: 0,
+    height: 0,
+    columns: [],
+    resize,
+    render: (progress) => {
+      const { width, height, columns } = drawer;
+
       const playedWidth = Math.floor(
         Math.max(0, Math.min(progress, 1)) * width,
       );
@@ -38,9 +67,14 @@ export const createDrawer = (canvas: HTMLCanvasElement): Drawer => {
         }
       }
 
-      canvas.width = width;
-      canvas.height = height;
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+      }
       context.putImageData(image, 0, 0);
     },
   };
+  resize();
+
+  return drawer;
 };

@@ -1,1 +1,1 @@
-export * as gpu from './indexJoin';
+export * from './pipeline';

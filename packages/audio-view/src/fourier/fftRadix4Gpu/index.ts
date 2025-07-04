@@ -36,19 +36,18 @@ const getWidth = (windowSize: number): number => {
 
 export const createFftRadix4Gpu = async (
   windowSize: number,
+  device: GPUDevice,
 ): Promise<Fourier> => {
   if (windowSize <= 1 || (windowSize & (windowSize - 1)) !== 0) {
     throw new Error('FFT size must be a power of two and bigger than 1');
   }
 
-  const adapter = await navigator.gpu.requestAdapter();
-  if (!adapter) {
-    throw new Error('WebGPU adapter not available');
-  }
-  const device = await adapter.requestDevice();
-
-  const module = device.createShaderModule({ code: shaderCode });
+  const module = device.createShaderModule({
+    label: 'fft4-shader',
+    code: shaderCode,
+  });
   const pipeline = device.createComputePipeline({
+    label: 'fft4-pipeline',
     layout: 'auto',
     compute: { module, entryPoint: 'main' },
   });
@@ -58,12 +57,14 @@ export const createFftRadix4Gpu = async (
   const reverseTable = createReverseTable(width);
 
   const reverseTableBuffer = device.createBuffer({
+    label: 'fft4-reverse-table',
     size: reverseTable.byteLength,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
   device.queue.writeBuffer(reverseTableBuffer, 0, reverseTable);
 
   const trigTableBuffer = device.createBuffer({
+    label: 'fft4-trig-table',
     size: trigTable.byteLength,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
@@ -77,40 +78,47 @@ export const createFftRadix4Gpu = async (
     const numWindows = input.real.length / windowSize;
     const totalSize = input.real.length * Float32Array.BYTES_PER_ELEMENT;
 
-    const inputBufferReal = device.createBuffer({
+    const inputRealBuffer = device.createBuffer({
+      label: 'fft4-input-real',
       size: totalSize,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
     });
-    const inputBufferImag = device.createBuffer({
+    const inputImagBuffer = device.createBuffer({
+      label: 'fft4-input-imag',
       size: totalSize,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
     });
 
-    const outputBufferReal = device.createBuffer({
+    const outputRealBuffer = device.createBuffer({
+      label: 'fft4-output-real',
       size: totalSize,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
     });
-    const outputBufferImag = device.createBuffer({
+    const outputImagBuffer = device.createBuffer({
+      label: 'fft4-output-imag',
       size: totalSize,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
     });
 
-    const readBufferReal = device.createBuffer({
+    const readRealBuffer = device.createBuffer({
+      label: 'fft4-read-real',
       size: totalSize,
       usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
     });
-    const readBufferImag = device.createBuffer({
+    const readImagBuffer = device.createBuffer({
+      label: 'fft4-read-imag',
       size: totalSize,
       usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
     });
 
     const paramsBuffer = device.createBuffer({
+      label: 'fft4-params',
       size: 4 * Uint32Array.BYTES_PER_ELEMENT,
       usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
 
-    device.queue.writeBuffer(inputBufferReal, 0, input.real);
-    device.queue.writeBuffer(inputBufferImag, 0, input.imag);
+    device.queue.writeBuffer(inputRealBuffer, 0, input.real);
+    device.queue.writeBuffer(inputImagBuffer, 0, input.imag);
     device.queue.writeBuffer(
       paramsBuffer,
       0,
@@ -118,36 +126,37 @@ export const createFftRadix4Gpu = async (
     );
 
     const bindGroup = device.createBindGroup({
+      label: 'fft4-bind-group',
       layout: pipeline.getBindGroupLayout(0),
       entries: [
-        { binding: 0, resource: { buffer: inputBufferReal } },
-        { binding: 1, resource: { buffer: inputBufferImag } },
-        { binding: 2, resource: { buffer: outputBufferReal } },
-        { binding: 3, resource: { buffer: outputBufferImag } },
+        { binding: 0, resource: { buffer: inputRealBuffer } },
+        { binding: 1, resource: { buffer: inputImagBuffer } },
+        { binding: 2, resource: { buffer: outputRealBuffer } },
+        { binding: 3, resource: { buffer: outputImagBuffer } },
         { binding: 4, resource: { buffer: reverseTableBuffer } },
         { binding: 5, resource: { buffer: trigTableBuffer } },
         { binding: 6, resource: { buffer: paramsBuffer } },
       ],
     });
 
-    const encoder = device.createCommandEncoder();
-    const pass = encoder.beginComputePass();
+    const encoder = device.createCommandEncoder({ label: 'fft4-encoder' });
+    const pass = encoder.beginComputePass({ label: 'fft4-pass' });
     pass.setPipeline(pipeline);
     pass.setBindGroup(0, bindGroup);
     pass.dispatchWorkgroups(numWindows);
     pass.end();
 
     encoder.copyBufferToBuffer(
-      outputBufferReal,
+      outputRealBuffer,
       0,
-      readBufferReal,
+      readRealBuffer,
       0,
       totalSize,
     );
     encoder.copyBufferToBuffer(
-      outputBufferImag,
+      outputImagBuffer,
       0,
-      readBufferImag,
+      readImagBuffer,
       0,
       totalSize,
     );
@@ -155,13 +164,13 @@ export const createFftRadix4Gpu = async (
     device.queue.submit([encoder.finish()]);
     await device.queue.onSubmittedWorkDone();
 
-    await readBufferReal.mapAsync(GPUMapMode.READ);
-    output.real.set(new Float32Array(readBufferReal.getMappedRange()));
-    readBufferReal.unmap();
+    await readRealBuffer.mapAsync(GPUMapMode.READ);
+    output.real.set(new Float32Array(readRealBuffer.getMappedRange()));
+    readRealBuffer.unmap();
 
-    await readBufferImag.mapAsync(GPUMapMode.READ);
-    output.imag.set(new Float32Array(readBufferImag.getMappedRange()));
-    readBufferImag.unmap();
+    await readImagBuffer.mapAsync(GPUMapMode.READ);
+    output.imag.set(new Float32Array(readImagBuffer.getMappedRange()));
+    readImagBuffer.unmap();
   };
 
   return {
