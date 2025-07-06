@@ -1,5 +1,5 @@
 export type Parameters = {
-  windowSize: number;
+  progress: number;
   sampleRate: number;
   minFrequency: number;
   maxFrequency: number;

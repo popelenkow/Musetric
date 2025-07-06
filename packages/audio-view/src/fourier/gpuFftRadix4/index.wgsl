@@ -1,8 +1,8 @@
 struct Params {
   windowSize : u32,
-  width : u32,
+  windowCount : u32,
+  reverseWidth : u32,
   inverse : u32,
-  numWindows : u32,
 };
 
 @group(0) @binding(0) var<storage, read>  inputReal  : array<f32>;
@@ -16,8 +16,8 @@ struct Params {
 @compute @workgroup_size(1)
 fn main(@builtin(workgroup_id) workgroup_id : vec3<u32>) {
   let windowOffset = workgroup_id.x * params.windowSize;
-  var step = 1u << params.width;
-  var len = params.windowSize >> params.width;
+  var step = 1u << params.reverseWidth;
+  var len = params.windowSize >> params.reverseWidth;
   var outOff : u32 = 0u;
   var t : u32 = 0u;
   let sign = select(1.0, -1.0, params.inverse == 1u);

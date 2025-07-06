@@ -44,7 +44,7 @@ export const SongPlayer: FC<SongPlayerProps> = (props) => {
         onClick={() => {
           if (!audioRef.current) return;
           if (playing) audioRef.current.pause();
-          else audioRef.current.play();
+          else void audioRef.current.play();
           setPlaying(!playing);
         }}
       >

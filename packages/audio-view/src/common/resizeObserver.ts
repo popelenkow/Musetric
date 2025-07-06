@@ -2,8 +2,14 @@ export const subscribeResizeObserver = (
   element: Element,
   callback: () => Promise<void>,
 ) => {
-  callback();
-  const observer = new ResizeObserver(callback);
+  let isEntry = true;
+  const observer = new ResizeObserver(() => {
+    if (isEntry) {
+      isEntry = false;
+      return;
+    }
+    void callback();
+  });
   observer.observe(element);
   return () => {
     observer.disconnect();

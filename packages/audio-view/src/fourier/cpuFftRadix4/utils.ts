@@ -1,5 +1,4 @@
 import { ComplexArray } from '../complexArray';
-import { Fourier } from '../fourier';
 
 /* Licensed by MIT. Based on https://github.com/indutny/fft.js/tree/4a18cf88fcdbd4ad5acca6eaea06a0b462047835 */
 
@@ -88,23 +87,30 @@ const singleTransform4 = (options: SingleTransform4Options): void => {
   output.imag[outOff + 3] = FDi;
 };
 
-type Transform4Options = {
+export type Transform4Options = {
   input: ComplexArray;
   output: ComplexArray;
   inverse: boolean;
   windowSize: number;
-  width: number;
+  reverseWidth: number;
   reverseTable: Uint32Array;
   trigTable: Float32Array;
 };
 /** radix-4 implementation */
-const transform4 = (options: Transform4Options): void => {
-  const { input, output, inverse, windowSize, width, reverseTable, trigTable } =
-    options;
+export const transform4 = (options: Transform4Options): void => {
+  const {
+    input,
+    output,
+    inverse,
+    windowSize,
+    reverseWidth,
+    reverseTable,
+    trigTable,
+  } = options;
 
   // Initial step (permute and transform)
-  let step = 1 << width;
-  let len = windowSize >>> width;
+  let step = 1 << reverseWidth;
+  let len = windowSize >>> reverseWidth;
 
   let outOff: number;
   let t: number;
@@ -199,97 +205,4 @@ const transform4 = (options: Transform4Options): void => {
       }
     }
   }
-};
-
-const createReverseTable = (width: number): Uint32Array => {
-  const reverseTable = new Uint32Array(1 << width);
-  for (let j = 0; j < reverseTable.length; j++) {
-    reverseTable[j] = 0;
-    for (let shift = 0; shift < width + 1; shift += 2) {
-      const revShift = width - shift - 1;
-      reverseTable[j] |= ((j >>> shift) & 3) << revShift;
-    }
-    reverseTable[j] /= 2;
-  }
-  return reverseTable;
-};
-
-const createTrigTable = (windowSize: number): Float32Array => {
-  const table = new Float32Array(2 * windowSize);
-  for (let i = 0; i < table.length; i += 2) {
-    const angle = (Math.PI * i) / windowSize;
-    table[i] = Math.cos(angle);
-    table[i + 1] = -Math.sin(angle);
-  }
-  return table;
-};
-
-const getWidth = (windowSize: number): number => {
-  // Find size's power of two
-  let power = 0;
-  for (let t = 1; windowSize > t; t <<= 1) {
-    power++;
-  }
-
-  // Calculate initial step's width:
-  //   * If we are full radix-4 - it is 2x smaller to give initial len=8
-  //   * Otherwise it is the same as `power` to give len=4
-  const width = power % 2 === 0 ? power - 1 : power;
-  return width - 1;
-};
-
-export const createFftRadix4Cpu = async (
-  windowSize: number,
-): Promise<Fourier> => {
-  if (windowSize <= 1 || (windowSize & (windowSize - 1)) !== 0) {
-    throw new Error('FFT size must be a power of two and bigger than 1');
-  }
-
-  const trigTable = createTrigTable(windowSize);
-
-  const width = getWidth(windowSize);
-
-  const reverseTable = createReverseTable(width);
-
-  const transform = async (
-    input: ComplexArray,
-    output: ComplexArray,
-    inverse: boolean,
-  ) => {
-    const numWindows = input.real.length / windowSize;
-    for (let w = 0; w < numWindows; w++) {
-      const inSlice: ComplexArray = {
-        real: input.real.subarray(w * windowSize, (w + 1) * windowSize),
-        imag: input.imag.subarray(w * windowSize, (w + 1) * windowSize),
-      };
-      const outSlice: ComplexArray = {
-        real: output.real.subarray(w * windowSize, (w + 1) * windowSize),
-        imag: output.imag.subarray(w * windowSize, (w + 1) * windowSize),
-      };
-      transform4({
-        input: inSlice,
-        output: outSlice,
-        inverse,
-        windowSize,
-        width,
-        reverseTable,
-        trigTable,
-      });
-      if (inverse) {
-        for (let i = 0; i < windowSize; i++) {
-          outSlice.real[i] /= windowSize;
-          outSlice.imag[i] /= windowSize;
-        }
-      }
-    }
-  };
-
-  return {
-    forward: async (input: ComplexArray, output: ComplexArray) => {
-      await transform(input, output, false);
-    },
-    inverse: async (input: ComplexArray, output: ComplexArray) => {
-      await transform(input, output, true);
-    },
-  };
 };

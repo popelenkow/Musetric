@@ -18,7 +18,7 @@ export const usePlayerStore = create<State>((set, get) => ({
       });
       set({ player, initialized: true });
     };
-    init();
+    void init();
     return () => {
       set(initialState);
     };
