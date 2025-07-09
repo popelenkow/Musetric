@@ -1,6 +1,6 @@
-import { ComplexArray } from './complexArray';
+import { ComplexArray } from '../common';
 
-export type Fourier = {
+export type CpuFourier = {
   forward: (input: ComplexArray, output: ComplexArray) => Promise<void>;
   inverse: (input: ComplexArray, output: ComplexArray) => Promise<void>;
   resize: (windowCount: number) => void;
@@ -12,13 +12,4 @@ export type CreateCpuFourierOptions = {
 };
 export type CreateCpuFourier = (
   options: CreateCpuFourierOptions,
-) => Promise<Fourier>;
-
-export type CreateGpuFourierOptions = {
-  windowSize: number;
-  windowCount: number;
-  device: GPUDevice;
-};
-export type CreateGpuFourier = (
-  options: CreateGpuFourierOptions,
-) => Promise<Fourier>;
+) => Promise<CpuFourier>;

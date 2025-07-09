@@ -1,12 +1,9 @@
-import { ComplexArray } from '../complexArray';
-import { CreateGpuFourier } from '../fourier';
-import {
-  createStaticBuffers,
-  createIoBuffers,
-  createBindGroup,
-  createParams,
-} from './common';
-import shaderCode from './index.wgsl?raw';
+import { ComplexArray, ComplexGpuBuffer } from '../../common';
+import { CreateGpuFourier, GpuFourier } from '../gpuFourier';
+import { createIoBuffers } from './ioBuffers';
+import { createParams } from './params';
+import { createBindGroup, createPipeline } from './pipeline';
+import { createStaticBuffers } from './staticBuffers';
 
 export const createGpuDft: CreateGpuFourier = async (options) => {
   const { windowSize, device } = options;
@@ -19,15 +16,7 @@ export const createGpuDft: CreateGpuFourier = async (options) => {
   const xWorkgroupSize = 64;
   const xWorkgroupCount = Math.ceil(windowSize / xWorkgroupSize);
 
-  const module = device.createShaderModule({
-    label: 'dft-shader',
-    code: shaderCode,
-  });
-  const pipeline = device.createComputePipeline({
-    label: 'dft-pipeline',
-    layout: 'auto',
-    compute: { module, entryPoint: 'main' },
-  });
+  const pipeline = createPipeline(device);
 
   const createGroup = () =>
     createBindGroup(device, pipeline, {
@@ -39,11 +28,8 @@ export const createGpuDft: CreateGpuFourier = async (options) => {
 
   const transform = async (
     input: ComplexArray,
-    output: ComplexArray,
     inverse: boolean,
-  ) => {
-    const totalSize = windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT;
-
+  ): Promise<ComplexGpuBuffer> => {
     device.queue.writeBuffer(ioBuffers.inputReal, 0, input.real);
     device.queue.writeBuffer(ioBuffers.inputImag, 0, input.imag);
     params.set({ windowSize, windowCount, inverse });
@@ -56,44 +42,16 @@ export const createGpuDft: CreateGpuFourier = async (options) => {
     pass.dispatchWorkgroups(xWorkgroupCount, windowCount);
     pass.end();
 
-    encoder.copyBufferToBuffer(
-      ioBuffers.outputReal,
-      0,
-      ioBuffers.readReal,
-      0,
-      totalSize,
-    );
-    encoder.copyBufferToBuffer(
-      ioBuffers.outputImag,
-      0,
-      ioBuffers.readImag,
-      0,
-      totalSize,
-    );
-
     device.queue.submit([encoder.finish()]);
     await device.queue.onSubmittedWorkDone();
 
-    await Promise.all([
-      ioBuffers.readReal.mapAsync(GPUMapMode.READ),
-      ioBuffers.readImag.mapAsync(GPUMapMode.READ),
-    ]);
-
-    output.real.set(new Float32Array(ioBuffers.readReal.getMappedRange()));
-    output.imag.set(new Float32Array(ioBuffers.readImag.getMappedRange()));
-
-    ioBuffers.readReal.unmap();
-    ioBuffers.readImag.unmap();
+    return { real: ioBuffers.outputReal, imag: ioBuffers.outputImag };
   };
 
-  return {
-    forward: async (input: ComplexArray, output: ComplexArray) => {
-      await transform(input, output, false);
-    },
-    inverse: async (input: ComplexArray, output: ComplexArray) => {
-      await transform(input, output, true);
-    },
-    resize: (newWindowCount: number) => {
+  const fourier: GpuFourier = {
+    forward: (input) => transform(input, false),
+    inverse: (input) => transform(input, true),
+    resize: (newWindowCount) => {
       windowCount = newWindowCount;
       ioBuffers.destroy();
       ioBuffers = createIoBuffers(device, windowSize, windowCount);
@@ -104,4 +62,5 @@ export const createGpuDft: CreateGpuFourier = async (options) => {
       staticBuffers.destroy();
     },
   };
+  return fourier;
 };

@@ -1,17 +1,23 @@
 import { Colors, createGradient, Gradients, parseHexColor } from '../colors';
+import { Parameters } from '../parameters';
+import { computeColumn } from './computeColumn';
 
-export type DrawerRender = (progress: number) => void;
+export type DrawerRender = (
+  magnitudes: Float32Array,
+  progress: number,
+  parameters: Parameters,
+) => void;
 
 export type Drawer = {
   width: number;
   height: number;
-  columns: Uint8Array[];
   resize: () => void;
   render: DrawerRender;
 };
 export const createDrawer = (
   canvas: HTMLCanvasElement,
   colors: Colors,
+  windowSize: number,
 ): Drawer => {
   const context = canvas.getContext('2d');
   if (!context) {
@@ -29,32 +35,30 @@ export const createDrawer = (
     ),
   };
 
-  let image = context.createImageData(canvas.clientWidth, canvas.clientHeight);
-
-  const resize = () => {
-    drawer.width = canvas.clientWidth;
-    drawer.height = canvas.clientHeight;
-    image = context.createImageData(drawer.width, drawer.height);
-    drawer.columns = Array.from(
-      { length: drawer.width },
-      () => new Uint8Array(drawer.height),
-    );
-  };
+  let image = context.createImageData(1, 1);
+  let column = new Uint8Array(1);
 
   const drawer: Drawer = {
     width: 0,
     height: 0,
-    columns: [],
-    resize,
-    render: (progress) => {
-      const { width, height, columns } = drawer;
+    resize: () => {
+      drawer.width = canvas.clientWidth;
+      drawer.height = canvas.clientHeight;
+      image = context.createImageData(drawer.width, drawer.height);
+      column = new Uint8Array(drawer.height);
+    },
+    render: (magnitudes, progress, parameters) => {
+      const { width, height } = drawer;
 
       const playedWidth = Math.floor(
         Math.max(0, Math.min(progress, 1)) * width,
       );
 
       for (let x = 0; x < width; x++) {
-        const column = columns[x];
+        const start = x * windowSize;
+        const end = start + windowSize;
+        const magnitude = magnitudes.subarray(start / 2, end / 2);
+        computeColumn(windowSize, height, parameters, magnitude, column);
         for (let y = 0; y < height; y++) {
           const value = column[y];
           const idx = (y * width + x) * 4;
@@ -74,7 +78,7 @@ export const createDrawer = (
       context.putImageData(image, 0, 0);
     },
   };
-  resize();
 
+  drawer.resize();
   return drawer;
 };

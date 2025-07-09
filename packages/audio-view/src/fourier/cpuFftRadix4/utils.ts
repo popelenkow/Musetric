@@ -1,4 +1,4 @@
-import { ComplexArray } from '../complexArray';
+import { ComplexArray } from '../../common';
 
 /* Licensed by MIT. Based on https://github.com/indutny/fft.js/tree/4a18cf88fcdbd4ad5acca6eaea06a0b462047835 */
 

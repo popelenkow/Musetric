@@ -1,22 +1,4 @@
-import type { ComplexArray } from '../../fourier';
 import { Parameters } from '../parameters';
-
-export const fillWave = (
-  windowSize: number,
-  windowCount: number,
-  input: Float32Array,
-  wave: ComplexArray,
-): void => {
-  const step = (input.length - windowSize) / windowCount;
-
-  for (let i = 0; i < windowCount; i++) {
-    const offset = i * windowSize;
-    const start = Math.floor(i * step);
-    const slice = input.subarray(start, start + windowSize);
-    wave.real.set(slice, offset);
-    wave.imag.fill(0, offset, offset + windowSize);
-  }
-};
 
 export const computeColumn = (
   windowSize: number,

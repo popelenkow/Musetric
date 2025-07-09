@@ -20,18 +20,18 @@ fn sign() -> f32 {
 @compute @workgroup_size(64)
 fn main(@builtin(global_invocation_id) gid : vec3<u32>) {
   let k = gid.x;
-  let window = gid.y;
-  if (k >= params.windowSize || window >= params.windowCount) {
+  let windowIndex = gid.y;
+  if (k >= params.windowSize || windowIndex >= params.windowCount) {
     return;
   }
-  let offset = window * params.windowSize;
+  let windowOffset = windowIndex * params.windowSize;
   var real : f32 = 0.0;
   var imag : f32 = 0.0;
   let s = sign();
   for (var n: u32 = 0u; n < params.windowSize; n = n + 1u) {
     let angle = 2.0 * 3.141592653589793 * f32(k * n) / f32(params.windowSize);
-    let re = inputReal[n + offset];
-    let im = inputImag[n + offset];
+    let re = inputReal[windowOffset + n];
+    let im = inputImag[windowOffset + n];
     let c = cos(angle);
     let si = s * sin(angle);
     real = real + re * c - im * si;
@@ -42,6 +42,6 @@ fn main(@builtin(global_invocation_id) gid : vec3<u32>) {
     real = real / size;
     imag = imag / size;
   }
-  outputReal[k + offset] = real;
-  outputImag[k + offset] = imag;
+  outputReal[windowOffset + k] = real;
+  outputImag[windowOffset + k] = imag;
 }

@@ -1,6 +1,7 @@
-import { Colors, cpu, Pipeline, PipelineRender } from '../';
-import { createCallLatest } from '../../common';
+import { Colors, Pipeline, PipelineRender, cpu } from '../';
+import { createCallLatest, createComplexGpuBufferReader } from '../../common';
 import { GpuFourierMode, gpuFouriers } from '../../fourier';
+import { createDrawer } from './drawer';
 import { renderPipeline } from './renderPipeline';
 
 export type CreatePipelineOptions = {
@@ -17,22 +18,21 @@ export type CreatePipeline = (
 export const createPipeline: CreatePipeline = async (options) => {
   const { canvas, windowSize, fourierMode, colors, device } = options;
 
-  const drawer = cpu.createDrawer(canvas, colors);
+  const drawer = createDrawer(canvas, colors, windowSize, device);
+  let arrays = cpu.createPipelineArrays(windowSize, drawer.width);
   const createFourier = gpuFouriers[fourierMode];
   const fourier = await createFourier({
     windowSize,
     windowCount: drawer.width,
     device,
   });
+  const gpuBufferReader = createComplexGpuBufferReader({
+    device,
+    typeSize: Float32Array.BYTES_PER_ELEMENT,
+    size: windowSize * drawer.width,
+  });
 
   let isResizeRequested = false;
-  let buffers = cpu.createPipelineBuffers(windowSize, drawer.width);
-
-  const resize = () => {
-    drawer.resize();
-    buffers = cpu.createPipelineBuffers(windowSize, drawer.width);
-    fourier.resize(drawer.width);
-  };
 
   return {
     resize: () => {
@@ -41,15 +41,19 @@ export const createPipeline: CreatePipeline = async (options) => {
     render: createCallLatest<PipelineRender>(async (input, parameters) => {
       if (isResizeRequested) {
         isResizeRequested = false;
-        resize();
+        drawer.resize();
+        arrays = cpu.createPipelineArrays(windowSize, drawer.width);
+        fourier.resize(drawer.width);
+        gpuBufferReader.resize(windowSize * drawer.width);
       }
       await renderPipeline({
         input,
         parameters,
         windowSize,
         drawer,
-        buffers,
+        arrays,
         fourier,
+        gpuBufferReader,
       });
     }),
   };

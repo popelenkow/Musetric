@@ -1,5 +1,5 @@
-import { ComplexArray } from '../complexArray';
-import { CreateCpuFourier } from '../fourier';
+import { ComplexArray, subComplexArray } from '../../common';
+import { CreateCpuFourier } from '../cpuFourier';
 import { assertWindowSizePowerOfTwo } from '../isPowerOfTwo';
 import { utilsRadix4 } from '../utilsRadix4';
 import { transform4 } from './utils';
@@ -19,14 +19,10 @@ export const createCpuFftRadix4: CreateCpuFourier = async (options) => {
   ) => {
     const windowCount = input.real.length / windowSize;
     for (let i = 0; i < windowCount; i++) {
-      const inputSlice: ComplexArray = {
-        real: input.real.subarray(i * windowSize, (i + 1) * windowSize),
-        imag: input.imag.subarray(i * windowSize, (i + 1) * windowSize),
-      };
-      const outputSlice: ComplexArray = {
-        real: output.real.subarray(i * windowSize, (i + 1) * windowSize),
-        imag: output.imag.subarray(i * windowSize, (i + 1) * windowSize),
-      };
+      const start = i * windowSize;
+      const end = start + windowSize;
+      const inputSlice = subComplexArray(input, start, end);
+      const outputSlice = subComplexArray(output, start, end);
       transform4({
         input: inputSlice,
         output: outputSlice,

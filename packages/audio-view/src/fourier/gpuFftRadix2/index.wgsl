@@ -21,20 +21,20 @@ fn main(
   @builtin(workgroup_id) workgroupId: vec3<u32>,
   @builtin(local_invocation_id) localId: vec3<u32>,
 ) {
-  let currentWindowIndex = workgroupId.x;
-  if (currentWindowIndex >= params.windowCount) {
+  let windowIndex = workgroupId.x;
+  if (windowIndex >= params.windowCount) {
     return;
   }
 
   let windowSize = params.windowSize;
-  let globalOffset = currentWindowIndex * windowSize;
+  let windowOffset = windowIndex * windowSize;
   let threadIndex = localId.x;
   let twiddleSign = getSign();
 
   for (var index: u32 = threadIndex; index < windowSize; index = index + 64u) {
     let reversedIndex = reverseTable[index];
-    outputReal[index + globalOffset] = inputReal[reversedIndex + globalOffset];
-    outputImag[index + globalOffset] = inputImag[reversedIndex + globalOffset];
+    outputReal[windowOffset + index] = inputReal[windowOffset + reversedIndex];
+    outputImag[windowOffset + index] = inputImag[windowOffset + reversedIndex];
   }
 
   workgroupBarrier();
@@ -45,7 +45,7 @@ fn main(
     let step = windowSize / sectionSize;
     for (var blockStart: u32 = 0u; blockStart < windowSize; blockStart = blockStart + sectionSize) {
       for (var twiddleIndex: u32 = threadIndex; twiddleIndex < halfSize; twiddleIndex = twiddleIndex + 64u) {
-        let firstIndex = blockStart + twiddleIndex + globalOffset;
+        let firstIndex = windowOffset + blockStart + twiddleIndex;
         let secondIndex = firstIndex + halfSize;
 
         let trigIndex = twiddleIndex * step;
@@ -74,7 +74,7 @@ fn main(
   if (params.inverse == 1u) {
     let normalizationFactor = f32(windowSize);
     for (var sampleIndex: u32 = threadIndex; sampleIndex < windowSize; sampleIndex = sampleIndex + 64u) {
-      let index = sampleIndex + globalOffset;
+      let index = windowOffset + sampleIndex;
       outputReal[index] = outputReal[index] / normalizationFactor;
       outputImag[index] = outputImag[index] / normalizationFactor;
     }
