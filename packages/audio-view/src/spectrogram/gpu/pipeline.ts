@@ -1,8 +1,10 @@
-import { Colors, Pipeline, PipelineRender, cpu } from '../';
-import { createCallLatest, createComplexGpuBufferReader } from '../../common';
+import { Colors, Pipeline, PipelineRender, cpu } from '..';
+import { createCallLatest } from '../../common';
 import { GpuFourierMode, gpuFouriers } from '../../fourier';
+import { createDecibelNormalizer } from './decibelNormalizer';
 import { createDrawer } from './drawer';
-import { renderPipeline } from './renderPipeline';
+import { createMagnitudeNormalizer } from './magnitudeNormalizer';
+import { createPipelineBuffers } from './pipelineBuffers';
 
 export type CreatePipelineOptions = {
   canvas: HTMLCanvasElement;
@@ -26,13 +28,19 @@ export const createPipeline: CreatePipeline = async (options) => {
     windowCount: drawer.width,
     device,
   });
-  const gpuBufferReader = createComplexGpuBufferReader({
-    device,
-    typeSize: Float32Array.BYTES_PER_ELEMENT,
-    size: windowSize * drawer.width,
-  });
+  const buffers = createPipelineBuffers(device, windowSize, drawer.width);
+  const magnitudeNormalizer = createMagnitudeNormalizer(device, windowSize);
+  const decibelNormalizer = createDecibelNormalizer(device, windowSize);
 
   let isResizeRequested = false;
+
+  const resize = () => {
+    isResizeRequested = false;
+    drawer.resize();
+    arrays = cpu.createPipelineArrays(windowSize, drawer.width);
+    fourier.resize(drawer.width);
+    buffers.resize(drawer.width);
+  };
 
   return {
     resize: () => {
@@ -40,21 +48,19 @@ export const createPipeline: CreatePipeline = async (options) => {
     },
     render: createCallLatest<PipelineRender>(async (input, parameters) => {
       if (isResizeRequested) {
-        isResizeRequested = false;
-        drawer.resize();
-        arrays = cpu.createPipelineArrays(windowSize, drawer.width);
-        fourier.resize(drawer.width);
-        gpuBufferReader.resize(windowSize * drawer.width);
+        resize();
       }
-      await renderPipeline({
-        input,
-        parameters,
-        windowSize,
-        drawer,
-        arrays,
-        fourier,
-        gpuBufferReader,
-      });
+      const { width } = drawer;
+      const { waves } = arrays;
+
+      cpu.fillWaves(windowSize, width, input, waves);
+      const encoder = device.createCommandEncoder({ label: 'render-pipeline' });
+      const buffer = fourier.forward(encoder, waves);
+      magnitudeNormalizer.run(encoder, buffer, buffers.magnitude, width);
+      decibelNormalizer.run(encoder, buffers.magnitude, width);
+      drawer.render(encoder, buffers.magnitude, parameters);
+      device.queue.submit([encoder.finish()]);
+      await device.queue.onSubmittedWorkDone();
     }),
   };
 };

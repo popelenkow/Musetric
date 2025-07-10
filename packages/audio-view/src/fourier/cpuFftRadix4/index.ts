@@ -28,7 +28,7 @@ export const createCpuFftRadix4: CreateCpuFourier = async (options) => {
         output: outputSlice,
         inverse,
         windowSize,
-        reverseWidth: reverseWidth,
+        reverseWidth,
         reverseTable,
         trigTable,
       });

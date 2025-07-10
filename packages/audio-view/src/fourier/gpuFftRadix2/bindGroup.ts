@@ -1,18 +1,4 @@
 import { Buffers } from './buffers';
-import shaderCode from './index.wgsl?raw';
-
-export const createPipeline = (device: GPUDevice) => {
-  const module = device.createShaderModule({
-    label: 'fft2-shader',
-    code: shaderCode,
-  });
-  const pipeline = device.createComputePipeline({
-    label: 'fft2-pipeline',
-    layout: 'auto',
-    compute: { module, entryPoint: 'main' },
-  });
-  return pipeline;
-};
 
 export const createBindGroup = (
   device: GPUDevice,

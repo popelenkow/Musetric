@@ -1,8 +1,14 @@
 import { ComplexArray, ComplexGpuBuffer } from '../common';
 
 export type GpuFourier = {
-  forward: (input: ComplexArray) => Promise<ComplexGpuBuffer>;
-  inverse: (input: ComplexArray) => Promise<ComplexGpuBuffer>;
+  forward: (
+    encoder: GPUCommandEncoder,
+    input: ComplexArray,
+  ) => ComplexGpuBuffer;
+  inverse: (
+    encoder: GPUCommandEncoder,
+    input: ComplexArray,
+  ) => ComplexGpuBuffer;
   resize: (windowCount: number) => void;
   destroy: () => void;
 };

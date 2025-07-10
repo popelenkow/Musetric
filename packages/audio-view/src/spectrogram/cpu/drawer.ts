@@ -1,6 +1,6 @@
 import { Colors, createGradient, Gradients, parseHexColor } from '../colors';
 import { Parameters } from '../parameters';
-import { computeColumn } from './computeColumn';
+import { logSlice } from './logSlice';
 
 export type DrawerRender = (
   magnitudes: Float32Array,
@@ -58,7 +58,7 @@ export const createDrawer = (
         const start = x * windowSize;
         const end = start + windowSize;
         const magnitude = magnitudes.subarray(start / 2, end / 2);
-        computeColumn(windowSize, height, parameters, magnitude, column);
+        logSlice(windowSize, height, parameters, magnitude, column);
         for (let y = 0; y < height; y++) {
           const value = column[y];
           const idx = (y * width + x) * 4;

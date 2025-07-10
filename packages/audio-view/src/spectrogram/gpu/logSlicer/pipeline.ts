@@ -2,11 +2,11 @@ import shaderCode from './index.wgsl?raw';
 
 export const createPipeline = (device: GPUDevice) => {
   const module = device.createShaderModule({
-    label: 'dft-shader',
+    label: 'drawer-column-shader',
     code: shaderCode,
   });
   return device.createComputePipeline({
-    label: 'dft-pipeline',
+    label: 'drawer-column-pipeline',
     layout: 'auto',
     compute: { module, entryPoint: 'main' },
   });
