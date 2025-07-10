@@ -15,7 +15,8 @@ struct Params {
 
 @compute @workgroup_size(1)
 fn main(@builtin(workgroup_id) workgroup_id : vec3<u32>) {
-  let windowOffset = workgroup_id.x * params.windowSize;
+  let windowIndex = workgroup_id.x;
+  let windowOffset = windowIndex * params.windowSize;
   var step = 1u << params.reverseWidth;
   var len = params.windowSize >> params.reverseWidth;
   var outOff : u32 = 0u;
@@ -24,20 +25,20 @@ fn main(@builtin(workgroup_id) workgroup_id : vec3<u32>) {
 
   if (len == 2u) {
     for (; outOff < params.windowSize; outOff += 2u) {
-      let off = reverseTable[t] + windowOffset;
+      let off = windowOffset + reverseTable[t];
       t = t + 1u;
       let evenR = inputReal[off];
       let evenI = inputImag[off];
       let oddR = inputReal[off + step];
       let oddI = inputImag[off + step];
-      outputReal[outOff + windowOffset] = evenR + oddR;
-      outputImag[outOff + windowOffset] = evenI + oddI;
-      outputReal[outOff + windowOffset + 1u] = evenR - oddR;
-      outputImag[outOff + windowOffset + 1u] = evenI - oddI;
+      outputReal[windowOffset + outOff] = evenR + oddR;
+      outputImag[windowOffset + outOff] = evenI + oddI;
+      outputReal[windowOffset + outOff + 1u] = evenR - oddR;
+      outputImag[windowOffset + outOff + 1u] = evenI - oddI;
     }
   } else {
     for (; outOff < params.windowSize; outOff += 4u) {
-      let off = reverseTable[t] + windowOffset;
+      let off = windowOffset + reverseTable[t];
       t = t + 1u;
       let step2 = step * 2u;
       let step3 = step * 3u;
@@ -69,14 +70,14 @@ fn main(@builtin(workgroup_id) workgroup_id : vec3<u32>) {
       let FDr = T1r - T3i;
       let FDi = T1i + T3r;
 
-      outputReal[outOff + windowOffset] = FAr;
-      outputImag[outOff + windowOffset] = FAi;
-      outputReal[outOff + windowOffset + 1u] = FBr;
-      outputImag[outOff + windowOffset + 1u] = FBi;
-      outputReal[outOff + windowOffset + 2u] = FCr;
-      outputImag[outOff + windowOffset + 2u] = FCi;
-      outputReal[outOff + windowOffset + 3u] = FDr;
-      outputImag[outOff + windowOffset + 3u] = FDi;
+      outputReal[windowOffset + outOff] = FAr;
+      outputImag[windowOffset + outOff] = FAi;
+      outputReal[windowOffset + outOff + 1u] = FBr;
+      outputImag[windowOffset + outOff + 1u] = FBi;
+      outputReal[windowOffset + outOff + 2u] = FCr;
+      outputImag[windowOffset + outOff + 2u] = FCi;
+      outputReal[windowOffset + outOff + 3u] = FDr;
+      outputImag[windowOffset + outOff + 3u] = FDi;
     }
   }
 
@@ -88,10 +89,10 @@ fn main(@builtin(workgroup_id) workgroup_id : vec3<u32>) {
       let limit = outOff + quarterLen;
       var k : u32 = 0u;
       for (var i : u32 = outOff; i < limit; i = i + 1u) {
-        let A = i + windowOffset;
-        let B = A + quarterLen;
-        let C = B + quarterLen;
-        let D = C + quarterLen;
+        let A = windowOffset + i;
+        let B = quarterLen + A;
+        let C = quarterLen + B;
+        let D = quarterLen + C;
 
         let Ar = outputReal[A];
         let Ai = outputImag[A];
@@ -156,8 +157,8 @@ fn main(@builtin(workgroup_id) workgroup_id : vec3<u32>) {
   if (params.inverse == 1u) {
     let size = f32(params.windowSize);
     for (var i : u32 = 0u; i < params.windowSize; i = i + 1u) {
-      outputReal[i + windowOffset] = outputReal[i + windowOffset] / size;
-      outputImag[i + windowOffset] = outputImag[i + windowOffset] / size;
+      outputReal[windowOffset + i] = outputReal[windowOffset + i] / size;
+      outputImag[windowOffset + i] = outputImag[windowOffset + i] / size;
     }
   }
 }

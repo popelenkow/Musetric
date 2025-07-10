@@ -4,7 +4,7 @@ import { cpuFouriers } from '../../fourier';
 import { Colors } from '../colors';
 import { Pipeline, PipelineRender } from '../pipeline';
 import { createDrawer } from './drawer';
-import { createPipelineBuffers } from './pipelineBuffers';
+import { createPipelineArrays } from './pipelineArrays';
 import { renderPipeline } from './renderPipeline';
 
 export type CreatePipelineOptions = {
@@ -18,18 +18,12 @@ export const createPipeline = async (
 ): Promise<Pipeline> => {
   const { canvas, windowSize, fourierMode, colors } = options;
 
-  const drawer = createDrawer(canvas, colors);
+  const drawer = createDrawer(canvas, colors, windowSize);
   const createFourier = cpuFouriers[fourierMode];
   const fourier = await createFourier({ windowSize });
 
   let isResizeRequested = false;
-  let buffers = createPipelineBuffers(windowSize, drawer.width);
-
-  const resize = () => {
-    drawer.resize();
-    buffers = createPipelineBuffers(windowSize, drawer.width);
-    fourier.resize(drawer.width);
-  };
+  let arrays = createPipelineArrays(windowSize, drawer.width);
 
   return {
     resize: () => {
@@ -38,14 +32,16 @@ export const createPipeline = async (
     render: createCallLatest<PipelineRender>(async (input, parameters) => {
       if (isResizeRequested) {
         isResizeRequested = false;
-        resize();
+        drawer.resize();
+        arrays = createPipelineArrays(windowSize, drawer.width);
+        fourier.resize(drawer.width);
       }
       await renderPipeline({
         input,
         parameters,
         windowSize,
         drawer,
-        buffers,
+        arrays,
         fourier,
       });
     }),

@@ -1,31 +1,44 @@
 import { cpu, Parameters } from '..';
-import { ComplexArray, Fourier, normComplexArray } from '../../fourier';
+import { subComplexArray } from '../../common';
+import { ComplexGpuBufferReader } from '../../common/gpuBufferReader';
+import { GpuFourier } from '../../fourier/gpuFourier';
+import { Drawer } from './drawer';
 
 export type RenderPipelineOptions = {
   input: Float32Array;
   parameters: Parameters;
   windowSize: number;
-  drawer: cpu.Drawer;
-  buffers: cpu.PipelineBuffers;
-  fourier: Fourier;
+  drawer: Drawer;
+  arrays: cpu.PipelineArrays;
+  fourier: GpuFourier;
+  gpuBufferReader: ComplexGpuBufferReader;
 };
 export const renderPipeline = async (options: RenderPipelineOptions) => {
-  const { input, parameters, windowSize, drawer, buffers, fourier } = options;
-  const { width, height, columns } = drawer;
-  const { frequency, magnitude, wave } = buffers;
+  const {
+    input,
+    parameters,
+    windowSize,
+    drawer,
+    arrays,
+    fourier,
+    gpuBufferReader,
+  } = options;
+  const { width } = drawer;
+  const { frequencies, magnitudes, waves } = arrays;
   const { progress } = parameters;
 
-  cpu.fillWave(windowSize, width, input, wave);
-  await fourier.forward(wave, frequency);
+  cpu.fillWaves(windowSize, width, input, waves);
+  const buffer = await fourier.forward(waves);
+
+  await gpuBufferReader.read(buffer, frequencies);
 
   for (let x = 0; x < width; x++) {
-    const slice: ComplexArray = {
-      real: frequency.real.subarray(x * windowSize, (x + 1) * windowSize),
-      imag: frequency.imag.subarray(x * windowSize, (x + 1) * windowSize),
-    };
-    normComplexArray(slice, magnitude);
+    const start = x * windowSize;
+    const end = start + windowSize;
+    const frequency = subComplexArray(frequencies, start, end);
+    const magnitude = magnitudes.subarray(start / 2, end / 2);
+    cpu.normMagnitude(frequency, magnitude);
     cpu.normDecibel(magnitude);
-    cpu.computeColumn(windowSize, height, parameters, magnitude, columns[x]);
   }
-  drawer.render(progress);
+  await drawer.render(magnitudes, progress, parameters);
 };

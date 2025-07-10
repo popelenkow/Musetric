@@ -1,9 +1,6 @@
-export type ComplexArray = {
-  real: Float32Array;
-  imag: Float32Array;
-};
+import { ComplexArray } from '../../common';
 
-export const normComplexArray = (
+export const normMagnitude = (
   input: ComplexArray,
   output: Float32Array,
 ): void => {

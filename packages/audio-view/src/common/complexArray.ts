@@ -1,0 +1,18 @@
+export type ComplexArray = {
+  real: Float32Array;
+  imag: Float32Array;
+};
+
+export const createComplexArray = (length: number): ComplexArray => ({
+  real: new Float32Array(length),
+  imag: new Float32Array(length),
+});
+
+export const subComplexArray = (
+  array: ComplexArray,
+  start: number,
+  end: number,
+): ComplexArray => ({
+  real: array.real.subarray(start, end),
+  imag: array.imag.subarray(start, end),
+});
