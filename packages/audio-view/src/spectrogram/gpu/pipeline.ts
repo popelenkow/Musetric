@@ -62,5 +62,12 @@ export const createPipeline: CreatePipeline = async (options) => {
       device.queue.submit([encoder.finish()]);
       await device.queue.onSubmittedWorkDone();
     }),
+    destroy: () => {
+      drawer.destroy();
+      fourier.destroy();
+      buffers.destroy();
+      magnitudeNormalizer.destroy();
+      decibelNormalizer.destroy();
+    },
   };
 };

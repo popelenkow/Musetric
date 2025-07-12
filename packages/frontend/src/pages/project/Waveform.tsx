@@ -1,7 +1,6 @@
-import { useTheme } from '@mui/material';
-import { subscribeResizeObserver, waveform } from '@musetric/audio-view';
-import { useQuery } from '@tanstack/react-query';
+import { subscribeResizeObserver } from '@musetric/audio-view';
 import { FC, useEffect, useRef } from 'react';
+import { useWaveformPipeline } from './common/waveformPipeline';
 import { usePlayerStore } from './store';
 
 export const Waveform: FC = () => {
@@ -9,18 +8,8 @@ export const Waveform: FC = () => {
   const buffer = usePlayerStore((s) => s.buffer);
   const progress = usePlayerStore((s) => s.progress);
   const seek = usePlayerStore((s) => s.seek);
-  const theme = useTheme();
 
-  const { data: pipeline } = useQuery({
-    queryKey: ['waveform', theme],
-    queryFn: () => {
-      if (!canvasRef.current) return;
-      return waveform.createPipeline(canvasRef.current, {
-        played: theme.palette.primary.main,
-        unplayed: theme.palette.default.main,
-      });
-    },
-  });
+  const pipeline = useWaveformPipeline(canvasRef);
 
   useEffect(() => {
     if (!canvasRef.current || !buffer || !pipeline) return;
