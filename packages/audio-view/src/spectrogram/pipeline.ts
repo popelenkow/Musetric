@@ -8,4 +8,5 @@ export type PipelineRender = (
 export type Pipeline = {
   resize: () => void;
   render: PipelineRender;
+  destroy: () => void;
 };

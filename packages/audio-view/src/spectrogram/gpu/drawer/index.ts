@@ -3,8 +3,7 @@ import { Parameters } from '../../parameters';
 import { createLogSlicer } from '../logSlicer';
 import { createBuffers } from './buffers';
 import { createBindGroup, createSampler, createTexture } from './common';
-import fragmentCode from './fragment.wgsl?raw';
-import vertexCode from './vertex.wgsl?raw';
+import { createPipeline } from './pipeline';
 
 export type DrawerRender = (
   encoder: GPUCommandEncoder,
@@ -17,6 +16,7 @@ export type Drawer = {
   height: number;
   resize: () => void;
   render: DrawerRender;
+  destroy: () => void;
 };
 
 export const createDrawer = (
@@ -29,29 +29,8 @@ export const createDrawer = (
   if (!context) {
     throw new Error('WebGPU context not available on the canvas');
   }
-  const format = navigator.gpu.getPreferredCanvasFormat();
-  context.configure({ device, format });
 
-  const vertexModule = device.createShaderModule({
-    label: 'drawer-vertex-shader',
-    code: vertexCode,
-  });
-  const fragmentModule = device.createShaderModule({
-    label: 'drawer-fragment-shader',
-    code: fragmentCode,
-  });
-
-  const pipeline = device.createRenderPipeline({
-    label: 'drawer-pipeline',
-    layout: 'auto',
-    vertex: { module: vertexModule, entryPoint: 'main' },
-    fragment: {
-      module: fragmentModule,
-      entryPoint: 'main',
-      targets: [{ format }],
-    },
-    primitive: { topology: 'triangle-list' },
-  });
+  const pipeline = createPipeline(device, context);
 
   const buffers = createBuffers(device, colors);
   const sampler = createSampler(device);
@@ -118,6 +97,11 @@ export const createDrawer = (
       pass.setBindGroup(0, bindGroup);
       pass.draw(3);
       pass.end();
+    },
+    destroy: () => {
+      texture.destroy();
+      buffers.destroy();
+      logSlicer.destroy();
     },
   };
 

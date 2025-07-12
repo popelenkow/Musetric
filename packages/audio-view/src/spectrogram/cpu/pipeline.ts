@@ -45,5 +45,8 @@ export const createPipeline = async (
         fourier,
       });
     }),
+    destroy: () => {
+      fourier.destroy();
+    },
   };
 };
