@@ -6,8 +6,8 @@
     "./*": "./src/*.js"
   },
   "scripts": {
-    "check:lint": "eslint .",
-    "fix:lint": "eslint . --fix"
+    "check:lint": "eslint . --cache",
+    "fix:lint": "eslint . --fix --cache"
   },
   "peerDependencies": {
     "eslint": "^9.0.0",

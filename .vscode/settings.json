@@ -23,6 +23,10 @@
     "**/node_modules": true,
     "**/.yarn": true,
     "**/yarn.lock": true,
-    "**/.pnp.*": true
+    "**/.pnp.*": true,
+    "**/dist": true
+  },
+  "files.watcherExclude": {
+    "**/dist/**": true
   }
 }

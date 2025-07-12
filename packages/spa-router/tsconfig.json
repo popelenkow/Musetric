@@ -8,7 +8,8 @@
     "declarationMap": true,
     "moduleResolution": "node",
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
   "include": ["src"]
 }

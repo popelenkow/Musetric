@@ -7,8 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "check:ts": "tsc --noEmit",
-    "check:lint": "eslint .",
-    "fix:lint": "eslint . --fix",
+    "check:lint": "eslint . --cache",
+    "fix:lint": "eslint . --fix --cache",
     "gen:translations": "i18next -c ./i18next.parser.config.js"
   },
   "devDependencies": {

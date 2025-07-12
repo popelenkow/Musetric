@@ -19,7 +19,8 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "allowJs": true,
-    "composite": true
+    "composite": true,
+    "incremental": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "**/dist"]
 }
