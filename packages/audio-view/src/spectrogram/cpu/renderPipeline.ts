@@ -3,8 +3,8 @@ import { subComplexArray } from '../../common';
 import { CpuFourier } from '../../fourier/cpuFourier';
 import { Drawer } from './drawer';
 import { fillWaves } from './fillWaves';
-import { normDecibel } from './normDecibel';
-import { normMagnitude } from './normMagnitude';
+import { normalizeDecibel } from './normalizeDecibel';
+import { normalizeMagnitude } from './normalizeMagnitude';
 import { PipelineArrays } from './pipelineArrays';
 
 export type RenderPipelineOptions = {
@@ -29,8 +29,8 @@ export const renderPipeline = async (options: RenderPipelineOptions) => {
     const end = start + windowSize;
     const frequency = subComplexArray(frequencies, start, end);
     const magnitude = magnitudes.subarray(start / 2, end / 2);
-    normMagnitude(frequency, magnitude);
-    normDecibel(magnitude);
+    normalizeMagnitude(frequency, magnitude);
+    normalizeDecibel(magnitude);
   }
   drawer.render(magnitudes, progress, parameters);
 };

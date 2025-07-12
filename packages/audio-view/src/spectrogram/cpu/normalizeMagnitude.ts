@@ -1,6 +1,6 @@
 import { ComplexArray } from '../../common';
 
-export const normMagnitude = (
+export const normalizeMagnitude = (
   input: ComplexArray,
   output: Float32Array,
 ): void => {

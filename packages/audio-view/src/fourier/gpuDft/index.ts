@@ -1,65 +1,48 @@
 import { ComplexArray, ComplexGpuBuffer } from '../../common';
 import { CreateGpuFourier, GpuFourier } from '../gpuFourier';
-import { createIoBuffers } from './ioBuffers';
-import { createParams } from './params';
-import { createBindGroup, createPipeline } from './pipeline';
-import { createStaticBuffers } from './staticBuffers';
+import { createBindGroup } from './bindGroup';
+import { createBuffers } from './buffers';
+import { createPipeline } from './pipeline';
 
 export const createGpuDft: CreateGpuFourier = async (options) => {
   const { windowSize, device } = options;
   let windowCount = options.windowCount;
 
-  const staticBuffers = createStaticBuffers(device);
-  let ioBuffers = createIoBuffers(device, windowSize, windowCount);
-  const params = createParams();
-
+  const buffers = createBuffers(device, windowSize, windowCount);
   const xWorkgroupSize = 64;
   const xWorkgroupCount = Math.ceil(windowSize / xWorkgroupSize);
-
   const pipeline = createPipeline(device);
-
-  const createGroup = () =>
-    createBindGroup(device, pipeline, {
-      ...staticBuffers,
-      ...ioBuffers,
-    });
-
+  const createGroup = () => createBindGroup(device, pipeline, buffers);
   let bindGroup = createGroup();
 
-  const transform = async (
+  const transform = (
+    encoder: GPUCommandEncoder,
     input: ComplexArray,
     inverse: boolean,
-  ): Promise<ComplexGpuBuffer> => {
-    device.queue.writeBuffer(ioBuffers.inputReal, 0, input.real);
-    device.queue.writeBuffer(ioBuffers.inputImag, 0, input.imag);
-    params.set({ windowSize, windowCount, inverse });
-    device.queue.writeBuffer(staticBuffers.params, 0, params.instance);
+  ): ComplexGpuBuffer => {
+    device.queue.writeBuffer(buffers.inputReal, 0, input.real);
+    device.queue.writeBuffer(buffers.inputImag, 0, input.imag);
+    buffers.writeParams({ windowSize, windowCount, inverse });
 
-    const encoder = device.createCommandEncoder({ label: 'dft-encoder' });
     const pass = encoder.beginComputePass({ label: 'dft-pass' });
     pass.setPipeline(pipeline);
     pass.setBindGroup(0, bindGroup);
     pass.dispatchWorkgroups(xWorkgroupCount, windowCount);
     pass.end();
 
-    device.queue.submit([encoder.finish()]);
-    await device.queue.onSubmittedWorkDone();
-
-    return { real: ioBuffers.outputReal, imag: ioBuffers.outputImag };
+    return { real: buffers.outputReal, imag: buffers.outputImag };
   };
 
   const fourier: GpuFourier = {
-    forward: (input) => transform(input, false),
-    inverse: (input) => transform(input, true),
+    forward: (encoder, input) => transform(encoder, input, false),
+    inverse: (encoder, input) => transform(encoder, input, true),
     resize: (newWindowCount) => {
       windowCount = newWindowCount;
-      ioBuffers.destroy();
-      ioBuffers = createIoBuffers(device, windowSize, windowCount);
+      buffers.resize(windowCount);
       bindGroup = createGroup();
     },
     destroy: () => {
-      ioBuffers.destroy();
-      staticBuffers.destroy();
+      buffers.destroy();
     },
   };
   return fourier;

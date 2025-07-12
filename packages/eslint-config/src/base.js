@@ -32,6 +32,7 @@ export const baseConfig = {
     '@typescript-eslint/no-shadow': ['error'],
     '@typescript-eslint/no-namespace': 'off',
     '@typescript-eslint/no-floating-promises': 'error',
+    '@typescript-eslint/no-use-before-define': ['error'],
     'func-style': ['error'],
     'func-names': ['error'],
     'import-x/order': [
@@ -42,5 +43,6 @@ export const baseConfig = {
       },
     ],
     'simple-import-sort/exports': 'error',
+    'object-shorthand': ['error', 'always'],
   },
 };

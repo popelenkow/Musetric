@@ -60,12 +60,18 @@ const createGpuFourier = async (mode: GpuFourierMode, windowSize: number) => {
 
   return {
     forward: async (input: ComplexArray) => {
-      const buffer = await fourier.forward(input);
+      const encoder = device.createCommandEncoder();
+      const buffer = fourier.forward(encoder, input);
+      device.queue.submit([encoder.finish()]);
+      await device.queue.onSubmittedWorkDone();
       await reader.read(buffer, output);
       return output;
     },
     inverse: async (input: ComplexArray) => {
-      const buffer = await fourier.inverse(input);
+      const encoder = device.createCommandEncoder();
+      const buffer = fourier.inverse(encoder, input);
+      device.queue.submit([encoder.finish()]);
+      await device.queue.onSubmittedWorkDone();
       await reader.read(buffer, output);
       return output;
     },

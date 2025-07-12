@@ -1,21 +1,16 @@
-import { cpu } from '../..';
 import { Colors } from '../../colors';
 import { Parameters } from '../../parameters';
-import {
-  createBindGroup,
-  createColorBuffer,
-  createProgressBuffer,
-  createSampler,
-  createTexture,
-} from './common';
+import { createLogSlicer } from '../logSlicer';
+import { createBuffers } from './buffers';
+import { createBindGroup, createSampler, createTexture } from './common';
 import fragmentCode from './fragment.wgsl?raw';
 import vertexCode from './vertex.wgsl?raw';
 
 export type DrawerRender = (
-  magnitudes: Float32Array,
-  progress: number,
+  encoder: GPUCommandEncoder,
+  magnitude: GPUBuffer,
   parameters: Parameters,
-) => Promise<void>;
+) => void;
 
 export type Drawer = {
   width: number;
@@ -37,10 +32,17 @@ export const createDrawer = (
   const format = navigator.gpu.getPreferredCanvasFormat();
   context.configure({ device, format });
 
-  const vertexModule = device.createShaderModule({ code: vertexCode });
-  const fragmentModule = device.createShaderModule({ code: fragmentCode });
+  const vertexModule = device.createShaderModule({
+    label: 'drawer-vertex-shader',
+    code: vertexCode,
+  });
+  const fragmentModule = device.createShaderModule({
+    label: 'drawer-fragment-shader',
+    code: fragmentCode,
+  });
 
   const pipeline = device.createRenderPipeline({
+    label: 'drawer-pipeline',
     layout: 'auto',
     vertex: { module: vertexModule, entryPoint: 'main' },
     fragment: {
@@ -51,18 +53,20 @@ export const createDrawer = (
     primitive: { topology: 'triangle-list' },
   });
 
-  const colorBuffer = createColorBuffer(device, colors);
-  const progressBuffer = createProgressBuffer(device);
+  const buffers = createBuffers(device, colors);
   const sampler = createSampler(device);
+
+  const logSlicer = createLogSlicer(device, windowSize);
 
   let texture = createTexture(device, 1, 1);
 
-  let bindGroup = createBindGroup(device, pipeline, {
-    colorBuffer,
-    progressBuffer,
+  let bindGroup = createBindGroup(
+    device,
+    pipeline,
+    buffers,
     sampler,
-    texture: texture.view,
-  });
+    texture.view,
+  );
 
   const drawer: Drawer = {
     width: 0,
@@ -77,43 +81,30 @@ export const createDrawer = (
 
       texture.destroy();
       texture = createTexture(device, width, height);
-      bindGroup = createBindGroup(device, pipeline, {
-        colorBuffer,
-        progressBuffer,
+      bindGroup = createBindGroup(
+        device,
+        pipeline,
+        buffers,
         sampler,
-        texture: texture.view,
-      });
+        texture.view,
+      );
     },
-    render: async (magnitudes, progress, parameters) => {
+    render: (encoder, magnitude, parameters) => {
       const { width, height } = drawer;
-      for (let x = 0; x < width; x++) {
-        const start = x * windowSize;
-        const end = start + windowSize;
-        const magnitude = magnitudes.subarray(start / 2, end / 2);
-        cpu.computeColumn(
-          windowSize,
-          height,
-          parameters,
-          magnitude,
-          texture.column,
-        );
-        for (let y = 0; y < height; y++) {
-          texture.columns[y * width + x] = texture.column[y];
-        }
-      }
-      device.queue.writeTexture(
-        { texture: texture.instance },
-        texture.columns,
-        { bytesPerRow: width },
-        { width, height, depthOrArrayLayers: 1 },
+      const { progress } = parameters;
+
+      logSlicer.run(
+        encoder,
+        magnitude,
+        parameters,
+        { width, height },
+        texture.view,
       );
 
-      const clamped = Math.max(0, Math.min(progress, 1));
-      device.queue.writeBuffer(progressBuffer, 0, new Float32Array([clamped]));
-
-      const encoder = device.createCommandEncoder();
+      buffers.writeProgress(progress);
       const view = context.getCurrentTexture().createView();
       const pass = encoder.beginRenderPass({
+        label: 'drawer-pass',
         colorAttachments: [
           {
             view,
@@ -127,8 +118,6 @@ export const createDrawer = (
       pass.setBindGroup(0, bindGroup);
       pass.draw(3);
       pass.end();
-      device.queue.submit([encoder.finish()]);
-      await device.queue.onSubmittedWorkDone();
     },
   };
 

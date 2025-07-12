@@ -1,34 +1,8 @@
-import { Colors, parseHexColor } from '../../colors';
-
-const toVec4 = (hex: string): [number, number, number, number] => {
-  const { red, green, blue } = parseHexColor(hex);
-  return [red / 255, green / 255, blue / 255, 1];
-};
-
-export const createColorBuffer = (device: GPUDevice, colors: Colors) => {
-  const colorData = new Float32Array([
-    ...toVec4(colors.played),
-    ...toVec4(colors.unplayed),
-    ...toVec4(colors.background),
-  ]);
-  const buffer = device.createBuffer({
-    label: 'drawer-colors',
-    size: colorData.byteLength,
-    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-  });
-  device.queue.writeBuffer(buffer, 0, colorData);
-  return buffer;
-};
-
-export const createProgressBuffer = (device: GPUDevice) =>
-  device.createBuffer({
-    label: 'drawer-progress',
-    size: 4,
-    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-  });
+import { Buffers } from './buffers';
 
 export const createSampler = (device: GPUDevice) =>
   device.createSampler({
+    label: 'drawer-sampler',
     magFilter: 'nearest',
     minFilter: 'nearest',
   });
@@ -41,17 +15,16 @@ export const createTexture = (
   const instance = device.createTexture({
     label: 'drawer-texture',
     size: { width, height },
-    format: 'r8unorm',
-    usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST,
+    format: 'rgba8unorm',
+    usage:
+      GPUTextureUsage.TEXTURE_BINDING |
+      GPUTextureUsage.COPY_DST |
+      GPUTextureUsage.STORAGE_BINDING,
   });
   const view = instance.createView();
-  const columns = new Uint8Array(width * height);
-  const column = new Uint8Array(height);
   return {
     instance,
     view,
-    columns,
-    column,
     destroy: () => {
       instance.destroy();
     },
@@ -68,14 +41,17 @@ export type BindGroupBuffers = {
 export const createBindGroup = (
   device: GPUDevice,
   pipeline: GPURenderPipeline,
-  buffers: BindGroupBuffers,
+  buffers: Buffers,
+  sampler: GPUSampler,
+  texture: GPUTextureView,
 ) =>
   device.createBindGroup({
+    label: 'drawer-bind-group',
     layout: pipeline.getBindGroupLayout(0),
     entries: [
-      { binding: 0, resource: { buffer: buffers.colorBuffer } },
-      { binding: 1, resource: { buffer: buffers.progressBuffer } },
-      { binding: 2, resource: buffers.sampler },
-      { binding: 3, resource: buffers.texture },
+      { binding: 0, resource: { buffer: buffers.colors } },
+      { binding: 1, resource: { buffer: buffers.progress } },
+      { binding: 2, resource: sampler },
+      { binding: 3, resource: texture },
     ],
   });

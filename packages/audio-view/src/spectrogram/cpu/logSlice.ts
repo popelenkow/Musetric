@@ -1,17 +1,17 @@
 import { Parameters } from '../parameters';
 
-export const computeColumn = (
+export const logSlice = (
   windowSize: number,
   height: number,
   parameters: Parameters,
   magnitude: Float32Array,
   column: Uint8Array,
 ) => {
-  const { maxFrequency, sampleRate, minFrequency } = parameters;
-  const fullBins = windowSize / 2;
+  const { sampleRate, maxFrequency, minFrequency } = parameters;
+  const halfSize = windowSize / 2;
   const maxBin = Math.min(
     Math.floor((maxFrequency / sampleRate) * windowSize),
-    fullBins,
+    halfSize,
   );
   const minBin = Math.max(
     Math.floor((minFrequency / sampleRate) * windowSize),
