@@ -13,20 +13,26 @@ struct Params {
 @group(0) @binding(5) var<storage, read>  trigTable : array<f32>;
 @group(0) @binding(6) var<uniform> params : Params;
 
-@compute @workgroup_size(1)
-fn main(@builtin(workgroup_id) workgroup_id : vec3<u32>) {
-  let windowIndex = workgroup_id.x;
+@compute @workgroup_size(64)
+fn main(
+  @builtin(workgroup_id) workgroupId : vec3<u32>,
+  @builtin(local_invocation_id) localId : vec3<u32>,
+) {
+  let windowIndex = workgroupId.x;
+  if (windowIndex >= params.windowCount) {
+    return;
+  }
+
+  let threadIndex = localId.x;
   let windowOffset = windowIndex * params.windowSize;
   var step = 1u << params.reverseWidth;
   var len = params.windowSize >> params.reverseWidth;
-  var outOff : u32 = 0u;
-  var t : u32 = 0u;
   let sign = select(1.0, -1.0, params.inverse == 1u);
 
   if (len == 2u) {
-    for (; outOff < params.windowSize; outOff += 2u) {
+    for (var outOff : u32 = threadIndex * 2u; outOff < params.windowSize; outOff += 2u * 64u) {
+      let t = outOff / 2u;
       let off = windowOffset + reverseTable[t];
-      t = t + 1u;
       let evenR = inputReal[off];
       let evenI = inputImag[off];
       let oddR = inputReal[off + step];
@@ -37,9 +43,9 @@ fn main(@builtin(workgroup_id) workgroup_id : vec3<u32>) {
       outputImag[windowOffset + outOff + 1u] = evenI - oddI;
     }
   } else {
-    for (; outOff < params.windowSize; outOff += 4u) {
+    for (var outOff : u32 = threadIndex * 4u; outOff < params.windowSize; outOff += 4u * 64u) {
+      let t = outOff / 4u;
       let off = windowOffset + reverseTable[t];
-      t = t + 1u;
       let step2 = step * 2u;
       let step3 = step * 3u;
 
@@ -80,15 +86,16 @@ fn main(@builtin(workgroup_id) workgroup_id : vec3<u32>) {
       outputImag[windowOffset + outOff + 3u] = FDi;
     }
   }
+  workgroupBarrier();
 
   step = step >> 1u;
   while (step >= 2u) {
     len = (params.windowSize / step) << 1u;
     let quarterLen = len >> 2u;
-    for (outOff = 0u; outOff < params.windowSize; outOff += len) {
+    for (var outOff : u32 = 0u; outOff < params.windowSize; outOff += len) {
       let limit = outOff + quarterLen;
-      var k : u32 = 0u;
-      for (var i : u32 = outOff; i < limit; i = i + 1u) {
+      for (var i : u32 = outOff + threadIndex; i < limit; i = i + 64u) {
+        let k = (i - outOff) * step;
         let A = windowOffset + i;
         let B = quarterLen + A;
         let C = quarterLen + B;
@@ -147,16 +154,16 @@ fn main(@builtin(workgroup_id) workgroup_id : vec3<u32>) {
         outputImag[C] = FCi;
         outputReal[D] = FDr;
         outputImag[D] = FDi;
-
-        k = k + step;
       }
+      workgroupBarrier();
     }
     step = step >> 2u;
+    workgroupBarrier();
   }
 
   if (params.inverse == 1u) {
     let size = f32(params.windowSize);
-    for (var i : u32 = 0u; i < params.windowSize; i = i + 1u) {
+    for (var i : u32 = threadIndex; i < params.windowSize; i = i + 64u) {
       outputReal[windowOffset + i] = outputReal[windowOffset + i] / size;
       outputImag[windowOffset + i] = outputImag[windowOffset + i] / size;
     }
