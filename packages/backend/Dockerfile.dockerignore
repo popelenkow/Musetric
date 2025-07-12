@@ -25,6 +25,7 @@ packages/**
 **/.eslintrc.local.json
 **/yarn-error.log
 **/tsconfig.tsbuildinfo
+**/.eslintcache
 **/.venv/
 **/__pycache__/
 **/*.db

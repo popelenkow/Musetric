@@ -6,7 +6,8 @@
     "jsx": "react-jsx",
     "moduleResolution": "bundler",
     "outDir": "dist",
-    "types": ["@webgpu/types"]
+    "types": ["@webgpu/types"],
+    "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
   "include": ["src", "src/**/*.json"]
 }

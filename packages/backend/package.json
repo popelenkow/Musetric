@@ -11,8 +11,8 @@
     "build:docker": "docker build --progress=plain --file Dockerfile -t musetric ../..",
     "start:docker": "docker compose up -d",
     "check:ts": "tsc --noEmit",
-    "check:lint": "eslint .",
-    "fix:lint": "eslint . --fix",
+    "check:lint": "eslint . --cache",
+    "fix:lint": "eslint . --fix --cache",
     "studio:db": "prisma studio"
   },
   "devDependencies": {
