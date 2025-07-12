@@ -19,8 +19,8 @@ export const createGpuFftRadix2: CreateGpuFourier = async (options) => {
     input: ComplexArray,
     inverse: boolean,
   ): ComplexGpuBuffer => {
-    device.queue.writeBuffer(buffers.inputReal, 0, input.real);
-    device.queue.writeBuffer(buffers.inputImag, 0, input.imag);
+    device.queue.writeBuffer(buffers.dataReal, 0, input.real);
+    device.queue.writeBuffer(buffers.dataImag, 0, input.imag);
     buffers.writeParams({ windowSize, windowCount, inverse });
 
     const pass = encoder.beginComputePass({
@@ -32,7 +32,7 @@ export const createGpuFftRadix2: CreateGpuFourier = async (options) => {
     pass.dispatchWorkgroups(windowCount);
     pass.end();
 
-    return { real: buffers.outputReal, imag: buffers.outputImag };
+    return { real: buffers.dataReal, imag: buffers.dataImag };
   };
 
   const fourier: GpuFourier = {

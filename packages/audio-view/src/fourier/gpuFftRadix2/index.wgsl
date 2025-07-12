@@ -4,13 +4,11 @@ struct Params {
   inverse: u32,
 };
 
-@group(0) @binding(0) var<storage, read> inputReal: array<f32>;
-@group(0) @binding(1) var<storage, read> inputImag: array<f32>;
-@group(0) @binding(2) var<storage, read_write> outputReal: array<f32>;
-@group(0) @binding(3) var<storage, read_write> outputImag: array<f32>;
-@group(0) @binding(4) var<storage, read> reverseTable: array<u32>;
-@group(0) @binding(5) var<storage, read> trigTable: array<f32>;
-@group(0) @binding(6) var<uniform> params: Params;
+@group(0) @binding(0) var<storage, read_write> dataReal: array<f32>;
+@group(0) @binding(1) var<storage, read_write> dataImag: array<f32>;
+@group(0) @binding(2) var<storage, read> reverseTable: array<u32>;
+@group(0) @binding(3) var<storage, read> trigTable: array<f32>;
+@group(0) @binding(4) var<uniform> params: Params;
 
 fn getSign() -> f32 {
   return select(-1.0, 1.0, params.inverse == 1u);
@@ -33,8 +31,16 @@ fn main(
 
   for (var index: u32 = threadIndex; index < windowSize; index = index + 64u) {
     let reversedIndex = reverseTable[index];
-    outputReal[windowOffset + index] = inputReal[windowOffset + reversedIndex];
-    outputImag[windowOffset + index] = inputImag[windowOffset + reversedIndex];
+    if (reversedIndex > index) {
+      let a = windowOffset + index;
+      let b = windowOffset + reversedIndex;
+      let tempReal = dataReal[a];
+      let tempImag = dataImag[a];
+      dataReal[a] = dataReal[b];
+      dataImag[a] = dataImag[b];
+      dataReal[b] = tempReal;
+      dataImag[b] = tempImag;
+    }
   }
 
   workgroupBarrier();
@@ -52,18 +58,18 @@ fn main(
         let twiddleReal = trigTable[2u * trigIndex];
         let twiddleImag = twiddleSign * trigTable[2u * trigIndex + 1u];
 
-        let evenReal = outputReal[firstIndex];
-        let evenImag = outputImag[firstIndex];
-        let oddReal = outputReal[secondIndex];
-        let oddImag = outputImag[secondIndex];
+        let evenReal = dataReal[firstIndex];
+        let evenImag = dataImag[firstIndex];
+        let oddReal = dataReal[secondIndex];
+        let oddImag = dataImag[secondIndex];
 
         let productReal = oddReal * twiddleReal - oddImag * twiddleImag;
         let productImag = oddReal * twiddleImag + oddImag * twiddleReal;
 
-        outputReal[firstIndex] = evenReal + productReal;
-        outputImag[firstIndex] = evenImag + productImag;
-        outputReal[secondIndex] = evenReal - productReal;
-        outputImag[secondIndex] = evenImag - productImag;
+        dataReal[firstIndex] = evenReal + productReal;
+        dataImag[firstIndex] = evenImag + productImag;
+        dataReal[secondIndex] = evenReal - productReal;
+        dataImag[secondIndex] = evenImag - productImag;
       }
       workgroupBarrier();
     }
@@ -75,8 +81,8 @@ fn main(
     let normalizationFactor = f32(windowSize);
     for (var sampleIndex: u32 = threadIndex; sampleIndex < windowSize; sampleIndex = sampleIndex + 64u) {
       let index = windowOffset + sampleIndex;
-      outputReal[index] = outputReal[index] / normalizationFactor;
-      outputImag[index] = outputImag[index] / normalizationFactor;
+      dataReal[index] = dataReal[index] / normalizationFactor;
+      dataImag[index] = dataImag[index] / normalizationFactor;
     }
   }
 }
