@@ -32,29 +32,23 @@ export const createBuffers = (
     size: trigTableArray.byteLength,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
-  const createInputReal = () =>
+  const createDataReal = () =>
     device.createBuffer({
-      label: 'fft2-input-real-buffer',
+      label: 'fft2-data-real-buffer',
       size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
-      usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+      usage:
+        GPUBufferUsage.STORAGE |
+        GPUBufferUsage.COPY_SRC |
+        GPUBufferUsage.COPY_DST,
     });
-  const createInputImag = () =>
+  const createDataImag = () =>
     device.createBuffer({
-      label: 'fft2-input-imag-buffer',
+      label: 'fft2-data-imag-buffer',
       size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
-      usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
-    });
-  const createOutputReal = () =>
-    device.createBuffer({
-      label: 'fft2-output-real-buffer',
-      size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
-      usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
-    });
-  const createOutputImag = () =>
-    device.createBuffer({
-      label: 'fft2-output-imag-buffer',
-      size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
-      usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
+      usage:
+        GPUBufferUsage.STORAGE |
+        GPUBufferUsage.COPY_SRC |
+        GPUBufferUsage.COPY_DST,
     });
 
   device.queue.writeBuffer(reverseTable, 0, reverseTableArray);
@@ -64,20 +58,14 @@ export const createBuffers = (
     params,
     reverseTable,
     trigTable,
-    inputReal: createInputReal(),
-    inputImag: createInputImag(),
-    outputReal: createOutputReal(),
-    outputImag: createOutputImag(),
+    dataReal: createDataReal(),
+    dataImag: createDataImag(),
     resize: (newWindowCount: number) => {
       windowCount = newWindowCount;
-      buffers.inputReal.destroy();
-      buffers.inputImag.destroy();
-      buffers.outputReal.destroy();
-      buffers.outputImag.destroy();
-      buffers.inputReal = createInputReal();
-      buffers.inputImag = createInputImag();
-      buffers.outputReal = createOutputReal();
-      buffers.outputImag = createOutputImag();
+      buffers.dataReal.destroy();
+      buffers.dataImag.destroy();
+      buffers.dataReal = createDataReal();
+      buffers.dataImag = createDataImag();
     },
     writeParams: (data: Params) => {
       paramsArray[0] = data.windowSize;
@@ -89,10 +77,8 @@ export const createBuffers = (
       params.destroy();
       reverseTable.destroy();
       trigTable.destroy();
-      buffers.inputReal.destroy();
-      buffers.inputImag.destroy();
-      buffers.outputReal.destroy();
-      buffers.outputImag.destroy();
+      buffers.dataReal.destroy();
+      buffers.dataImag.destroy();
     },
   };
   return buffers;
