@@ -18,7 +18,7 @@ export const createPipeline = async (
 ): Promise<Pipeline> => {
   const { canvas, windowSize, fourierMode, colors } = options;
 
-  const drawer = createDrawer(canvas, colors, windowSize);
+  const drawer = createDrawer({ canvas, colors, windowSize });
   const createFourier = cpuFouriers[fourierMode];
   const fourier = await createFourier({ windowSize });
 

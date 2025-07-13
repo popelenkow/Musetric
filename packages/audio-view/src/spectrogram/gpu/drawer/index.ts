@@ -18,11 +18,15 @@ export type Drawer = {
   destroy: () => void;
 };
 
-export const createDrawer = (
-  device: GPUDevice,
-  canvas: HTMLCanvasElement,
-  colors: Colors,
-): Drawer => {
+export type CreateDrawerOptions = {
+  device: GPUDevice;
+  canvas: HTMLCanvasElement;
+  colors: Colors;
+  timestampWrites?: GPUComputePassTimestampWrites;
+};
+
+export const createDrawer = (options: CreateDrawerOptions): Drawer => {
+  const { device, canvas, colors, timestampWrites } = options;
   const context = canvas.getContext('webgpu');
   if (!context) {
     throw new Error('WebGPU context not available on the canvas');
@@ -69,7 +73,9 @@ export const createDrawer = (
       const { progress } = parameters;
 
       buffers.writeProgress(progress);
-      const view = context.getCurrentTexture().createView();
+      const view = context.getCurrentTexture().createView({
+        label: 'drawer-output-view',
+      });
       const pass = encoder.beginRenderPass({
         label: 'drawer-pass',
         colorAttachments: [
@@ -80,6 +86,7 @@ export const createDrawer = (
             storeOp: 'store',
           },
         ],
+        timestampWrites,
       });
       pass.setPipeline(pipeline);
       pass.setBindGroup(0, bindGroup);

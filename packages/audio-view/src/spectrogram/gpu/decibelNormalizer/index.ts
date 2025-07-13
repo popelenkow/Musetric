@@ -14,10 +14,16 @@ export type DecibelNormalizer = {
   destroy: () => void;
 };
 
+export type CreateDecibelNormalizerOptions = {
+  device: GPUDevice;
+  windowSize: number;
+  timestampWrites?: GPUComputePassTimestampWrites;
+};
+
 export const createDecibelNormalizer = (
-  device: GPUDevice,
-  windowSize: number,
+  options: CreateDecibelNormalizerOptions,
 ): DecibelNormalizer => {
+  const { device, windowSize, timestampWrites } = options;
   const pipeline = createPipeline(device);
   const buffers = createBuffers(device);
 
@@ -29,6 +35,7 @@ export const createDecibelNormalizer = (
 
       const pass = encoder.beginComputePass({
         label: 'decibel-normalizer-pass',
+        timestampWrites,
       });
       pass.setPipeline(pipeline);
       pass.setBindGroup(0, bindGroup);

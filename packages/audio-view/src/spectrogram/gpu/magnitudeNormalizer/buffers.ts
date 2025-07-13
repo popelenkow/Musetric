@@ -7,7 +7,7 @@ export const createBuffers = (device: GPUDevice) => {
   const paramsArray = new Uint32Array(2);
 
   const params = device.createBuffer({
-    label: 'magnitude-normalizer-params',
+    label: 'magnitude-normalizer-params-buffer',
     size: paramsArray.byteLength,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });

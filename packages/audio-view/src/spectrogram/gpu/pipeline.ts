@@ -1,5 +1,6 @@
 import { Colors, Pipeline, PipelineRender, cpu } from '..';
 import { createCallLatest } from '../../common';
+import { createGpuTimer } from '../../common/gpuTimer';
 import { GpuFourierMode, gpuFouriers } from '../../fourier';
 import { createDecibelNormalizer } from './decibelNormalizer';
 import { createDrawer } from './drawer';
@@ -13,29 +14,59 @@ export type CreatePipelineOptions = {
   fourierMode: GpuFourierMode;
   canvas: HTMLCanvasElement;
   colors: Colors;
+  profiling?: boolean;
 };
 export type CreatePipeline = (
   options: CreatePipelineOptions,
 ) => Promise<Pipeline>;
 
 export const createPipeline: CreatePipeline = async (options) => {
-  const { device, windowSize, fourierMode, canvas, colors } = options;
+  const { device, windowSize, fourierMode, canvas, colors, profiling } =
+    options;
 
-  const drawer = createDrawer(device, canvas, colors);
+  const timer = profiling
+    ? createGpuTimer(device, [
+        'fourier',
+        'magnitudeNormalizer',
+        'decibelNormalizer',
+        'logSlicer',
+        'drawer',
+      ])
+    : undefined;
+
+  const drawer = createDrawer({
+    device,
+    canvas,
+    colors,
+    timestampWrites: timer?.timestampWrites.drawer,
+  });
   let windowCount = drawer.width;
 
   let arrays = cpu.createPipelineArrays(windowSize, windowCount);
-  const buffers = createPipelineBuffers(device, windowSize, windowCount);
+  const buffers = createPipelineBuffers({ device, windowSize, windowCount });
 
   const createFourier = gpuFouriers[fourierMode];
   const fourier = await createFourier({
     device,
     windowSize,
     windowCount,
+    timestampWrites: timer?.timestampWrites.fourier,
   });
-  const magnitudeNormalizer = createMagnitudeNormalizer(device, windowSize);
-  const decibelNormalizer = createDecibelNormalizer(device, windowSize);
-  const logSlicer = createLogSlicer(device, windowSize);
+  const magnitudeNormalizer = createMagnitudeNormalizer({
+    device,
+    windowSize,
+    timestampWrites: timer?.timestampWrites.magnitudeNormalizer,
+  });
+  const decibelNormalizer = createDecibelNormalizer({
+    device,
+    windowSize,
+    timestampWrites: timer?.timestampWrites.decibelNormalizer,
+  });
+  const logSlicer = createLogSlicer({
+    device,
+    windowSize,
+    timestampWrites: timer?.timestampWrites.logSlicer,
+  });
 
   let isResizeRequested = false;
 
@@ -63,8 +94,14 @@ export const createPipeline: CreatePipeline = async (options) => {
       decibelNormalizer.run(encoder, buffers.magnitude, windowCount);
       logSlicer.run(encoder, buffers.magnitude, parameters, drawer);
       drawer.render(encoder, parameters);
+      timer?.resolve(encoder);
       device.queue.submit([encoder.finish()]);
       await device.queue.onSubmittedWorkDone();
+
+      if (timer) {
+        const duration = await timer.read();
+        console.table(duration);
+      }
     }),
     destroy: () => {
       drawer.destroy();

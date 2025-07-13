@@ -1,4 +1,4 @@
-import { ComplexGpuBuffer } from '../../../common/gpuBuffer';
+import { ComplexGpuBuffer } from '../../../common';
 import { createBindGroup } from './bindGroup';
 import { createBuffers } from './buffers';
 import { createPipeline } from './pipeline';
@@ -15,10 +15,16 @@ export type MagnitudeNormalizer = {
   destroy: () => void;
 };
 
+export type CreateMagnitudeNormalizerOptions = {
+  device: GPUDevice;
+  windowSize: number;
+  timestampWrites?: GPUComputePassTimestampWrites;
+};
 export const createMagnitudeNormalizer = (
-  device: GPUDevice,
-  windowSize: number,
+  options: CreateMagnitudeNormalizerOptions,
 ): MagnitudeNormalizer => {
+  const { device, windowSize, timestampWrites } = options;
+
   const pipeline = createPipeline(device);
   const buffers = createBuffers(device);
 
@@ -35,6 +41,7 @@ export const createMagnitudeNormalizer = (
 
       const pass = encoder.beginComputePass({
         label: 'magnitude-normalizer-pass',
+        timestampWrites,
       });
       pass.setPipeline(pipeline);
       pass.setBindGroup(0, bindGroup);

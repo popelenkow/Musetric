@@ -14,11 +14,15 @@ export type Drawer = {
   resize: () => void;
   render: DrawerRender;
 };
-export const createDrawer = (
-  canvas: HTMLCanvasElement,
-  colors: Colors,
-  windowSize: number,
-): Drawer => {
+
+export type CreateDrawerOptions = {
+  canvas: HTMLCanvasElement;
+  colors: Colors;
+  windowSize: number;
+};
+
+export const createDrawer = (options: CreateDrawerOptions): Drawer => {
+  const { canvas, colors, windowSize } = options;
   const context = canvas.getContext('2d');
   if (!context) {
     throw new Error('Context 2D not available on the canvas');

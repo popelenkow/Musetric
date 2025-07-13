@@ -6,7 +6,7 @@ import { createBuffers } from './buffers';
 import { createPipeline } from './pipeline';
 
 export const createGpuFftRadix4: CreateGpuFourier = async (options) => {
-  const { windowSize, device } = options;
+  const { windowSize, device, timestampWrites } = options;
   let windowCount = options.windowCount;
   assertWindowSizePowerOfTwo(windowSize);
 
@@ -25,7 +25,10 @@ export const createGpuFftRadix4: CreateGpuFourier = async (options) => {
     device.queue.writeBuffer(buffers.inputImag, 0, input.imag);
     buffers.writeParams({ windowSize, windowCount, reverseWidth, inverse });
 
-    const pass = encoder.beginComputePass({ label: 'fft4-pass' });
+    const pass = encoder.beginComputePass({
+      label: 'fft4-pass',
+      timestampWrites,
+    });
     pass.setPipeline(pipeline);
     pass.setBindGroup(0, bindGroup);
     pass.dispatchWorkgroups(windowCount);

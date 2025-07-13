@@ -1,3 +1,13 @@
+export type ComplexGpuBuffer = {
+  real: GPUBuffer;
+  imag: GPUBuffer;
+};
+
+export type ComplexCpuBuffer = {
+  real: ArrayBuffer;
+  imag: ArrayBuffer;
+};
+
 export type ComplexArray = {
   real: Float32Array;
   imag: Float32Array;
@@ -15,4 +25,9 @@ export const subComplexArray = (
 ): ComplexArray => ({
   real: array.real.subarray(start, end),
   imag: array.imag.subarray(start, end),
+});
+
+export const complexArrayFrom = (array: ComplexCpuBuffer): ComplexArray => ({
+  real: new Float32Array(array.real),
+  imag: new Float32Array(array.imag),
 });

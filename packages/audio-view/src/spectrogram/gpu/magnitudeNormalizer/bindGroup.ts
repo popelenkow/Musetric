@@ -1,4 +1,4 @@
-import { ComplexGpuBuffer } from '../../../common/gpuBuffer';
+import { ComplexGpuBuffer } from '../../../common';
 import { Buffers } from './buffers';
 
 export const createBindGroup = (

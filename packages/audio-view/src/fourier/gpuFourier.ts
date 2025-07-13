@@ -17,6 +17,7 @@ export type CreateGpuFourierOptions = {
   device: GPUDevice;
   windowSize: number;
   windowCount: number;
+  timestampWrites?: GPUComputePassTimestampWrites;
 };
 
 export type CreateGpuFourier = (

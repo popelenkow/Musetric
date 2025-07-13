@@ -5,7 +5,7 @@ import { createBuffers } from './buffers';
 import { createBindGroup, createPipeline } from './pipeline';
 
 export const createGpuFftRadix2: CreateGpuFourier = async (options) => {
-  const { windowSize, device } = options;
+  const { device, windowSize, timestampWrites } = options;
   let windowCount = options.windowCount;
   assertWindowSizePowerOfTwo(windowSize);
 
@@ -23,7 +23,10 @@ export const createGpuFftRadix2: CreateGpuFourier = async (options) => {
     device.queue.writeBuffer(buffers.inputImag, 0, input.imag);
     buffers.writeParams({ windowSize, windowCount, inverse });
 
-    const pass = encoder.beginComputePass({ label: 'fft2-pass' });
+    const pass = encoder.beginComputePass({
+      label: 'fft2-pass',
+      timestampWrites,
+    });
     pass.setPipeline(pipeline);
     pass.setBindGroup(0, bindGroup);
     pass.dispatchWorkgroups(windowCount);

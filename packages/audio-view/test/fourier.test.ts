@@ -1,6 +1,7 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import {
   ComplexArray,
+  complexArrayFrom,
   CpuFourierMode,
   cpuFouriers,
   createComplexArray,
@@ -46,7 +47,6 @@ const createCpuFourier = async (mode: CpuFourierMode, windowSize: number) => {
 const createGpuFourier = async (mode: GpuFourierMode, windowSize: number) => {
   const createFourier = gpuFouriers[mode];
   const device = await getGpuDevice();
-  const output = createComplexArray(windowSize);
   const fourier = await createFourier({
     windowSize,
     windowCount: 1,
@@ -64,16 +64,16 @@ const createGpuFourier = async (mode: GpuFourierMode, windowSize: number) => {
       const buffer = fourier.forward(encoder, input);
       device.queue.submit([encoder.finish()]);
       await device.queue.onSubmittedWorkDone();
-      await reader.read(buffer, output);
-      return output;
+      const outputBuffer = await reader.read(buffer);
+      return complexArrayFrom(outputBuffer);
     },
     inverse: async (input: ComplexArray) => {
       const encoder = device.createCommandEncoder();
       const buffer = fourier.inverse(encoder, input);
       device.queue.submit([encoder.finish()]);
       await device.queue.onSubmittedWorkDone();
-      await reader.read(buffer, output);
-      return output;
+      const outputBuffer = await reader.read(buffer);
+      return complexArrayFrom(outputBuffer);
     },
     destroy: () => {
       fourier.destroy();

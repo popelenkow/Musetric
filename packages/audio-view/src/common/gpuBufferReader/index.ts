@@ -1,5 +1,4 @@
-import { ComplexArray } from '../complexArray';
-import { ComplexGpuBuffer } from '../gpuBuffer';
+import { ComplexCpuBuffer, ComplexGpuBuffer } from '../complexArray';
 import { copyGpuBuffer, copyComplexGpuBuffer } from './copy';
 import { createGpuBuffer, createComplexGpuBuffer } from './create';
 import { readGpuBuffer, readComplexGpuBuffer } from './read';
@@ -11,7 +10,7 @@ export type CreateGpuBufferReaderOptions = {
 };
 
 export type GpuBufferReader = {
-  read: (input: GPUBuffer, output: Float32Array) => Promise<void>;
+  read: (input: GPUBuffer) => Promise<ArrayBuffer>;
   resize: (size: number) => void;
   destroy: () => void;
 };
@@ -23,9 +22,9 @@ export const createGpuBufferReader = (
   let buffer = createGpuBuffer(device, size * typeSize);
 
   return {
-    read: async (input: GPUBuffer, output: Float32Array) => {
+    read: async (input) => {
       await copyGpuBuffer(device, input, buffer, size * typeSize);
-      await readGpuBuffer(buffer, output);
+      return await readGpuBuffer(buffer);
     },
     resize: (newSize: number) => {
       size = newSize;
@@ -37,7 +36,7 @@ export const createGpuBufferReader = (
 };
 
 export type ComplexGpuBufferReader = {
-  read: (input: ComplexGpuBuffer, output: ComplexArray) => Promise<void>;
+  read: (input: ComplexGpuBuffer) => Promise<ComplexCpuBuffer>;
   resize: (size: number) => void;
   destroy: () => void;
 };
@@ -50,9 +49,9 @@ export const createComplexGpuBufferReader = (
   let buffer = createComplexGpuBuffer(device, size * typeSize);
 
   return {
-    read: async (input: ComplexGpuBuffer, output: ComplexArray) => {
+    read: async (input) => {
       await copyComplexGpuBuffer(device, input, buffer, size * typeSize);
-      await readComplexGpuBuffer(buffer, output);
+      return await readComplexGpuBuffer(buffer);
     },
     resize: (newSize: number) => {
       size = newSize;

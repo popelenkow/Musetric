@@ -8,7 +8,7 @@ export const createBuffers = (device: GPUDevice) => {
   const paramsArray = new DataView(new ArrayBuffer(12));
 
   const params = device.createBuffer({
-    label: 'norm-db-params',
+    label: 'decibel-normalizer-params-buffer',
     size: paramsArray.buffer.byteLength,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
