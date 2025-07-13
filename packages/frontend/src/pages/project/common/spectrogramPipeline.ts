@@ -31,18 +31,18 @@ export const useSpectrogramPipeline = (
       if (isGpuFourierMode(fourierMode)) {
         const device = await getGpuDevice();
         return await spectrogram.gpu.createPipeline({
-          canvas,
+          device,
           windowSize,
           fourierMode,
+          canvas,
           colors,
-          device,
         });
       }
 
       return await spectrogram.cpu.createPipeline({
-        canvas,
         windowSize,
         fourierMode,
+        canvas,
         colors,
       });
     },

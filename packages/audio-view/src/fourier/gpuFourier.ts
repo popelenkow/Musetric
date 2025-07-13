@@ -14,9 +14,9 @@ export type GpuFourier = {
 };
 
 export type CreateGpuFourierOptions = {
+  device: GPUDevice;
   windowSize: number;
   windowCount: number;
-  device: GPUDevice;
 };
 
 export type CreateGpuFourier = (

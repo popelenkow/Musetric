@@ -1,4 +1,5 @@
 import { Parameters } from '../../parameters';
+import { Drawer } from '../drawer';
 import { createBindGroup } from './bindGroup';
 import { createBuffers } from './buffers';
 import { createPipeline } from './pipeline';
@@ -14,8 +15,7 @@ export type LogSlicerRun = (
   encoder: GPUCommandEncoder,
   magnitude: GPUBuffer,
   parameters: Parameters,
-  viewSize: ViewSize,
-  texture: GPUTextureView,
+  drawer: Drawer,
 ) => void;
 
 export type LogSlicer = {
@@ -31,7 +31,12 @@ export const createLogSlicer = (
   const buffers = createBuffers(device, windowSize);
 
   return {
-    run: (encoder, magnitude, parameters, viewSize, texture) => {
+    run: (encoder, magnitude, parameters, drawer) => {
+      const viewSize: ViewSize = {
+        width: drawer.width,
+        height: drawer.height,
+      };
+      const texture = drawer.getTextureView();
       buffers.writeParams(parameters, viewSize);
       const bindGroup = createBindGroup(
         device,
