@@ -1,22 +1,18 @@
-import { ComplexArray } from '../complexArray';
-import { ComplexGpuBuffer } from '../gpuBuffer';
+import { ComplexCpuBuffer, ComplexGpuBuffer } from '../complexArray';
 
-export const readGpuBuffer = async (
-  input: GPUBuffer,
-  output: Float32Array,
-): Promise<void> => {
+export const readGpuBuffer = async (input: GPUBuffer): Promise<ArrayBuffer> => {
   await input.mapAsync(GPUMapMode.READ);
-  const array = new Float32Array(input.getMappedRange());
-  output.set(array);
+  const output = input.getMappedRange();
   input.unmap();
+  return output;
 };
 
 export const readComplexGpuBuffer = async (
   input: ComplexGpuBuffer,
-  output: ComplexArray,
-): Promise<void> => {
-  await Promise.all([
-    readGpuBuffer(input.real, output.real),
-    readGpuBuffer(input.imag, output.imag),
+): Promise<ComplexCpuBuffer> => {
+  const [real, imag] = await Promise.all([
+    readGpuBuffer(input.real),
+    readGpuBuffer(input.imag),
   ]);
+  return { real, imag };
 };

@@ -1,14 +1,19 @@
+export type CreatePipelineBuffersOptions = {
+  device: GPUDevice;
+  windowSize: number;
+  windowCount: number;
+};
+
 export const createPipelineBuffers = (
-  device: GPUDevice,
-  windowSize: number,
-  initWindowCount: number,
+  options: CreatePipelineBuffersOptions,
 ) => {
+  const { device, windowSize } = options;
   const halfSize = windowSize / 2;
-  let windowCount = initWindowCount;
+  let windowCount = options.windowCount;
 
   const createMagnitude = () =>
     device.createBuffer({
-      label: 'pipeline-magnitude',
+      label: 'pipeline-magnitude-buffer',
       size: halfSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
     });

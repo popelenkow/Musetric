@@ -21,7 +21,9 @@ export const createTexture = (
       GPUTextureUsage.COPY_DST |
       GPUTextureUsage.STORAGE_BINDING,
   });
-  const view = instance.createView();
+  const view = instance.createView({
+    label: 'drawer-texture-view',
+  });
   return {
     instance,
     view,

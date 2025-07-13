@@ -5,8 +5,11 @@ import {
   spectrogram,
 } from '@musetric/audio-view';
 import { RefObject } from 'react';
+import { envs } from '../../../common/envs';
 import { getGpuDevice } from '../../../common/gpu';
 import { useAsyncResource } from '../../../common/useAsyncResource';
+
+const profiling = envs.spectrogramProfiling;
 
 export const useSpectrogramPipeline = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
@@ -29,13 +32,14 @@ export const useSpectrogramPipeline = (
       };
 
       if (isGpuFourierMode(fourierMode)) {
-        const device = await getGpuDevice();
+        const device = await getGpuDevice(profiling);
         return await spectrogram.gpu.createPipeline({
           device,
           windowSize,
           fourierMode,
           canvas,
           colors,
+          profiling,
         });
       }
 

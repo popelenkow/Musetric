@@ -17,7 +17,7 @@ export const createBuffers = (device: GPUDevice, windowSize: number) => {
   const paramsArray = new DataView(new ArrayBuffer(28));
 
   const params = device.createBuffer({
-    label: 'drawer-compute-params',
+    label: 'drawer-compute-params-buffer',
     size: paramsArray.byteLength,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });

@@ -5,7 +5,7 @@ import { createBuffers } from './buffers';
 import { createPipeline } from './pipeline';
 
 export const createGpuDft: CreateGpuFourier = async (options) => {
-  const { windowSize, device } = options;
+  const { windowSize, device, timestampWrites } = options;
   let windowCount = options.windowCount;
 
   const buffers = createBuffers(device, windowSize, windowCount);
@@ -24,7 +24,10 @@ export const createGpuDft: CreateGpuFourier = async (options) => {
     device.queue.writeBuffer(buffers.inputImag, 0, input.imag);
     buffers.writeParams({ windowSize, windowCount, inverse });
 
-    const pass = encoder.beginComputePass({ label: 'dft-pass' });
+    const pass = encoder.beginComputePass({
+      label: 'dft-pass',
+      timestampWrites,
+    });
     pass.setPipeline(pipeline);
     pass.setBindGroup(0, bindGroup);
     pass.dispatchWorkgroups(xWorkgroupCount, windowCount);

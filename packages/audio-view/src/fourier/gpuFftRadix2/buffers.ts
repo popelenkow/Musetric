@@ -18,41 +18,41 @@ export const createBuffers = (
   const trigTableArray = utilsRadix2.createTrigTable(windowSize);
 
   const params = device.createBuffer({
-    label: 'fft2-params',
+    label: 'fft2-params-buffer',
     size: paramsArray.byteLength,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
   const reverseTable = device.createBuffer({
-    label: 'fft2-reverse-table',
+    label: 'fft2-reverse-table-buffer',
     size: reverseTableArray.byteLength,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
   const trigTable = device.createBuffer({
-    label: 'fft2-trig-table',
+    label: 'fft2-trig-table-buffer',
     size: trigTableArray.byteLength,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
   const createInputReal = () =>
     device.createBuffer({
-      label: 'fft2-input-real',
+      label: 'fft2-input-real-buffer',
       size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
     });
   const createInputImag = () =>
     device.createBuffer({
-      label: 'fft2-input-imag',
+      label: 'fft2-input-imag-buffer',
       size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
     });
   const createOutputReal = () =>
     device.createBuffer({
-      label: 'fft2-output-real',
+      label: 'fft2-output-real-buffer',
       size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
     });
   const createOutputImag = () =>
     device.createBuffer({
-      label: 'fft2-output-imag',
+      label: 'fft2-output-imag-buffer',
       size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC,
     });
