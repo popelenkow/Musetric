@@ -1,29 +1,27 @@
 import { Colors } from '../../colors';
 import { Parameters } from '../../parameters';
-import { createLogSlicer } from '../logSlicer';
 import { createBuffers } from './buffers';
 import { createBindGroup, createSampler, createTexture } from './common';
 import { createPipeline } from './pipeline';
 
 export type DrawerRender = (
   encoder: GPUCommandEncoder,
-  magnitude: GPUBuffer,
   parameters: Parameters,
 ) => void;
 
 export type Drawer = {
   width: number;
   height: number;
+  getTextureView: () => GPUTextureView;
   resize: () => void;
   render: DrawerRender;
   destroy: () => void;
 };
 
 export const createDrawer = (
+  device: GPUDevice,
   canvas: HTMLCanvasElement,
   colors: Colors,
-  windowSize: number,
-  device: GPUDevice,
 ): Drawer => {
   const context = canvas.getContext('webgpu');
   if (!context) {
@@ -34,8 +32,6 @@ export const createDrawer = (
 
   const buffers = createBuffers(device, colors);
   const sampler = createSampler(device);
-
-  const logSlicer = createLogSlicer(device, windowSize);
 
   let texture = createTexture(device, 1, 1);
 
@@ -50,6 +46,7 @@ export const createDrawer = (
   const drawer: Drawer = {
     width: 0,
     height: 0,
+    getTextureView: () => texture.view,
     resize: () => {
       const width = canvas.clientWidth;
       const height = canvas.clientHeight;
@@ -68,17 +65,8 @@ export const createDrawer = (
         texture.view,
       );
     },
-    render: (encoder, magnitude, parameters) => {
-      const { width, height } = drawer;
+    render: (encoder, parameters) => {
       const { progress } = parameters;
-
-      logSlicer.run(
-        encoder,
-        magnitude,
-        parameters,
-        { width, height },
-        texture.view,
-      );
 
       buffers.writeProgress(progress);
       const view = context.getCurrentTexture().createView();
@@ -101,7 +89,6 @@ export const createDrawer = (
     destroy: () => {
       texture.destroy();
       buffers.destroy();
-      logSlicer.destroy();
     },
   };
 
