@@ -4,34 +4,9 @@ import {
   isGpuFourierMode,
   spectrogram,
 } from '@musetric/audio-view';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { RefObject, useEffect, useMemo, useRef } from 'react';
+import { RefObject } from 'react';
 import { getGpuDevice } from '../../../common/gpu';
-
-export const createSpectrogramPipeline = async (
-  canvas: HTMLCanvasElement,
-  windowSize: number,
-  fourierMode: FourierMode,
-  colors: spectrogram.Colors,
-): Promise<spectrogram.Pipeline> => {
-  if (isGpuFourierMode(fourierMode)) {
-    const device = await getGpuDevice();
-    return await spectrogram.gpu.createPipeline({
-      canvas,
-      windowSize,
-      fourierMode,
-      colors,
-      device,
-    });
-  }
-
-  return await spectrogram.cpu.createPipeline({
-    canvas,
-    windowSize,
-    fourierMode,
-    colors,
-  });
-};
+import { useAsyncResource } from '../../../common/useAsyncResource';
 
 export const useSpectrogramPipeline = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
@@ -39,35 +14,13 @@ export const useSpectrogramPipeline = (
   fourierMode: FourierMode,
 ) => {
   const theme = useTheme();
-  const pipelineRef = useRef<spectrogram.Pipeline>(undefined);
-  const queryClient = useQueryClient();
 
-  const queryKey = useMemo(
-    () => ['spectrogramPipeline', windowSize, fourierMode],
-    [windowSize, fourierMode],
-  );
-
-  useEffect(() => {
-    return () => {
-      pipelineRef.current?.destroy();
-      pipelineRef.current = undefined;
-    };
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      queryClient.removeQueries({ queryKey });
-    };
-  }, [queryClient, queryKey]);
-
-  const query = useQuery({
-    queryKey,
-    queryFn: async () => {
-      pipelineRef.current?.destroy();
-      pipelineRef.current = undefined;
-
+  const pipeline = useAsyncResource({
+    create: async () => {
       const canvas = canvasRef.current;
-      if (!canvas) return undefined;
+      if (!canvas) {
+        return;
+      }
 
       const colors: spectrogram.Colors = {
         played: theme.palette.primary.main,
@@ -75,17 +28,29 @@ export const useSpectrogramPipeline = (
         background: theme.palette.background.default,
       };
 
-      const pipeline = await createSpectrogramPipeline(
+      if (isGpuFourierMode(fourierMode)) {
+        const device = await getGpuDevice();
+        return await spectrogram.gpu.createPipeline({
+          canvas,
+          windowSize,
+          fourierMode,
+          colors,
+          device,
+        });
+      }
+
+      return await spectrogram.cpu.createPipeline({
         canvas,
         windowSize,
         fourierMode,
         colors,
-      );
-
-      pipelineRef.current = pipeline;
-      return pipeline;
+      });
     },
+    unmount: async (prev) => {
+      prev.destroy();
+    },
+    deps: [windowSize, fourierMode, theme],
   });
 
-  return query.data;
+  return pipeline;
 };
