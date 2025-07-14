@@ -1,9 +1,9 @@
 import { ComplexArray, ComplexGpuBuffer } from '../../common';
 import { CreateGpuFourier, GpuFourier } from '../gpuFourier';
 import { assertWindowSizePowerOfTwo } from '../isPowerOfTwo';
-import { createBindGroup } from './bindGroup';
+import { createReverseBindGroup, createTransformBindGroup } from './bindGroup';
 import { createBuffers } from './buffers';
-import { createPipeline } from './pipeline';
+import { createReversePipeline, createTransformPipeline } from './pipeline';
 
 export const createGpuFftRadix4: CreateGpuFourier = async (options) => {
   const { windowSize, device, timestampWrites } = options;
@@ -11,25 +11,31 @@ export const createGpuFftRadix4: CreateGpuFourier = async (options) => {
   assertWindowSizePowerOfTwo(windowSize);
 
   const buffers = createBuffers(device, windowSize, windowCount);
-  const { reverseWidth } = buffers;
-  const pipeline = createPipeline(device);
-  const createGroup = () => createBindGroup(device, pipeline, buffers);
-  let bindGroup = createGroup();
+  const reversePipeline = createReversePipeline(device);
+  const transformPipeline = createTransformPipeline(device);
 
-  const transform = (
-    encoder: GPUCommandEncoder,
-    input: ComplexArray,
-    inverse: boolean,
-  ): ComplexGpuBuffer => {
-    device.queue.writeBuffer(buffers.inputReal, 0, input.real);
-    device.queue.writeBuffer(buffers.inputImag, 0, input.imag);
-    buffers.writeParams({ windowSize, windowCount, reverseWidth, inverse });
-
+  const reverse = (encoder: GPUCommandEncoder) => {
+    const bindGroup = createReverseBindGroup(device, reversePipeline, buffers);
     const pass = encoder.beginComputePass({
-      label: 'fft4-pass',
-      timestampWrites,
+      label: 'fft4-reverse-pass',
+      timestampWrites: timestampWrites?.reverse,
     });
-    pass.setPipeline(pipeline);
+    pass.setPipeline(reversePipeline);
+    pass.setBindGroup(0, bindGroup);
+    pass.dispatchWorkgroups(windowCount);
+    pass.end();
+  };
+  const transform = (encoder: GPUCommandEncoder): ComplexGpuBuffer => {
+    const bindGroup = createTransformBindGroup(
+      device,
+      transformPipeline,
+      buffers,
+    );
+    const pass = encoder.beginComputePass({
+      label: 'fft4-transform-pass',
+      timestampWrites: timestampWrites?.transform,
+    });
+    pass.setPipeline(transformPipeline);
     pass.setBindGroup(0, bindGroup);
     pass.dispatchWorkgroups(windowCount);
     pass.end();
@@ -37,13 +43,25 @@ export const createGpuFftRadix4: CreateGpuFourier = async (options) => {
     return { real: buffers.outputReal, imag: buffers.outputImag };
   };
 
+  const run = (
+    encoder: GPUCommandEncoder,
+    input: ComplexArray,
+    inverse: boolean,
+  ) => {
+    const { reverseWidth } = buffers;
+    device.queue.writeBuffer(buffers.inputReal, 0, input.real);
+    device.queue.writeBuffer(buffers.inputImag, 0, input.imag);
+    buffers.writeParams({ windowSize, windowCount, reverseWidth, inverse });
+    reverse(encoder);
+    return transform(encoder);
+  };
+
   const fourier: GpuFourier = {
-    forward: (encoder, input) => transform(encoder, input, false),
-    inverse: (encoder, input) => transform(encoder, input, true),
+    forward: (encoder, input) => run(encoder, input, false),
+    inverse: (encoder, input) => run(encoder, input, true),
     resize: (newWindowCount) => {
       windowCount = newWindowCount;
       buffers.resize(windowCount);
-      bindGroup = createGroup();
     },
     destroy: () => {
       buffers.destroy();

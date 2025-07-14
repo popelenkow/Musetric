@@ -10,8 +10,7 @@ struct Params {
 @group(0) @binding(2) var<storage, read_write> outputReal : array<f32>;
 @group(0) @binding(3) var<storage, read_write> outputImag : array<f32>;
 @group(0) @binding(4) var<storage, read>  reverseTable : array<u32>;
-@group(0) @binding(5) var<storage, read>  trigTable : array<f32>;
-@group(0) @binding(6) var<uniform> params : Params;
+@group(0) @binding(5) var<uniform> params : Params;
 
 @compute @workgroup_size(64)
 fn main(
@@ -84,88 +83,6 @@ fn main(
       outputImag[windowOffset + outOff + 2u] = FCi;
       outputReal[windowOffset + outOff + 3u] = FDr;
       outputImag[windowOffset + outOff + 3u] = FDi;
-    }
-  }
-  workgroupBarrier();
-
-  step = step >> 1u;
-  while (step >= 2u) {
-    len = (params.windowSize / step) << 1u;
-    let quarterLen = len >> 2u;
-    for (var outOff : u32 = 0u; outOff < params.windowSize; outOff += len) {
-      let limit = outOff + quarterLen;
-      for (var i : u32 = outOff + threadIndex; i < limit; i = i + 64u) {
-        let k = (i - outOff) * step;
-        let A = windowOffset + i;
-        let B = quarterLen + A;
-        let C = quarterLen + B;
-        let D = quarterLen + C;
-
-        let Ar = outputReal[A];
-        let Ai = outputImag[A];
-        let Br = outputReal[B];
-        let Bi = outputImag[B];
-        let Cr = outputReal[C];
-        let Ci = outputImag[C];
-        let Dr = outputReal[D];
-        let Di = outputImag[D];
-
-        let MAr = Ar;
-        let MAi = Ai;
-
-        let tableBr = trigTable[k];
-        let tableBi = sign * trigTable[k + 1u];
-        let MBr = Br * tableBr - Bi * tableBi;
-        let MBi = Br * tableBi + Bi * tableBr;
-
-        let tableCr = trigTable[2u * k];
-        let tableCi = sign * trigTable[2u * k + 1u];
-        let MCr = Cr * tableCr - Ci * tableCi;
-        let MCi = Cr * tableCi + Ci * tableCr;
-
-        let tableDr = trigTable[3u * k];
-        let tableDi = sign * trigTable[3u * k + 1u];
-        let MDr = Dr * tableDr - Di * tableDi;
-        let MDi = Dr * tableDi + Di * tableDr;
-
-        let T0r = MAr + MCr;
-        let T0i = MAi + MCi;
-        let T1r = MAr - MCr;
-        let T1i = MAi - MCi;
-        let T2r = MBr + MDr;
-        let T2i = MBi + MDi;
-        let T3r = sign * (MBr - MDr);
-        let T3i = sign * (MBi - MDi);
-
-        let FAr = T0r + T2r;
-        let FAi = T0i + T2i;
-        let FCr = T0r - T2r;
-        let FCi = T0i - T2i;
-        let FBr = T1r + T3i;
-        let FBi = T1i - T3r;
-        let FDr = T1r - T3i;
-        let FDi = T1i + T3r;
-
-        outputReal[A] = FAr;
-        outputImag[A] = FAi;
-        outputReal[B] = FBr;
-        outputImag[B] = FBi;
-        outputReal[C] = FCr;
-        outputImag[C] = FCi;
-        outputReal[D] = FDr;
-        outputImag[D] = FDi;
-      }
-      workgroupBarrier();
-    }
-    step = step >> 2u;
-    workgroupBarrier();
-  }
-
-  if (params.inverse == 1u) {
-    let size = f32(params.windowSize);
-    for (var i : u32 = threadIndex; i < params.windowSize; i = i + 64u) {
-      outputReal[windowOffset + i] = outputReal[windowOffset + i] / size;
-      outputImag[windowOffset + i] = outputImag[windowOffset + i] / size;
     }
   }
 }
