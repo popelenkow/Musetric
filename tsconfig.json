@@ -13,5 +13,6 @@
     { "path": "packages/frontend" },
     { "path": "packages/spa-router" },
     { "path": "packages/python-backend" }
-  ]
+  ],
+  "include": ["packages/*/src", "packages/*/test"]
 }
