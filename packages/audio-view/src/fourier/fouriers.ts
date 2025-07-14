@@ -1,5 +1,4 @@
 import { createCpuFftRadix4 } from './cpuFftRadix4';
-import { createGpuDft } from './gpuDft';
 import { createGpuFftRadix2 } from './gpuFftRadix2';
 import { createGpuFftRadix4 } from './gpuFftRadix4';
 
@@ -8,7 +7,6 @@ export const cpuFouriers = {
 } as const;
 
 export const gpuFouriers = {
-  gpuDft: createGpuDft,
   gpuFftRadix2: createGpuFftRadix2,
   gpuFftRadix4: createGpuFftRadix4,
 } as const;
