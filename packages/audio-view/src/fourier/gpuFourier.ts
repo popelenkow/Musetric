@@ -13,11 +13,16 @@ export type GpuFourier = {
   destroy: () => void;
 };
 
+export type FourierTimestampWrites = {
+  reverse?: GPUComputePassTimestampWrites;
+  transform?: GPUComputePassTimestampWrites;
+};
+
 export type CreateGpuFourierOptions = {
   device: GPUDevice;
   windowSize: number;
   windowCount: number;
-  timestampWrites?: GPUComputePassTimestampWrites;
+  timestampWrites?: FourierTimestampWrites;
 };
 
 export type CreateGpuFourier = (

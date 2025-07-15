@@ -6,9 +6,8 @@ struct Params {
 
 @group(0) @binding(0) var<storage, read_write> dataReal: array<f32>;
 @group(0) @binding(1) var<storage, read_write> dataImag: array<f32>;
-@group(0) @binding(2) var<storage, read> reverseTable: array<u32>;
-@group(0) @binding(3) var<storage, read> trigTable: array<f32>;
-@group(0) @binding(4) var<uniform> params: Params;
+@group(0) @binding(2) var<storage, read> trigTable: array<f32>;
+@group(0) @binding(3) var<uniform> params: Params;
 
 fn getSign() -> f32 {
   return select(-1.0, 1.0, params.inverse == 1u);
@@ -28,22 +27,6 @@ fn main(
   let windowOffset = windowIndex * windowSize;
   let threadIndex = localId.x;
   let twiddleSign = getSign();
-
-  for (var index: u32 = threadIndex; index < windowSize; index = index + 64u) {
-    let reversedIndex = reverseTable[index];
-    if (reversedIndex > index) {
-      let a = windowOffset + index;
-      let b = windowOffset + reversedIndex;
-      let tempReal = dataReal[a];
-      let tempImag = dataImag[a];
-      dataReal[a] = dataReal[b];
-      dataImag[a] = dataImag[b];
-      dataReal[b] = tempReal;
-      dataImag[b] = tempImag;
-    }
-  }
-
-  workgroupBarrier();
 
   var sectionSize: u32 = 2u;
   while (sectionSize <= windowSize) {

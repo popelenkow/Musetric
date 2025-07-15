@@ -26,7 +26,8 @@ export const createPipeline: CreatePipeline = async (options) => {
 
   const timer = profiling
     ? createGpuTimer(device, [
-        'fourier',
+        'fourierReverse',
+        'fourierTransform',
         'magnitudeNormalizer',
         'decibelNormalizer',
         'logSlicer',
@@ -50,7 +51,10 @@ export const createPipeline: CreatePipeline = async (options) => {
     device,
     windowSize,
     windowCount,
-    timestampWrites: timer?.timestampWrites.fourier,
+    timestampWrites: {
+      reverse: timer?.timestampWrites.fourierReverse,
+      transform: timer?.timestampWrites.fourierTransform,
+    },
   });
   const magnitudeNormalizer = createMagnitudeNormalizer({
     device,

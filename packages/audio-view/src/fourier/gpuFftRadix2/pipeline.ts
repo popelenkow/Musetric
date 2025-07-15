@@ -1,32 +1,26 @@
-import { Buffers } from './buffers';
-import shaderCode from './index.wgsl?raw';
+import reverseShader from './reverse.wgsl?raw';
+import transformShader from './transform.wgsl?raw';
 
-export const createPipeline = (device: GPUDevice) => {
+export const createReversePipeline = (device: GPUDevice) => {
   const module = device.createShaderModule({
-    label: 'fft2-shader',
-    code: shaderCode,
+    label: 'fft2-reverse-shader',
+    code: reverseShader,
   });
-  const pipeline = device.createComputePipeline({
-    label: 'fft2-pipeline',
+  return device.createComputePipeline({
+    label: 'fft2-reverse-pipeline',
     layout: 'auto',
     compute: { module, entryPoint: 'main' },
   });
-  return pipeline;
 };
 
-export const createBindGroup = (
-  device: GPUDevice,
-  pipeline: GPUComputePipeline,
-  buffers: Buffers,
-) =>
-  device.createBindGroup({
-    label: 'fft2-bind-group',
-    layout: pipeline.getBindGroupLayout(0),
-    entries: [
-      { binding: 0, resource: { buffer: buffers.dataReal } },
-      { binding: 1, resource: { buffer: buffers.dataImag } },
-      { binding: 2, resource: { buffer: buffers.reverseTable } },
-      { binding: 3, resource: { buffer: buffers.trigTable } },
-      { binding: 4, resource: { buffer: buffers.params } },
-    ],
+export const createTransformPipeline = (device: GPUDevice) => {
+  const module = device.createShaderModule({
+    label: 'fft2-transform-shader',
+    code: transformShader,
   });
+  return device.createComputePipeline({
+    label: 'fft2-transform-pipeline',
+    layout: 'auto',
+    compute: { module, entryPoint: 'main' },
+  });
+};
