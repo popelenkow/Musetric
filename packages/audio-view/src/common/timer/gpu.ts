@@ -11,6 +11,8 @@ export const createGpuTimer = <Labels extends readonly string[]>(
   device: GPUDevice,
   labels: [...Labels],
 ): GpuTimer<Labels[number]> => {
+  type Label = Labels[number];
+
   const count = labels.length * 2;
   const size = count * BigUint64Array.BYTES_PER_ELEMENT;
 
@@ -36,7 +38,7 @@ export const createGpuTimer = <Labels extends readonly string[]>(
       };
       return acc;
     },
-    {} as Record<Labels[number], GPUComputePassTimestampWrites>,
+    {} as Record<Label, GPUComputePassTimestampWrites>,
   );
 
   return {
@@ -52,10 +54,11 @@ export const createGpuTimer = <Labels extends readonly string[]>(
         (acc, label, i) => {
           const start = data[i * 2];
           const end = data[i * 2 + 1];
-          acc[label] = Number(end - start) / 1e6;
+          const duration = Number(end - start) / 1e6;
+          acc[label] = Math.round(duration * 1e3) / 1e3;
           return acc;
         },
-        {} as Record<Labels[number], number>,
+        {} as Record<Label, number>,
       );
       readBuffer.unmap();
       return result;
