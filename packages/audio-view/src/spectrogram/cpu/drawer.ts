@@ -1,6 +1,7 @@
-import { Colors, createGradient, Gradients, parseHexColor } from '../colors';
+import { createGradient, parseHexColor } from '../../common';
+import { Colors, Gradients } from '../colors';
 import { Parameters } from '../parameters';
-import { logSlice } from './logSlice';
+import { scaleView } from './scaleView';
 
 export type DrawerRender = (
   magnitudes: Float32Array,
@@ -62,7 +63,7 @@ export const createDrawer = (options: CreateDrawerOptions): Drawer => {
         const start = x * windowSize;
         const end = start + windowSize;
         const magnitude = magnitudes.subarray(start / 2, end / 2);
-        logSlice(windowSize, height, parameters, magnitude, column);
+        scaleView(windowSize, height, parameters, magnitude, column);
         for (let y = 0; y < height; y++) {
           const value = column[y];
           const idx = (y * width + x) * 4;

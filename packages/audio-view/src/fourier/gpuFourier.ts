@@ -1,11 +1,13 @@
-import { ComplexArray, ComplexGpuBuffer } from '../common';
+import { ComplexGpuBuffer } from '../common';
+
+export type GpuFourierParams = {
+  windowSize: number;
+  windowCount: number;
+};
 
 export type GpuFourier = {
-  forward: (
-    encoder: GPUCommandEncoder,
-    input: ComplexArray,
-  ) => ComplexGpuBuffer;
-  resize: (windowCount: number) => void;
+  forward: (encoder: GPUCommandEncoder, data: ComplexGpuBuffer) => void;
+  writeParams: (params: GpuFourierParams) => void;
   destroy: () => void;
 };
 
@@ -17,7 +19,6 @@ export type FourierTimestampWrites = {
 export type CreateGpuFourierOptions = {
   device: GPUDevice;
   windowSize: number;
-  windowCount: number;
   timestampWrites?: FourierTimestampWrites;
 };
 

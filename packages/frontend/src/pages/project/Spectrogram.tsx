@@ -1,8 +1,4 @@
-import {
-  FourierMode,
-  spectrogram,
-  subscribeResizeObserver,
-} from '@musetric/audio-view';
+import { FourierMode, subscribeResizeObserver } from '@musetric/audio-view';
 import { FC, useEffect, useRef } from 'react';
 import { useSpectrogramPipeline } from './common/spectrogramPipeline';
 import { usePlayerStore } from './store';
@@ -16,22 +12,21 @@ export const Spectrogram: FC = () => {
   const seek = usePlayerStore((s) => s.seek);
   const progress = usePlayerStore((s) => s.progress);
 
-  const pipeline = useSpectrogramPipeline(canvasRef, windowSize, fourierMode);
+  const pipeline = useSpectrogramPipeline(
+    canvasRef,
+    windowSize,
+    fourierMode,
+    buffer,
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || !pipeline || !buffer) return;
-    const parameters: spectrogram.Parameters = {
-      sampleRate: buffer.sampleRate,
-      minFrequency: buffer.sampleRate * 0.001,
-      maxFrequency: buffer.sampleRate * 0.1,
-      progress,
-    };
     const data = buffer.getChannelData(0);
-    void pipeline.render(data, parameters);
+    void pipeline.render(data, progress);
     return subscribeResizeObserver(canvas, async () => {
       pipeline.resize();
-      await pipeline.render(data, parameters);
+      await pipeline.render(data, progress);
     });
   }, [pipeline, buffer, progress]);
 

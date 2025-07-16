@@ -19,6 +19,10 @@ export type CpuTimer<Label extends string> = {
   start: (label: Label) => void;
   end: (label: Label) => void;
   wrap: <T extends (...args: any[]) => any>(label: Label, fn: T) => T;
+  wrapAsync: <T extends (...args: any[]) => Promise<any>>(
+    label: Label,
+    fn: T,
+  ) => T;
   read: () => Record<Label, number>;
 };
 
@@ -44,10 +48,23 @@ export const createCpuTimer = <Labels extends readonly string[]>(
     },
     wrap: (label, fn) => {
       const wrapped = (...args: Parameters<typeof fn>) => {
-        ranges[label].start = performance.now();
-        const result = fn(...args);
-        ranges[label].end = performance.now();
-        return result;
+        try {
+          ranges[label].start = performance.now();
+          return fn(...args);
+        } finally {
+          ranges[label].end = performance.now();
+        }
+      };
+      return wrapped as typeof fn;
+    },
+    wrapAsync: (label, fn) => {
+      const wrapped = async (...args: Parameters<typeof fn>) => {
+        try {
+          ranges[label].start = performance.now();
+          return await fn(...args);
+        } finally {
+          ranges[label].end = performance.now();
+        }
       };
       return wrapped as typeof fn;
     },
@@ -56,6 +73,8 @@ export const createCpuTimer = <Labels extends readonly string[]>(
         (acc, label) => {
           const range = ranges[label];
           acc[label] = getDuration(range);
+          range.start = undefined;
+          range.end = undefined;
           return acc;
         },
         {} as Record<Label, number>,

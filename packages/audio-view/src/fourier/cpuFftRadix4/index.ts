@@ -48,11 +48,5 @@ export const createCpuFftRadix4: CreateCpuFourier = async (options) => {
     inverse: async (input: ComplexArray, output: ComplexArray) => {
       await transform(input, output, true);
     },
-    resize: () => {
-      // CPU implementation does not allocate persistent buffers
-    },
-    destroy: () => {
-      // CPU implementation does not allocate persistent buffers
-    },
   };
 };

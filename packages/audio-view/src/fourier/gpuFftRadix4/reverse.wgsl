@@ -1,4 +1,4 @@
-struct Params {
+struct GpuFftRadix4ParamsShader {
   windowSize : u32,
   windowCount : u32,
   reverseWidth : u32,
@@ -7,7 +7,7 @@ struct Params {
 @group(0) @binding(0) var<storage, read_write> dataReal  : array<f32>;
 @group(0) @binding(1) var<storage, read_write> dataImag  : array<f32>;
 @group(0) @binding(2) var<storage, read>  reverseTable : array<u32>;
-@group(0) @binding(3) var<uniform> params : Params;
+@group(0) @binding(3) var<uniform> params : GpuFftRadix4ParamsShader;
 
 fn indexMap(index : u32, step : u32, len : u32) -> u32 {
   let r = index / step;
