@@ -8,7 +8,7 @@ import { useSpectrogramPipeline } from './common/spectrogramPipeline';
 import { usePlayerStore } from './store';
 
 const windowSize = 1024 * 16;
-export const fourierMode: FourierMode = 'gpuFftRadix2';
+export const fourierMode: FourierMode = 'gpuFftRadix4';
 
 export const Spectrogram: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);

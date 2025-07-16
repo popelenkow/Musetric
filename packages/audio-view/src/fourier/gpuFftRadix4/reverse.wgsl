@@ -2,7 +2,6 @@ struct Params {
   windowSize : u32,
   windowCount : u32,
   reverseWidth : u32,
-  inverse : u32,
 };
 
 @group(0) @binding(0) var<storage, read>  inputReal  : array<f32>;
@@ -26,7 +25,7 @@ fn main(
   let windowOffset = windowIndex * params.windowSize;
   var step = 1u << params.reverseWidth;
   var len = params.windowSize >> params.reverseWidth;
-  let sign = select(1.0, -1.0, params.inverse == 1u);
+  let sign = 1.0;
 
   if (len == 2u) {
     for (var outOff : u32 = threadIndex * 2u; outOff < params.windowSize; outOff += 2u * 64u) {

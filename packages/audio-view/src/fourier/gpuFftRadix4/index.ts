@@ -1,4 +1,4 @@
-import { ComplexArray, ComplexGpuBuffer } from '../../common';
+import { ComplexGpuBuffer } from '../../common';
 import { CreateGpuFourier, GpuFourier } from '../gpuFourier';
 import { assertWindowSizePowerOfTwo } from '../isPowerOfTwo';
 import { createReverseBindGroup, createTransformBindGroup } from './bindGroup';
@@ -43,22 +43,13 @@ export const createGpuFftRadix4: CreateGpuFourier = async (options) => {
     return { real: buffers.outputReal, imag: buffers.outputImag };
   };
 
-  const run = (
-    encoder: GPUCommandEncoder,
-    input: ComplexArray,
-    inverse: boolean,
-  ) => {
-    const { reverseWidth } = buffers;
-    device.queue.writeBuffer(buffers.inputReal, 0, input.real);
-    device.queue.writeBuffer(buffers.inputImag, 0, input.imag);
-    buffers.writeParams({ windowSize, windowCount, reverseWidth, inverse });
-    reverse(encoder);
-    return transform(encoder);
-  };
-
   const fourier: GpuFourier = {
-    forward: (encoder, input) => run(encoder, input, false),
-    inverse: (encoder, input) => run(encoder, input, true),
+    forward: (encoder, input) => {
+      device.queue.writeBuffer(buffers.inputReal, 0, input.real);
+      device.queue.writeBuffer(buffers.inputImag, 0, input.imag);
+      reverse(encoder);
+      return transform(encoder);
+    },
     resize: (newWindowCount) => {
       windowCount = newWindowCount;
       buffers.resize(windowCount);

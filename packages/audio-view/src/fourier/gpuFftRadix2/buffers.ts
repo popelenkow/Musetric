@@ -3,7 +3,6 @@ import { utilsRadix2 } from '../utilsRadix2';
 export type Params = {
   windowSize: number;
   windowCount: number;
-  inverse: boolean;
 };
 
 export const createBuffers = (
@@ -13,7 +12,7 @@ export const createBuffers = (
 ) => {
   let windowCount = initWindowCount;
 
-  const paramsArray = new Uint32Array(3);
+  const paramsArray = new Uint32Array(2);
   const reverseTableArray = utilsRadix2.createReverseTable(windowSize);
   const trigTableArray = utilsRadix2.createTrigTable(windowSize);
 
@@ -51,8 +50,11 @@ export const createBuffers = (
         GPUBufferUsage.COPY_DST,
     });
 
-  device.queue.writeBuffer(reverseTable, 0, reverseTableArray);
-  device.queue.writeBuffer(trigTable, 0, trigTableArray);
+  const writeParams = () => {
+    paramsArray[0] = windowSize;
+    paramsArray[1] = windowCount;
+    device.queue.writeBuffer(params, 0, paramsArray);
+  };
 
   const buffers = {
     params,
@@ -66,12 +68,7 @@ export const createBuffers = (
       buffers.dataImag.destroy();
       buffers.dataReal = createDataReal();
       buffers.dataImag = createDataImag();
-    },
-    writeParams: (data: Params) => {
-      paramsArray[0] = data.windowSize;
-      paramsArray[1] = data.windowCount;
-      paramsArray[2] = data.inverse ? 1 : 0;
-      device.queue.writeBuffer(buffers.params, 0, paramsArray);
+      writeParams();
     },
     destroy: () => {
       params.destroy();
@@ -81,6 +78,11 @@ export const createBuffers = (
       buffers.dataImag.destroy();
     },
   };
+
+  device.queue.writeBuffer(reverseTable, 0, reverseTableArray);
+  device.queue.writeBuffer(trigTable, 0, trigTableArray);
+  writeParams();
+
   return buffers;
 };
 export type Buffers = ReturnType<typeof createBuffers>;

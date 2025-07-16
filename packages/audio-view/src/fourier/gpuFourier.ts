@@ -5,10 +5,6 @@ export type GpuFourier = {
     encoder: GPUCommandEncoder,
     input: ComplexArray,
   ) => ComplexGpuBuffer;
-  inverse: (
-    encoder: GPUCommandEncoder,
-    input: ComplexArray,
-  ) => ComplexGpuBuffer;
   resize: (windowCount: number) => void;
   destroy: () => void;
 };

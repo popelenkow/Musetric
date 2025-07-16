@@ -2,7 +2,6 @@ struct Params {
   windowSize : u32,
   windowCount : u32,
   reverseWidth : u32,
-  inverse : u32,
 };
 
 @group(0) @binding(0) var<storage, read_write> dataReal : array<f32>;
@@ -24,7 +23,7 @@ fn main(
   let windowOffset = windowIndex * params.windowSize;
   var step = 1u << params.reverseWidth;
   step = step >> 1u;
-  let sign = select(1.0, -1.0, params.inverse == 1u);
+  let sign = 1.0;
 
   while (step >= 2u) {
     let len = (params.windowSize / step) << 1u;
@@ -98,11 +97,5 @@ fn main(
     workgroupBarrier();
   }
 
-  if (params.inverse == 1u) {
-    let size = f32(params.windowSize);
-    for (var i : u32 = threadIndex; i < params.windowSize; i = i + 64u) {
-      dataReal[windowOffset + i] = dataReal[windowOffset + i] / size;
-      dataImag[windowOffset + i] = dataImag[windowOffset + i] / size;
-    }
-  }
+
 }
