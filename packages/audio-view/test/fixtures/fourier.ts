@@ -8,7 +8,6 @@ export type FourierFixture = {
 };
 
 export const fourierFixtures: FourierFixture[] = [
-  // 2-point fixtures
   {
     name: 'FFT 2-point: unit impulse',
     windowSize: 2,
@@ -36,8 +35,6 @@ export const fourierFixtures: FourierFixture[] = [
       imag: Float32Array.from([0, 0]),
     },
   },
-
-  // 4-point fixtures
   {
     name: 'FFT 4-point: unit impulse',
     windowSize: 4,
@@ -65,12 +62,12 @@ export const fourierFixtures: FourierFixture[] = [
       imag: Float32Array.from([0, 2, 0, -2]),
     },
   },
-
-  // 8-point fixtures
   {
     name: 'FFT 8-point: unit impulse',
     windowSize: 8,
-    input: Float32Array.from([1, 0, 0, 0, 0, 0, 0, 0]),
+    input: Float32Array.from(
+      Array.from({ length: 8 }, (_, i) => (i === 0 ? 1 : 0)),
+    ),
     output: {
       real: Float32Array.from(new Array(8).fill(1)),
       imag: Float32Array.from(new Array(8).fill(0)),
@@ -99,16 +96,14 @@ export const fourierFixtures: FourierFixture[] = [
   {
     name: 'FFT 8-point: single sine',
     windowSize: 8,
-    input: Float32Array.from([
-      0, 0.70710678, 1, 0.70710678, 0, -0.70710678, -1, -0.70710678,
-    ]),
+    input: Float32Array.from(
+      Array.from({ length: 8 }, (_, i) => Math.sin((2 * Math.PI * i) / 8)),
+    ),
     output: {
       real: Float32Array.from(new Array(8).fill(0)),
       imag: Float32Array.from([0, -4, 0, 0, 0, 0, 0, 4]),
     },
   },
-
-  // 16-point fixtures
   {
     name: 'FFT 16-point: unit impulse',
     windowSize: 16,
@@ -128,32 +123,46 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 16-point: single sine',
+    name: 'FFT 16-point: sin 1',
     windowSize: 16,
-    input: Float32Array.from([
-      0, 0.38268343, 0.70710678, 0.92387953, 1, 0.92387953, 0.70710678,
-      0.38268343, 0, -0.38268343, -0.70710678, -0.92387953, -1, -0.92387953,
-      -0.70710678, -0.38268343,
-    ]),
+    input: Float32Array.from(
+      Array.from({ length: 16 }, (_, i) => Math.sin((2 * Math.PI * i) / 16)),
+    ),
     output: {
       real: Float32Array.from(new Array(16).fill(0)),
-      imag: Float32Array.from([0, -8, ...new Array(13).fill(0), 8]),
+      imag: Float32Array.from(
+        Array.from({ length: 16 }, (_, i) => {
+          if (i === 1) return -8;
+          if (i === 15) return 8;
+          return 0;
+        }),
+      ),
     },
   },
   {
     name: 'FFT 16-point: two-tone cos 3 & 5',
     windowSize: 16,
-    input: Float32Array.from([
-      2.0, 0.0, -1.414214, 0.0, 0.0, 0.0, 1.414214, 0.0, -2.0, 0.0, 1.414214,
-      0.0, 0.0, 0.0, -1.414214, 0.0,
-    ]),
+    input: Float32Array.from(
+      Array.from(
+        { length: 16 },
+        (_, i) =>
+          Math.cos((2 * Math.PI * 3 * i) / 16) +
+          Math.cos((2 * Math.PI * 5 * i) / 16),
+      ),
+    ),
     output: {
-      real: Float32Array.from([0, 0, 0, 8, 0, 8, 0, 0, 0, 0, 0, 8, 0, 8, 0, 0]),
+      real: Float32Array.from(
+        Array.from({ length: 16 }, (_, i) => {
+          if (i === 3) return 8;
+          if (i === 13) return 8;
+          if (i === 5) return 8;
+          if (i === 11) return 8;
+          return 0;
+        }),
+      ),
       imag: Float32Array.from(new Array(16).fill(0)),
     },
   },
-
-  // 32-point fixtures
   {
     name: 'FFT 32-point: unit impulse',
     windowSize: 32,
@@ -173,36 +182,110 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 32-point: single sine',
+    name: 'FFT 32-point: sine 1',
     windowSize: 32,
-    input: Float32Array.from([
-      0, 0.19509032, 0.38268343, 0.55557023, 0.70710678, 0.83146961, 0.92387953,
-      0.98078528, 1, 0.98078528, 0.92387953, 0.83146961, 0.70710678, 0.55557023,
-      0.38268343, 0.19509032, 0, -0.19509032, -0.38268343, -0.55557023,
-      -0.70710678, -0.83146961, -0.92387953, -0.98078528, -1, -0.98078528,
-      -0.92387953, -0.83146961, -0.70710678, -0.55557023, -0.38268343,
-      -0.19509032,
-    ]),
+    input: Float32Array.from(
+      Array.from({ length: 32 }, (_, i) => Math.sin((2 * Math.PI * i) / 32)),
+    ),
     output: {
       real: Float32Array.from(new Array(32).fill(0)),
-      imag: Float32Array.from([0, -16, ...new Array(29).fill(0), 16]),
+      imag: Float32Array.from(
+        Array.from({ length: 32 }, (_, i) => {
+          if (i === 1) return -16;
+          if (i === 31) return 16;
+          return 0;
+        }),
+      ),
     },
   },
   {
     name: 'FFT 32-point: two-tone cos 3 & 5',
     windowSize: 32,
-    input: Float32Array.from([
-      2.0, 1.38704, 0.0, -1.175876, -1.414214, -0.785695, 0.0, 0.275899, 0.0,
-      -0.275899, 0.0, 0.785695, 1.414214, 1.175876, 0.0, -1.38704, -2.0,
-      -1.38704, 0.0, 1.175876, 1.414214, 0.785695, 0.0, -0.275899, 0.0,
-      0.275899, 0.0, -0.785695, -1.414214, -1.175876, 0.0, 1.38704,
-    ]),
+    input: Float32Array.from(
+      Array.from(
+        { length: 32 },
+        (_, i) =>
+          Math.cos((2 * Math.PI * 3 * i) / 32) +
+          Math.cos((2 * Math.PI * 5 * i) / 32),
+      ),
+    ),
     output: {
-      real: Float32Array.from([
-        0, 0, 0, 16, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 16, 0, 16, 0, 0,
-      ]),
+      real: Float32Array.from(
+        Array.from({ length: 32 }, (_, i) => {
+          if (i === 3) return 16;
+          if (i === 29) return 16;
+          if (i === 5) return 16;
+          if (i === 27) return 16;
+          return 0;
+        }),
+      ),
       imag: Float32Array.from(new Array(32).fill(0)),
+    },
+  },
+  {
+    name: 'FFT 64-point: single sine 7',
+    windowSize: 64,
+    input: Float32Array.from(
+      Array.from({ length: 64 }, (_, i) =>
+        Math.sin((2 * Math.PI * 7 * i) / 64),
+      ),
+    ),
+    output: {
+      real: Float32Array.from(new Array(64).fill(0)),
+      imag: Float32Array.from(
+        Array.from({ length: 64 }, (_, i) => {
+          if (i === 7) return -32;
+          if (i === 57) return 32;
+          return 0;
+        }),
+      ),
+    },
+  },
+  {
+    name: 'FFT 128-point: single cosine 9',
+    windowSize: 128,
+    input: Float32Array.from(
+      Array.from({ length: 128 }, (_, i) =>
+        Math.cos((2 * Math.PI * 9 * i) / 128),
+      ),
+    ),
+    output: {
+      real: Float32Array.from(
+        Array.from({ length: 128 }, (_, i) => {
+          if (i === 9) return 64;
+          if (i === 119) return 64;
+          return 0;
+        }),
+      ),
+      imag: Float32Array.from(new Array(128).fill(0)),
+    },
+  },
+  {
+    name: 'FFT 256-point: sine 12 + cosine 20',
+    windowSize: 256,
+    input: Float32Array.from(
+      Array.from(
+        { length: 256 },
+        (_, i) =>
+          Math.sin((2 * Math.PI * 12 * i) / 256) +
+          Math.cos((2 * Math.PI * 20 * i) / 256),
+      ),
+    ),
+    output: {
+      real: Float32Array.from(
+        Array.from({ length: 256 }, (_, i) => {
+          if (i === 20) return 128;
+          if (i === 236) return 128;
+          return 0;
+        }),
+      ),
+      imag: Float32Array.from(
+        Array.from({ length: 256 }, (_, i) => {
+          if (i === 12) return -128;
+          if (i === 244) return 128;
+          return 0;
+        }),
+      ),
     },
   },
 ];
