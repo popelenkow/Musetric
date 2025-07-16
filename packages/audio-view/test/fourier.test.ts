@@ -6,88 +6,15 @@ import {
   cpuFouriers,
   createComplexArray,
   createComplexGpuBufferReader,
-  FourierMode,
-  fourierModes,
   GpuFourierMode,
   gpuFouriers,
-  isGpuFourierMode,
 } from '../src';
 import { fourierFixtures } from './fixtures/fourier';
 
-const getGpuDevice = async () => {
-  const adapter = await navigator.gpu?.requestAdapter();
-  if (!adapter) {
-    throw new Error('WebGPU adapter not available');
-  }
-  const device = await adapter.requestDevice();
-  return device;
-};
-
-const createCpuFourier = async (mode: CpuFourierMode, windowSize: number) => {
-  const createFourier = cpuFouriers[mode];
-  const output = createComplexArray(windowSize);
-  const fourier = await createFourier({
-    windowSize,
-  });
-  return {
-    forward: async (input: ComplexArray) => {
-      await fourier.forward(input, output);
-      return output;
-    },
-    inverse: async (input: ComplexArray) => {
-      await fourier.inverse(input, output);
-      return output;
-    },
-    destroy: () => {
-      fourier.destroy();
-    },
-  };
-};
-
-const createGpuFourier = async (mode: GpuFourierMode, windowSize: number) => {
-  const createFourier = gpuFouriers[mode];
-  const device = await getGpuDevice();
-  const fourier = await createFourier({
-    windowSize,
-    windowCount: 1,
-    device,
-  });
-  const reader = createComplexGpuBufferReader({
-    device,
-    typeSize: Float32Array.BYTES_PER_ELEMENT,
-    size: windowSize,
-  });
-
-  return {
-    forward: async (input: ComplexArray) => {
-      const encoder = device.createCommandEncoder();
-      const buffer = fourier.forward(encoder, input);
-      device.queue.submit([encoder.finish()]);
-      await device.queue.onSubmittedWorkDone();
-      const outputBuffer = await reader.read(buffer);
-      return complexArrayFrom(outputBuffer);
-    },
-    inverse: async (input: ComplexArray) => {
-      const encoder = device.createCommandEncoder();
-      const buffer = fourier.inverse(encoder, input);
-      device.queue.submit([encoder.finish()]);
-      await device.queue.onSubmittedWorkDone();
-      const outputBuffer = await reader.read(buffer);
-      return complexArrayFrom(outputBuffer);
-    },
-    destroy: () => {
-      fourier.destroy();
-      reader.destroy();
-    },
-  };
-};
-
-const createFourier = async (mode: FourierMode, windowSize: number) => {
-  if (isGpuFourierMode(mode)) {
-    return createGpuFourier(mode, windowSize);
-  }
-  return createCpuFourier(mode, windowSize);
-};
+// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+const cpuFourierModes = Object.keys(cpuFouriers) as CpuFourierMode[];
+// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+const gpuFourierModes = Object.keys(gpuFouriers) as GpuFourierMode[];
 
 export const assertArrayClose = (
   name: string,
@@ -101,26 +28,86 @@ export const assertArrayClose = (
 };
 
 describe('fourier', () => {
-  fourierModes.forEach((mode) => {
+  for (const mode of cpuFourierModes) {
     describe(mode, () => {
-      fourierFixtures.forEach((fixture) => {
+      for (const fixture of fourierFixtures) {
         describe(fixture.name, async () => {
-          const fourier = await createFourier(mode, fixture.windowSize);
+          const output = createComplexArray(fixture.windowSize);
+          const createFourier = cpuFouriers[mode];
+          const fourier = await createFourier({
+            windowSize: fixture.windowSize,
+          });
+
           it('forward', async () => {
-            const result = await fourier.forward(fixture.input);
-            assertArrayClose('real', result.real, fixture.output.real);
-            assertArrayClose('imag', result.imag, fixture.output.imag);
+            const fixtureInput: ComplexArray = {
+              real: fixture.input,
+              imag: new Float32Array(fixture.windowSize).fill(0),
+            };
+            await fourier.forward(fixtureInput, output);
+            assertArrayClose('real', output.real, fixture.output.real);
+            assertArrayClose('imag', output.imag, fixture.output.imag);
           });
+
           it('inverse', async () => {
-            const result = await fourier.inverse(fixture.output);
-            assertArrayClose('real', result.real, fixture.input.real);
-            assertArrayClose('imag', result.imag, fixture.input.imag);
+            const fixtureInput: ComplexArray = {
+              real: fixture.input,
+              imag: new Float32Array(fixture.windowSize).fill(0),
+            };
+            await fourier.inverse(fixture.output, output);
+            assertArrayClose('real', output.real, fixtureInput.real);
+            assertArrayClose('imag', output.imag, fixtureInput.imag);
           });
+
           afterAll(() => {
             fourier.destroy();
           });
         });
-      });
+      }
     });
-  });
+  }
+
+  for (const mode of gpuFourierModes) {
+    describe(mode, () => {
+      for (const fixture of fourierFixtures) {
+        describe(fixture.name, async () => {
+          const adapter = await navigator.gpu?.requestAdapter();
+          if (!adapter) throw new Error('WebGPU adapter not available');
+          const device = await adapter.requestDevice();
+
+          const createFourier = gpuFouriers[mode];
+          const fourier = await createFourier({
+            device,
+            windowSize: fixture.windowSize,
+            windowCount: 1,
+          });
+          const reader = createComplexGpuBufferReader({
+            device,
+            typeSize: Float32Array.BYTES_PER_ELEMENT,
+            size: fixture.windowSize,
+          });
+
+          it('forward', async () => {
+            const encoder = device.createCommandEncoder();
+            const fixtureInput: ComplexArray = {
+              real: fixture.input,
+              imag: new Float32Array(fixture.windowSize).fill(0),
+            };
+            const buffer = fourier.forward(encoder, fixtureInput);
+            const command = encoder.finish();
+            device.queue.submit([command]);
+            await device.queue.onSubmittedWorkDone();
+            const outputBuffer = await reader.read(buffer);
+            const result = complexArrayFrom(outputBuffer);
+            assertArrayClose('real', result.real, fixture.output.real);
+            assertArrayClose('imag', result.imag, fixture.output.imag);
+          });
+
+          afterAll(() => {
+            fourier.destroy();
+            reader.destroy();
+          });
+        });
+      }
+    });
+  }
 });

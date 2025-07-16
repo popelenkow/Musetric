@@ -1,7 +1,6 @@
 struct Params {
   windowSize: u32,
   windowCount: u32,
-  inverse: u32,
 };
 
 @group(0) @binding(0) var<storage, read_write> dataReal: array<f32>;

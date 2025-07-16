@@ -1,7 +1,6 @@
 struct Params {
   windowSize: u32,
   windowCount: u32,
-  inverse: u32,
 };
 
 @group(0) @binding(0) var<storage, read_write> dataReal: array<f32>;
@@ -9,9 +8,6 @@ struct Params {
 @group(0) @binding(2) var<storage, read> trigTable: array<f32>;
 @group(0) @binding(3) var<uniform> params: Params;
 
-fn getSign() -> f32 {
-  return select(-1.0, 1.0, params.inverse == 1u);
-}
 
 @compute @workgroup_size(64)
 fn main(
@@ -26,7 +22,7 @@ fn main(
   let windowSize = params.windowSize;
   let windowOffset = windowIndex * windowSize;
   let threadIndex = localId.x;
-  let twiddleSign = getSign();
+  let twiddleSign = -1.0;
 
   var sectionSize: u32 = 2u;
   while (sectionSize <= windowSize) {
@@ -60,12 +56,5 @@ fn main(
     sectionSize = sectionSize << 1u;
   }
 
-  if (params.inverse == 1u) {
-    let normalizationFactor = f32(windowSize);
-    for (var sampleIndex: u32 = threadIndex; sampleIndex < windowSize; sampleIndex = sampleIndex + 64u) {
-      let index = windowOffset + sampleIndex;
-      dataReal[index] = dataReal[index] / normalizationFactor;
-      dataImag[index] = dataImag[index] / normalizationFactor;
-    }
-  }
+
 }

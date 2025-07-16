@@ -21,9 +21,6 @@ export type GpuFourierMode = keyof typeof gpuFouriers;
 
 export type FourierMode = CpuFourierMode | GpuFourierMode;
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-export const fourierModes = Object.keys(fouriers) as FourierMode[];
-
 export const isGpuFourierMode = (mode: FourierMode): mode is GpuFourierMode => {
   return mode in gpuFouriers;
 };
