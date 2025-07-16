@@ -40,13 +40,13 @@ export const createGpuFftRadix4: CreateGpuFourier = async (options) => {
     pass.dispatchWorkgroups(windowCount);
     pass.end();
 
-    return { real: buffers.outputReal, imag: buffers.outputImag };
+    return { real: buffers.dataReal, imag: buffers.dataImag };
   };
 
   const fourier: GpuFourier = {
     forward: (encoder, input) => {
-      device.queue.writeBuffer(buffers.inputReal, 0, input.real);
-      device.queue.writeBuffer(buffers.inputImag, 0, input.imag);
+      device.queue.writeBuffer(buffers.dataReal, 0, input.real);
+      device.queue.writeBuffer(buffers.dataImag, 0, input.imag);
       reverse(encoder);
       return transform(encoder);
     },
