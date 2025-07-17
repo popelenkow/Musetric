@@ -1,11 +1,11 @@
-struct Params {
+struct DecibelNormalizerParams {
   halfSize: u32,
   windowCount: u32,
   minDecibel: f32,
 };
 
 @group(0) @binding(0) var<storage, read_write> magnitudes: array<f32>;
-@group(0) @binding(1) var<uniform> params: Params;
+@group(0) @binding(1) var<uniform> params: DecibelNormalizerParams;
 
 @compute @workgroup_size(1)
 fn main(@builtin(global_invocation_id) gid: vec3<u32>) {

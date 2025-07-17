@@ -1,47 +1,46 @@
-import { ComplexGpuBuffer } from '../../../common';
 import { createBindGroup } from './bindGroup';
-import { createBuffers, MagnitudeNormalizerParams } from './buffers';
+import { createBuffers, ViewScalerParams } from './buffers';
 import { createPipeline } from './pipeline';
 
-const workgroupSize = 64;
+const workgroupSize = 16;
 
-export type MagnitudeNormalizer = {
+export type ViewScaler = {
   run: (
     encoder: GPUCommandEncoder,
-    input: ComplexGpuBuffer,
-    output: GPUBuffer,
+    magnitude: GPUBuffer,
+    texture: GPUTextureView,
   ) => void;
-  writeParams: (params: MagnitudeNormalizerParams) => void;
+  writeParams: (params: ViewScalerParams) => void;
   destroy: () => void;
 };
 
-export const createMagnitudeNormalizer = (
+export const createViewScaler = (
   device: GPUDevice,
   timestampWrites?: GPUComputePassTimestampWrites,
-): MagnitudeNormalizer => {
+): ViewScaler => {
   const pipeline = createPipeline(device);
   const buffers = createBuffers(device);
 
   return {
-    run: (encoder, input, output) => {
-      const { windowSize, windowCount } = buffers.paramsValue;
-      const halfSize = Math.ceil(windowSize / 2);
-      const xCount = Math.ceil(halfSize / workgroupSize);
+    run: (encoder, magnitude, texture) => {
+      const { width, height } = buffers.paramsValue;
+      const xGroups = Math.ceil(width / workgroupSize);
+      const yGroups = Math.ceil(height / workgroupSize);
 
       const bindGroup = createBindGroup(
         device,
         pipeline,
+        magnitude,
         buffers,
-        input,
-        output,
+        texture,
       );
       const pass = encoder.beginComputePass({
-        label: 'magnitude-normalizer-pass',
+        label: 'drawer-column-pass',
         timestampWrites,
       });
       pass.setPipeline(pipeline);
       pass.setBindGroup(0, bindGroup);
-      pass.dispatchWorkgroups(xCount, windowCount);
+      pass.dispatchWorkgroups(xGroups, yGroups);
       pass.end();
     },
     writeParams: buffers.writeParams,

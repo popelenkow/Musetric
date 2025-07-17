@@ -1,7 +1,20 @@
-export type Params = {
+export type DecibelNormalizerParams = {
   halfSize: number;
   windowCount: number;
   minDecibel: number;
+};
+
+const defaultParams: DecibelNormalizerParams = {
+  halfSize: 0,
+  windowCount: 0,
+  minDecibel: 0,
+};
+
+export type Buffers = {
+  paramsValue: DecibelNormalizerParams;
+  params: GPUBuffer;
+  writeParams: (params: DecibelNormalizerParams) => void;
+  destroy: () => void;
 };
 
 export const createBuffers = (device: GPUDevice) => {
@@ -13,12 +26,14 @@ export const createBuffers = (device: GPUDevice) => {
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
 
-  const buffers = {
+  const buffers: Buffers = {
+    paramsValue: defaultParams,
     params,
-    writeParams: (data: Params) => {
-      paramsArray.setUint32(0, data.halfSize, true);
-      paramsArray.setUint32(4, data.windowCount, true);
-      paramsArray.setFloat32(8, data.minDecibel, true);
+    writeParams: (value: DecibelNormalizerParams) => {
+      buffers.paramsValue = value;
+      paramsArray.setUint32(0, value.halfSize, true);
+      paramsArray.setUint32(4, value.windowCount, true);
+      paramsArray.setFloat32(8, value.minDecibel, true);
       device.queue.writeBuffer(params, 0, paramsArray.buffer);
     },
     destroy: () => {
@@ -28,4 +43,3 @@ export const createBuffers = (device: GPUDevice) => {
 
   return buffers;
 };
-export type Buffers = ReturnType<typeof createBuffers>;

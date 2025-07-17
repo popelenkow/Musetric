@@ -1,4 +1,4 @@
-struct Params {
+struct ViewScalerParamsShader {
   halfSize: u32,
   width: u32,
   height: u32,
@@ -10,7 +10,7 @@ struct Params {
 
 @group(0) @binding(0) var<storage, read> magnitudes: array<f32>;
 @group(0) @binding(1) var columnTexture: texture_storage_2d<rgba8unorm, write>;
-@group(0) @binding(2) var<uniform> params: Params;
+@group(0) @binding(2) var<uniform> params: ViewScalerParamsShader;
 
 @compute @workgroup_size(16, 16)
 fn main(@builtin(global_invocation_id) gid : vec3<u32>) {

@@ -1,20 +1,15 @@
 import { Colors } from '../../colors';
-import { Parameters } from '../../parameters';
 import { createBuffers } from './buffers';
 import { createBindGroup, createSampler, createTexture } from './common';
 import { createPipeline } from './pipeline';
 
-export type DrawerRender = (
-  encoder: GPUCommandEncoder,
-  parameters: Parameters,
-) => void;
-
 export type Drawer = {
+  render: (encoder: GPUCommandEncoder) => void;
+  resize: () => void;
+  writeProgress: (progress: number) => void;
   width: number;
   height: number;
   getTextureView: () => GPUTextureView;
-  resize: () => void;
-  render: DrawerRender;
   destroy: () => void;
 };
 
@@ -48,31 +43,7 @@ export const createDrawer = (options: CreateDrawerOptions): Drawer => {
   );
 
   const drawer: Drawer = {
-    width: 0,
-    height: 0,
-    getTextureView: () => texture.view,
-    resize: () => {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      drawer.width = width;
-      drawer.height = height;
-      canvas.width = width;
-      canvas.height = height;
-
-      texture.destroy();
-      texture = createTexture(device, width, height);
-      bindGroup = createBindGroup(
-        device,
-        pipeline,
-        buffers,
-        sampler,
-        texture.view,
-      );
-    },
-    render: (encoder, parameters) => {
-      const { progress } = parameters;
-
-      buffers.writeProgress(progress);
+    render: (encoder) => {
       const view = context.getCurrentTexture().createView({
         label: 'drawer-output-view',
       });
@@ -93,6 +64,29 @@ export const createDrawer = (options: CreateDrawerOptions): Drawer => {
       pass.draw(3);
       pass.end();
     },
+    resize: () => {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      drawer.width = width;
+      drawer.height = height;
+      canvas.width = width;
+      canvas.height = height;
+
+      texture.destroy();
+      texture = createTexture(device, width, height);
+      bindGroup = createBindGroup(
+        device,
+        pipeline,
+        buffers,
+        sampler,
+        texture.view,
+      );
+    },
+    writeProgress: buffers.writeProgress,
+    width: 0,
+    height: 0,
+    getTextureView: () => texture.view,
+
     destroy: () => {
       texture.destroy();
       buffers.destroy();

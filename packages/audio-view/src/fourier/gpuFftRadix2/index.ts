@@ -7,15 +7,21 @@ import { createReversePipeline, createTransformPipeline } from './pipeline';
 
 export const createGpuFftRadix2: CreateGpuFourier = async (options) => {
   const { device, windowSize, timestampWrites } = options;
-  let windowCount = options.windowCount;
   assertWindowSizePowerOfTwo(windowSize);
 
-  const buffers = createBuffers(device, windowSize, windowCount);
+  const buffers = createBuffers(device, windowSize);
   const reversePipeline = createReversePipeline(device);
   const transformPipeline = createTransformPipeline(device);
 
-  const reverse = (encoder: GPUCommandEncoder) => {
-    const bindGroup = createReverseBindGroup(device, reversePipeline, buffers);
+  const reverse = (encoder: GPUCommandEncoder, waves: ComplexGpuBuffer) => {
+    const { windowCount } = buffers.paramsValue;
+
+    const bindGroup = createReverseBindGroup(
+      device,
+      reversePipeline,
+      buffers,
+      waves,
+    );
     const pass = encoder.beginComputePass({
       label: 'fft2-reverse-pass',
       timestampWrites: timestampWrites?.reverse,
@@ -26,11 +32,14 @@ export const createGpuFftRadix2: CreateGpuFourier = async (options) => {
     pass.end();
   };
 
-  const transform = (encoder: GPUCommandEncoder): ComplexGpuBuffer => {
+  const transform = (encoder: GPUCommandEncoder, waves: ComplexGpuBuffer) => {
+    const { windowCount } = buffers.paramsValue;
+
     const bindGroup = createTransformBindGroup(
       device,
       transformPipeline,
       buffers,
+      waves,
     );
     const pass = encoder.beginComputePass({
       label: 'fft2-transform-pass',
@@ -40,21 +49,14 @@ export const createGpuFftRadix2: CreateGpuFourier = async (options) => {
     pass.setBindGroup(0, bindGroup);
     pass.dispatchWorkgroups(windowCount);
     pass.end();
-
-    return { real: buffers.dataReal, imag: buffers.dataImag };
   };
 
   const fourier: GpuFourier = {
-    forward: (encoder, input) => {
-      device.queue.writeBuffer(buffers.dataReal, 0, input.real);
-      device.queue.writeBuffer(buffers.dataImag, 0, input.imag);
-      reverse(encoder);
-      return transform(encoder);
+    forward: (encoder, waves) => {
+      reverse(encoder, waves);
+      transform(encoder, waves);
     },
-    resize: (newWindowCount) => {
-      windowCount = newWindowCount;
-      buffers.resize(windowCount);
-    },
+    writeParams: buffers.writeParams,
     destroy: () => {
       buffers.destroy();
     },

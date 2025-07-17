@@ -15,13 +15,14 @@ export const useSpectrogramPipeline = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
   windowSize: number,
   fourierMode: FourierMode,
+  buffer?: AudioBuffer,
 ) => {
   const theme = useTheme();
 
   const pipeline = useAsyncResource({
     create: async () => {
       const canvas = canvasRef.current;
-      if (!canvas) {
+      if (!canvas || !buffer) {
         return;
       }
 
@@ -29,6 +30,12 @@ export const useSpectrogramPipeline = (
         played: theme.palette.primary.main,
         unplayed: theme.palette.default.main,
         background: theme.palette.background.default,
+      };
+
+      const parameters: spectrogram.Parameters = {
+        sampleRate: buffer.sampleRate,
+        minFrequency: buffer.sampleRate * 0.001,
+        maxFrequency: buffer.sampleRate * 0.1,
       };
 
       if (isGpuFourierMode(fourierMode)) {
@@ -39,6 +46,7 @@ export const useSpectrogramPipeline = (
           fourierMode,
           canvas,
           colors,
+          parameters,
           profiling,
         });
       }
@@ -48,12 +56,13 @@ export const useSpectrogramPipeline = (
         fourierMode,
         canvas,
         colors,
+        parameters,
       });
     },
     unmount: async (prev) => {
       prev.destroy();
     },
-    deps: [windowSize, fourierMode, theme],
+    deps: [windowSize, fourierMode, buffer, theme],
   });
 
   return pipeline;

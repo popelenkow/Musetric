@@ -1,4 +1,5 @@
-import { Colors, parseHexColor } from '../../colors';
+import { parseHexColor } from '../../../common';
+import { Colors } from '../../colors';
 
 const toVec4 = (hex: string): [number, number, number, number] => {
   const { red, green, blue } = parseHexColor(hex);
@@ -29,8 +30,8 @@ export const createBuffers = (device: GPUDevice, colorsData: Colors) => {
   const buffers = {
     colors,
     progress,
-    writeProgress: (data: number) => {
-      progressArray[0] = data;
+    writeProgress: (value: number) => {
+      progressArray[0] = value;
       device.queue.writeBuffer(progress, 0, progressArray);
     },
     destroy: () => {

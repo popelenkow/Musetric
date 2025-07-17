@@ -49,11 +49,11 @@ export const createGpuTimer = <Labels extends readonly string[]>(
     },
     read: async () => {
       await readBuffer.mapAsync(GPUMapMode.READ);
-      const data = new BigUint64Array(readBuffer.getMappedRange());
+      const times = new BigUint64Array(readBuffer.getMappedRange());
       const result = labels.reduce(
         (acc, label, i) => {
-          const start = data[i * 2];
-          const end = data[i * 2 + 1];
+          const start = times[i * 2];
+          const end = times[i * 2 + 1];
           const duration = Number(end - start) / 1e6;
           acc[label] = Math.round(duration * 1e3) / 1e3;
           return acc;

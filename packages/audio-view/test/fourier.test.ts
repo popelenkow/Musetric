@@ -16,6 +16,37 @@ const cpuFourierModes = Object.keys(cpuFouriers) as CpuFourierMode[];
 // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 const gpuFourierModes = Object.keys(gpuFouriers) as GpuFourierMode[];
 
+const createGpuBuffers = (device: GPUDevice, windowSize: number) => {
+  const createSignalBuffer = () => ({
+    real: device.createBuffer({
+      label: 'test-signal-real-buffer',
+      size: windowSize * Float32Array.BYTES_PER_ELEMENT,
+      usage:
+        GPUBufferUsage.STORAGE |
+        GPUBufferUsage.COPY_SRC |
+        GPUBufferUsage.COPY_DST,
+    }),
+    imag: device.createBuffer({
+      label: 'test-signal-imag-buffer',
+      size: windowSize * Float32Array.BYTES_PER_ELEMENT,
+      usage:
+        GPUBufferUsage.STORAGE |
+        GPUBufferUsage.COPY_SRC |
+        GPUBufferUsage.COPY_DST,
+    }),
+  });
+
+  const buffers = {
+    signal: createSignalBuffer(),
+    destroy: () => {
+      buffers.signal.real.destroy();
+      buffers.signal.imag.destroy();
+    },
+  };
+
+  return buffers;
+};
+
 export const assertArrayClose = (
   name: string,
   received: Float32Array,
@@ -57,10 +88,6 @@ describe('fourier', () => {
             assertArrayClose('real', output.real, fixtureInput.real);
             assertArrayClose('imag', output.imag, fixtureInput.imag);
           });
-
-          afterAll(() => {
-            fourier.destroy();
-          });
         });
       }
     });
@@ -78,6 +105,9 @@ describe('fourier', () => {
           const fourier = await createFourier({
             device,
             windowSize: fixture.windowSize,
+          });
+          fourier.writeParams({
+            windowSize: fixture.windowSize,
             windowCount: 1,
           });
           const reader = createComplexGpuBufferReader({
@@ -85,18 +115,18 @@ describe('fourier', () => {
             typeSize: Float32Array.BYTES_PER_ELEMENT,
             size: fixture.windowSize,
           });
+          const buffers = createGpuBuffers(device, fixture.windowSize);
 
           it('forward', async () => {
+            const zeroImag = new Float32Array(fixture.windowSize).fill(0);
+            device.queue.writeBuffer(buffers.signal.real, 0, fixture.input);
+            device.queue.writeBuffer(buffers.signal.imag, 0, zeroImag);
             const encoder = device.createCommandEncoder();
-            const fixtureInput: ComplexArray = {
-              real: fixture.input,
-              imag: new Float32Array(fixture.windowSize).fill(0),
-            };
-            const buffer = fourier.forward(encoder, fixtureInput);
+            fourier.forward(encoder, buffers.signal);
             const command = encoder.finish();
             device.queue.submit([command]);
             await device.queue.onSubmittedWorkDone();
-            const outputBuffer = await reader.read(buffer);
+            const outputBuffer = await reader.read(buffers.signal);
             const result = complexArrayFrom(outputBuffer);
             assertArrayClose('real', result.real, fixture.output.real);
             assertArrayClose('imag', result.imag, fixture.output.imag);
@@ -105,6 +135,7 @@ describe('fourier', () => {
           afterAll(() => {
             fourier.destroy();
             reader.destroy();
+            buffers.destroy();
           });
         });
       }

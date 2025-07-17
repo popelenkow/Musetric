@@ -1,38 +1,24 @@
 import { createBindGroup } from './bindGroup';
-import { createBuffers } from './buffers';
+import { createBuffers, DecibelNormalizerParams } from './buffers';
 import { createPipeline } from './pipeline';
 
-export type DecibelNormalizerRun = (
-  encoder: GPUCommandEncoder,
-  magnitudes: GPUBuffer,
-  windowCount: number,
-  minDecibel?: number,
-) => void;
-
 export type DecibelNormalizer = {
-  run: DecibelNormalizerRun;
+  run: (encoder: GPUCommandEncoder, magnitudes: GPUBuffer) => void;
+  writeParams: (params: DecibelNormalizerParams) => void;
   destroy: () => void;
 };
 
-export type CreateDecibelNormalizerOptions = {
-  device: GPUDevice;
-  windowSize: number;
-  timestampWrites?: GPUComputePassTimestampWrites;
-};
-
 export const createDecibelNormalizer = (
-  options: CreateDecibelNormalizerOptions,
+  device: GPUDevice,
+  timestampWrites?: GPUComputePassTimestampWrites,
 ): DecibelNormalizer => {
-  const { device, windowSize, timestampWrites } = options;
   const pipeline = createPipeline(device);
   const buffers = createBuffers(device);
 
   return {
-    run: (encoder, magnitudes, windowCount, minDecibel = -40) => {
-      const halfSize = windowSize / 2;
-      buffers.writeParams({ halfSize, windowCount, minDecibel });
+    run: (encoder, magnitudes) => {
+      const { windowCount } = buffers.paramsValue;
       const bindGroup = createBindGroup(device, pipeline, buffers, magnitudes);
-
       const pass = encoder.beginComputePass({
         label: 'decibel-normalizer-pass',
         timestampWrites,
@@ -42,6 +28,7 @@ export const createDecibelNormalizer = (
       pass.dispatchWorkgroups(windowCount);
       pass.end();
     },
+    writeParams: buffers.writeParams,
     destroy: () => {
       buffers.destroy();
     },

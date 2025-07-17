@@ -1,6 +1,6 @@
 import { Parameters } from '../parameters';
 
-export const logSlice = (
+export const scaleView = (
   windowSize: number,
   height: number,
   parameters: Parameters,

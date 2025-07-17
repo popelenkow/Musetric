@@ -1,22 +1,30 @@
-export type Params = {
+export type MagnitudeNormalizerParams = {
   windowSize: number;
   windowCount: number;
 };
 
+export type Buffers = {
+  paramsValue: MagnitudeNormalizerParams;
+  params: GPUBuffer;
+  writeParams: (paramsValue: MagnitudeNormalizerParams) => void;
+  destroy: () => void;
+};
+
 export const createBuffers = (device: GPUDevice) => {
   const paramsArray = new Uint32Array(2);
-
   const params = device.createBuffer({
     label: 'magnitude-normalizer-params-buffer',
     size: paramsArray.byteLength,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
 
-  const buffers = {
+  const buffers: Buffers = {
+    paramsValue: { windowSize: 0, windowCount: 0 },
     params,
-    writeParams: (data: Params) => {
-      paramsArray[0] = data.windowSize;
-      paramsArray[1] = data.windowCount;
+    writeParams: (value) => {
+      buffers.paramsValue = value;
+      paramsArray[0] = value.windowSize;
+      paramsArray[1] = value.windowCount;
       device.queue.writeBuffer(params, 0, paramsArray);
     },
     destroy: () => {
@@ -26,4 +34,3 @@ export const createBuffers = (device: GPUDevice) => {
 
   return buffers;
 };
-export type Buffers = ReturnType<typeof createBuffers>;

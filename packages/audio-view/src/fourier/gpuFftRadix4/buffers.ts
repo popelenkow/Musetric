@@ -1,17 +1,37 @@
+import { GpuFourierParams } from '../gpuFourier';
 import { utilsRadix4 } from '../utilsRadix4';
 
-export type Params = {
+export type GpuFftRadix4ParamsShader = {
   windowSize: number;
   windowCount: number;
   reverseWidth: number;
 };
 
-export const createBuffers = (
-  device: GPUDevice,
-  windowSize: number,
-  initWindowCount: number,
-) => {
-  let windowCount = initWindowCount;
+const toParamsShader = (
+  params: GpuFourierParams,
+): GpuFftRadix4ParamsShader => ({
+  windowSize: params.windowSize,
+  windowCount: params.windowCount,
+  reverseWidth: utilsRadix4.getReverseWidth(params.windowSize),
+});
+
+const defaultParams: GpuFourierParams = {
+  windowSize: 0,
+  windowCount: 0,
+};
+
+const defaultParamsShader = toParamsShader(defaultParams);
+
+export type Buffers = {
+  paramsValue: GpuFourierParams;
+  paramsShader: GpuFftRadix4ParamsShader;
+  params: GPUBuffer;
+  reverseTable: GPUBuffer;
+  trigTable: GPUBuffer;
+  writeParams: (params: GpuFourierParams) => void;
+  destroy: () => void;
+};
+export const createBuffers = (device: GPUDevice, windowSize: number) => {
   const reverseWidth = utilsRadix4.getReverseWidth(windowSize);
 
   const paramsArray = new Uint32Array(3);
@@ -34,60 +54,29 @@ export const createBuffers = (
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
 
-  const createDataReal = () =>
-    device.createBuffer({
-      label: 'fft4-data-real',
-      size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
-      usage:
-        GPUBufferUsage.STORAGE |
-        GPUBufferUsage.COPY_SRC |
-        GPUBufferUsage.COPY_DST,
-    });
-  const createDataImag = () =>
-    device.createBuffer({
-      label: 'fft4-data-imag',
-      size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
-      usage:
-        GPUBufferUsage.STORAGE |
-        GPUBufferUsage.COPY_SRC |
-        GPUBufferUsage.COPY_DST,
-    });
-
-  const writeParams = () => {
-    paramsArray[0] = windowSize;
-    paramsArray[1] = windowCount;
-    paramsArray[2] = reverseWidth;
-    device.queue.writeBuffer(params, 0, paramsArray);
-  };
-
-  const buffers = {
+  const buffers: Buffers = {
+    paramsValue: defaultParams,
+    paramsShader: defaultParamsShader,
     params,
     reverseTable,
     trigTable,
-    dataReal: createDataReal(),
-    dataImag: createDataImag(),
-    reverseWidth,
-    resize: (newWindowCount: number) => {
-      windowCount = newWindowCount;
-      buffers.dataReal.destroy();
-      buffers.dataImag.destroy();
-      buffers.dataReal = createDataReal();
-      buffers.dataImag = createDataImag();
-      writeParams();
+    writeParams: (newParams: GpuFourierParams) => {
+      buffers.paramsValue = newParams;
+      buffers.paramsShader = toParamsShader(newParams);
+      paramsArray[0] = newParams.windowSize;
+      paramsArray[1] = newParams.windowCount;
+      paramsArray[2] = reverseWidth;
+      device.queue.writeBuffer(params, 0, paramsArray);
     },
     destroy: () => {
       params.destroy();
       reverseTable.destroy();
       trigTable.destroy();
-      buffers.dataReal.destroy();
-      buffers.dataImag.destroy();
     },
   };
 
   device.queue.writeBuffer(reverseTable, 0, reverseTableArray);
   device.queue.writeBuffer(trigTable, 0, trigTableArray);
-  writeParams();
 
   return buffers;
 };
-export type Buffers = ReturnType<typeof createBuffers>;
