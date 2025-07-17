@@ -4,10 +4,10 @@ const create = (device: GPUDevice) => ({
   gpu: createGpuTimer(device, [
     'fourierReverse',
     'fourierTransform',
-    'magnitudeNormalizer',
-    'decibelNormalizer',
-    'logSlicer',
-    'drawer',
+    'normalizeMagnitude',
+    'normalizeDecibel',
+    'scaleView',
+    'draw',
   ]),
   cpu: createCpuTimer([
     'resize',
@@ -19,13 +19,15 @@ const create = (device: GPUDevice) => ({
 });
 
 type Timer = ReturnType<typeof create>;
+type ReadResult = ReturnType<Timer['cpu']['read']> &
+  Awaited<ReturnType<Timer['gpu']['read']>>;
 
 export type PipelineTimer = {
   wrap: Timer['cpu']['wrap'];
   wrapAsync: Timer['cpu']['wrapAsync'];
   tw: Partial<Timer['gpu']['timestampWrites']>;
   resolve: (encoder: GPUCommandEncoder) => void;
-  read?: () => Promise<Record<string, number>>;
+  read?: () => Promise<ReadResult>;
   destroy: () => void;
 };
 
@@ -41,7 +43,7 @@ export const createPipelineTimer = (
       resolve: () => {
         /** Nothing */
       },
-      read: () => Promise.resolve({}),
+      read: undefined,
       destroy: () => {
         /** Nothing */
       },

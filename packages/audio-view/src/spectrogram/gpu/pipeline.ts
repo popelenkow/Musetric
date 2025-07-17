@@ -63,18 +63,18 @@ export const createPipeline = async (
   });
   const magnitudeNormalizer = createMagnitudeNormalizer(
     device,
-    timer.tw.magnitudeNormalizer,
+    timer.tw.normalizeMagnitude,
   );
   const decibelNormalizer = createDecibelNormalizer(
     device,
-    timer.tw.decibelNormalizer,
+    timer.tw.normalizeDecibel,
   );
-  const viewScaler = createViewScaler(device, timer.tw.logSlicer);
+  const viewScaler = createViewScaler(device, timer.tw.scaleView);
   const drawer = createDrawer({
     device,
     canvas,
     colors,
-    timestampWrites: timer.tw.drawer,
+    timestampWrites: timer.tw.draw,
   });
 
   const resize = timer.wrap('resize', () => {
