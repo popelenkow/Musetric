@@ -7,7 +7,9 @@ export type GpuFftRadix4ParamsShader = {
   reverseWidth: number;
 };
 
-const toParamsShader = (params: GpuFourierParams): GpuFftRadix4ParamsShader => ({
+const toParamsShader = (
+  params: GpuFourierParams,
+): GpuFftRadix4ParamsShader => ({
   windowSize: params.windowSize,
   windowCount: params.windowCount,
   reverseWidth: utilsRadix4.getReverseWidth(params.windowSize),
@@ -29,10 +31,7 @@ export type Buffers = {
   writeParams: (params: GpuFourierParams) => void;
   destroy: () => void;
 };
-export const createBuffers = (
-  device: GPUDevice,
-  windowSize: number,
-) => {
+export const createBuffers = (device: GPUDevice, windowSize: number) => {
   const reverseWidth = utilsRadix4.getReverseWidth(windowSize);
 
   const paramsArray = new Uint32Array(3);

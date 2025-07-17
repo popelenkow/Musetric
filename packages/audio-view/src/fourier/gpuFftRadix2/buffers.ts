@@ -14,10 +14,7 @@ export type Buffers = {
   writeParams: (params: GpuFourierParams) => void;
   destroy: () => void;
 };
-export const createBuffers = (
-  device: GPUDevice,
-  windowSize: number,
-) => {
+export const createBuffers = (device: GPUDevice, windowSize: number) => {
   const paramsArray = new Uint32Array(2);
   const reverseTableArray = utilsRadix2.createReverseTable(windowSize);
   const trigTableArray = utilsRadix2.createTrigTable(windowSize);

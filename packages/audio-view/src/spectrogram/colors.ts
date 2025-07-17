@@ -1,4 +1,4 @@
-import { RgbGradient } from "../common";
+import { RgbGradient } from '../common';
 
 export type Colors = {
   played: string;

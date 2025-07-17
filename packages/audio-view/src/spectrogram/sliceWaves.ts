@@ -8,7 +8,7 @@ export type SliceWavesOptions = {
 };
 export const sliceWaves = (options: SliceWavesOptions): void => {
   const { windowSize, windowCount, wave, waves } = options;
-  
+
   const step = (wave.length - windowSize) / windowCount;
 
   for (let i = 0; i < windowCount; i++) {
