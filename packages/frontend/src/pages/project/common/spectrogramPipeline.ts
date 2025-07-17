@@ -60,6 +60,7 @@ export const useSpectrogramPipeline = (
         colors,
         viewParams,
         minDecibel,
+        profiling,
       });
     },
     unmount: async (prev) => {
