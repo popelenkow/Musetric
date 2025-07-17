@@ -55,7 +55,7 @@ export type Buffers = {
   paramsValue: ViewScalerParams;
   paramsShader: ViewScalerParamsShader;
   params: GPUBuffer;
-  writeParams: (data: ViewScalerParams) => void;
+  writeParams: (params: ViewScalerParams) => void;
   destroy: () => void;
 };
 

@@ -49,8 +49,8 @@ export const createPipeline = async (
 
   const sliceWaves = timer.wrap('sliceWaves', sliceWavesImpl);
   const writeGpuWaves = timer.wrap('writeGpuWaves', () => {
-    device.queue.writeBuffer(buffers.data.real, 0, waves.real);
-    device.queue.writeBuffer(buffers.data.imag, 0, waves.imag);
+    device.queue.writeBuffer(buffers.signal.real, 0, waves.real);
+    device.queue.writeBuffer(buffers.signal.imag, 0, waves.imag);
   });
   const createFourier = gpuFouriers[fourierMode];
   const fourier = await createFourier({
@@ -106,8 +106,8 @@ export const createPipeline = async (
 
   const createCommand = timer.wrap('createCommand', () => {
     const encoder = device.createCommandEncoder({ label: 'render-pipeline' });
-    fourier.forward(encoder, buffers.data);
-    magnitudeNormalizer.run(encoder, buffers.data, buffers.magnitude);
+    fourier.forward(encoder, buffers.signal);
+    magnitudeNormalizer.run(encoder, buffers.signal, buffers.magnitude);
     decibelNormalizer.run(encoder, buffers.magnitude);
     viewScaler.run(encoder, buffers.magnitude, drawer.getTextureView());
     drawer.render(encoder);

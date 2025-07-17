@@ -13,14 +13,14 @@ export const createGpuFftRadix2: CreateGpuFourier = async (options) => {
   const reversePipeline = createReversePipeline(device);
   const transformPipeline = createTransformPipeline(device);
 
-  const reverse = (encoder: GPUCommandEncoder, data: ComplexGpuBuffer) => {
+  const reverse = (encoder: GPUCommandEncoder, waves: ComplexGpuBuffer) => {
     const { windowCount } = buffers.paramsValue;
 
     const bindGroup = createReverseBindGroup(
       device,
       reversePipeline,
       buffers,
-      data,
+      waves,
     );
     const pass = encoder.beginComputePass({
       label: 'fft2-reverse-pass',
@@ -32,14 +32,14 @@ export const createGpuFftRadix2: CreateGpuFourier = async (options) => {
     pass.end();
   };
 
-  const transform = (encoder: GPUCommandEncoder, data: ComplexGpuBuffer) => {
+  const transform = (encoder: GPUCommandEncoder, waves: ComplexGpuBuffer) => {
     const { windowCount } = buffers.paramsValue;
 
     const bindGroup = createTransformBindGroup(
       device,
       transformPipeline,
       buffers,
-      data,
+      waves,
     );
     const pass = encoder.beginComputePass({
       label: 'fft2-transform-pass',
@@ -52,9 +52,9 @@ export const createGpuFftRadix2: CreateGpuFourier = async (options) => {
   };
 
   const fourier: GpuFourier = {
-    forward: (encoder, data) => {
-      reverse(encoder, data);
-      transform(encoder, data);
+    forward: (encoder, waves) => {
+      reverse(encoder, waves);
+      transform(encoder, waves);
     },
     writeParams: buffers.writeParams,
     destroy: () => {

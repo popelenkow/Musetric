@@ -18,7 +18,7 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 2-point: constant signal',
+    name: 'FFT 2-point: constant',
     windowSize: 2,
     input: Float32Array.from([1, 1]),
     output: {
@@ -45,7 +45,7 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 4-point: constant signal',
+    name: 'FFT 4-point: constant',
     windowSize: 4,
     input: Float32Array.from([1, 1, 1, 1]),
     output: {
@@ -74,7 +74,7 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 8-point: constant signal',
+    name: 'FFT 8-point: constant',
     windowSize: 8,
     input: Float32Array.from(new Array(8).fill(1)),
     output: {
@@ -94,7 +94,7 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 8-point: single sine',
+    name: 'FFT 8-point: sin 1',
     windowSize: 8,
     input: Float32Array.from(
       Array.from({ length: 8 }, (_, i) => Math.sin((2 * Math.PI * i) / 8)),
@@ -114,7 +114,7 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 16-point: constant signal',
+    name: 'FFT 16-point: constant',
     windowSize: 16,
     input: Float32Array.from(new Array(16).fill(1)),
     output: {
@@ -140,7 +140,7 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 16-point: two-tone cos 3 & 5',
+    name: 'FFT 16-point: cos 3 & cos 5',
     windowSize: 16,
     input: Float32Array.from(
       Array.from(
@@ -173,7 +173,7 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 32-point: constant signal',
+    name: 'FFT 32-point: constant',
     windowSize: 32,
     input: Float32Array.from(new Array(32).fill(1)),
     output: {
@@ -182,7 +182,7 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 32-point: sine 1',
+    name: 'FFT 32-point: sin 1',
     windowSize: 32,
     input: Float32Array.from(
       Array.from({ length: 32 }, (_, i) => Math.sin((2 * Math.PI * i) / 32)),
@@ -199,7 +199,7 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 32-point: two-tone cos 3 & 5',
+    name: 'FFT 32-point: cos 3 & cos 5',
     windowSize: 32,
     input: Float32Array.from(
       Array.from(
@@ -223,7 +223,7 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 64-point: single sine 7',
+    name: 'FFT 64-point: sin 7',
     windowSize: 64,
     input: Float32Array.from(
       Array.from({ length: 64 }, (_, i) =>
@@ -242,7 +242,7 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 128-point: single cosine 9',
+    name: 'FFT 128-point: cos 9',
     windowSize: 128,
     input: Float32Array.from(
       Array.from({ length: 128 }, (_, i) =>
@@ -261,7 +261,7 @@ export const fourierFixtures: FourierFixture[] = [
     },
   },
   {
-    name: 'FFT 256-point: sine 12 + cosine 20',
+    name: 'FFT 256-point: sin 12 & cos 20',
     windowSize: 256,
     input: Float32Array.from(
       Array.from(

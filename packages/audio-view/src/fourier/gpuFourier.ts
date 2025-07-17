@@ -6,7 +6,7 @@ export type GpuFourierParams = {
 };
 
 export type GpuFourier = {
-  forward: (encoder: GPUCommandEncoder, data: ComplexGpuBuffer) => void;
+  forward: (encoder: GPUCommandEncoder, waves: ComplexGpuBuffer) => void;
   writeParams: (params: GpuFourierParams) => void;
   destroy: () => void;
 };

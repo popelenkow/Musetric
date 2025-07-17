@@ -17,9 +17,9 @@ const cpuFourierModes = Object.keys(cpuFouriers) as CpuFourierMode[];
 const gpuFourierModes = Object.keys(gpuFouriers) as GpuFourierMode[];
 
 const createGpuBuffers = (device: GPUDevice, windowSize: number) => {
-  const createDataBuffer = () => ({
+  const createSignalBuffer = () => ({
     real: device.createBuffer({
-      label: 'test-data-real-buffer',
+      label: 'test-signal-real-buffer',
       size: windowSize * Float32Array.BYTES_PER_ELEMENT,
       usage:
         GPUBufferUsage.STORAGE |
@@ -27,7 +27,7 @@ const createGpuBuffers = (device: GPUDevice, windowSize: number) => {
         GPUBufferUsage.COPY_DST,
     }),
     imag: device.createBuffer({
-      label: 'test-data-imag-buffer',
+      label: 'test-signal-imag-buffer',
       size: windowSize * Float32Array.BYTES_PER_ELEMENT,
       usage:
         GPUBufferUsage.STORAGE |
@@ -37,10 +37,10 @@ const createGpuBuffers = (device: GPUDevice, windowSize: number) => {
   });
 
   const buffers = {
-    data: createDataBuffer(),
+    signal: createSignalBuffer(),
     destroy: () => {
-      buffers.data.real.destroy();
-      buffers.data.imag.destroy();
+      buffers.signal.real.destroy();
+      buffers.signal.imag.destroy();
     },
   };
 
@@ -88,10 +88,6 @@ describe('fourier', () => {
             assertArrayClose('real', output.real, fixtureInput.real);
             assertArrayClose('imag', output.imag, fixtureInput.imag);
           });
-
-          afterAll(() => {
-            fourier.destroy();
-          });
         });
       }
     });
@@ -123,14 +119,14 @@ describe('fourier', () => {
 
           it('forward', async () => {
             const zeroImag = new Float32Array(fixture.windowSize).fill(0);
-            device.queue.writeBuffer(buffers.data.real, 0, fixture.input);
-            device.queue.writeBuffer(buffers.data.imag, 0, zeroImag);
+            device.queue.writeBuffer(buffers.signal.real, 0, fixture.input);
+            device.queue.writeBuffer(buffers.signal.imag, 0, zeroImag);
             const encoder = device.createCommandEncoder();
-            fourier.forward(encoder, buffers.data);
+            fourier.forward(encoder, buffers.signal);
             const command = encoder.finish();
             device.queue.submit([command]);
             await device.queue.onSubmittedWorkDone();
-            const outputBuffer = await reader.read(buffers.data);
+            const outputBuffer = await reader.read(buffers.signal);
             const result = complexArrayFrom(outputBuffer);
             assertArrayClose('real', result.real, fixture.output.real);
             assertArrayClose('imag', result.imag, fixture.output.imag);
