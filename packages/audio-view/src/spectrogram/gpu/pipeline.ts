@@ -1,4 +1,4 @@
-import { Colors, Parameters, sliceWaves as sliceWavesImpl } from '..';
+import { Colors, SignalViewParams, sliceWaves as sliceWavesImpl } from '..';
 import { createCallLatest, createComplexArray } from '../../common';
 import { GpuFourierMode, gpuFouriers } from '../../fourier';
 import { createDecibelNormalizer } from './decibelNormalizer';
@@ -14,8 +14,8 @@ export type CreatePipelineOptions = {
   fourierMode: GpuFourierMode;
   canvas: HTMLCanvasElement;
   colors: Colors;
-  parameters: Parameters;
-  minDecibel?: number;
+  viewParams: SignalViewParams;
+  minDecibel: number;
   profiling?: boolean;
 };
 
@@ -34,8 +34,8 @@ export const createPipeline = async (
     fourierMode,
     canvas,
     colors,
-    parameters,
-    minDecibel = -40,
+    viewParams,
+    minDecibel,
     profiling,
   } = options;
 
@@ -97,7 +97,7 @@ export const createPipeline = async (
       minDecibel,
     });
     viewScaler.writeParams({
-      ...parameters,
+      ...viewParams,
       windowSize,
       width: drawer.width,
       height: drawer.height,
@@ -122,7 +122,7 @@ export const createPipeline = async (
         isResizeRequested = false;
         resize();
       }
-      sliceWaves({ windowSize, windowCount, wave, waves });
+      sliceWaves(windowSize, windowCount, wave, waves);
       writeGpuWaves();
       drawer.writeProgress(progress);
       const command = createCommand();
