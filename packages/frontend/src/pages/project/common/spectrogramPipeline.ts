@@ -10,6 +10,7 @@ import { getGpuDevice } from '../../../common/gpu';
 import { useAsyncResource } from '../../../common/useAsyncResource';
 
 const profiling = envs.spectrogramProfiling;
+const minDecibel = -40;
 
 export const useSpectrogramPipeline = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
@@ -32,7 +33,7 @@ export const useSpectrogramPipeline = (
         background: theme.palette.background.default,
       };
 
-      const parameters: spectrogram.Parameters = {
+      const viewParams: spectrogram.SignalViewParams = {
         sampleRate: buffer.sampleRate,
         minFrequency: buffer.sampleRate * 0.001,
         maxFrequency: buffer.sampleRate * 0.1,
@@ -46,7 +47,8 @@ export const useSpectrogramPipeline = (
           fourierMode,
           canvas,
           colors,
-          parameters,
+          viewParams,
+          minDecibel,
           profiling,
         });
       }
@@ -56,7 +58,8 @@ export const useSpectrogramPipeline = (
         fourierMode,
         canvas,
         colors,
-        parameters,
+        viewParams,
+        minDecibel,
       });
     },
     unmount: async (prev) => {

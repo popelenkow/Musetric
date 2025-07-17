@@ -1,7 +1,7 @@
 import { ViewSize } from '../../../common';
-import { Parameters } from '../../parameters';
+import { SignalViewParams } from '../../signalViewParams';
 
-export type ViewScalerParams = Parameters &
+export type ViewScalerParams = SignalViewParams &
   ViewSize & {
     windowSize: number;
   };

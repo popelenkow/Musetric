@@ -1,20 +1,22 @@
-import { createCallLatest, subComplexArray } from '../../common';
+import { createCallLatest } from '../../common';
 import type { CpuFourierMode } from '../../fourier';
 import { cpuFouriers } from '../../fourier';
 import { Colors } from '../colors';
-import { Parameters } from '../parameters';
+import { SignalViewParams } from '../signalViewParams';
 import { sliceWaves } from '../sliceWaves';
 import { createDrawer } from './drawer';
 import { normalizeDecibel } from './normalizeDecibel';
 import { normalizeMagnitude } from './normalizeMagnitude';
 import { createPipelineArrays } from './pipelineArrays';
+import { scaleView } from './scaleView';
 
 export type CreatePipelineOptions = {
   canvas: HTMLCanvasElement;
   windowSize: number;
   fourierMode: CpuFourierMode;
   colors: Colors;
-  parameters: Parameters;
+  viewParams: SignalViewParams;
+  minDecibel: number;
 };
 
 export type Pipeline = {
@@ -25,18 +27,19 @@ export type Pipeline = {
 export const createPipeline = async (
   options: CreatePipelineOptions,
 ): Promise<Pipeline> => {
-  const { canvas, windowSize, fourierMode, colors, parameters } = options;
+  const { canvas, windowSize, fourierMode, colors, viewParams, minDecibel } =
+    options;
 
-  const drawer = createDrawer({ canvas, colors, windowSize });
+  const drawer = createDrawer({ canvas, colors });
   const createFourier = cpuFouriers[fourierMode];
   const fourier = await createFourier({ windowSize });
 
   let isResizeRequested = false;
-  let arrays = createPipelineArrays(windowSize, drawer.width);
+  let arrays = createPipelineArrays(windowSize, drawer.width, drawer.height);
 
   const resize = () => {
     drawer.resize();
-    arrays = createPipelineArrays(windowSize, drawer.width);
+    arrays = createPipelineArrays(windowSize, drawer.width, drawer.height);
   };
 
   const render = (wave: Float32Array, progress: number) => {
@@ -44,22 +47,16 @@ export const createPipeline = async (
       isResizeRequested = false;
       return resize();
     }
-    const { width } = drawer;
-    const windowCount = width;
-    const { frequencies, magnitudes, waves } = arrays;
+    const { waves, signal, magnitudes, view } = arrays;
+    const { height } = drawer;
+    const windowCount = drawer.width;
 
-    sliceWaves({ windowSize, windowCount, wave, waves });
-    fourier.forward(waves, frequencies);
-
-    for (let x = 0; x < width; x++) {
-      const start = x * windowSize;
-      const end = start + windowSize;
-      const frequency = subComplexArray(frequencies, start, end);
-      const magnitude = magnitudes.subarray(start / 2, end / 2);
-      normalizeMagnitude(frequency, magnitude);
-      normalizeDecibel(magnitude);
-    }
-    drawer.render(magnitudes, progress, parameters);
+    sliceWaves(windowSize, windowCount, wave, waves);
+    fourier.forward(waves, signal);
+    normalizeMagnitude(windowSize, windowCount, signal, magnitudes);
+    normalizeDecibel(windowSize, windowCount, magnitudes, minDecibel);
+    scaleView(windowSize, windowCount, height, viewParams, magnitudes, view);
+    drawer.render(view, progress);
   };
 
   return {
