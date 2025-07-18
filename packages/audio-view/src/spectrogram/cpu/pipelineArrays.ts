@@ -3,7 +3,6 @@ import { ComplexArray, createComplexArray } from '../../common';
 export type PipelineArrays = {
   waves: ComplexArray;
   signal: ComplexArray;
-  magnitudes: Float32Array;
   view: Uint8Array;
 };
 export const createPipelineArrays = (
@@ -14,8 +13,7 @@ export const createPipelineArrays = (
   const windowLength = windowSize * windowCount;
   const waves = createComplexArray(windowLength);
   const signal = createComplexArray(windowLength);
-  const magnitudes = new Float32Array(windowLength / 2);
   const view = new Uint8Array(windowCount * height);
 
-  return { waves, signal, magnitudes, view };
+  return { waves, signal, view };
 };
