@@ -6,11 +6,7 @@ import { createPipeline } from './pipeline';
 const workgroupSize = 64;
 
 export type MagnitudeNormalizer = {
-  run: (
-    encoder: GPUCommandEncoder,
-    input: ComplexGpuBuffer,
-    output: GPUBuffer,
-  ) => void;
+  run: (encoder: GPUCommandEncoder, signal: ComplexGpuBuffer) => void;
   writeParams: (params: MagnitudeNormalizerParams) => void;
   destroy: () => void;
 };
@@ -23,18 +19,12 @@ export const createMagnitudeNormalizer = (
   const buffers = createBuffers(device);
 
   return {
-    run: (encoder, input, output) => {
+    run: (encoder, signal) => {
       const { windowSize, windowCount } = buffers.paramsValue;
       const halfSize = Math.ceil(windowSize / 2);
       const xCount = Math.ceil(halfSize / workgroupSize);
 
-      const bindGroup = createBindGroup(
-        device,
-        pipeline,
-        buffers,
-        input,
-        output,
-      );
+      const bindGroup = createBindGroup(device, pipeline, buffers, signal);
       const pass = encoder.beginComputePass({
         label: 'magnitude-normalizer-pass',
         timestampWrites,

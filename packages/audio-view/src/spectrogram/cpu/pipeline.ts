@@ -68,15 +68,15 @@ export const createPipeline = async (
       isResizeRequested = false;
       return resize();
     }
-    const { waves, signal, magnitudes, view } = arrays;
+    const { waves, signal, view } = arrays;
     const { height } = drawer;
     const windowCount = drawer.width;
 
     sliceWaves(windowSize, windowCount, wave, waves);
     fourier.forward(waves, signal);
-    normalizeMagnitude(windowSize, windowCount, signal, magnitudes);
-    normalizeDecibel(windowSize, windowCount, magnitudes, minDecibel);
-    scaleView(windowSize, windowCount, height, viewParams, magnitudes, view);
+    normalizeMagnitude(windowSize, windowCount, signal);
+    normalizeDecibel(windowSize, windowCount, signal.real, minDecibel);
+    scaleView(windowSize, windowCount, height, viewParams, signal.real, view);
     drawer.render(view, progress);
   });
 

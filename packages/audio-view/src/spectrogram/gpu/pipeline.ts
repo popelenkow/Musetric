@@ -107,9 +107,9 @@ export const createPipeline = async (
   const createCommand = timer.wrap('createCommand', () => {
     const encoder = device.createCommandEncoder({ label: 'render-pipeline' });
     fourier.forward(encoder, buffers.signal);
-    magnitudeNormalizer.run(encoder, buffers.signal, buffers.magnitude);
-    decibelNormalizer.run(encoder, buffers.magnitude);
-    viewScaler.run(encoder, buffers.magnitude, drawer.getTextureView());
+    magnitudeNormalizer.run(encoder, buffers.signal);
+    decibelNormalizer.run(encoder, buffers.signal.real);
+    viewScaler.run(encoder, buffers.signal.real, drawer.getTextureView());
     drawer.render(encoder);
     timer.resolve(encoder);
     return encoder.finish();
