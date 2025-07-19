@@ -27,7 +27,7 @@ export type CpuTimer<Label extends string> = {
 };
 
 export const createCpuTimer = <Labels extends readonly string[]>(
-  labels: [...Labels],
+  labels: readonly [...Labels],
 ): CpuTimer<Labels[number]> => {
   type Label = Labels[number];
 

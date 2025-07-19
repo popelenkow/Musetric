@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "dev": "yarn workspaces foreach --all --include @musetric/backend --include @musetric/frontend --parallel --interlaced run dev",
+    "dev:perf": "yarn workspace @musetric/audio-view dev:perf",
     "build:frontend": "yarn workspace @musetric/frontend build && npx ncp packages/frontend/dist packages/backend/public",
     "build:docker": "yarn workspace @musetric/backend build:docker",
     "start:docker": "yarn workspace @musetric/backend start:docker",
