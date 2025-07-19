@@ -8,7 +8,7 @@ import { createDrawer } from './drawer';
 import { normalizeDecibel as normalizeDecibelImpl } from './normalizeDecibel';
 import { normalizeMagnitude as normalizeMagnitudeImpl } from './normalizeMagnitude';
 import { createPipelineArrays } from './pipelineArrays';
-import { createPipelineTimer } from './pipelineTimer';
+import { createPipelineTimer, PipelineProfile } from './pipelineTimer';
 import { scaleView as scaleViewImpl } from './scaleView';
 
 export type CreatePipelineOptions = {
@@ -18,7 +18,7 @@ export type CreatePipelineOptions = {
   colors: Colors;
   viewParams: SignalViewParams;
   minDecibel: number;
-  profiling?: boolean;
+  onProfile?: (profile: PipelineProfile) => void;
 };
 
 export type Pipeline = {
@@ -36,14 +36,14 @@ export const createPipeline = async (
     colors,
     viewParams,
     minDecibel,
-    profiling,
+    onProfile,
   } = options;
 
   const drawer = createDrawer({ canvas, colors });
   const createFourier = cpuFouriers[fourierMode];
   const fourier = await createFourier({ windowSize });
 
-  const timer = createPipelineTimer(profiling);
+  const timer = createPipelineTimer(onProfile);
 
   let isResizeRequested = false;
   let arrays = createPipelineArrays(windowSize, drawer.width, drawer.height);
@@ -83,10 +83,7 @@ export const createPipeline = async (
   return {
     render: createCallLatest(async (wave, progress) => {
       render(wave, progress);
-      if (timer.read) {
-        const duration = await timer.read();
-        console.table(duration);
-      }
+      timer.finish();
     }),
     resize: () => {
       isResizeRequested = true;

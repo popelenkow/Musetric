@@ -5,7 +5,7 @@ import { createDecibelNormalizer } from './decibelNormalizer';
 import { createDrawer } from './drawer';
 import { createMagnitudeNormalizer } from './magnitudeNormalizer';
 import { createPipelineBuffers } from './pipelineBuffers';
-import { createPipelineTimer } from './pipelineTimer';
+import { createPipelineTimer, PipelineProfile } from './pipelineTimer';
 import { createViewScaler } from './viewScaler';
 
 export type CreatePipelineOptions = {
@@ -16,7 +16,7 @@ export type CreatePipelineOptions = {
   colors: Colors;
   viewParams: SignalViewParams;
   minDecibel: number;
-  profiling?: boolean;
+  onProfile?: (profile: PipelineProfile) => void;
 };
 
 export type Pipeline = {
@@ -36,13 +36,13 @@ export const createPipeline = async (
     colors,
     viewParams,
     minDecibel,
-    profiling,
+    onProfile,
   } = options;
 
   let windowCount = 1;
   let isResizeRequested = true;
 
-  const timer = createPipelineTimer(device, profiling);
+  const timer = createPipelineTimer(device, onProfile);
 
   let waves = createComplexArray(windowSize * windowCount);
   const buffers = createPipelineBuffers({ device, windowSize, windowCount });
@@ -134,10 +134,7 @@ export const createPipeline = async (
   return {
     render: createCallLatest(async (wave, progress) => {
       await render(wave, progress);
-      if (timer.read) {
-        const duration = await timer.read();
-        console.table(duration);
-      }
+      await timer.finish();
     }),
     resize: () => {
       isResizeRequested = true;
