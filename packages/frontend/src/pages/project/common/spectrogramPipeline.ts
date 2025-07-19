@@ -49,7 +49,11 @@ export const useSpectrogramPipeline = (
           colors,
           viewParams,
           minDecibel,
-          profiling,
+          onProfile: profiling
+            ? (profile) => {
+                console.table(profile);
+              }
+            : undefined,
         });
       }
 
@@ -60,7 +64,11 @@ export const useSpectrogramPipeline = (
         colors,
         viewParams,
         minDecibel,
-        profiling,
+        onProfile: profiling
+          ? (profile) => {
+              console.table(profile);
+            }
+          : undefined,
       });
     },
     unmount: async (prev) => {

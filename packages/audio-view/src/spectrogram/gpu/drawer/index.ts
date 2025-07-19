@@ -88,8 +88,9 @@ export const createDrawer = (options: CreateDrawerOptions): Drawer => {
     getTextureView: () => texture.view,
 
     destroy: () => {
-      texture.destroy();
       buffers.destroy();
+      texture.destroy();
+      context.unconfigure();
     },
   };
 

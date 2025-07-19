@@ -11,5 +11,5 @@
     "types": ["@webgpu/types"],
     "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
-  "include": ["src", "test"]
+  "include": ["src", "test", "perf"]
 }

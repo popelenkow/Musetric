@@ -6,6 +6,7 @@
   "main": "src/index.ts",
   "scripts": {
     "postinstall": "node ./scripts/install-playwright.js",
+    "dev:perf": "vite --config perf/vite.config.ts",
     "build": "tsc",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache",
@@ -26,6 +27,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "typescript": "5.8.3",
+    "vite": "7.0.0",
+    "vite-plugin-mkcert": "1.17.8",
     "vitest": "3.2.4"
   }
 }
