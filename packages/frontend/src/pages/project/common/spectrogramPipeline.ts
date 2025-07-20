@@ -10,7 +10,7 @@ import { getGpuDevice } from '../../../common/gpu';
 import { useAsyncResource } from '../../../common/useAsyncResource';
 
 const profiling = envs.spectrogramProfiling;
-const minDecibel = -40;
+const minDecibel = -45;
 
 export const useSpectrogramPipeline = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
@@ -35,8 +35,8 @@ export const useSpectrogramPipeline = (
 
       const viewParams: spectrogram.SignalViewParams = {
         sampleRate: buffer.sampleRate,
-        minFrequency: buffer.sampleRate * 0.001,
-        maxFrequency: buffer.sampleRate * 0.1,
+        minFrequency: 120,
+        maxFrequency: 5000,
       };
 
       if (isGpuFourierMode(fourierMode)) {
