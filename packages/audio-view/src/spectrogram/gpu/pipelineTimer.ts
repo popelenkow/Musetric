@@ -86,7 +86,15 @@ export const createPipelineTimer = (
         ...gpuDuration,
         ...cpuDuration,
       };
-      onProfile(profile);
+      const sortedProfile = gpuMetricKeys.reduce<PipelineProfile>(
+        (acc, key) => ({
+          ...acc,
+          [key]: profile[key],
+        }),
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        {} as PipelineProfile,
+      );
+      onProfile(sortedProfile);
     },
     destroy: timer.gpu.destroy,
   };

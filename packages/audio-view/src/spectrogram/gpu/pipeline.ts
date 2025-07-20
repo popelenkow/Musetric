@@ -53,7 +53,7 @@ export const createPipeline = async (
     device.queue.writeBuffer(buffers.signal.real, 0, waves.real);
     device.queue.writeBuffer(buffers.signal.imag, 0, waves.imag);
   });
-  const filterWave = createFilterWave(device, timer.tw.filterWave);
+  const filterWave = createFilterWave(device, windowSize, timer.tw.filterWave);
   const createFourier = gpuFouriers[fourierMode];
   const fourier = await createFourier({
     device,

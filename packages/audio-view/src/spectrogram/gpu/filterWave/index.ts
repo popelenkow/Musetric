@@ -5,23 +5,24 @@ import { createPipeline } from './pipeline';
 const workgroupSize = 64;
 
 export type FilterWave = {
-  run: (encoder: GPUCommandEncoder, buffer: GPUBuffer) => void;
+  run: (encoder: GPUCommandEncoder, signal: GPUBuffer) => void;
   writeParams: (params: FilterWaveParams) => void;
   destroy: () => void;
 };
 
 export const createFilterWave = (
   device: GPUDevice,
+  windowSize: number,
   timestampWrites?: GPUComputePassTimestampWrites,
 ): FilterWave => {
   const pipeline = createPipeline(device);
-  const buffers = createBuffers(device);
+  const buffers = createBuffers(device, windowSize);
 
   return {
-    run: (encoder, buffer) => {
-      const { windowSize, windowCount } = buffers.paramsValue;
+    run: (encoder, signal) => {
+      const { windowCount } = buffers.paramsValue;
       const xCount = Math.ceil(windowSize / workgroupSize);
-      const bindGroup = createBindGroup(device, pipeline, buffers, buffer);
+      const bindGroup = createBindGroup(device, pipeline, buffers, signal);
       const pass = encoder.beginComputePass({
         label: 'filter-wave-pass',
         timestampWrites,

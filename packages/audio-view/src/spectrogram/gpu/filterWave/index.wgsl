@@ -5,6 +5,7 @@ struct FilterWaveParams {
 
 @group(0) @binding(0) var<storage, read_write> samples: array<f32>;
 @group(0) @binding(1) var<uniform> params: FilterWaveParams;
+@group(0) @binding(2) var<storage, read> coefficients: array<f32>;
 
 @compute @workgroup_size(64)
 fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
@@ -14,6 +15,6 @@ fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
     return;
   }
   let offset = windowIndex * params.windowSize + sampleIndex;
-  let coeff = 0.54 - 0.46 * cos(6.28318530718 * f32(sampleIndex) / f32(params.windowSize - 1u));
+  let coeff = coefficients[sampleIndex];
   samples[offset] = samples[offset] * coeff;
 }
