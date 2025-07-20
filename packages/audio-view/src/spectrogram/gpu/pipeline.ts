@@ -119,6 +119,14 @@ export const createPipeline = async (
     return encoder.finish();
   });
 
+  const submitCommand = timer.wrapAsync(
+    'submitCommand',
+    async (command: GPUCommandBuffer) => {
+      device.queue.submit([command]);
+      await device.queue.onSubmittedWorkDone();
+    },
+  );
+
   const render = timer.wrapAsync(
     'total',
     async (wave: Float32Array, progress: number) => {
@@ -129,8 +137,7 @@ export const createPipeline = async (
       sliceWaves(windowSize, windowCount, wave, waves);
       writeGpuBuffers(progress);
       const command = createCommand();
-      device.queue.submit([command]);
-      await device.queue.onSubmittedWorkDone();
+      await submitCommand(command);
     },
   );
 
