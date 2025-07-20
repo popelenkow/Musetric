@@ -1,23 +1,23 @@
 import { createBindGroup } from './bindGroup';
-import { createBuffers, ViewScalerParams } from './buffers';
+import { createBuffers, ScaleViewParams } from './buffers';
 import { createPipeline } from './pipeline';
 
 const workgroupSize = 16;
 
-export type ViewScaler = {
+export type ScaleView = {
   run: (
     encoder: GPUCommandEncoder,
     magnitude: GPUBuffer,
     texture: GPUTextureView,
   ) => void;
-  writeParams: (params: ViewScalerParams) => void;
+  writeParams: (params: ScaleViewParams) => void;
   destroy: () => void;
 };
 
-export const createViewScaler = (
+export const createScaleView = (
   device: GPUDevice,
   timestampWrites?: GPUComputePassTimestampWrites,
-): ViewScaler => {
+): ScaleView => {
   const pipeline = createPipeline(device);
   const buffers = createBuffers(device);
 
@@ -35,7 +35,7 @@ export const createViewScaler = (
         texture,
       );
       const pass = encoder.beginComputePass({
-        label: 'drawer-column-pass',
+        label: 'scale-view-column-pass',
         timestampWrites,
       });
       pass.setPipeline(pipeline);

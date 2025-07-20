@@ -15,12 +15,12 @@ export const createBuffers = (device: GPUDevice, colorsData: Colors) => {
   const progressArray = new Float32Array([1]);
 
   const colors = device.createBuffer({
-    label: 'drawer-colors-buffer',
+    label: 'draw-colors-buffer',
     size: colorsArray.byteLength,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
   const progress = device.createBuffer({
-    label: 'drawer-progress-buffer',
+    label: 'draw-progress-buffer',
     size: 4,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });

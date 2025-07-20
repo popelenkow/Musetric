@@ -4,15 +4,14 @@ export const cpuMetricKeys = [
   'resize',
   'sliceWaves',
   'fourier',
-  'normalizeMagnitude',
-  'normalizeDecibel',
+  'magnitudify',
+  'decibelify',
   'scaleView',
   'draw',
-  'total',
+  'render',
 ] as const;
 
 const create = () => createCpuTimer(cpuMetricKeys);
-
 type Timer = ReturnType<typeof create>;
 
 export type PipelineProfile = ReturnType<Timer['read']>;

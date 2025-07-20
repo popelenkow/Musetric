@@ -3,8 +3,8 @@ import { createBuffers } from './buffers';
 import { createBindGroup, createSampler, createTexture } from './common';
 import { createPipeline } from './pipeline';
 
-export type Drawer = {
-  render: (encoder: GPUCommandEncoder) => void;
+export type Draw = {
+  run: (encoder: GPUCommandEncoder) => void;
   resize: () => void;
   writeProgress: (progress: number) => void;
   width: number;
@@ -13,14 +13,14 @@ export type Drawer = {
   destroy: () => void;
 };
 
-export type CreateDrawerOptions = {
+export type CreateDrawOptions = {
   device: GPUDevice;
   canvas: HTMLCanvasElement;
   colors: Colors;
   timestampWrites?: GPUComputePassTimestampWrites;
 };
 
-export const createDrawer = (options: CreateDrawerOptions): Drawer => {
+export const createDraw = (options: CreateDrawOptions): Draw => {
   const { device, canvas, colors, timestampWrites } = options;
   const context = canvas.getContext('webgpu');
   if (!context) {
@@ -42,13 +42,13 @@ export const createDrawer = (options: CreateDrawerOptions): Drawer => {
     texture.view,
   );
 
-  const drawer: Drawer = {
-    render: (encoder) => {
+  const drawer: Draw = {
+    run: (encoder) => {
       const view = context.getCurrentTexture().createView({
-        label: 'drawer-output-view',
+        label: 'draw-view',
       });
       const pass = encoder.beginRenderPass({
-        label: 'drawer-pass',
+        label: 'draw-pass',
         colorAttachments: [
           {
             view,

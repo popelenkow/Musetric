@@ -7,7 +7,7 @@ export const createBindGroup = (
   magnitudes: GPUBuffer,
 ) =>
   device.createBindGroup({
-    label: 'decibel-normalizer-bind-group',
+    label: 'decibelify-bind-group',
     layout: pipeline.getBindGroupLayout(0),
     entries: [
       { binding: 0, resource: { buffer: magnitudes } },

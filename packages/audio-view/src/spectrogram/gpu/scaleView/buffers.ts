@@ -1,12 +1,12 @@
 import { ViewSize } from '../../../common';
 import { SignalViewParams } from '../../signalViewParams';
 
-export type ViewScalerParams = SignalViewParams &
+export type ScaleViewParams = SignalViewParams &
   ViewSize & {
     windowSize: number;
   };
 
-export type ViewScalerParamsShader = {
+export type ScaleViewParamsShader = {
   halfSize: number;
   width: number;
   height: number;
@@ -16,7 +16,7 @@ export type ViewScalerParamsShader = {
   logRange: number;
 };
 
-const toParamsShader = (params: ViewScalerParams): ViewScalerParamsShader => {
+const toParamsShader = (params: ScaleViewParams): ScaleViewParamsShader => {
   const { windowSize, sampleRate, minFrequency, maxFrequency, width, height } =
     params;
   const halfSize = windowSize / 2;
@@ -41,7 +41,7 @@ const toParamsShader = (params: ViewScalerParams): ViewScalerParamsShader => {
   };
 };
 
-const defaultParams: ViewScalerParams = {
+const defaultParams: ScaleViewParams = {
   sampleRate: 0,
   minFrequency: 0,
   maxFrequency: 0,
@@ -52,10 +52,10 @@ const defaultParams: ViewScalerParams = {
 const defaultParamsShader = toParamsShader(defaultParams);
 
 export type Buffers = {
-  paramsValue: ViewScalerParams;
-  paramsShader: ViewScalerParamsShader;
+  paramsValue: ScaleViewParams;
+  paramsShader: ScaleViewParamsShader;
   params: GPUBuffer;
-  writeParams: (params: ViewScalerParams) => void;
+  writeParams: (params: ScaleViewParams) => void;
   destroy: () => void;
 };
 
@@ -63,7 +63,7 @@ export const createBuffers = (device: GPUDevice) => {
   const paramsArray = new DataView(new ArrayBuffer(28));
 
   const params = device.createBuffer({
-    label: 'drawer-compute-params-buffer',
+    label: 'scale-view-params-buffer',
     size: paramsArray.byteLength,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });

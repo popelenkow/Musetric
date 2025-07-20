@@ -16,3 +16,5 @@ export const sliceWaves = (
     waves.imag.fill(0, offset, offset + windowSize);
   }
 };
+
+export const createSliceWaves = () => sliceWaves;

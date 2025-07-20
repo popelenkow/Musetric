@@ -2,11 +2,11 @@ import shaderCode from './index.wgsl?raw';
 
 export const createPipeline = (device: GPUDevice) => {
   const module = device.createShaderModule({
-    label: 'magnitude-normalizer-shader',
+    label: 'magnitudify-shader',
     code: shaderCode,
   });
   return device.createComputePipeline({
-    label: 'magnitude-normalizer-pipeline',
+    label: 'magnitudify-pipeline',
     layout: 'auto',
     compute: { module, entryPoint: 'main' },
   });

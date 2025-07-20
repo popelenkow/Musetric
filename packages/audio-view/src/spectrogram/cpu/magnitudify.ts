@@ -1,6 +1,6 @@
 import { ComplexArray } from '../../common';
 
-export const normalizeMagnitude = (
+export const magnitudify = (
   windowSize: number,
   windowCount: number,
   signal: ComplexArray,
@@ -17,3 +17,5 @@ export const normalizeMagnitude = (
     }
   }
 };
+
+export const createMagnitudify = () => magnitudify;

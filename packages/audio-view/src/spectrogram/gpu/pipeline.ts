@@ -1,12 +1,12 @@
-import { Colors, SignalViewParams, sliceWaves as sliceWavesImpl } from '..';
+import { Colors, SignalViewParams, createSliceWaves } from '..';
 import { createCallLatest, createComplexArray } from '../../common';
 import { GpuFourierMode, gpuFouriers } from '../../fourier';
-import { createDecibelNormalizer } from './decibelNormalizer';
-import { createDrawer } from './drawer';
-import { createMagnitudeNormalizer } from './magnitudeNormalizer';
+import { createDecibelify } from './decibelify';
+import { createDraw } from './draw';
+import { createMagnitudify } from './magnitudify';
 import { createPipelineBuffers } from './pipelineBuffers';
 import { createPipelineTimer, PipelineProfile } from './pipelineTimer';
-import { createViewScaler } from './viewScaler';
+import { createScaleView } from './scaleView';
 
 export type CreatePipelineOptions = {
   device: GPUDevice;
@@ -47,7 +47,7 @@ export const createPipeline = async (
   let waves = createComplexArray(windowSize * windowCount);
   const buffers = createPipelineBuffers({ device, windowSize, windowCount });
 
-  const sliceWaves = timer.wrap('sliceWaves', sliceWavesImpl);
+  const sliceWaves = timer.wrap('sliceWaves', createSliceWaves());
   const writeGpuWaves = timer.wrap('writeGpuWaves', () => {
     device.queue.writeBuffer(buffers.signal.real, 0, waves.real);
     device.queue.writeBuffer(buffers.signal.imag, 0, waves.imag);
@@ -61,16 +61,10 @@ export const createPipeline = async (
       transform: timer.tw.fourierTransform,
     },
   });
-  const magnitudeNormalizer = createMagnitudeNormalizer(
-    device,
-    timer.tw.normalizeMagnitude,
-  );
-  const decibelNormalizer = createDecibelNormalizer(
-    device,
-    timer.tw.normalizeDecibel,
-  );
-  const viewScaler = createViewScaler(device, timer.tw.scaleView);
-  const drawer = createDrawer({
+  const magnitudify = createMagnitudify(device, timer.tw.magnitudify);
+  const decibelify = createDecibelify(device, timer.tw.decibelify);
+  const scaleView = createScaleView(device, timer.tw.scaleView);
+  const draw = createDraw({
     device,
     canvas,
     colors,
@@ -78,8 +72,8 @@ export const createPipeline = async (
   });
 
   const resize = timer.wrap('resize', () => {
-    drawer.resize();
-    windowCount = drawer.width;
+    draw.resize();
+    windowCount = draw.width;
     const halfSize = windowSize / 2;
     waves = createComplexArray(windowSize * windowCount);
     buffers.resize(windowCount);
@@ -87,36 +81,38 @@ export const createPipeline = async (
       windowSize,
       windowCount,
     });
-    magnitudeNormalizer.writeParams({
+    magnitudify.writeParams({
       windowSize,
       windowCount,
     });
-    decibelNormalizer.writeParams({
+    decibelify.writeParams({
       halfSize,
       windowCount,
       minDecibel,
     });
-    viewScaler.writeParams({
+    scaleView.writeParams({
       ...viewParams,
       windowSize,
-      width: drawer.width,
-      height: drawer.height,
+      width: draw.width,
+      height: draw.height,
     });
   });
 
   const createCommand = timer.wrap('createCommand', () => {
-    const encoder = device.createCommandEncoder({ label: 'render-pipeline' });
+    const encoder = device.createCommandEncoder({
+      label: 'pipeline-render-encoder',
+    });
     fourier.forward(encoder, buffers.signal);
-    magnitudeNormalizer.run(encoder, buffers.signal);
-    decibelNormalizer.run(encoder, buffers.signal.real);
-    viewScaler.run(encoder, buffers.signal.real, drawer.getTextureView());
-    drawer.render(encoder);
+    magnitudify.run(encoder, buffers.signal);
+    decibelify.run(encoder, buffers.signal.real);
+    scaleView.run(encoder, buffers.signal.real, draw.getTextureView());
+    draw.run(encoder);
     timer.resolve(encoder);
     return encoder.finish();
   });
 
   const render = timer.wrapAsync(
-    'total',
+    'render',
     async (wave: Float32Array, progress: number) => {
       if (isResizeRequested) {
         isResizeRequested = false;
@@ -124,7 +120,7 @@ export const createPipeline = async (
       }
       sliceWaves(windowSize, windowCount, wave, waves);
       writeGpuWaves();
-      drawer.writeProgress(progress);
+      draw.writeProgress(progress);
       const command = createCommand();
       device.queue.submit([command]);
       await device.queue.onSubmittedWorkDone();
@@ -143,10 +139,10 @@ export const createPipeline = async (
       timer.destroy();
       buffers.destroy();
       fourier.destroy();
-      magnitudeNormalizer.destroy();
-      decibelNormalizer.destroy();
-      viewScaler.destroy();
-      drawer.destroy();
+      magnitudify.destroy();
+      decibelify.destroy();
+      scaleView.destroy();
+      draw.destroy();
     },
   };
 };

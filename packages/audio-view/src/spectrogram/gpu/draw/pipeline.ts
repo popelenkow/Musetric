@@ -9,16 +9,16 @@ export const createPipeline = (
   context.configure({ device, format });
 
   const vertexModule = device.createShaderModule({
-    label: 'drawer-vertex-shader',
+    label: 'draw-vertex-shader',
     code: vertexCode,
   });
   const fragmentModule = device.createShaderModule({
-    label: 'drawer-fragment-shader',
+    label: 'draw-fragment-shader',
     code: fragmentCode,
   });
 
   return device.createRenderPipeline({
-    label: 'drawer-pipeline',
+    label: 'draw-pipeline',
     layout: 'auto',
     vertex: { module: vertexModule, entryPoint: 'main' },
     fragment: {
