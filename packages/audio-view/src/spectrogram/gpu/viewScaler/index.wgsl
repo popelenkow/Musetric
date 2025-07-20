@@ -28,7 +28,7 @@ fn main(@builtin(global_invocation_id) gid : vec3<u32>) {
   if (idx >= params.maxBin) {
     idx = params.maxBin - 1u;
   }
-  let offset = x * params.halfSize + idx;
+  let offset = x * params.halfSize * 2u + idx;
   let intensity = magnitudes[offset];
   textureStore(columnTexture, vec2u(x, y), vec4f(intensity, 0.0, 0.0, 1.0));
 }
