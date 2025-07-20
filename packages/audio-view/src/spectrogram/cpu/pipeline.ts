@@ -6,6 +6,7 @@ import { SignalViewParams } from '../signalViewParams';
 import { createSliceWaves } from '../sliceWaves';
 import { createDecibelify } from './decibelify';
 import { createDraw } from './draw';
+import { createFilterWave } from './filterWave';
 import { createMagnitudify } from './magnitudify';
 import { createPipelineArrays } from './pipelineArrays';
 import { createPipelineTimer, PipelineProfile } from './pipelineTimer';
@@ -54,6 +55,7 @@ export const createPipeline = async (
   });
 
   const sliceWaves = timer.wrap('sliceWaves', createSliceWaves());
+  const filterWave = timer.wrap('filterWave', createFilterWave(windowSize));
   fourier.forward = timer.wrap('fourier', fourier.forward);
   const magnitudify = timer.wrap('magnitudify', createMagnitudify());
   const decibelify = timer.wrap('decibelify', createDecibelify());
@@ -72,6 +74,7 @@ export const createPipeline = async (
       const windowCount = draw.width;
 
       sliceWaves(windowSize, windowCount, wave, waves);
+      filterWave(windowCount, waves.real);
       fourier.forward(waves, signal);
       magnitudify(windowSize, windowCount, signal);
       decibelify(windowSize, windowCount, signal.real, minDecibel);

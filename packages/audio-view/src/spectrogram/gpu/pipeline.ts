@@ -3,6 +3,7 @@ import { createCallLatest, createComplexArray } from '../../common';
 import { GpuFourierMode, gpuFouriers } from '../../fourier';
 import { createDecibelify } from './decibelify';
 import { createDraw } from './draw';
+import { createFilterWave } from './filterWave';
 import { createMagnitudify } from './magnitudify';
 import { createPipelineBuffers } from './pipelineBuffers';
 import { createPipelineTimer, PipelineProfile } from './pipelineTimer';
@@ -52,6 +53,7 @@ export const createPipeline = async (
     device.queue.writeBuffer(buffers.signal.real, 0, waves.real);
     device.queue.writeBuffer(buffers.signal.imag, 0, waves.imag);
   });
+  const filterWave = createFilterWave(device, windowSize, timer.tw.filterWave);
   const createFourier = gpuFouriers[fourierMode];
   const fourier = await createFourier({
     device,
@@ -77,6 +79,10 @@ export const createPipeline = async (
     const halfSize = windowSize / 2;
     waves = createComplexArray(windowSize * windowCount);
     buffers.resize(windowCount);
+    filterWave.writeParams({
+      windowSize,
+      windowCount,
+    });
     fourier.writeParams({
       windowSize,
       windowCount,
@@ -102,6 +108,7 @@ export const createPipeline = async (
     const encoder = device.createCommandEncoder({
       label: 'pipeline-render-encoder',
     });
+    filterWave.run(encoder, buffers.signal.real);
     fourier.forward(encoder, buffers.signal);
     magnitudify.run(encoder, buffers.signal);
     decibelify.run(encoder, buffers.signal.real);
@@ -138,6 +145,7 @@ export const createPipeline = async (
     destroy: () => {
       timer.destroy();
       buffers.destroy();
+      filterWave.destroy();
       fourier.destroy();
       magnitudify.destroy();
       decibelify.destroy();
