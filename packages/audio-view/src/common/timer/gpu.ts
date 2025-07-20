@@ -9,7 +9,7 @@ export type GpuTimer<Label extends string> = {
 
 export const createGpuTimer = <Labels extends readonly string[]>(
   device: GPUDevice,
-  labels: [...Labels],
+  labels: readonly [...Labels],
 ): GpuTimer<Labels[number]> => {
   type Label = Labels[number];
 

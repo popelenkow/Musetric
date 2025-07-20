@@ -6,6 +6,7 @@ import {
   cpuFouriers,
   createComplexArray,
   createComplexGpuBufferReader,
+  createGpuContext,
   GpuFourierMode,
   gpuFouriers,
 } from '../src';
@@ -58,7 +59,9 @@ export const assertArrayClose = (
   }
 };
 
-describe('fourier', () => {
+describe('fourier', async () => {
+  const { device } = await createGpuContext();
+
   for (const mode of cpuFourierModes) {
     describe(mode, () => {
       for (const fixture of fourierFixtures) {
@@ -97,10 +100,6 @@ describe('fourier', () => {
     describe(mode, () => {
       for (const fixture of fourierFixtures) {
         describe(fixture.name, async () => {
-          const adapter = await navigator.gpu?.requestAdapter();
-          if (!adapter) throw new Error('WebGPU adapter not available');
-          const device = await adapter.requestDevice();
-
           const createFourier = gpuFouriers[mode];
           const fourier = await createFourier({
             device,
