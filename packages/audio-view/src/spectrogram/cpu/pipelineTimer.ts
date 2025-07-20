@@ -3,6 +3,7 @@ import { createCpuTimer } from '../../common';
 export const cpuMetricKeys = [
   'resize',
   'sliceWaves',
+  'filterWave',
   'fourier',
   'magnitudify',
   'decibelify',

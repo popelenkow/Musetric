@@ -5,6 +5,7 @@ export const gpuMetricKeys = [
   'sliceWaves',
   'writeGpuWaves',
   'createCommand',
+  'filterWave',
   'fourierReverse',
   'fourierTransform',
   'magnitudify',
@@ -16,6 +17,7 @@ export const gpuMetricKeys = [
 
 const create = (device: GPUDevice) => ({
   gpu: createGpuTimer(device, [
+    'filterWave',
     'fourierReverse',
     'fourierTransform',
     'magnitudify',
