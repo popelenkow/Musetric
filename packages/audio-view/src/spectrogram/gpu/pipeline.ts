@@ -48,10 +48,17 @@ export const createPipeline = async (
   let waves = createComplexArray(windowSize * windowCount);
   const buffers = createPipelineBuffers({ device, windowSize, windowCount });
 
+  const draw = createDraw({
+    device,
+    canvas,
+    colors,
+    timestampWrites: timer.tw.draw,
+  });
   const sliceWaves = timer.wrap('sliceWaves', createSliceWaves());
-  const writeGpuWaves = timer.wrap('writeGpuWaves', () => {
+  const writeGpuBuffers = timer.wrap('writeGpuBuffers', (progress: number) => {
     device.queue.writeBuffer(buffers.signal.real, 0, waves.real);
     device.queue.writeBuffer(buffers.signal.imag, 0, waves.imag);
+    draw.writeProgress(progress);
   });
   const filterWave = createFilterWave(device, windowSize, timer.tw.filterWave);
   const createFourier = gpuFouriers[fourierMode];
@@ -66,12 +73,6 @@ export const createPipeline = async (
   const magnitudify = createMagnitudify(device, timer.tw.magnitudify);
   const decibelify = createDecibelify(device, timer.tw.decibelify);
   const scaleView = createScaleView(device, timer.tw.scaleView);
-  const draw = createDraw({
-    device,
-    canvas,
-    colors,
-    timestampWrites: timer.tw.draw,
-  });
 
   const resize = timer.wrap('resize', () => {
     draw.resize();
@@ -119,15 +120,14 @@ export const createPipeline = async (
   });
 
   const render = timer.wrapAsync(
-    'render',
+    'total',
     async (wave: Float32Array, progress: number) => {
       if (isResizeRequested) {
         isResizeRequested = false;
         resize();
       }
       sliceWaves(windowSize, windowCount, wave, waves);
-      writeGpuWaves();
-      draw.writeProgress(progress);
+      writeGpuBuffers(progress);
       const command = createCommand();
       device.queue.submit([command]);
       await device.queue.onSubmittedWorkDone();

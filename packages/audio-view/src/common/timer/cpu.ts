@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 
+import { roundDuration } from './roundDuration';
+
 type TimeRange = {
   start?: number;
   end?: number;
@@ -12,7 +14,7 @@ const getDuration = (range: TimeRange): number => {
     return 0;
   }
   const duration = end - start;
-  return Math.round(duration * 1e3) / 1e3;
+  return roundDuration(duration);
 };
 
 export type CpuTimer<Label extends string> = {

@@ -60,26 +60,23 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
   const scaleView = timer.wrap('scaleView', createScaleView());
   draw.run = timer.wrap('draw', draw.run);
 
-  const render = timer.wrap(
-    'render',
-    (wave: Float32Array, progress: number) => {
-      if (isResizeRequested) {
-        isResizeRequested = false;
-        return resize();
-      }
-      const { signal, view } = arrays;
-      const { height } = draw;
-      const windowCount = draw.width;
+  const render = timer.wrap('total', (wave: Float32Array, progress: number) => {
+    if (isResizeRequested) {
+      isResizeRequested = false;
+      return resize();
+    }
+    const { signal, view } = arrays;
+    const { height } = draw;
+    const windowCount = draw.width;
 
-      sliceWaves(windowSize, windowCount, wave, signal);
-      filterWave(windowCount, signal.real);
-      fourier.forward(signal, windowCount);
-      magnitudify(windowSize, windowCount, signal);
-      decibelify(windowSize, windowCount, signal.real, minDecibel);
-      scaleView(windowSize, windowCount, height, viewParams, signal.real, view);
-      draw.run(view, progress);
-    },
-  );
+    sliceWaves(windowSize, windowCount, wave, signal);
+    filterWave(windowCount, signal.real);
+    fourier.forward(signal, windowCount);
+    magnitudify(windowSize, windowCount, signal);
+    decibelify(windowSize, windowCount, signal.real, minDecibel);
+    scaleView(windowSize, windowCount, height, viewParams, signal.real, view);
+    draw.run(view, progress);
+  });
 
   return {
     render: createCallLatest(async (wave, progress) => {

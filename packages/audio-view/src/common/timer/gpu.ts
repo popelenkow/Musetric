@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 
+import { roundDuration } from './roundDuration';
+
 export type GpuTimer<Label extends string> = {
   timestampWrites: Record<Label, GPUComputePassTimestampWrites>;
   resolve: (encoder: GPUCommandEncoder) => void;
@@ -55,7 +57,7 @@ export const createGpuTimer = <Labels extends readonly string[]>(
           const start = times[i * 2];
           const end = times[i * 2 + 1];
           const duration = Number(end - start) / 1e6;
-          acc[label] = Math.round(duration * 1e3) / 1e3;
+          acc[label] = roundDuration(duration);
           return acc;
         },
         {} as Record<Label, number>,
