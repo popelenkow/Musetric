@@ -1,9 +1,9 @@
-import { createCpuTimer, createGpuTimer } from '../../common';
+import { createCpuTimer, createGpuTimer, roundDuration } from '../../common';
 
 export const gpuMetricKeys = [
   'resize',
   'sliceWaves',
-  'writeGpuWaves',
+  'writeGpuBuffers',
   'createCommand',
   'filterWave',
   'fourierReverse',
@@ -12,8 +12,11 @@ export const gpuMetricKeys = [
   'decibelify',
   'scaleView',
   'draw',
-  'render',
+  'other',
+  'total',
 ] as const;
+export type GpuMetricKey = (typeof gpuMetricKeys)[number];
+export type PipelineProfile = Record<GpuMetricKey, number>;
 
 const create = (device: GPUDevice) => ({
   gpu: createGpuTimer(device, [
@@ -28,20 +31,13 @@ const create = (device: GPUDevice) => ({
   cpu: createCpuTimer([
     'resize',
     'sliceWaves',
-    'writeGpuWaves',
+    'writeGpuBuffers',
     'createCommand',
-    'render',
+    'total',
   ]),
 });
 
 type Timer = ReturnType<typeof create>;
-
-type Prettify<T> = {
-  [K in keyof T]: T[K];
-} & {};
-export type PipelineProfile = Prettify<
-  ReturnType<Timer['cpu']['read']> & Awaited<ReturnType<Timer['gpu']['read']>>
->;
 
 export type PipelineTimer = {
   wrap: Timer['cpu']['wrap'];
@@ -85,7 +81,12 @@ export const createPipelineTimer = (
       const profile: PipelineProfile = {
         ...gpuDuration,
         ...cpuDuration,
+        other: 0,
       };
+      const sum = gpuMetricKeys
+        .slice(0, -2)
+        .reduce((acc, key) => acc + profile[key], 0);
+      profile.other = roundDuration(profile.total - sum);
       const sortedProfile = gpuMetricKeys.reduce<PipelineProfile>(
         (acc, key) => ({
           ...acc,
