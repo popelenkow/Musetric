@@ -3,35 +3,33 @@ import { ComplexArray } from '../../common';
 /* Licensed by MIT. Based on https://github.com/indutny/fft.js/tree/4a18cf88fcdbd4ad5acca6eaea06a0b462047835 */
 
 type SingleTransform2Options = {
-  input: ComplexArray;
-  output: ComplexArray;
+  signal: ComplexArray;
   outOff: number;
   off: number;
   step: number;
 };
 /** radix-2 implementation. Only called for len=4 */
 const singleTransform2 = (options: SingleTransform2Options): void => {
-  const { input, output, outOff, off, step } = options;
+  const { signal, outOff, off, step } = options;
 
-  const evenR = input.real[off];
-  const evenI = input.imag[off];
-  const oddR = input.real[off + step];
-  const oddI = input.imag[off + step];
+  const evenR = signal.real[off];
+  const evenI = signal.imag[off];
+  const oddR = signal.real[off + step];
+  const oddI = signal.imag[off + step];
 
   const leftR = evenR + oddR;
   const leftI = evenI + oddI;
   const rightR = evenR - oddR;
   const rightI = evenI - oddI;
 
-  output.real[outOff] = leftR;
-  output.imag[outOff] = leftI;
-  output.real[outOff + 1] = rightR;
-  output.imag[outOff + 1] = rightI;
+  signal.real[outOff] = leftR;
+  signal.imag[outOff] = leftI;
+  signal.real[outOff + 1] = rightR;
+  signal.imag[outOff + 1] = rightI;
 };
 
 type SingleTransform4Options = {
-  input: ComplexArray;
-  output: ComplexArray;
+  signal: ComplexArray;
   inverse: boolean;
   outOff: number;
   off: number;
@@ -39,20 +37,20 @@ type SingleTransform4Options = {
 };
 /** radix-4. Only called for len=8 */
 const singleTransform4 = (options: SingleTransform4Options): void => {
-  const { input, output, inverse, outOff, off, step } = options;
+  const { signal, inverse, outOff, off, step } = options;
   const sign = inverse ? -1 : 1;
   const step2 = step * 2;
   const step3 = step * 3;
 
   // Original values
-  const Ar = input.real[off];
-  const Ai = input.imag[off];
-  const Br = input.real[off + step];
-  const Bi = input.imag[off + step];
-  const Cr = input.real[off + step2];
-  const Ci = input.imag[off + step2];
-  const Dr = input.real[off + step3];
-  const Di = input.imag[off + step3];
+  const Ar = signal.real[off];
+  const Ai = signal.imag[off];
+  const Br = signal.real[off + step];
+  const Bi = signal.imag[off + step];
+  const Cr = signal.real[off + step2];
+  const Ci = signal.imag[off + step2];
+  const Dr = signal.real[off + step3];
+  const Di = signal.imag[off + step3];
 
   // Pre-Final values
   const T0r = Ar + Cr;
@@ -77,19 +75,18 @@ const singleTransform4 = (options: SingleTransform4Options): void => {
   const FDr = T1r - T3i;
   const FDi = T1i + T3r;
 
-  output.real[outOff] = FAr;
-  output.imag[outOff] = FAi;
-  output.real[outOff + 1] = FBr;
-  output.imag[outOff + 1] = FBi;
-  output.real[outOff + 2] = FCr;
-  output.imag[outOff + 2] = FCi;
-  output.real[outOff + 3] = FDr;
-  output.imag[outOff + 3] = FDi;
+  signal.real[outOff] = FAr;
+  signal.imag[outOff] = FAi;
+  signal.real[outOff + 1] = FBr;
+  signal.imag[outOff + 1] = FBi;
+  signal.real[outOff + 2] = FCr;
+  signal.imag[outOff + 2] = FCi;
+  signal.real[outOff + 3] = FDr;
+  signal.imag[outOff + 3] = FDi;
 };
 
 export type Transform4Options = {
-  input: ComplexArray;
-  output: ComplexArray;
+  signal: ComplexArray;
   inverse: boolean;
   windowSize: number;
   reverseWidth: number;
@@ -98,32 +95,52 @@ export type Transform4Options = {
 };
 /** radix-4 implementation */
 export const transform4 = (options: Transform4Options): void => {
-  const {
-    input,
-    output,
-    inverse,
-    windowSize,
-    reverseWidth,
-    reverseTable,
-    trigTable,
-  } = options;
+  const { signal, inverse, windowSize, reverseWidth, reverseTable, trigTable } =
+    options;
 
   // Initial step (permute and transform)
   let step = 1 << reverseWidth;
   let len = windowSize >>> reverseWidth;
 
+  const indexMap = (index: number): number => {
+    const r = Math.floor(index / step);
+    const t = index % step;
+    return reverseTable[t] * len + r;
+  };
+
+  for (let start = 0; start < windowSize; start++) {
+    let j = indexMap(start);
+    let k = j;
+    while (k > start) {
+      k = indexMap(k);
+    }
+    if (k === start) {
+      let valueR = signal.real[start];
+      let valueI = signal.imag[start];
+      j = indexMap(start);
+      while (j !== start) {
+        const tmpR = signal.real[j];
+        const tmpI = signal.imag[j];
+        signal.real[j] = valueR;
+        signal.imag[j] = valueI;
+        valueR = tmpR;
+        valueI = tmpI;
+        j = indexMap(j);
+      }
+      signal.real[start] = valueR;
+      signal.imag[start] = valueI;
+    }
+  }
+
   let outOff: number;
-  let t: number;
   if (len === 2) {
-    for (outOff = 0, t = 0; outOff < windowSize; outOff += 2, t++) {
-      const off = reverseTable[t];
-      singleTransform2({ input, output, outOff, off, step });
+    for (outOff = 0; outOff < windowSize; outOff += 2) {
+      singleTransform2({ signal, outOff, off: outOff, step: 1 });
     }
   } else {
     // len === 4
-    for (outOff = 0, t = 0; outOff < windowSize; outOff += 4, t++) {
-      const off = reverseTable[t];
-      singleTransform4({ input, output, inverse, outOff, off, step });
+    for (outOff = 0; outOff < windowSize; outOff += 4) {
+      singleTransform4({ signal, inverse, outOff, off: outOff, step: 1 });
     }
   }
 
@@ -143,14 +160,14 @@ export const transform4 = (options: Transform4Options): void => {
         const D = C + quarterLen;
 
         // Original values
-        const Ar = output.real[A];
-        const Ai = output.imag[A];
-        const Br = output.real[B];
-        const Bi = output.imag[B];
-        const Cr = output.real[C];
-        const Ci = output.imag[C];
-        const Dr = output.real[D];
-        const Di = output.imag[D];
+        const Ar = signal.real[A];
+        const Ai = signal.imag[A];
+        const Br = signal.real[B];
+        const Bi = signal.imag[B];
+        const Cr = signal.real[C];
+        const Ci = signal.imag[C];
+        const Dr = signal.real[D];
+        const Di = signal.imag[D];
 
         // Middle values
         const MAr = Ar;
@@ -194,14 +211,14 @@ export const transform4 = (options: Transform4Options): void => {
         const FDr = T1r - T3i;
         const FDi = T1i + T3r;
 
-        output.real[A] = FAr;
-        output.imag[A] = FAi;
-        output.real[B] = FBr;
-        output.imag[B] = FBi;
-        output.real[C] = FCr;
-        output.imag[C] = FCi;
-        output.real[D] = FDr;
-        output.imag[D] = FDi;
+        signal.real[A] = FAr;
+        signal.imag[A] = FAi;
+        signal.real[B] = FBr;
+        signal.imag[B] = FBi;
+        signal.real[C] = FCr;
+        signal.imag[C] = FCi;
+        signal.real[D] = FDr;
+        signal.imag[D] = FDi;
       }
     }
   }

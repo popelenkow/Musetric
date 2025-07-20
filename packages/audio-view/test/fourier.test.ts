@@ -4,7 +4,6 @@ import {
   complexArrayFrom,
   CpuFourierMode,
   cpuFouriers,
-  createComplexArray,
   createComplexGpuBufferReader,
   createGpuContext,
   GpuFourierMode,
@@ -65,31 +64,32 @@ describe('fourier', async () => {
   for (const mode of cpuFourierModes) {
     describe(mode, () => {
       for (const fixture of fourierFixtures) {
-        describe(fixture.name, async () => {
-          const output = createComplexArray(fixture.windowSize);
+        describe(fixture.name, () => {
           const createFourier = cpuFouriers[mode];
-          const fourier = await createFourier({
+          const fourier = createFourier({
             windowSize: fixture.windowSize,
           });
 
-          it('forward', async () => {
-            const fixtureInput: ComplexArray = {
-              real: fixture.input,
-              imag: new Float32Array(fixture.windowSize).fill(0),
+          it('forward', () => {
+            const zeroImag = new Float32Array(fixture.windowSize).fill(0);
+            const signal: ComplexArray = {
+              real: fixture.input.slice(),
+              imag: zeroImag,
             };
-            await fourier.forward(fixtureInput, output);
-            assertArrayClose('real', output.real, fixture.output.real);
-            assertArrayClose('imag', output.imag, fixture.output.imag);
+            fourier.forward(signal, 1);
+            assertArrayClose('real', signal.real, fixture.output.real);
+            assertArrayClose('imag', signal.imag, fixture.output.imag);
           });
 
-          it('inverse', async () => {
-            const fixtureInput: ComplexArray = {
-              real: fixture.input,
-              imag: new Float32Array(fixture.windowSize).fill(0),
+          it('inverse', () => {
+            const zeroImag = new Float32Array(fixture.windowSize).fill(0);
+            const signal: ComplexArray = {
+              real: fixture.output.real.slice(),
+              imag: fixture.output.imag.slice(),
             };
-            await fourier.inverse(fixture.output, output);
-            assertArrayClose('real', output.real, fixtureInput.real);
-            assertArrayClose('imag', output.imag, fixtureInput.imag);
+            fourier.inverse(signal, 1);
+            assertArrayClose('real', signal.real, fixture.input);
+            assertArrayClose('imag', signal.imag, zeroImag);
           });
         });
       }
