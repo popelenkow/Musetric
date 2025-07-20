@@ -4,7 +4,7 @@ import { assertWindowSizePowerOfTwo } from '../isPowerOfTwo';
 import { utilsRadix4 } from '../utilsRadix4';
 import { transform4 } from './utils';
 
-export const createCpuFftRadix4: CreateCpuFourier = async (options) => {
+export const createCpuFftRadix4: CreateCpuFourier = (options) => {
   const { windowSize } = options;
   assertWindowSizePowerOfTwo(windowSize);
 
@@ -12,20 +12,17 @@ export const createCpuFftRadix4: CreateCpuFourier = async (options) => {
   const reverseTable = utilsRadix4.createReverseTable(reverseWidth);
   const trigTable = utilsRadix4.createTrigTable(windowSize);
 
-  const transform = async (
-    input: ComplexArray,
-    output: ComplexArray,
+  const transform = (
+    signal: ComplexArray,
+    windowCount: number,
     inverse: boolean,
   ) => {
-    const windowCount = input.real.length / windowSize;
     for (let i = 0; i < windowCount; i++) {
       const start = i * windowSize;
       const end = start + windowSize;
-      const inputSlice = subComplexArray(input, start, end);
-      const outputSlice = subComplexArray(output, start, end);
+      const slice = subComplexArray(signal, start, end);
       transform4({
-        input: inputSlice,
-        output: outputSlice,
+        signal: slice,
         inverse,
         windowSize,
         reverseWidth,
@@ -34,19 +31,19 @@ export const createCpuFftRadix4: CreateCpuFourier = async (options) => {
       });
       if (inverse) {
         for (let j = 0; j < windowSize; j++) {
-          outputSlice.real[j] /= windowSize;
-          outputSlice.imag[j] /= windowSize;
+          slice.real[j] /= windowSize;
+          slice.imag[j] /= windowSize;
         }
       }
     }
   };
 
   return {
-    forward: async (input: ComplexArray, output: ComplexArray) => {
-      await transform(input, output, false);
+    forward: (signal, windowCount) => {
+      transform(signal, windowCount, false);
     },
-    inverse: async (input: ComplexArray, output: ComplexArray) => {
-      await transform(input, output, true);
+    inverse: (signal, windowCount) => {
+      transform(signal, windowCount, true);
     },
   };
 };

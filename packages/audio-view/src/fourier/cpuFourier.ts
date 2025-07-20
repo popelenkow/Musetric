@@ -1,13 +1,11 @@
 import { ComplexArray } from '../common';
 
 export type CpuFourier = {
-  forward: (input: ComplexArray, output: ComplexArray) => void;
-  inverse: (input: ComplexArray, output: ComplexArray) => void;
+  forward: (signal: ComplexArray, windowCount: number) => void;
+  inverse: (signal: ComplexArray, windowCount: number) => void;
 };
 
 export type CreateCpuFourierOptions = {
   windowSize: number;
 };
-export type CreateCpuFourier = (
-  options: CreateCpuFourierOptions,
-) => Promise<CpuFourier>;
+export type CreateCpuFourier = (options: CreateCpuFourierOptions) => CpuFourier;

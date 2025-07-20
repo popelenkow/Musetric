@@ -27,9 +27,7 @@ export type Pipeline = {
   resize: () => void;
   destroy: () => void;
 };
-export const createPipeline = async (
-  options: CreatePipelineOptions,
-): Promise<Pipeline> => {
+export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
   const {
     canvas,
     windowSize,
@@ -42,7 +40,7 @@ export const createPipeline = async (
 
   const draw = createDraw({ canvas, colors });
   const createFourier = cpuFouriers[fourierMode];
-  const fourier = await createFourier({ windowSize });
+  const fourier = createFourier({ windowSize });
 
   const timer = createPipelineTimer(onProfile);
 
@@ -69,13 +67,13 @@ export const createPipeline = async (
         isResizeRequested = false;
         return resize();
       }
-      const { waves, signal, view } = arrays;
+      const { signal, view } = arrays;
       const { height } = draw;
       const windowCount = draw.width;
 
-      sliceWaves(windowSize, windowCount, wave, waves);
-      filterWave(windowCount, waves.real);
-      fourier.forward(waves, signal);
+      sliceWaves(windowSize, windowCount, wave, signal);
+      filterWave(windowCount, signal.real);
+      fourier.forward(signal, windowCount);
       magnitudify(windowSize, windowCount, signal);
       decibelify(windowSize, windowCount, signal.real, minDecibel);
       scaleView(windowSize, windowCount, height, viewParams, signal.real, view);

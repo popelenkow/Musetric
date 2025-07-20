@@ -24,7 +24,7 @@ export const runPipeline = async (
         minDecibel,
         onProfile: (profile) => profiles.push(profile),
       })
-    : await spectrogram.cpu.createPipeline({
+    : spectrogram.cpu.createPipeline({
         canvas,
         windowSize,
         fourierMode,
