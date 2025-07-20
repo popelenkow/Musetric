@@ -1,17 +1,17 @@
 import { createBindGroup } from './bindGroup';
-import { createBuffers, DecibelNormalizerParams } from './buffers';
+import { createBuffers, DecibelifyParams } from './buffers';
 import { createPipeline } from './pipeline';
 
-export type DecibelNormalizer = {
+export type Decibelify = {
   run: (encoder: GPUCommandEncoder, magnitudes: GPUBuffer) => void;
-  writeParams: (params: DecibelNormalizerParams) => void;
+  writeParams: (params: DecibelifyParams) => void;
   destroy: () => void;
 };
 
-export const createDecibelNormalizer = (
+export const createDecibelify = (
   device: GPUDevice,
   timestampWrites?: GPUComputePassTimestampWrites,
-): DecibelNormalizer => {
+): Decibelify => {
   const pipeline = createPipeline(device);
   const buffers = createBuffers(device);
 
@@ -20,7 +20,7 @@ export const createDecibelNormalizer = (
       const { windowCount } = buffers.paramsValue;
       const bindGroup = createBindGroup(device, pipeline, buffers, magnitudes);
       const pass = encoder.beginComputePass({
-        label: 'decibel-normalizer-pass',
+        label: 'decibelify-pass',
         timestampWrites,
       });
       pass.setPipeline(pipeline);

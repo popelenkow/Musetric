@@ -1,19 +1,19 @@
 import { createGradient, parseHexColor } from '../../common';
 import { Colors, Gradients } from '../colors';
 
-export type CreateDrawerOptions = {
+export type CreateDrawOptions = {
   canvas: HTMLCanvasElement;
   colors: Colors;
 };
 
-export type Drawer = {
+export type Draw = {
   width: number;
   height: number;
-  render: (view: Uint8Array, progress: number) => void;
+  run: (view: Uint8Array, progress: number) => void;
   resize: () => void;
 };
 
-export const createDrawer = (options: CreateDrawerOptions): Drawer => {
+export const createDraw = (options: CreateDrawOptions): Draw => {
   const { canvas, colors } = options;
   const context = canvas.getContext('2d');
   if (!context) {
@@ -33,15 +33,10 @@ export const createDrawer = (options: CreateDrawerOptions): Drawer => {
 
   let image = context.createImageData(1, 1);
 
-  const drawer: Drawer = {
+  const drawer: Draw = {
     width: 0,
     height: 0,
-    resize: () => {
-      drawer.width = canvas.clientWidth;
-      drawer.height = canvas.clientHeight;
-      image = context.createImageData(drawer.width, drawer.height);
-    },
-    render: (view, progress) => {
+    run: (view, progress) => {
       const { width, height } = drawer;
 
       const played = Math.floor(progress * width);
@@ -61,6 +56,11 @@ export const createDrawer = (options: CreateDrawerOptions): Drawer => {
       canvas.width = width;
       canvas.height = height;
       context.putImageData(image, 0, 0);
+    },
+    resize: () => {
+      drawer.width = canvas.clientWidth;
+      drawer.height = canvas.clientHeight;
+      image = context.createImageData(drawer.width, drawer.height);
     },
   };
 

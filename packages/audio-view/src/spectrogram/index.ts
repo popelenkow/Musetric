@@ -3,3 +3,4 @@ export * as cpu from './cpu';
 export * as gpu from './gpu';
 export * from './signalViewParams';
 export * from './sliceWaves';
+export * from './windowFilters';

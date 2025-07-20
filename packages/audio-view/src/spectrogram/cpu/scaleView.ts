@@ -33,3 +33,5 @@ export const scaleView = (
     }
   }
 };
+
+export const createScaleView = () => scaleView;

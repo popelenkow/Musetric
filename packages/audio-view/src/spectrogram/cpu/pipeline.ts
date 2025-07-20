@@ -3,13 +3,13 @@ import type { CpuFourierMode } from '../../fourier';
 import { cpuFouriers } from '../../fourier';
 import { Colors } from '../colors';
 import { SignalViewParams } from '../signalViewParams';
-import { sliceWaves as sliceWavesImpl } from '../sliceWaves';
-import { createDrawer } from './drawer';
-import { normalizeDecibel as normalizeDecibelImpl } from './normalizeDecibel';
-import { normalizeMagnitude as normalizeMagnitudeImpl } from './normalizeMagnitude';
+import { createSliceWaves } from '../sliceWaves';
+import { createDecibelify } from './decibelify';
+import { createDraw } from './draw';
+import { createMagnitudify } from './magnitudify';
 import { createPipelineArrays } from './pipelineArrays';
 import { createPipelineTimer, PipelineProfile } from './pipelineTimer';
-import { scaleView as scaleViewImpl } from './scaleView';
+import { createScaleView } from './scaleView';
 
 export type CreatePipelineOptions = {
   canvas: HTMLCanvasElement;
@@ -39,46 +39,46 @@ export const createPipeline = async (
     onProfile,
   } = options;
 
-  const drawer = createDrawer({ canvas, colors });
+  const draw = createDraw({ canvas, colors });
   const createFourier = cpuFouriers[fourierMode];
   const fourier = await createFourier({ windowSize });
 
   const timer = createPipelineTimer(onProfile);
 
   let isResizeRequested = false;
-  let arrays = createPipelineArrays(windowSize, drawer.width, drawer.height);
+  let arrays = createPipelineArrays(windowSize, draw.width, draw.height);
 
   const resize = timer.wrap('resize', () => {
-    drawer.resize();
-    arrays = createPipelineArrays(windowSize, drawer.width, drawer.height);
+    draw.resize();
+    arrays = createPipelineArrays(windowSize, draw.width, draw.height);
   });
 
-  const sliceWaves = timer.wrap('sliceWaves', sliceWavesImpl);
+  const sliceWaves = timer.wrap('sliceWaves', createSliceWaves());
   fourier.forward = timer.wrap('fourier', fourier.forward);
-  const normalizeMagnitude = timer.wrap(
-    'normalizeMagnitude',
-    normalizeMagnitudeImpl,
+  const magnitudify = timer.wrap('magnitudify', createMagnitudify());
+  const decibelify = timer.wrap('decibelify', createDecibelify());
+  const scaleView = timer.wrap('scaleView', createScaleView());
+  draw.run = timer.wrap('draw', draw.run);
+
+  const render = timer.wrap(
+    'render',
+    (wave: Float32Array, progress: number) => {
+      if (isResizeRequested) {
+        isResizeRequested = false;
+        return resize();
+      }
+      const { waves, signal, view } = arrays;
+      const { height } = draw;
+      const windowCount = draw.width;
+
+      sliceWaves(windowSize, windowCount, wave, waves);
+      fourier.forward(waves, signal);
+      magnitudify(windowSize, windowCount, signal);
+      decibelify(windowSize, windowCount, signal.real, minDecibel);
+      scaleView(windowSize, windowCount, height, viewParams, signal.real, view);
+      draw.run(view, progress);
+    },
   );
-  const normalizeDecibel = timer.wrap('normalizeDecibel', normalizeDecibelImpl);
-  const scaleView = timer.wrap('scaleView', scaleViewImpl);
-  drawer.render = timer.wrap('draw', drawer.render);
-
-  const render = timer.wrap('total', (wave: Float32Array, progress: number) => {
-    if (isResizeRequested) {
-      isResizeRequested = false;
-      return resize();
-    }
-    const { waves, signal, view } = arrays;
-    const { height } = drawer;
-    const windowCount = drawer.width;
-
-    sliceWaves(windowSize, windowCount, wave, waves);
-    fourier.forward(waves, signal);
-    normalizeMagnitude(windowSize, windowCount, signal);
-    normalizeDecibel(windowSize, windowCount, signal.real, minDecibel);
-    scaleView(windowSize, windowCount, height, viewParams, signal.real, view);
-    drawer.render(view, progress);
-  });
 
   return {
     render: createCallLatest(async (wave, progress) => {

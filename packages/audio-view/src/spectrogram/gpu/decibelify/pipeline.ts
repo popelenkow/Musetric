@@ -2,11 +2,11 @@ import shaderCode from './index.wgsl?raw';
 
 export const createPipeline = (device: GPUDevice) => {
   const module = device.createShaderModule({
-    label: 'decibel-normalizer-shader',
+    label: 'decibelify-shader',
     code: shaderCode,
   });
   return device.createComputePipeline({
-    label: 'decibel-normalizer-pipeline',
+    label: 'decibelify-pipeline',
     layout: 'auto',
     compute: { module, entryPoint: 'main' },
   });

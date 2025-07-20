@@ -1,19 +1,19 @@
-export type MagnitudeNormalizerParams = {
+export type MagnitudifyParams = {
   windowSize: number;
   windowCount: number;
 };
 
 export type Buffers = {
-  paramsValue: MagnitudeNormalizerParams;
+  paramsValue: MagnitudifyParams;
   params: GPUBuffer;
-  writeParams: (paramsValue: MagnitudeNormalizerParams) => void;
+  writeParams: (paramsValue: MagnitudifyParams) => void;
   destroy: () => void;
 };
 
 export const createBuffers = (device: GPUDevice) => {
   const paramsArray = new Uint32Array(2);
   const params = device.createBuffer({
-    label: 'magnitude-normalizer-params-buffer',
+    label: 'magnitudify-params-buffer',
     size: paramsArray.byteLength,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });

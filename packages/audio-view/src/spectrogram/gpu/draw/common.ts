@@ -2,7 +2,7 @@ import { Buffers } from './buffers';
 
 export const createSampler = (device: GPUDevice) =>
   device.createSampler({
-    label: 'drawer-sampler',
+    label: 'draw-sampler',
     magFilter: 'nearest',
     minFilter: 'nearest',
   });
@@ -13,7 +13,7 @@ export const createTexture = (
   height: number,
 ) => {
   const instance = device.createTexture({
-    label: 'drawer-texture',
+    label: 'draw-texture',
     size: { width, height },
     format: 'rgba8unorm',
     usage:
@@ -22,7 +22,7 @@ export const createTexture = (
       GPUTextureUsage.STORAGE_BINDING,
   });
   const view = instance.createView({
-    label: 'drawer-texture-view',
+    label: 'draw-texture-view',
   });
   return {
     instance,
@@ -48,7 +48,7 @@ export const createBindGroup = (
   texture: GPUTextureView,
 ) =>
   device.createBindGroup({
-    label: 'drawer-bind-group',
+    label: 'draw-bind-group',
     layout: pipeline.getBindGroupLayout(0),
     entries: [
       { binding: 0, resource: { buffer: buffers.colors } },

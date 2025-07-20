@@ -1,4 +1,4 @@
-export const normalizeDecibel = (
+export const decibelify = (
   windowSize: number,
   windowCount: number,
   magnitudes: Float32Array,
@@ -26,3 +26,5 @@ export const normalizeDecibel = (
     }
   }
 };
+
+export const createDecibelify = () => decibelify;

@@ -2,33 +2,33 @@ import { createCpuTimer, createGpuTimer } from '../../common';
 
 export const gpuMetricKeys = [
   'resize',
-  'createCommand',
   'sliceWaves',
   'writeGpuWaves',
+  'createCommand',
   'fourierReverse',
   'fourierTransform',
-  'normalizeMagnitude',
-  'normalizeDecibel',
+  'magnitudify',
+  'decibelify',
   'scaleView',
   'draw',
-  'total',
+  'render',
 ] as const;
 
 const create = (device: GPUDevice) => ({
   gpu: createGpuTimer(device, [
     'fourierReverse',
     'fourierTransform',
-    'normalizeMagnitude',
-    'normalizeDecibel',
+    'magnitudify',
+    'decibelify',
     'scaleView',
     'draw',
   ]),
   cpu: createCpuTimer([
     'resize',
-    'createCommand',
     'sliceWaves',
     'writeGpuWaves',
-    'total',
+    'createCommand',
+    'render',
   ]),
 });
 
