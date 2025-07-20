@@ -5,6 +5,7 @@ export const gpuMetricKeys = [
   'sliceWaves',
   'writeGpuBuffers',
   'createCommand',
+  'submitCommand',
   'filterWave',
   'fourierReverse',
   'fourierTransform',
@@ -18,23 +19,28 @@ export const gpuMetricKeys = [
 export type GpuMetricKey = (typeof gpuMetricKeys)[number];
 export type PipelineProfile = Record<GpuMetricKey, number>;
 
+const gpuKeys = [
+  'filterWave',
+  'fourierReverse',
+  'fourierTransform',
+  'magnitudify',
+  'decibelify',
+  'scaleView',
+  'draw',
+] as const satisfies GpuMetricKey[];
+
+const cpuKeys = [
+  'resize',
+  'sliceWaves',
+  'writeGpuBuffers',
+  'createCommand',
+  'submitCommand',
+  'total',
+] as const satisfies GpuMetricKey[];
+
 const create = (device: GPUDevice) => ({
-  gpu: createGpuTimer(device, [
-    'filterWave',
-    'fourierReverse',
-    'fourierTransform',
-    'magnitudify',
-    'decibelify',
-    'scaleView',
-    'draw',
-  ]),
-  cpu: createCpuTimer([
-    'resize',
-    'sliceWaves',
-    'writeGpuBuffers',
-    'createCommand',
-    'total',
-  ]),
+  gpu: createGpuTimer(device, gpuKeys),
+  cpu: createCpuTimer(cpuKeys),
 });
 
 type Timer = ReturnType<typeof create>;
@@ -83,6 +89,8 @@ export const createPipelineTimer = (
         ...cpuDuration,
         other: 0,
       };
+      const gpuSum = gpuKeys.reduce((acc, key) => acc + profile[key], 0);
+      profile.submitCommand = roundDuration(profile.submitCommand - gpuSum);
       const sum = gpuMetricKeys
         .slice(0, -2)
         .reduce((acc, key) => acc + profile[key], 0);
