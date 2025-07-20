@@ -34,6 +34,32 @@ export const run = async () => {
     });
   }
 
+  const percentToggle = document.getElementById('toggle-percent');
+  const updatePercentages = () => {
+    const showPercent =
+      percentToggle instanceof HTMLInputElement && percentToggle.checked;
+    const cells =
+      results.querySelectorAll<HTMLTableCellElement>('td[data-value]');
+    cells.forEach((cell) => {
+      const value = Number(cell.dataset.value);
+      const total = Number(cell.dataset.total);
+      if (
+        showPercent &&
+        !Number.isNaN(value) &&
+        !Number.isNaN(total) &&
+        total
+      ) {
+        cell.textContent = ((value / total) * 100).toFixed(2);
+      } else if (!Number.isNaN(value)) {
+        cell.textContent = value.toFixed(2);
+      }
+    });
+  };
+  if (percentToggle && percentToggle instanceof HTMLInputElement) {
+    percentToggle.addEventListener('change', updatePercentages);
+    updatePercentages();
+  }
+
   const tableMap: Record<
     string,
     {
@@ -78,11 +104,22 @@ export const run = async () => {
 
       const colIndex = windowSizes.indexOf(windowSize) + 1;
       const tables = tableMap[fourierMode];
+      const showPercent =
+        percentToggle instanceof HTMLInputElement && percentToggle.checked;
       for (const metric of Object.keys(first)) {
         const row = tables.first.rows[metric];
         if (row) {
           const cell = row.children[colIndex];
-          if (cell) cell.textContent = first[metric].toFixed(2);
+          if (cell instanceof HTMLTableCellElement) {
+            const value = first[metric];
+            const total = first.total;
+            cell.dataset.value = String(value);
+            cell.dataset.total = String(total);
+            cell.textContent =
+              showPercent && total
+                ? ((value / total) * 100).toFixed(2)
+                : value.toFixed(2);
+          }
         }
       }
 
@@ -90,10 +127,19 @@ export const run = async () => {
         const row = tables.average.rows[metric];
         if (row) {
           const cell = row.children[colIndex];
-          if (cell) cell.textContent = average[metric].toFixed(2);
+          if (cell instanceof HTMLTableCellElement) {
+            const value = average[metric];
+            const total = average.total;
+            cell.dataset.value = String(value);
+            cell.dataset.total = String(total);
+            cell.textContent =
+              showPercent && total
+                ? ((value / total) * 100).toFixed(2)
+                : value.toFixed(2);
+          }
         }
       }
-
+      updatePercentages();
       await waitNextFrame(15);
     }
   }
