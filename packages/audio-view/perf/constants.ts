@@ -11,7 +11,7 @@ import { gpuMetricKeys } from '../src/spectrogram/gpu';
 export const runs = 10;
 export const skipRuns = 10;
 export const sampleRate = 44100;
-export const minDecibel = -40;
+export const minDecibel = -45;
 
 export const colors: spectrogram.Colors = {
   played: '#a26da8',
@@ -21,8 +21,8 @@ export const colors: spectrogram.Colors = {
 
 export const viewParams: spectrogram.SignalViewParams = {
   sampleRate,
-  minFrequency: sampleRate * 0.001,
-  maxFrequency: sampleRate * 0.1,
+  minFrequency: 120,
+  maxFrequency: 5000,
 };
 
 const getWindowSizes = () => {
