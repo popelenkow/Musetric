@@ -1,6 +1,6 @@
 import { createCpuTimer, createGpuTimer, roundDuration } from '../../common';
 
-export const gpuMetricKeys = [
+export const metricKeys = [
   'resize',
   'sliceWaves',
   'writeGpuBuffers',
@@ -16,8 +16,8 @@ export const gpuMetricKeys = [
   'other',
   'total',
 ] as const;
-export type GpuMetricKey = (typeof gpuMetricKeys)[number];
-export type PipelineProfile = Record<GpuMetricKey, number>;
+export type MetricKey = (typeof metricKeys)[number];
+export type PipelineProfile = Record<MetricKey, number>;
 
 const gpuKeys = [
   'filterWave',
@@ -27,7 +27,7 @@ const gpuKeys = [
   'decibelify',
   'scaleView',
   'draw',
-] as const satisfies GpuMetricKey[];
+] as const satisfies MetricKey[];
 
 const cpuKeys = [
   'resize',
@@ -36,7 +36,7 @@ const cpuKeys = [
   'createCommand',
   'submitCommand',
   'total',
-] as const satisfies GpuMetricKey[];
+] as const satisfies MetricKey[];
 
 const create = (device: GPUDevice) => ({
   gpu: createGpuTimer(device, gpuKeys),
@@ -91,11 +91,11 @@ export const createPipelineTimer = (
       };
       const gpuSum = gpuKeys.reduce((acc, key) => acc + profile[key], 0);
       profile.submitCommand = roundDuration(profile.submitCommand - gpuSum);
-      const sum = gpuMetricKeys
+      const sum = metricKeys
         .slice(0, -2)
         .reduce((acc, key) => acc + profile[key], 0);
       profile.other = roundDuration(profile.total - sum);
-      const sortedProfile = gpuMetricKeys.reduce<PipelineProfile>(
+      const sortedProfile = metricKeys.reduce<PipelineProfile>(
         (acc, key) => ({
           ...acc,
           [key]: profile[key],

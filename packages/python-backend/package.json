@@ -4,7 +4,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "uv run dev.py 3001",
+    "dev-ignore": "uv run dev.py 3001",
     "lint:fix": "uv run lint.py"
   }
 }

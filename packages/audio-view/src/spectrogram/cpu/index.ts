@@ -4,4 +4,5 @@ export * from './filterWave';
 export * from './magnitudify';
 export * from './pipeline';
 export * from './pipelineArrays';
+export * from './pipelineTimer';
 export * from './scaleView';
