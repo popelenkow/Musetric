@@ -12,7 +12,8 @@
     { "path": "packages/backend" },
     { "path": "packages/frontend" },
     { "path": "packages/spa-router" },
-    { "path": "packages/python-backend" }
+    { "path": "packages/python-backend" },
+    { "path": "packages/performance" }
   ],
   "include": ["packages/*/src", "packages/*/test"]
 }

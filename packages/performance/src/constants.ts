@@ -4,9 +4,7 @@ import {
   gpuFouriers,
   FourierMode,
   isGpuFourierMode,
-} from '../src';
-import { cpuMetricKeys } from '../src/spectrogram/cpu/pipelineTimer';
-import { gpuMetricKeys } from '../src/spectrogram/gpu';
+} from '@musetric/audio-view';
 
 export const runs = 10;
 export const skipRuns = 10;
@@ -25,6 +23,9 @@ export const viewParams: spectrogram.SignalViewParams = {
   maxFrequency: 5000,
 };
 
+export const canvasWidth = 1920;
+export const canvasHeight = 1080;
+
 const getWindowSizes = () => {
   const sizes: number[] = [];
   for (let size = 64; size <= 1024 * 16; size *= 2) {
@@ -41,4 +42,6 @@ export const fourierModes: FourierMode[] = [
   ...(Object.keys(cpuFouriers) as Array<keyof typeof cpuFouriers>),
 ];
 export const getMetricKeys = (mode: FourierMode): readonly string[] =>
-  isGpuFourierMode(mode) ? gpuMetricKeys : cpuMetricKeys;
+  isGpuFourierMode(mode)
+    ? spectrogram.gpu.metricKeys
+    : spectrogram.cpu.metricKeys;

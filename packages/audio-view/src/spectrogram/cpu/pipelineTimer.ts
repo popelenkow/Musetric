@@ -1,6 +1,6 @@
 import { createCpuTimer, roundDuration } from '../../common';
 
-export const cpuMetricKeys = [
+export const metricKeys = [
   'resize',
   'sliceWaves',
   'filterWave',
@@ -12,10 +12,10 @@ export const cpuMetricKeys = [
   'other',
   'total',
 ] as const;
-export type CpuMetricKey = (typeof cpuMetricKeys)[number];
-export type PipelineProfile = Record<CpuMetricKey, number>;
+export type MetricKey = (typeof metricKeys)[number];
+export type PipelineProfile = Record<MetricKey, number>;
 
-const create = () => createCpuTimer(cpuMetricKeys);
+const create = () => createCpuTimer(metricKeys);
 type Timer = ReturnType<typeof create>;
 
 export type PipelineTimer = {
@@ -44,7 +44,7 @@ export const createPipelineTimer = (
     wrapAsync: timer.wrapAsync,
     finish: async () => {
       const profile = timer.read();
-      const sum = cpuMetricKeys
+      const sum = metricKeys
         .slice(0, -2)
         .reduce((acc, key) => acc + profile[key], 0);
       profile.other = roundDuration(profile.total - sum);

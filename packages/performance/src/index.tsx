@@ -1,22 +1,25 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { App } from './app';
-import { initI18next } from './translations';
+import { App } from './components/App';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { theme } from './theme';
 
-const runApp = async () => {
+const run = () => {
   const rootElement = document.getElementById('root');
   const splashScreen = document.getElementById('splashScreen');
   if (!rootElement || !splashScreen) {
     throw new Error('Root element or splash screen not found');
   }
-  await initI18next();
 
   createRoot(rootElement).render(
     <StrictMode>
-      <App />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
     </StrictMode>,
   );
   splashScreen.remove();
 };
 
-void runApp();
+run();

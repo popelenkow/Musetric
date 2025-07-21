@@ -1185,20 +1185,12 @@ __metadata:
   resolution: "@musetric/audio-view@workspace:packages/audio-view"
   dependencies:
     "@musetric/eslint-config": "workspace:*"
-    "@types/react": "npm:19.1.8"
     "@vitest/browser": "npm:3.2.4"
     "@webgpu/types": "npm:0.1.63"
     eslint: "npm:9.30.0"
     playwright: "npm:1.42.1"
-    react: "npm:19.1.0"
-    react-dom: "npm:19.1.0"
     typescript: "npm:5.8.3"
-    vite: "npm:7.0.0"
-    vite-plugin-mkcert: "npm:1.17.8"
     vitest: "npm:3.2.4"
-  peerDependencies:
-    react: ^19.0.0
-    react-dom: ^19.0.0
   languageName: unknown
   linkType: soft
 
@@ -1293,6 +1285,24 @@ __metadata:
     grep-cli: "npm:0.2.1"
     ncp: "npm:2.0.0"
     prettier: "npm:3.6.2"
+  languageName: unknown
+  linkType: soft
+
+"@musetric/performance@workspace:packages/performance":
+  version: 0.0.0-use.local
+  resolution: "@musetric/performance@workspace:packages/performance"
+  dependencies:
+    "@emotion/react": "npm:11.14.0"
+    "@emotion/styled": "npm:11.14.1"
+    "@mui/material": "npm:7.2.0"
+    "@musetric/audio-view": "workspace:*"
+    "@musetric/eslint-config": "workspace:*"
+    "@types/react": "npm:19.1.8"
+    react: "npm:19.1.0"
+    react-dom: "npm:19.1.0"
+    typescript: "npm:5.8.3"
+    vite: "npm:7.0.0"
+    vite-plugin-mkcert: "npm:1.17.8"
   languageName: unknown
   linkType: soft
 

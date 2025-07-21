@@ -1,4 +1,8 @@
-import { spectrogram, isGpuFourierMode, FourierMode } from '../src';
+import {
+  spectrogram,
+  isGpuFourierMode,
+  FourierMode,
+} from '@musetric/audio-view';
 import { colors, minDecibel, runs, skipRuns, viewParams } from './constants';
 import { waitNextFrame } from './waitNextFrame';
 
