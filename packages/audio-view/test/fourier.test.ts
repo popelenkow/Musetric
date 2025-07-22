@@ -101,27 +101,24 @@ describe('fourier', async () => {
       for (const fixture of fourierFixtures) {
         describe(fixture.name, async () => {
           const createFourier = gpuFouriers[mode];
-          const fourier = await createFourier({
-            device,
-            windowSize: fixture.windowSize,
-          });
-          fourier.writeParams({
-            windowSize: fixture.windowSize,
-            windowCount: 1,
-          });
+          const fourier = await createFourier(device);
           const reader = createComplexGpuBufferReader({
             device,
             typeSize: Float32Array.BYTES_PER_ELEMENT,
             size: fixture.windowSize,
           });
           const buffers = createGpuBuffers(device, fixture.windowSize);
+          fourier.configure(buffers.signal, {
+            windowSize: fixture.windowSize,
+            windowCount: 1,
+          });
 
           it('forward', async () => {
             const zeroImag = new Float32Array(fixture.windowSize).fill(0);
             device.queue.writeBuffer(buffers.signal.real, 0, fixture.input);
             device.queue.writeBuffer(buffers.signal.imag, 0, zeroImag);
             const encoder = device.createCommandEncoder();
-            fourier.forward(encoder, buffers.signal);
+            fourier.forward(encoder);
             const command = encoder.finish();
             device.queue.submit([command]);
             await device.queue.onSubmittedWorkDone();
