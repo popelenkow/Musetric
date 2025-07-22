@@ -1,65 +1,46 @@
-import { ComplexGpuBuffer } from '../../common';
 import { CreateGpuFourier, GpuFourier } from '../gpuFourier';
-import { assertWindowSizePowerOfTwo } from '../isPowerOfTwo';
-import { createReverseBindGroup, createTransformBindGroup } from './bindGroup';
-import { createBuffers } from './buffers';
-import { createReversePipeline, createTransformPipeline } from './pipeline';
+import { createState } from './state';
 
-export const createGpuFftRadix2: CreateGpuFourier = async (options) => {
-  const { device, windowSize, timestampWrites } = options;
-  assertWindowSizePowerOfTwo(windowSize);
+export const createGpuFftRadix2: CreateGpuFourier = async (
+  device,
+  timestampWrites,
+) => {
+  const state = createState(device);
 
-  const buffers = createBuffers(device, windowSize);
-  const reversePipeline = createReversePipeline(device);
-  const transformPipeline = createTransformPipeline(device);
+  const reverse = (encoder: GPUCommandEncoder) => {
+    const { windowCount } = state.params.value;
 
-  const reverse = (encoder: GPUCommandEncoder, waves: ComplexGpuBuffer) => {
-    const { windowCount } = buffers.paramsValue;
-
-    const bindGroup = createReverseBindGroup(
-      device,
-      reversePipeline,
-      buffers,
-      waves,
-    );
     const pass = encoder.beginComputePass({
       label: 'fft2-reverse-pass',
       timestampWrites: timestampWrites?.reverse,
     });
-    pass.setPipeline(reversePipeline);
-    pass.setBindGroup(0, bindGroup);
+    pass.setPipeline(state.pipelines.reverse);
+    pass.setBindGroup(0, state.bindGroups.reverse);
     pass.dispatchWorkgroups(windowCount);
     pass.end();
   };
 
-  const transform = (encoder: GPUCommandEncoder, waves: ComplexGpuBuffer) => {
-    const { windowCount } = buffers.paramsValue;
+  const transform = (encoder: GPUCommandEncoder) => {
+    const { windowCount } = state.params.value;
 
-    const bindGroup = createTransformBindGroup(
-      device,
-      transformPipeline,
-      buffers,
-      waves,
-    );
     const pass = encoder.beginComputePass({
       label: 'fft2-transform-pass',
       timestampWrites: timestampWrites?.transform,
     });
-    pass.setPipeline(transformPipeline);
-    pass.setBindGroup(0, bindGroup);
+    pass.setPipeline(state.pipelines.transform);
+    pass.setBindGroup(0, state.bindGroups.transform);
     pass.dispatchWorkgroups(windowCount);
     pass.end();
   };
 
   const fourier: GpuFourier = {
-    forward: (encoder, waves) => {
-      reverse(encoder, waves);
-      transform(encoder, waves);
+    forward: (encoder) => {
+      reverse(encoder);
+      transform(encoder);
     },
-    writeParams: buffers.writeParams,
-    destroy: () => {
-      buffers.destroy();
-    },
+    configure: state.configure,
+    destroy: state.destroy,
   };
+
   return fourier;
 };

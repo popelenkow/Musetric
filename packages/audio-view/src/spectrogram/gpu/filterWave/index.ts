@@ -1,40 +1,32 @@
-import { createBindGroup } from './bindGroup';
-import { createBuffers, FilterWaveParams } from './buffers';
-import { createPipeline } from './pipeline';
+import { createState, State } from './state';
 
 const workgroupSize = 64;
 
 export type FilterWave = {
-  run: (encoder: GPUCommandEncoder, signal: GPUBuffer) => void;
-  writeParams: (params: FilterWaveParams) => void;
-  destroy: () => void;
+  run: (encoder: GPUCommandEncoder) => void;
+  configure: State['configure'];
+  destroy: State['destroy'];
 };
 
 export const createFilterWave = (
   device: GPUDevice,
-  windowSize: number,
   timestampWrites?: GPUComputePassTimestampWrites,
 ): FilterWave => {
-  const pipeline = createPipeline(device);
-  const buffers = createBuffers(device, windowSize);
-
+  const state = createState(device);
   return {
-    run: (encoder, signal) => {
-      const { windowCount } = buffers.paramsValue;
+    run: (encoder) => {
+      const { windowSize, windowCount } = state.params.value;
       const xCount = Math.ceil(windowSize / workgroupSize);
-      const bindGroup = createBindGroup(device, pipeline, buffers, signal);
       const pass = encoder.beginComputePass({
         label: 'filter-wave-pass',
         timestampWrites,
       });
-      pass.setPipeline(pipeline);
-      pass.setBindGroup(0, bindGroup);
+      pass.setPipeline(state.pipeline);
+      pass.setBindGroup(0, state.bindGroup);
       pass.dispatchWorkgroups(xCount, windowCount);
       pass.end();
     },
-    writeParams: buffers.writeParams,
-    destroy: () => {
-      buffers.destroy();
-    },
+    configure: state.configure,
+    destroy: state.destroy,
   };
 };

@@ -1,42 +1,34 @@
-import { ComplexGpuBuffer } from '../../../common';
-import { createBindGroup } from './bindGroup';
-import { createBuffers, MagnitudifyParams } from './buffers';
-import { createPipeline } from './pipeline';
+import { createState, State } from './state';
 
 const workgroupSize = 64;
 
 export type Magnitudify = {
-  run: (encoder: GPUCommandEncoder, signal: ComplexGpuBuffer) => void;
-  writeParams: (params: MagnitudifyParams) => void;
-  destroy: () => void;
+  run: (encoder: GPUCommandEncoder) => void;
+  configure: State['configure'];
+  destroy: State['destroy'];
 };
 
 export const createMagnitudify = (
   device: GPUDevice,
   timestampWrites?: GPUComputePassTimestampWrites,
 ): Magnitudify => {
-  const pipeline = createPipeline(device);
-  const buffers = createBuffers(device);
+  const state = createState(device);
 
   return {
-    run: (encoder, signal) => {
-      const { windowSize, windowCount } = buffers.paramsValue;
+    run: (encoder) => {
+      const { windowSize, windowCount } = state.params.value;
       const halfSize = Math.ceil(windowSize / 2);
       const xCount = Math.ceil(halfSize / workgroupSize);
-
-      const bindGroup = createBindGroup(device, pipeline, buffers, signal);
       const pass = encoder.beginComputePass({
         label: 'magnitudify-pass',
         timestampWrites,
       });
-      pass.setPipeline(pipeline);
-      pass.setBindGroup(0, bindGroup);
+      pass.setPipeline(state.pipeline);
+      pass.setBindGroup(0, state.bindGroup);
       pass.dispatchWorkgroups(xCount, windowCount);
       pass.end();
     },
-    writeParams: buffers.writeParams,
-    destroy: () => {
-      buffers.destroy();
-    },
+    configure: state.configure,
+    destroy: state.destroy,
   };
 };

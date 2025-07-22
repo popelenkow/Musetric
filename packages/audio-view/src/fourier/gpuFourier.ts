@@ -6,8 +6,8 @@ export type GpuFourierParams = {
 };
 
 export type GpuFourier = {
-  forward: (encoder: GPUCommandEncoder, waves: ComplexGpuBuffer) => void;
-  writeParams: (params: GpuFourierParams) => void;
+  forward: (encoder: GPUCommandEncoder) => void;
+  configure: (signal: ComplexGpuBuffer, params: GpuFourierParams) => void;
   destroy: () => void;
 };
 
@@ -16,12 +16,7 @@ export type FourierTimestampWrites = {
   transform?: GPUComputePassTimestampWrites;
 };
 
-export type CreateGpuFourierOptions = {
-  device: GPUDevice;
-  windowSize: number;
-  timestampWrites?: FourierTimestampWrites;
-};
-
 export type CreateGpuFourier = (
-  options: CreateGpuFourierOptions,
+  device: GPUDevice,
+  timestampWrites?: FourierTimestampWrites,
 ) => Promise<GpuFourier>;

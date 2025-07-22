@@ -60,15 +60,11 @@ export const createPipeline = async (
     device.queue.writeBuffer(buffers.signal.imag, 0, waves.imag);
     draw.writeProgress(progress);
   });
-  const filterWave = createFilterWave(device, windowSize, timer.tw.filterWave);
+  const filterWave = createFilterWave(device, timer.tw.filterWave);
   const createFourier = gpuFouriers[fourierMode];
-  const fourier = await createFourier({
-    device,
-    windowSize,
-    timestampWrites: {
-      reverse: timer.tw.fourierReverse,
-      transform: timer.tw.fourierTransform,
-    },
+  const fourier = await createFourier(device, {
+    reverse: timer.tw.fourierReverse,
+    transform: timer.tw.fourierTransform,
   });
   const magnitudify = createMagnitudify(device, timer.tw.magnitudify);
   const decibelify = createDecibelify(device, timer.tw.decibelify);
@@ -80,24 +76,25 @@ export const createPipeline = async (
     const halfSize = windowSize / 2;
     waves = createComplexArray(windowSize * windowCount);
     buffers.resize(windowCount);
-    filterWave.writeParams({
+    const { signal } = buffers;
+    filterWave.configure(signal.real, {
       windowSize,
       windowCount,
     });
-    fourier.writeParams({
+    fourier.configure(signal, {
       windowSize,
       windowCount,
     });
-    magnitudify.writeParams({
+    magnitudify.configure(signal, {
       windowSize,
       windowCount,
     });
-    decibelify.writeParams({
+    decibelify.configure(signal.real, {
       halfSize,
       windowCount,
       minDecibel,
     });
-    scaleView.writeParams({
+    scaleView.configure(signal.real, draw.getTextureView(), {
       ...viewParams,
       windowSize,
       width: draw.width,
@@ -109,11 +106,11 @@ export const createPipeline = async (
     const encoder = device.createCommandEncoder({
       label: 'pipeline-render-encoder',
     });
-    filterWave.run(encoder, buffers.signal.real);
-    fourier.forward(encoder, buffers.signal);
-    magnitudify.run(encoder, buffers.signal);
-    decibelify.run(encoder, buffers.signal.real);
-    scaleView.run(encoder, buffers.signal.real, draw.getTextureView());
+    filterWave.run(encoder);
+    fourier.forward(encoder);
+    magnitudify.run(encoder);
+    decibelify.run(encoder);
+    scaleView.run(encoder);
     draw.run(encoder);
     timer.resolve(encoder);
     return encoder.finish();
