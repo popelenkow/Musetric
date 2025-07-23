@@ -1,7 +1,5 @@
 import {
   spectrogram,
-  cpuFouriers,
-  gpuFouriers,
   FourierMode,
   isGpuFourierMode,
 } from '@musetric/audio-view';
@@ -35,12 +33,6 @@ const getWindowSizes = () => {
 };
 export const windowSizes = getWindowSizes();
 
-export const fourierModes: FourierMode[] = [
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  ...(Object.keys(gpuFouriers) as Array<keyof typeof gpuFouriers>),
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  ...(Object.keys(cpuFouriers) as Array<keyof typeof cpuFouriers>),
-];
 export const getMetricKeys = (mode: FourierMode): readonly string[] =>
   isGpuFourierMode(mode)
     ? spectrogram.gpu.metricKeys

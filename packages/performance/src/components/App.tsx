@@ -8,8 +8,8 @@ import {
   LinearProgress,
   Typography,
 } from '@mui/material';
-import { fourierModes, windowSizes } from '../constants';
-import type { FourierMode } from '@musetric/audio-view';
+import { windowSizes } from '../constants';
+import { allFourierModes, type FourierMode } from '@musetric/audio-view';
 import { MetricsTable } from './MetricsTable';
 import { BenchmarkRunner } from './BenchmarkRunner';
 import type { BenchmarkData } from '../runBenchmarks';
@@ -19,12 +19,12 @@ type Task = {
   windowSize: number;
 };
 
-const initialData: BenchmarkData = fourierModes.reduce((acc, mode) => {
+const initialData: BenchmarkData = allFourierModes.reduce((acc, mode) => {
   acc[mode] = {};
   return acc;
 }, {} as BenchmarkData);
 
-const allTasks: Task[] = fourierModes.flatMap((fourierMode) =>
+const allTasks: Task[] = allFourierModes.flatMap((fourierMode) =>
   windowSizes.map((windowSize) => ({ fourierMode, windowSize })),
 );
 
@@ -32,7 +32,7 @@ export const App: FC = () => {
   const [data, setData] = useState<BenchmarkData>(initialData);
   const [showFirst, setShowFirst] = useState(false);
   const [showPercent, setShowPercent] = useState(false);
-  const [mode, setMode] = useState<FourierMode>(fourierModes[0]);
+  const [mode, setMode] = useState<FourierMode>(allFourierModes[0]);
   const [toDo, setToDo] = useState<Task[]>(allTasks);
 
   const status = useMemo(() => {
@@ -55,7 +55,10 @@ export const App: FC = () => {
     >
       <FormControlLabel
         control={
-          <Checkbox checked={showFirst} onChange={(_, v) => setShowFirst(v)} />
+          <Checkbox
+            checked={showFirst}
+            onClick={() => setShowFirst(!showFirst)}
+          />
         }
         label='Show first run'
       />
@@ -63,20 +66,19 @@ export const App: FC = () => {
         control={
           <Checkbox
             checked={showPercent}
-            onChange={() => setShowPercent(!showPercent)}
+            onClick={() => setShowPercent(!showPercent)}
           />
         }
         label='Show percent'
       />
-      <ToggleButtonGroup
-        value={mode}
-        exclusive
-        onChange={(_, v) => v && setMode(v)}
-        sx={{ my: 2 }}
-      >
-        {fourierModes.map((m) => (
-          <ToggleButton key={m} value={m}>
-            {m}
+      <ToggleButtonGroup value={mode} exclusive sx={{ my: 2 }}>
+        {allFourierModes.map((fourierMode) => (
+          <ToggleButton
+            key={fourierMode}
+            value={fourierMode}
+            onClick={() => setMode(fourierMode)}
+          >
+            {fourierMode}
           </ToggleButton>
         ))}
       </ToggleButtonGroup>

@@ -1,20 +1,15 @@
 import { afterAll, describe, expect, it } from 'vitest';
 import {
+  allCpuFourierModes,
+  allGpuFourierModes,
   ComplexArray,
   complexArrayFrom,
-  CpuFourierMode,
   cpuFouriers,
   createComplexGpuBufferReader,
   createGpuContext,
-  GpuFourierMode,
   gpuFouriers,
 } from '../src';
 import { fourierFixtures } from './fixtures/fourier';
-
-// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-const cpuFourierModes = Object.keys(cpuFouriers) as CpuFourierMode[];
-// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-const gpuFourierModes = Object.keys(gpuFouriers) as GpuFourierMode[];
 
 const createGpuBuffers = (device: GPUDevice, windowSize: number) => {
   const createSignalBuffer = () => ({
@@ -61,7 +56,7 @@ export const assertArrayClose = (
 describe('fourier', async () => {
   const { device } = await createGpuContext();
 
-  for (const mode of cpuFourierModes) {
+  for (const mode of allCpuFourierModes) {
     describe(mode, () => {
       for (const fixture of fourierFixtures) {
         describe(fixture.name, () => {
@@ -96,7 +91,7 @@ describe('fourier', async () => {
     });
   }
 
-  for (const mode of gpuFourierModes) {
+  for (const mode of allGpuFourierModes) {
     describe(mode, () => {
       for (const fixture of fourierFixtures) {
         describe(fixture.name, async () => {
