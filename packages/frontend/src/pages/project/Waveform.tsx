@@ -1,7 +1,7 @@
 import { subscribeResizeObserver } from '@musetric/audio-view';
 import { FC, useEffect, useRef } from 'react';
 import { useWaveformPipeline } from './common/waveformPipeline';
-import { usePlayerStore } from './store';
+import { usePlayerStore } from './store/player';
 
 export const Waveform: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);

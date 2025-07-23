@@ -8,8 +8,9 @@ import { routes } from '../../app/router/routes';
 import { QueryPending } from '../../common/QueryView/QueryPending';
 import favicon from '../../favicon.ico';
 import { Player } from './Player';
-import { fourierMode, Spectrogram } from './Spectrogram';
-import { usePlayerStore } from './store';
+import { Settings } from './Settings';
+import { Spectrogram } from './Spectrogram';
+import { usePlayerStore } from './store/player';
 import { Waveform } from './Waveform';
 
 export const ProjectPage: FC = () => {
@@ -61,9 +62,8 @@ export const ProjectPage: FC = () => {
           }}
         />
         <Typography variant='h4'>{t('pages.project.title')}</Typography>
-        <Typography variant='h6' sx={{ ml: 'auto' }}>
-          {fourierMode}
-        </Typography>
+        <Box flexGrow={1} />
+        <Settings />
       </Stack>
       <Stack gap={1} width='100%' sx={{ mt: 'auto' }} alignItems='center'>
         <Box height='512px' width='100%'>

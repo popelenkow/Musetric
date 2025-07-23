@@ -1,26 +1,24 @@
 import { useTheme } from '@mui/material';
-import {
-  FourierMode,
-  isGpuFourierMode,
-  spectrogram,
-} from '@musetric/audio-view';
+import { isGpuFourierMode, spectrogram } from '@musetric/audio-view';
 import { RefObject } from 'react';
 import { envs } from '../../../common/envs';
 import { getGpuDevice } from '../../../common/gpu';
 import { useAsyncResource } from '../../../common/useAsyncResource';
+import { useSettingsStore } from '../store/settings';
 
 const profiling = envs.spectrogramProfiling;
-const minDecibel = -45;
-const minFrequency = 120;
-const maxFrequency = 5000;
 
 export const useSpectrogramPipeline = (
   canvasRef: RefObject<HTMLCanvasElement | null>,
-  windowSize: number,
-  fourierMode: FourierMode,
   buffer?: AudioBuffer,
 ) => {
   const theme = useTheme();
+
+  const windowSize = useSettingsStore((s) => s.windowSize);
+  const fourierMode = useSettingsStore((s) => s.fourierMode);
+  const minFrequency = useSettingsStore((s) => s.minFrequency);
+  const maxFrequency = useSettingsStore((s) => s.maxFrequency);
+  const minDecibel = useSettingsStore((s) => s.minDecibel);
 
   const pipeline = useAsyncResource({
     create: async () => {
@@ -73,7 +71,15 @@ export const useSpectrogramPipeline = (
     unmount: async (prev) => {
       prev.destroy();
     },
-    deps: [windowSize, fourierMode, buffer, theme],
+    deps: [
+      windowSize,
+      fourierMode,
+      minFrequency,
+      maxFrequency,
+      minDecibel,
+      buffer,
+      theme,
+    ],
   });
 
   return pipeline;
