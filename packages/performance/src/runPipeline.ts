@@ -3,7 +3,15 @@ import {
   isGpuFourierMode,
   FourierMode,
 } from '@musetric/audio-view';
-import { colors, minDecibel, runs, skipRuns, viewParams } from './constants';
+import {
+  colors,
+  minDecibel,
+  runs,
+  skipRuns,
+  sampleRate,
+  minFrequency,
+  maxFrequency,
+} from './constants';
 import { waitNextFrame } from './waitNextFrame';
 
 export const runPipeline = async (
@@ -24,7 +32,9 @@ export const runPipeline = async (
         windowSize,
         fourierMode,
         colors,
-        viewParams,
+        sampleRate,
+        minFrequency,
+        maxFrequency,
         minDecibel,
         onProfile: (profile) => profiles.push(profile),
       })
@@ -33,7 +43,9 @@ export const runPipeline = async (
         windowSize,
         fourierMode,
         colors,
-        viewParams,
+        sampleRate,
+        minFrequency,
+        maxFrequency,
         minDecibel,
         onProfile: (profile) => profiles.push(profile),
       });

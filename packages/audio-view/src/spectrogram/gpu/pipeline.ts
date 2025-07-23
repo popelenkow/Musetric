@@ -1,24 +1,21 @@
-import { Colors, SignalViewParams } from '..';
 import { createCallLatest } from '../../common';
 import { GpuFourierMode } from '../../fourier';
-import { Pipeline } from '../pipeline';
+import { Pipeline, PipelineConfigureOptions } from '../pipeline';
 import { createPipelineState } from './pipelineState';
 import { PipelineProfile } from './pipelineTimer';
 
 export type CreatePipelineOptions = {
   device: GPUDevice;
-  windowSize: number;
   fourierMode: GpuFourierMode;
   canvas: HTMLCanvasElement;
-  colors: Colors;
-  viewParams: SignalViewParams;
-  minDecibel: number;
   onProfile?: (profile: PipelineProfile) => void;
 };
-export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
+export const createPipeline = (
+  options: CreatePipelineOptions & PipelineConfigureOptions,
+): Pipeline => {
   const { device } = options;
 
-  let isResizeRequested = true;
+  let isConfigureRequested = true;
 
   const state = createPipelineState(options);
 
@@ -54,8 +51,8 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
   const render = state.timer.wrapAsync(
     'total',
     async (wave: Float32Array, progress: number) => {
-      if (isResizeRequested) {
-        isResizeRequested = false;
+      if (isConfigureRequested) {
+        isConfigureRequested = false;
         state.configure();
       }
       state.sliceWaves.run(wave, state.buffers.signalArray);
@@ -71,7 +68,7 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
       await state.timer.finish();
     }),
     resize: () => {
-      isResizeRequested = true;
+      isConfigureRequested = true;
     },
     destroy: () => {
       state.destroy();

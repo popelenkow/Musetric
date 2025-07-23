@@ -1,4 +1,5 @@
 import { GpuFourier, gpuFouriers } from '../../fourier';
+import { PipelineConfigureOptions } from '../pipeline';
 import { createDecibelify, Decibelify } from './decibelify';
 import { createDraw, Draw } from './draw';
 import { createFilterWave, FilterWave } from './filterWave';
@@ -26,7 +27,7 @@ export type PipelineState = {
 };
 
 export const createPipelineState = (
-  options: CreatePipelineOptions,
+  options: CreatePipelineOptions & PipelineConfigureOptions,
 ): PipelineState => {
   const {
     device,
@@ -34,7 +35,9 @@ export const createPipelineState = (
     fourierMode,
     canvas,
     colors,
-    viewParams,
+    sampleRate,
+    minFrequency,
+    maxFrequency,
     minDecibel,
     onProfile,
   } = options;
@@ -99,7 +102,9 @@ export const createPipelineState = (
         minDecibel,
       });
       scaleView.configure(signal.real, draw.getTextureView(), {
-        ...viewParams,
+        sampleRate,
+        minFrequency,
+        maxFrequency,
         windowSize,
         width: draw.width,
         height: draw.height,
