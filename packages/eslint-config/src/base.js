@@ -45,6 +45,10 @@ export const baseConfig = {
           "Literal[raw='null']:not(CallExpression[callee.name='useRef'] > Literal[raw='null'])",
         message: 'Do not use null',
       },
+      {
+        selector: 'ExportDefaultDeclaration',
+        message: 'Do not use export default',
+      },
     ],
     'func-style': ['error'],
     'func-names': ['error'],
