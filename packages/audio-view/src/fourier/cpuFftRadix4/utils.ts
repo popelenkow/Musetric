@@ -132,7 +132,7 @@ export const transform4 = (options: Transform4Options): void => {
     }
   }
 
-  let outOff: number;
+  let outOff: number = 0;
   if (len === 2) {
     for (outOff = 0; outOff < windowSize; outOff += 2) {
       singleTransform2({ signal, outOff, off: outOff, step: 1 });

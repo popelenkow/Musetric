@@ -26,6 +26,7 @@ export const baseConfig = {
       { assertionStyle: 'never' },
     ],
     '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+    '@typescript-eslint/init-declarations': ['error', 'always'],
     '@typescript-eslint/no-empty-function': ['error'],
     '@typescript-eslint/no-unused-vars': ['error'],
     '@typescript-eslint/no-useless-constructor': ['error'],

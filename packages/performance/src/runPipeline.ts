@@ -25,29 +25,27 @@ export const runPipeline = async (
   average: Record<string, number>;
 }> => {
   const profiles: Record<string, number>[] = [];
+  const configureOptions: spectrogram.PipelineConfigureOptions = {
+    windowSize,
+    colors,
+    sampleRate,
+    minFrequency,
+    maxFrequency,
+    minDecibel,
+  };
   const pipeline = isGpuFourierMode(fourierMode)
     ? spectrogram.gpu.createPipeline({
         device,
         canvas,
-        windowSize,
         fourierMode,
-        colors,
-        sampleRate,
-        minFrequency,
-        maxFrequency,
-        minDecibel,
         onProfile: (profile) => profiles.push(profile),
+        ...configureOptions,
       })
     : spectrogram.cpu.createPipeline({
         canvas,
-        windowSize,
         fourierMode,
-        colors,
-        sampleRate,
-        minFrequency,
-        maxFrequency,
-        minDecibel,
         onProfile: (profile) => profiles.push(profile),
+        ...configureOptions,
       });
 
   for (let i = 0; i < skipRuns + runs; i++) {

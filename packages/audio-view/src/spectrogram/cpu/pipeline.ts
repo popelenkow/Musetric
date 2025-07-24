@@ -31,27 +31,27 @@ export const createPipeline = (
     onProfile,
   } = options;
 
-  const draw = createDraw({ canvas, colors });
-  const createFourier = cpuFouriers[fourierMode];
-  const fourier = createFourier({ windowSize });
+  let isResizeRequested = false;
 
   const timer = createPipelineTimer(onProfile);
 
-  let isResizeRequested = false;
+  const draw = createDraw({ canvas, colors });
+  draw.run = timer.wrap('draw', draw.run);
   let arrays = createPipelineArrays(windowSize, draw.width, draw.height);
+
+  const sliceWaves = timer.wrap('sliceWaves', createSliceWaves());
+  const filterWave = timer.wrap('filterWave', createFilterWave(windowSize));
+  const createFourier = cpuFouriers[fourierMode];
+  const fourier = createFourier({ windowSize });
+  fourier.forward = timer.wrap('fourier', fourier.forward);
+  const magnitudify = timer.wrap('magnitudify', createMagnitudify());
+  const decibelify = timer.wrap('decibelify', createDecibelify());
+  const scaleView = timer.wrap('scaleView', createScaleView());
 
   const configure = timer.wrap('configure', () => {
     draw.resize();
     arrays = createPipelineArrays(windowSize, draw.width, draw.height);
   });
-
-  const sliceWaves = timer.wrap('sliceWaves', createSliceWaves());
-  const filterWave = timer.wrap('filterWave', createFilterWave(windowSize));
-  fourier.forward = timer.wrap('fourier', fourier.forward);
-  const magnitudify = timer.wrap('magnitudify', createMagnitudify());
-  const decibelify = timer.wrap('decibelify', createDecibelify());
-  const scaleView = timer.wrap('scaleView', createScaleView());
-  draw.run = timer.wrap('draw', draw.run);
 
   const render = timer.wrap('total', (wave: Float32Array, progress: number) => {
     if (isResizeRequested) {

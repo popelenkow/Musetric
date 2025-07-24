@@ -18,4 +18,4 @@ export const sliceWaves = (
 };
 
 export type SliceWaves = typeof sliceWaves;
-export const createSliceWaves = () => sliceWaves;
+export const createSliceWaves = (): SliceWaves => sliceWaves;

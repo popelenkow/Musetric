@@ -23,7 +23,7 @@ export const createAudioPlayer = async (
     ended: () => options.end?.(),
   });
 
-  let currentBuffer: AudioBuffer | undefined;
+  let currentBuffer: AudioBuffer | undefined = undefined;
   let offset = 0;
   let startTime = 0;
   let raf = 0;
