@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import { createPort } from '../port';
 import { toArrays, type ChannelArrays } from './buffer';
 import type { FromWorkletEvent, ToWorkletEvent } from './event';

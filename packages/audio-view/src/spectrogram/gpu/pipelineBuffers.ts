@@ -17,7 +17,9 @@ export type PipelineBuffers = {
 };
 export const createPipelineBuffers = (device: GPUDevice) => {
   const buffers: PipelineBuffers = {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     signal: undefined!,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     signalArray: undefined!,
     resize: (windowSize, windowCount) => {
       buffers.signal?.real.destroy();

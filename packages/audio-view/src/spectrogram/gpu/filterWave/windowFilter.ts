@@ -7,6 +7,7 @@ export type StateWindowFilter = {
 };
 export const createWindowFilter = (device: GPUDevice): StateWindowFilter => {
   const state: StateWindowFilter = {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     buffer: undefined!,
     resize: (windowSize: number) => {
       const array = hammingWindowFilter(windowSize);

@@ -30,9 +30,22 @@ export const baseConfig = {
     '@typescript-eslint/no-unused-vars': ['error'],
     '@typescript-eslint/no-useless-constructor': ['error'],
     '@typescript-eslint/no-shadow': ['error'],
+    '@typescript-eslint/no-non-null-assertion': ['error'],
     '@typescript-eslint/no-namespace': 'off',
     '@typescript-eslint/no-floating-promises': 'error',
     '@typescript-eslint/no-use-before-define': ['error'],
+    'no-restricted-syntax': [
+      'error',
+      {
+        selector: 'ThisExpression',
+        message: 'Do not use this',
+      },
+      {
+        selector:
+          "Literal[raw='null']:not(CallExpression[callee.name='useRef'] > Literal[raw='null'])",
+        message: 'Do not use null',
+      },
+    ],
     'func-style': ['error'],
     'func-names': ['error'],
     'import-x/order': [

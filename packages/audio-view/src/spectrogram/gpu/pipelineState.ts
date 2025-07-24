@@ -62,6 +62,7 @@ export const createPipelineState = (
 
   const state: PipelineState = {
     windowSize,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     windowCount: undefined!,
     timer,
     buffers,

@@ -7,6 +7,7 @@ export type StateReverseTable = {
 };
 export const createReverseTable = (device: GPUDevice) => {
   const state: StateReverseTable = {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     buffer: undefined!,
     resize: (reverseWidth) => {
       const array = utilsRadix4.createReverseTable(reverseWidth);

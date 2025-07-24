@@ -10,6 +10,7 @@ const pems = generate([{ name: 'commonName', value: 'localhost' }], {
 
 export const getHttps = (): ServerOptions | null => {
   if (envs.protocol !== 'https') {
+    // eslint-disable-next-line no-restricted-syntax
     return null;
   }
   return {
