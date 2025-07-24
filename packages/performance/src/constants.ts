@@ -15,11 +15,8 @@ export const colors: spectrogram.Colors = {
   background: '#000000',
 };
 
-export const viewParams: spectrogram.SignalViewParams = {
-  sampleRate,
-  minFrequency: 120,
-  maxFrequency: 5000,
-};
+export const minFrequency = 120;
+export const maxFrequency = 5000;
 
 export const canvasWidth = 1920;
 export const canvasHeight = 1080;

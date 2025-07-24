@@ -1,9 +1,7 @@
 import { createCallLatest } from '../../common';
 import type { CpuFourierMode } from '../../fourier';
 import { cpuFouriers } from '../../fourier';
-import { Colors } from '../colors';
-import { Pipeline } from '../pipeline';
-import { SignalViewParams } from '../signalViewParams';
+import { Pipeline, PipelineConfigureOptions } from '../pipeline';
 import { createDecibelify } from './decibelify';
 import { createDraw } from './draw';
 import { createFilterWave } from './filterWave';
@@ -15,20 +13,20 @@ import { createSliceWaves } from './sliceWaves';
 
 export type CreatePipelineOptions = {
   canvas: HTMLCanvasElement;
-  windowSize: number;
   fourierMode: CpuFourierMode;
-  colors: Colors;
-  viewParams: SignalViewParams;
-  minDecibel: number;
   onProfile?: (profile: PipelineProfile) => void;
 };
-export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
+export const createPipeline = (
+  options: CreatePipelineOptions & PipelineConfigureOptions,
+): Pipeline => {
   const {
     canvas,
     windowSize,
     fourierMode,
     colors,
-    viewParams,
+    sampleRate,
+    minFrequency,
+    maxFrequency,
     minDecibel,
     onProfile,
   } = options;
@@ -69,7 +67,16 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
     fourier.forward(signal, windowCount);
     magnitudify(windowSize, windowCount, signal);
     decibelify(windowSize, windowCount, signal.real, minDecibel);
-    scaleView(windowSize, windowCount, height, viewParams, signal.real, view);
+    scaleView(
+      windowSize,
+      windowCount,
+      height,
+      sampleRate,
+      minFrequency,
+      maxFrequency,
+      signal.real,
+      view,
+    );
     draw.run(view, progress);
   });
 

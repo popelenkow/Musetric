@@ -1,14 +1,13 @@
-import { SignalViewParams } from '../signalViewParams';
-
 export const scaleView = (
   windowSize: number,
   windowCount: number,
   height: number,
-  viewParams: SignalViewParams,
+  sampleRate: number,
+  minFrequency: number,
+  maxFrequency: number,
   magnitudes: Float32Array,
   view: Uint8Array,
 ) => {
-  const { sampleRate, maxFrequency, minFrequency } = viewParams;
   const halfSize = windowSize / 2;
   const maxBin = Math.min(
     Math.floor((maxFrequency / sampleRate) * windowSize),

@@ -1,6 +1,3 @@
-import { ViewSize } from '../../../common';
-import { SignalViewParams } from '../../signalViewParams';
-
 export type ScaleViewShaderParams = {
   halfSize: number;
   width: number;
@@ -11,10 +8,14 @@ export type ScaleViewShaderParams = {
   logRange: number;
 };
 
-export type ScaleViewParams = SignalViewParams &
-  ViewSize & {
-    windowSize: number;
-  };
+export type ScaleViewParams = {
+  sampleRate: number;
+  minFrequency: number;
+  maxFrequency: number;
+  width: number;
+  height: number;
+  windowSize: number;
+};
 
 const toShaderParams = (params: ScaleViewParams): ScaleViewShaderParams => {
   const { windowSize, sampleRate, minFrequency, maxFrequency, width, height } =
