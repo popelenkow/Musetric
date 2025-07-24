@@ -1,22 +1,17 @@
 import { ComplexArray, subComplexArray } from '../../common';
 import { CreateCpuFourier } from '../cpuFourier';
-import { assertWindowSizePowerOfTwo } from '../isPowerOfTwo';
-import { utilsRadix4 } from '../utilsRadix4';
+import { createState } from './state';
 import { transform4 } from './utils';
 
-export const createCpuFftRadix4: CreateCpuFourier = (options) => {
-  const { windowSize } = options;
-  assertWindowSizePowerOfTwo(windowSize);
-
-  const reverseWidth = utilsRadix4.getReverseWidth(windowSize);
-  const reverseTable = utilsRadix4.createReverseTable(reverseWidth);
-  const trigTable = utilsRadix4.createTrigTable(windowSize);
+export const createCpuFftRadix4: CreateCpuFourier = () => {
+  const state = createState();
 
   const transform = (
     signal: ComplexArray,
     windowCount: number,
     inverse: boolean,
   ) => {
+    const { windowSize, reverseWidth, reverseTable, trigTable } = state;
     for (let i = 0; i < windowCount; i++) {
       const start = i * windowSize;
       const end = start + windowSize;
@@ -44,6 +39,9 @@ export const createCpuFftRadix4: CreateCpuFourier = (options) => {
     },
     inverse: (signal, windowCount) => {
       transform(signal, windowCount, true);
+    },
+    configure: (windowSize) => {
+      state.configure(windowSize);
     },
   };
 };

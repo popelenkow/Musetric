@@ -1,35 +1,22 @@
 import { createGradient, parseHexColor } from '../../common';
 import { Colors, Gradients } from '../colors';
 
-export type CreateDrawOptions = {
-  canvas: HTMLCanvasElement;
-  colors: Colors;
-};
-
 export type Draw = {
   width: number;
   height: number;
   run: (view: Uint8Array, progress: number) => void;
   resize: () => void;
+  configure: (colors: Colors) => void;
 };
 
-export const createDraw = (options: CreateDrawOptions): Draw => {
-  const { canvas, colors } = options;
+export const createDraw = (canvas: HTMLCanvasElement): Draw => {
   const context = canvas.getContext('2d');
   if (!context) {
     throw new Error('Context 2D not available on the canvas');
   }
 
-  const gradients: Gradients = {
-    played: createGradient(
-      parseHexColor(colors.background),
-      parseHexColor(colors.played),
-    ),
-    unplayed: createGradient(
-      parseHexColor(colors.background),
-      parseHexColor(colors.unplayed),
-    ),
-  };
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let gradients: Gradients = undefined!;
 
   let image = context.createImageData(1, 1);
 
@@ -61,6 +48,18 @@ export const createDraw = (options: CreateDrawOptions): Draw => {
       drawer.width = canvas.clientWidth;
       drawer.height = canvas.clientHeight;
       image = context.createImageData(drawer.width, drawer.height);
+    },
+    configure: (colors) => {
+      gradients = {
+        played: createGradient(
+          parseHexColor(colors.background),
+          parseHexColor(colors.played),
+        ),
+        unplayed: createGradient(
+          parseHexColor(colors.background),
+          parseHexColor(colors.unplayed),
+        ),
+      };
     },
   };
 
