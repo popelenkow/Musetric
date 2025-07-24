@@ -8,7 +8,8 @@ const createCallLatestInternal = <Args extends unknown[], Result>(
   type PromiseResult = Promise<Result>;
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   let currentPromise = Promise.resolve() as PromiseResult;
-  let latestFunction: () => PromiseResult;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let latestFunction: () => PromiseResult = undefined!;
 
   const call: AsyncFunction<Args, Result> = (...args) => {
     latestFunction = () => {

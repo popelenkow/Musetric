@@ -33,4 +33,5 @@ export const scaleView = (
   }
 };
 
-export const createScaleView = () => scaleView;
+export type ScaleView = typeof scaleView;
+export const createScaleView = (): ScaleView => scaleView;

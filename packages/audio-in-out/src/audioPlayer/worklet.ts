@@ -9,7 +9,7 @@ type Processor = {
   process: Process;
 };
 const createProcessor = (rawPort: MessagePort): Processor => {
-  let buffers: ChannelArrays | undefined;
+  let buffers: ChannelArrays | undefined = undefined;
   let offset = 0;
   let playing = false;
 

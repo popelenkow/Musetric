@@ -18,4 +18,5 @@ export const magnitudify = (
   }
 };
 
-export const createMagnitudify = () => magnitudify;
+export type Magnitudify = typeof magnitudify;
+export const createMagnitudify = (): Magnitudify => magnitudify;
