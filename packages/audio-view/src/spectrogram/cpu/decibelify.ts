@@ -27,4 +27,5 @@ export const decibelify = (
   }
 };
 
-export const createDecibelify = () => decibelify;
+export type Decibelify = typeof decibelify;
+export const createDecibelify = (): Decibelify => decibelify;

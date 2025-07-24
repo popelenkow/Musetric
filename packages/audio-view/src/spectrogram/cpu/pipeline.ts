@@ -31,31 +31,35 @@ export const createPipeline = (
     onProfile,
   } = options;
 
-  let isResizeRequested = false;
+  let isConfigureRequested = true;
 
   const timer = createPipelineTimer(onProfile);
 
-  const draw = createDraw({ canvas, colors });
-  draw.run = timer.wrap('draw', draw.run);
-  let arrays = createPipelineArrays(windowSize, draw.width, draw.height);
+  const arrays = createPipelineArrays();
 
   const sliceWaves = timer.wrap('sliceWaves', createSliceWaves());
-  const filterWave = timer.wrap('filterWave', createFilterWave(windowSize));
+  const filterWave = createFilterWave();
+  filterWave.run = timer.wrap('filterWave', filterWave.run);
   const createFourier = cpuFouriers[fourierMode];
-  const fourier = createFourier({ windowSize });
+  const fourier = createFourier();
   fourier.forward = timer.wrap('fourier', fourier.forward);
   const magnitudify = timer.wrap('magnitudify', createMagnitudify());
   const decibelify = timer.wrap('decibelify', createDecibelify());
   const scaleView = timer.wrap('scaleView', createScaleView());
+  const draw = createDraw(canvas);
+  draw.run = timer.wrap('draw', draw.run);
 
   const configure = timer.wrap('configure', () => {
     draw.resize();
-    arrays = createPipelineArrays(windowSize, draw.width, draw.height);
+    draw.configure(colors);
+    arrays.resize(windowSize, draw.width, draw.height);
+    filterWave.configure(windowSize);
+    fourier.configure(windowSize);
   });
 
   const render = timer.wrap('total', (wave: Float32Array, progress: number) => {
-    if (isResizeRequested) {
-      isResizeRequested = false;
+    if (isConfigureRequested) {
+      isConfigureRequested = false;
       configure();
     }
     const { signal, view } = arrays;
@@ -63,7 +67,7 @@ export const createPipeline = (
     const windowCount = draw.width;
 
     sliceWaves(windowSize, windowCount, wave, signal);
-    filterWave(windowCount, signal.real);
+    filterWave.run(windowCount, signal.real);
     fourier.forward(signal, windowCount);
     magnitudify(windowSize, windowCount, signal);
     decibelify(windowSize, windowCount, signal.real, minDecibel);
@@ -86,7 +90,7 @@ export const createPipeline = (
       timer.finish();
     }),
     resize: () => {
-      isResizeRequested = true;
+      isConfigureRequested = true;
     },
     destroy: () => {
       // No resources to clean up in CPU implementation
