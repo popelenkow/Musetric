@@ -41,7 +41,7 @@ export const useSpectrogramPipeline = (
 
       if (isGpuFourierMode(fourierMode)) {
         const device = await getGpuDevice(profiling);
-        return await spectrogram.gpu.createPipeline({
+        return spectrogram.gpu.createPipeline({
           device,
           windowSize,
           fourierMode,
@@ -57,7 +57,7 @@ export const useSpectrogramPipeline = (
         });
       }
 
-      return await spectrogram.cpu.createPipeline({
+      return spectrogram.cpu.createPipeline({
         windowSize,
         fourierMode,
         canvas,

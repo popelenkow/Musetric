@@ -1,13 +1,9 @@
-import { Colors, SignalViewParams, createSliceWaves } from '..';
-import { createCallLatest, createComplexArray } from '../../common';
-import { GpuFourierMode, gpuFouriers } from '../../fourier';
-import { createDecibelify } from './decibelify';
-import { createDraw } from './draw';
-import { createFilterWave } from './filterWave';
-import { createMagnitudify } from './magnitudify';
-import { createPipelineBuffers } from './pipelineBuffers';
-import { createPipelineTimer, PipelineProfile } from './pipelineTimer';
-import { createScaleView } from './scaleView';
+import { Colors, SignalViewParams } from '..';
+import { createCallLatest } from '../../common';
+import { GpuFourierMode } from '../../fourier';
+import { Pipeline } from '../pipeline';
+import { createPipelineState } from './pipelineState';
+import { PipelineProfile } from './pipelineTimer';
 
 export type CreatePipelineOptions = {
   device: GPUDevice;
@@ -19,104 +15,35 @@ export type CreatePipelineOptions = {
   minDecibel: number;
   onProfile?: (profile: PipelineProfile) => void;
 };
+export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
+  const { device } = options;
 
-export type Pipeline = {
-  render: (wave: Float32Array, progress: number) => Promise<void>;
-  resize: () => void;
-  destroy: () => void;
-};
-
-export const createPipeline = async (
-  options: CreatePipelineOptions,
-): Promise<Pipeline> => {
-  const {
-    device,
-    windowSize,
-    fourierMode,
-    canvas,
-    colors,
-    viewParams,
-    minDecibel,
-    onProfile,
-  } = options;
-
-  let windowCount = 1;
   let isResizeRequested = true;
 
-  const timer = createPipelineTimer(device, onProfile);
+  const state = createPipelineState(options);
 
-  let waves = createComplexArray(windowSize * windowCount);
-  const buffers = createPipelineBuffers({ device, windowSize, windowCount });
-
-  const draw = createDraw({
-    device,
-    canvas,
-    colors,
-    timestampWrites: timer.tw.draw,
-  });
-  const sliceWaves = timer.wrap('sliceWaves', createSliceWaves());
-  const writeGpuBuffers = timer.wrap('writeGpuBuffers', (progress: number) => {
-    device.queue.writeBuffer(buffers.signal.real, 0, waves.real);
-    device.queue.writeBuffer(buffers.signal.imag, 0, waves.imag);
-    draw.writeProgress(progress);
-  });
-  const filterWave = createFilterWave(device, timer.tw.filterWave);
-  const createFourier = gpuFouriers[fourierMode];
-  const fourier = await createFourier(device, {
-    reverse: timer.tw.fourierReverse,
-    transform: timer.tw.fourierTransform,
-  });
-  const magnitudify = createMagnitudify(device, timer.tw.magnitudify);
-  const decibelify = createDecibelify(device, timer.tw.decibelify);
-  const scaleView = createScaleView(device, timer.tw.scaleView);
-
-  const resize = timer.wrap('resize', () => {
-    draw.resize();
-    windowCount = draw.width;
-    const halfSize = windowSize / 2;
-    waves = createComplexArray(windowSize * windowCount);
-    buffers.resize(windowCount);
-    const { signal } = buffers;
-    filterWave.configure(signal.real, {
-      windowSize,
-      windowCount,
-    });
-    fourier.configure(signal, {
-      windowSize,
-      windowCount,
-    });
-    magnitudify.configure(signal, {
-      windowSize,
-      windowCount,
-    });
-    decibelify.configure(signal.real, {
-      halfSize,
-      windowCount,
-      minDecibel,
-    });
-    scaleView.configure(signal.real, draw.getTextureView(), {
-      ...viewParams,
-      windowSize,
-      width: draw.width,
-      height: draw.height,
-    });
+  const writeBuffers = state.timer.wrap('writeBuffers', (progress: number) => {
+    const { signal, signalArray } = state.buffers;
+    device.queue.writeBuffer(signal.real, 0, signalArray.real);
+    device.queue.writeBuffer(signal.imag, 0, signalArray.imag);
+    state.draw.writeProgress(progress);
   });
 
-  const createCommand = timer.wrap('createCommand', () => {
+  const createCommand = state.timer.wrap('createCommand', () => {
     const encoder = device.createCommandEncoder({
       label: 'pipeline-render-encoder',
     });
-    filterWave.run(encoder);
-    fourier.forward(encoder);
-    magnitudify.run(encoder);
-    decibelify.run(encoder);
-    scaleView.run(encoder);
-    draw.run(encoder);
-    timer.resolve(encoder);
+    state.filterWave.run(encoder);
+    state.fourier.forward(encoder);
+    state.magnitudify.run(encoder);
+    state.decibelify.run(encoder);
+    state.scaleView.run(encoder);
+    state.draw.run(encoder);
+    state.timer.resolve(encoder);
     return encoder.finish();
   });
 
-  const submitCommand = timer.wrapAsync(
+  const submitCommand = state.timer.wrapAsync(
     'submitCommand',
     async (command: GPUCommandBuffer) => {
       device.queue.submit([command]);
@@ -124,15 +51,15 @@ export const createPipeline = async (
     },
   );
 
-  const render = timer.wrapAsync(
+  const render = state.timer.wrapAsync(
     'total',
     async (wave: Float32Array, progress: number) => {
       if (isResizeRequested) {
         isResizeRequested = false;
-        resize();
+        state.configure();
       }
-      sliceWaves(windowSize, windowCount, wave, waves);
-      writeGpuBuffers(progress);
+      state.sliceWaves.run(wave, state.buffers.signalArray);
+      writeBuffers(progress);
       const command = createCommand();
       await submitCommand(command);
     },
@@ -141,20 +68,13 @@ export const createPipeline = async (
   return {
     render: createCallLatest(async (wave, progress) => {
       await render(wave, progress);
-      await timer.finish();
+      await state.timer.finish();
     }),
     resize: () => {
       isResizeRequested = true;
     },
     destroy: () => {
-      timer.destroy();
-      buffers.destroy();
-      filterWave.destroy();
-      fourier.destroy();
-      magnitudify.destroy();
-      decibelify.destroy();
-      scaleView.destroy();
-      draw.destroy();
+      state.destroy();
     },
   };
 };

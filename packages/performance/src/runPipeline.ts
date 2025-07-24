@@ -18,7 +18,7 @@ export const runPipeline = async (
 }> => {
   const profiles: Record<string, number>[] = [];
   const pipeline = isGpuFourierMode(fourierMode)
-    ? await spectrogram.gpu.createPipeline({
+    ? spectrogram.gpu.createPipeline({
         device,
         canvas,
         windowSize,

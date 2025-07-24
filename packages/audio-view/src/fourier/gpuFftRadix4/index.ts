@@ -1,7 +1,7 @@
 import { CreateGpuFourier, GpuFourier } from '../gpuFourier';
 import { createState } from './state';
 
-export const createGpuFftRadix4: CreateGpuFourier = async (
+export const createGpuFftRadix4: CreateGpuFourier = (
   device,
   timestampWrites,
 ) => {

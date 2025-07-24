@@ -1,53 +1,52 @@
-import { ComplexGpuBuffer } from '../../common';
+import {
+  ComplexArray,
+  ComplexGpuBuffer,
+  createComplexArray,
+} from '../../common';
 
 export type CreatePipelineBuffersOptions = {
-  device: GPUDevice;
   windowSize: number;
   windowCount: number;
 };
 
 export type PipelineBuffers = {
   signal: ComplexGpuBuffer;
-  resize: (newWindowCount: number) => void;
+  signalArray: ComplexArray;
+  resize: (windowSize: number, windowCount: number) => void;
   destroy: () => void;
 };
-export const createPipelineBuffers = (
-  options: CreatePipelineBuffersOptions,
-) => {
-  const { device, windowSize } = options;
-  let windowCount = options.windowCount;
-
-  const createSignalBuffer = (): ComplexGpuBuffer => ({
-    real: device.createBuffer({
-      label: 'pipeline-signal-real-buffer',
-      size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
-      usage:
-        GPUBufferUsage.STORAGE |
-        GPUBufferUsage.COPY_SRC |
-        GPUBufferUsage.COPY_DST,
-    }),
-    imag: device.createBuffer({
-      label: 'pipeline-signal-imag-buffer',
-      size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
-      usage:
-        GPUBufferUsage.STORAGE |
-        GPUBufferUsage.COPY_SRC |
-        GPUBufferUsage.COPY_DST,
-    }),
-  });
-
+export const createPipelineBuffers = (device: GPUDevice) => {
   const buffers: PipelineBuffers = {
-    signal: createSignalBuffer(),
-    resize: (newWindowCount: number) => {
-      windowCount = newWindowCount;
-      buffers.signal.real.destroy();
-      buffers.signal.imag.destroy();
-      buffers.signal = createSignalBuffer();
+    signal: undefined!,
+    signalArray: undefined!,
+    resize: (windowSize, windowCount) => {
+      buffers.signal?.real.destroy();
+      buffers.signal?.imag.destroy();
+      buffers.signal = {
+        real: device.createBuffer({
+          label: 'pipeline-signal-real-buffer',
+          size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
+          usage:
+            GPUBufferUsage.STORAGE |
+            GPUBufferUsage.COPY_SRC |
+            GPUBufferUsage.COPY_DST,
+        }),
+        imag: device.createBuffer({
+          label: 'pipeline-signal-imag-buffer',
+          size: windowSize * windowCount * Float32Array.BYTES_PER_ELEMENT,
+          usage:
+            GPUBufferUsage.STORAGE |
+            GPUBufferUsage.COPY_SRC |
+            GPUBufferUsage.COPY_DST,
+        }),
+      };
+      buffers.signalArray = createComplexArray(windowSize * windowCount);
     },
     destroy: () => {
       buffers.signal.real.destroy();
       buffers.signal.imag.destroy();
     },
   };
+
   return buffers;
 };

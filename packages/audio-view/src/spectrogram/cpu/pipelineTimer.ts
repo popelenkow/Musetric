@@ -1,7 +1,7 @@
 import { createCpuTimer, roundDuration } from '../../common';
 
 export const metricKeys = [
-  'resize',
+  'configure',
   'sliceWaves',
   'filterWave',
   'fourier',

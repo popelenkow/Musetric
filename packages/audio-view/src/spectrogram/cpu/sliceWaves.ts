@@ -1,4 +1,4 @@
-import { ComplexArray } from '../common';
+import { ComplexArray } from '../../common';
 
 export const sliceWaves = (
   windowSize: number,
@@ -17,4 +17,5 @@ export const sliceWaves = (
   }
 };
 
+export type SliceWaves = typeof sliceWaves;
 export const createSliceWaves = () => sliceWaves;

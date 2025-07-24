@@ -1,9 +1,9 @@
 import { createCpuTimer, createGpuTimer, roundDuration } from '../../common';
 
 export const metricKeys = [
-  'resize',
+  'configure',
   'sliceWaves',
-  'writeGpuBuffers',
+  'writeBuffers',
   'createCommand',
   'submitCommand',
   'filterWave',
@@ -30,9 +30,9 @@ const gpuKeys = [
 ] as const satisfies MetricKey[];
 
 const cpuKeys = [
-  'resize',
+  'configure',
   'sliceWaves',
-  'writeGpuBuffers',
+  'writeBuffers',
   'createCommand',
   'submitCommand',
   'total',
