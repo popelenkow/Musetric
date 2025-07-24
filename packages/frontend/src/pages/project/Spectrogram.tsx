@@ -1,23 +1,17 @@
-import { FourierMode, subscribeResizeObserver } from '@musetric/audio-view';
+import { subscribeResizeObserver } from '@musetric/audio-view';
 import { FC, useEffect, useRef } from 'react';
 import { useSpectrogramPipeline } from './common/spectrogramPipeline';
-import { usePlayerStore } from './store';
-
-const windowSize = 1024 * 16;
-export const fourierMode: FourierMode = 'gpuFftRadix4';
+import { usePlayerStore } from './store/player';
+import { useSettingsStore } from './store/settings';
 
 export const Spectrogram: FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const buffer = usePlayerStore((s) => s.buffer);
   const seek = usePlayerStore((s) => s.seek);
   const progress = usePlayerStore((s) => s.progress);
+  const fourierMode = useSettingsStore((s) => s.fourierMode);
 
-  const pipeline = useSpectrogramPipeline(
-    canvasRef,
-    windowSize,
-    fourierMode,
-    buffer,
-  );
+  const pipeline = useSpectrogramPipeline(canvasRef, buffer);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -32,6 +26,7 @@ export const Spectrogram: FC = () => {
 
   return (
     <canvas
+      key={fourierMode}
       ref={canvasRef}
       style={{ width: '100%', height: '100%', display: 'block' }}
       onClick={async (event) => {

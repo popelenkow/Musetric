@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material';
+import { noNumberInputSpin } from './noNumberInputSpin';
 import { defaultPalette } from './palettes/default';
 import { neutralButton, neutralPalette } from './palettes/neutral';
 import { themeScrollbar } from './scrollbar';
@@ -19,6 +20,7 @@ export const appTheme = createTheme({
         body: {
           fontFamily: themeTypography.fontFamily,
         },
+        ...noNumberInputSpin,
       },
     },
     MuiButton: {
