@@ -48,5 +48,5 @@ export const FirstMatch: FC<PropsWithChildren> = (props) => {
 
   const item = useMemoLocation(() => items.find(({ match }) => match()));
 
-  return item?.element ?? null;
+  return item?.element ?? undefined;
 };

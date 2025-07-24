@@ -16,7 +16,7 @@ export const createMatch = <Params,>(
     // eslint-disable-next-line react/prop-types
     const Component = props.component;
     const params = useMemoLocation(match);
-    return params ? <Component {...params} /> : null;
+    return params ? <Component {...params} /> : undefined;
   };
   Match.match = match;
   if (prefixName) {

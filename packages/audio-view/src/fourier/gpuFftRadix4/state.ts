@@ -33,6 +33,7 @@ export const createState = (device: GPUDevice) => {
 
   const state: State = {
     pipelines,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroups: undefined!,
     params,
     configure: (signal, value) => {

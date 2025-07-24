@@ -31,7 +31,9 @@ export const createParams = (device: GPUDevice) => {
   });
 
   const state: StateParams = {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     value: undefined!,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     shader: undefined!,
     buffer,
     write: (value) => {

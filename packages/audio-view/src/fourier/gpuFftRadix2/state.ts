@@ -33,6 +33,7 @@ export const createState = (device: GPUDevice) => {
   const state: State = {
     pipelines,
     params,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroups: undefined!,
     configure: (signal, value) => {
       assertWindowSizePowerOfTwo(value.windowSize);

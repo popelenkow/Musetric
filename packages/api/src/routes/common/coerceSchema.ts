@@ -28,7 +28,7 @@ const coerceValues = {
     if (typeof value === 'string') {
       try {
         const parsed = JSON.parse(value);
-        if (typeof parsed === 'object' && parsed !== null) {
+        if (typeof parsed === 'object' && parsed) {
           return parsed;
         }
       } catch {

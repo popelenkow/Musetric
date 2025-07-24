@@ -1,4 +1,5 @@
 export const assertDefined = <T>(value: T, message: string): NonNullable<T> => {
+  // eslint-disable-next-line no-restricted-syntax
   if (value === undefined || value === null) {
     throw new Error(message);
   }

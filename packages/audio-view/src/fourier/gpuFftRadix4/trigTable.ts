@@ -7,6 +7,7 @@ export type StateTrigTable = {
 };
 export const createTrigTable = (device: GPUDevice) => {
   const state: StateTrigTable = {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     buffer: undefined!,
     resize: (windowSize) => {
       const array = utilsRadix4.createTrigTable(windowSize);
