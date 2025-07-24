@@ -17,7 +17,7 @@ export type Draw = {
 export const createDraw = (
   device: GPUDevice,
   canvas: HTMLCanvasElement,
-  timestampWrites?: GPUComputePassTimestampWrites
+  timestampWrites?: GPUComputePassTimestampWrites,
 ): Draw => {
   const context = canvas.getContext('webgpu');
   if (!context) {

@@ -11,11 +11,13 @@ export type CreatePipelineOptions = {
   onProfile?: (profile: PipelineProfile) => void;
 };
 export const createPipeline = (
-  createOptions: CreatePipelineOptions & PipelineConfigureOptions,
+  createOptions: CreatePipelineOptions,
 ): Pipeline => {
   const { device } = createOptions;
 
   let isConfigureRequested = true;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let options: PipelineConfigureOptions = undefined!;
 
   const state = createPipelineState(createOptions);
 
@@ -53,7 +55,7 @@ export const createPipeline = (
     async (wave: Float32Array, progress: number) => {
       if (isConfigureRequested) {
         isConfigureRequested = false;
-        state.configure(createOptions);
+        state.configure(options);
       }
       state.sliceWaves.run(wave, state.buffers.signalArray);
       writeBuffers(progress);
@@ -67,6 +69,10 @@ export const createPipeline = (
       await render(wave, progress);
       await state.timer.finish();
     }),
+    configure: (newOptions: PipelineConfigureOptions) => {
+      options = newOptions;
+      isConfigureRequested = true;
+    },
     resize: () => {
       isConfigureRequested = true;
     },

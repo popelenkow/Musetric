@@ -17,15 +17,13 @@ export type CreatePipelineOptions = {
   onProfile?: (profile: PipelineProfile) => void;
 };
 export const createPipeline = (
-  createOptions: CreatePipelineOptions & PipelineConfigureOptions,
+  createOptions: CreatePipelineOptions,
 ): Pipeline => {
-  const {
-    canvas,
-    fourierMode,
-    onProfile,
-  } = createOptions;
+  const { canvas, fourierMode, onProfile } = createOptions;
 
   let isConfigureRequested = true;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let options: PipelineConfigureOptions = undefined!;
 
   const timer = createPipelineTimer(onProfile);
 
@@ -48,7 +46,14 @@ export const createPipeline = (
   draw.run = timer.wrap('draw', draw.run);
 
   const configure = timer.wrap('configure', () => {
-    const { windowSize, colors, sampleRate, minFrequency, maxFrequency, minDecibel } = createOptions;
+    const {
+      windowSize,
+      colors,
+      sampleRate,
+      minFrequency,
+      maxFrequency,
+      minDecibel,
+    } = options;
     draw.resize();
     const windowCount = draw.width;
     arrays.resize(windowSize, windowCount, draw.height);
@@ -88,6 +93,10 @@ export const createPipeline = (
       render(wave, progress);
       timer.finish();
     }),
+    configure: (newOptions: PipelineConfigureOptions) => {
+      options = newOptions;
+      isConfigureRequested = true;
+    },
     resize: () => {
       isConfigureRequested = true;
     },

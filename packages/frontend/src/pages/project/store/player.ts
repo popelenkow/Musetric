@@ -1,6 +1,5 @@
-import { createAudioPlayer, AudioPlayer  } from '@musetric/audio-in-out';
+import { createAudioPlayer, AudioPlayer } from '@musetric/audio-in-out';
 import { create } from 'zustand';
-
 
 export type PlayerState = {
   player?: AudioPlayer;

@@ -61,53 +61,50 @@ export const createPipelineState = (
     decibelify,
     scaleView,
     draw,
-    configure: timer.wrap(
-      'configure',
-      (options) => {
-        const {
-          windowSize,
-          colors,
-          sampleRate,
-          minFrequency,
-          maxFrequency,
-          minDecibel,
-        } = options;
+    configure: timer.wrap('configure', (options) => {
+      const {
+        windowSize,
+        colors,
+        sampleRate,
+        minFrequency,
+        maxFrequency,
+        minDecibel,
+      } = options;
 
-        draw.resize();
-        const windowCount = draw.width;
-        state.windowCount = windowCount;
-        const halfSize = windowSize / 2;
-        buffers.resize(windowSize, windowCount);
-        const { signal } = buffers;
-        sliceWaves.configure(windowSize, windowCount);
-        filterWave.configure(signal.real, {
-          windowSize,
-          windowCount,
-        });
-        fourier.configure(signal, {
-          windowSize,
-          windowCount,
-        });
-        magnitudify.configure(signal, {
-          windowSize,
-          windowCount,
-        });
-        decibelify.configure(signal.real, {
-          halfSize,
-          windowCount,
-          minDecibel,
-        });
-        draw.configure(colors);
-        scaleView.configure(signal.real, draw.getTextureView(), {
-          sampleRate,
-          minFrequency,
-          maxFrequency,
-          windowSize,
-          width: draw.width,
-          height: draw.height,
-        });
-      },
-    ),
+      draw.resize();
+      const windowCount = draw.width;
+      state.windowCount = windowCount;
+      const halfSize = windowSize / 2;
+      buffers.resize(windowSize, windowCount);
+      const { signal } = buffers;
+      sliceWaves.configure(windowSize, windowCount);
+      filterWave.configure(signal.real, {
+        windowSize,
+        windowCount,
+      });
+      fourier.configure(signal, {
+        windowSize,
+        windowCount,
+      });
+      magnitudify.configure(signal, {
+        windowSize,
+        windowCount,
+      });
+      decibelify.configure(signal.real, {
+        halfSize,
+        windowCount,
+        minDecibel,
+      });
+      draw.configure(colors);
+      scaleView.configure(signal.real, draw.getTextureView(), {
+        sampleRate,
+        minFrequency,
+        maxFrequency,
+        windowSize,
+        width: draw.width,
+        height: draw.height,
+      });
+    }),
     destroy: () => {
       timer.destroy();
       buffers.destroy();
