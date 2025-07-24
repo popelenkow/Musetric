@@ -8,8 +8,9 @@
     "build": "vite build",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache",
+    "check:translations": "i18next -c ./i18next.parser.config.js --fail-on-update",
     "fix:lint": "eslint . --fix --cache",
-    "gen:translations": "i18next -c ./i18next.parser.config.js"
+    "fix:translations": "i18next -c ./i18next.parser.config.js"
   },
   "devDependencies": {
     "@emotion/react": "11.14.0",

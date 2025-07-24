@@ -16,11 +16,12 @@
     "start:docker": "yarn workspace @musetric/backend start:docker",
     "check:ts": "yarn workspaces foreach --all --topological run check:ts",
     "check:lint": "yarn workspaces foreach --all --topological run check:lint",
+    "check:translations": "yarn workspaces foreach --all --topological run check:translations",
     "check:format": "prettier --check .",
     "fix:lint": "yarn workspaces foreach --all --topological run fix:lint",
+    "fix:translations": "yarn workspaces foreach --all --topological run fix:translations",
     "fix:format": "prettier . --write",
     "test": "yarn workspaces foreach --all --topological run test",
-    "gen:translations": "yarn workspaces foreach --all --topological run gen:translations",
     "show:peer": "yarn explain peer-requirements | npx grep-cli \"✘\""
   },
   "devDependencies": {
