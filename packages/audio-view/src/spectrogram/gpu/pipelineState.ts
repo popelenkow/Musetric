@@ -22,25 +22,14 @@ export type PipelineState = {
   decibelify: Decibelify;
   scaleView: ScaleView;
   draw: Draw;
-  configure: () => void;
+  configure: (options: PipelineConfigureOptions) => void;
   destroy: () => void;
 };
 
 export const createPipelineState = (
-  options: CreatePipelineOptions & PipelineConfigureOptions,
+  createOptions: CreatePipelineOptions,
 ): PipelineState => {
-  const {
-    device,
-    windowSize,
-    fourierMode,
-    canvas,
-    colors,
-    sampleRate,
-    minFrequency,
-    maxFrequency,
-    minDecibel,
-    onProfile,
-  } = options;
+  const { device, fourierMode, canvas, onProfile } = createOptions;
 
   const timer = createPipelineTimer(device, onProfile);
 
@@ -56,15 +45,11 @@ export const createPipelineState = (
   const magnitudify = createMagnitudify(device, timer.tw.magnitudify);
   const decibelify = createDecibelify(device, timer.tw.decibelify);
   const scaleView = createScaleView(device, timer.tw.scaleView);
-  const draw = createDraw({
-    device,
-    canvas,
-    colors,
-    timestampWrites: timer.tw.draw,
-  });
+  const draw = createDraw(device, canvas, timer.tw.draw);
 
   const state: PipelineState = {
-    windowSize,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    windowSize: undefined!,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     windowCount: undefined!,
     timer,
@@ -76,40 +61,53 @@ export const createPipelineState = (
     decibelify,
     scaleView,
     draw,
-    configure: timer.wrap('configure', () => {
-      draw.resize();
-      const windowCount = draw.width;
-      state.windowCount = windowCount;
-      const halfSize = windowSize / 2;
-      buffers.resize(windowSize, windowCount);
-      const { signal } = buffers;
-      sliceWaves.configure(windowSize, windowCount);
-      filterWave.configure(signal.real, {
-        windowSize,
-        windowCount,
-      });
-      fourier.configure(signal, {
-        windowSize,
-        windowCount,
-      });
-      magnitudify.configure(signal, {
-        windowSize,
-        windowCount,
-      });
-      decibelify.configure(signal.real, {
-        halfSize,
-        windowCount,
-        minDecibel,
-      });
-      scaleView.configure(signal.real, draw.getTextureView(), {
-        sampleRate,
-        minFrequency,
-        maxFrequency,
-        windowSize,
-        width: draw.width,
-        height: draw.height,
-      });
-    }),
+    configure: timer.wrap(
+      'configure',
+      (options) => {
+        const {
+          windowSize,
+          colors,
+          sampleRate,
+          minFrequency,
+          maxFrequency,
+          minDecibel,
+        } = options;
+
+        draw.resize();
+        const windowCount = draw.width;
+        state.windowCount = windowCount;
+        const halfSize = windowSize / 2;
+        buffers.resize(windowSize, windowCount);
+        const { signal } = buffers;
+        sliceWaves.configure(windowSize, windowCount);
+        filterWave.configure(signal.real, {
+          windowSize,
+          windowCount,
+        });
+        fourier.configure(signal, {
+          windowSize,
+          windowCount,
+        });
+        magnitudify.configure(signal, {
+          windowSize,
+          windowCount,
+        });
+        decibelify.configure(signal.real, {
+          halfSize,
+          windowCount,
+          minDecibel,
+        });
+        draw.configure(colors);
+        scaleView.configure(signal.real, draw.getTextureView(), {
+          sampleRate,
+          minFrequency,
+          maxFrequency,
+          windowSize,
+          width: draw.width,
+          height: draw.height,
+        });
+      },
+    ),
     destroy: () => {
       timer.destroy();
       buffers.destroy();

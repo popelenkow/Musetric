@@ -11,6 +11,8 @@ import {
 } from '../src';
 import { fourierFixtures } from './fixtures/fourier';
 
+const windowCount = 1;
+
 const createGpuBuffers = (device: GPUDevice, windowSize: number) => {
   const createSignalBuffer = () => ({
     real: device.createBuffer({
@@ -62,7 +64,7 @@ describe('fourier', async () => {
         describe(fixture.name, () => {
           const createFourier = cpuFouriers[mode];
           const fourier = createFourier();
-          fourier.configure(fixture.windowSize);
+          fourier.configure(fixture.windowSize, windowCount);
 
           it('forward', () => {
             const zeroImag = new Float32Array(fixture.windowSize).fill(0);
@@ -70,7 +72,7 @@ describe('fourier', async () => {
               real: fixture.input.slice(),
               imag: zeroImag,
             };
-            fourier.forward(signal, 1);
+            fourier.forward(signal);
             assertArrayClose('real', signal.real, fixture.output.real);
             assertArrayClose('imag', signal.imag, fixture.output.imag);
           });
@@ -81,7 +83,7 @@ describe('fourier', async () => {
               real: fixture.output.real.slice(),
               imag: fixture.output.imag.slice(),
             };
-            fourier.inverse(signal, 1);
+            fourier.inverse(signal);
             assertArrayClose('real', signal.real, fixture.input);
             assertArrayClose('imag', signal.imag, zeroImag);
           });
@@ -99,7 +101,7 @@ describe('fourier', async () => {
           const fourier = createFourier(device);
           fourier.configure(buffers.signal, {
             windowSize: fixture.windowSize,
-            windowCount: 1,
+            windowCount,
           });
           const reader = createComplexGpuBufferReader({
             device,

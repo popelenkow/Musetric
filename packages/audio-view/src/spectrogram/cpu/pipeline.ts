@@ -17,19 +17,13 @@ export type CreatePipelineOptions = {
   onProfile?: (profile: PipelineProfile) => void;
 };
 export const createPipeline = (
-  options: CreatePipelineOptions & PipelineConfigureOptions,
+  createOptions: CreatePipelineOptions & PipelineConfigureOptions,
 ): Pipeline => {
   const {
     canvas,
-    windowSize,
     fourierMode,
-    colors,
-    sampleRate,
-    minFrequency,
-    maxFrequency,
-    minDecibel,
     onProfile,
-  } = options;
+  } = createOptions;
 
   let isConfigureRequested = true;
 
@@ -37,24 +31,41 @@ export const createPipeline = (
 
   const arrays = createPipelineArrays();
 
-  const sliceWaves = timer.wrap('sliceWaves', createSliceWaves());
+  const sliceWaves = createSliceWaves();
+  sliceWaves.run = timer.wrap('sliceWaves', sliceWaves.run);
   const filterWave = createFilterWave();
   filterWave.run = timer.wrap('filterWave', filterWave.run);
   const createFourier = cpuFouriers[fourierMode];
   const fourier = createFourier();
   fourier.forward = timer.wrap('fourier', fourier.forward);
-  const magnitudify = timer.wrap('magnitudify', createMagnitudify());
-  const decibelify = timer.wrap('decibelify', createDecibelify());
-  const scaleView = timer.wrap('scaleView', createScaleView());
+  const magnitudify = createMagnitudify();
+  magnitudify.run = timer.wrap('magnitudify', magnitudify.run);
+  const decibelify = createDecibelify();
+  decibelify.run = timer.wrap('decibelify', decibelify.run);
+  const scaleView = createScaleView();
+  scaleView.run = timer.wrap('scaleView', scaleView.run);
   const draw = createDraw(canvas);
   draw.run = timer.wrap('draw', draw.run);
 
   const configure = timer.wrap('configure', () => {
+    const { windowSize, colors, sampleRate, minFrequency, maxFrequency, minDecibel } = createOptions;
     draw.resize();
+    const windowCount = draw.width;
+    arrays.resize(windowSize, windowCount, draw.height);
+    sliceWaves.configure(windowSize, windowCount);
+    filterWave.configure(windowSize, windowCount);
+    fourier.configure(windowSize, windowCount);
+    magnitudify.configure(windowSize, windowCount);
+    decibelify.configure(windowSize, windowCount, minDecibel);
+    scaleView.configure(
+      windowSize,
+      windowCount,
+      draw.height,
+      sampleRate,
+      minFrequency,
+      maxFrequency,
+    );
     draw.configure(colors);
-    arrays.resize(windowSize, draw.width, draw.height);
-    filterWave.configure(windowSize);
-    fourier.configure(windowSize);
   });
 
   const render = timer.wrap('total', (wave: Float32Array, progress: number) => {
@@ -63,24 +74,12 @@ export const createPipeline = (
       configure();
     }
     const { signal, view } = arrays;
-    const { height } = draw;
-    const windowCount = draw.width;
-
-    sliceWaves(windowSize, windowCount, wave, signal);
-    filterWave.run(windowCount, signal.real);
-    fourier.forward(signal, windowCount);
-    magnitudify(windowSize, windowCount, signal);
-    decibelify(windowSize, windowCount, signal.real, minDecibel);
-    scaleView(
-      windowSize,
-      windowCount,
-      height,
-      sampleRate,
-      minFrequency,
-      maxFrequency,
-      signal.real,
-      view,
-    );
+    sliceWaves.run(wave, signal);
+    filterWave.run(signal.real);
+    fourier.forward(signal);
+    magnitudify.run(signal);
+    decibelify.run(signal.real);
+    scaleView.run(signal.real, view);
     draw.run(view, progress);
   });
 

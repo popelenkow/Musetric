@@ -33,5 +33,57 @@ export const scaleView = (
   }
 };
 
-export type ScaleView = typeof scaleView;
-export const createScaleView = (): ScaleView => scaleView;
+export type ScaleView = {
+  run: (magnitudes: Float32Array, view: Uint8Array) => void;
+  configure: (
+    windowSize: number,
+    windowCount: number,
+    height: number,
+    sampleRate: number,
+    minFrequency: number,
+    maxFrequency: number,
+  ) => void;
+};
+export const createScaleView = (): ScaleView => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let windowSize: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let windowCount: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let height: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let sampleRate: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let minFrequency: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let maxFrequency: number = undefined!;
+
+  return {
+    run: (magnitudes, view) =>
+      scaleView(
+        windowSize,
+        windowCount,
+        height,
+        sampleRate,
+        minFrequency,
+        maxFrequency,
+        magnitudes,
+        view,
+      ),
+    configure: (
+      newWindowSize,
+      newWindowCount,
+      newHeight,
+      newSampleRate,
+      newMinFrequency,
+      newMaxFrequency,
+    ) => {
+      windowSize = newWindowSize;
+      windowCount = newWindowCount;
+      height = newHeight;
+      sampleRate = newSampleRate;
+      minFrequency = newMinFrequency;
+      maxFrequency = newMaxFrequency;
+    },
+  };
+};

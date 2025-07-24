@@ -6,12 +6,9 @@ import { transform4 } from './utils';
 export const createCpuFftRadix4: CreateCpuFourier = () => {
   const state = createState();
 
-  const transform = (
-    signal: ComplexArray,
-    windowCount: number,
-    inverse: boolean,
-  ) => {
-    const { windowSize, reverseWidth, reverseTable, trigTable } = state;
+  const transform = (signal: ComplexArray, inverse: boolean) => {
+    const { windowSize, windowCount, reverseWidth, reverseTable, trigTable } =
+      state;
     for (let i = 0; i < windowCount; i++) {
       const start = i * windowSize;
       const end = start + windowSize;
@@ -34,14 +31,12 @@ export const createCpuFftRadix4: CreateCpuFourier = () => {
   };
 
   return {
-    forward: (signal, windowCount) => {
-      transform(signal, windowCount, false);
+    forward: (signal) => {
+      transform(signal, false);
     },
-    inverse: (signal, windowCount) => {
-      transform(signal, windowCount, true);
+    inverse: (signal) => {
+      transform(signal, true);
     },
-    configure: (windowSize) => {
-      state.configure(windowSize);
-    },
+    configure: state.configure,
   };
 };

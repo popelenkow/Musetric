@@ -11,13 +11,13 @@ export type CreatePipelineOptions = {
   onProfile?: (profile: PipelineProfile) => void;
 };
 export const createPipeline = (
-  options: CreatePipelineOptions & PipelineConfigureOptions,
+  createOptions: CreatePipelineOptions & PipelineConfigureOptions,
 ): Pipeline => {
-  const { device } = options;
+  const { device } = createOptions;
 
   let isConfigureRequested = true;
 
-  const state = createPipelineState(options);
+  const state = createPipelineState(createOptions);
 
   const writeBuffers = state.timer.wrap('writeBuffers', (progress: number) => {
     const { signal, signalArray } = state.buffers;
@@ -53,7 +53,7 @@ export const createPipeline = (
     async (wave: Float32Array, progress: number) => {
       if (isConfigureRequested) {
         isConfigureRequested = false;
-        state.configure();
+        state.configure(createOptions);
       }
       state.sliceWaves.run(wave, state.buffers.signalArray);
       writeBuffers(progress);
