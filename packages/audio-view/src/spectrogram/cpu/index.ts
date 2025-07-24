@@ -6,3 +6,4 @@ export * from './pipeline';
 export * from './pipelineArrays';
 export * from './pipelineTimer';
 export * from './scaleView';
+export * from './sliceWaves';

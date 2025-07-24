@@ -2,8 +2,8 @@ import { createCallLatest } from '../../common';
 import type { CpuFourierMode } from '../../fourier';
 import { cpuFouriers } from '../../fourier';
 import { Colors } from '../colors';
+import { Pipeline } from '../pipeline';
 import { SignalViewParams } from '../signalViewParams';
-import { createSliceWaves } from '../sliceWaves';
 import { createDecibelify } from './decibelify';
 import { createDraw } from './draw';
 import { createFilterWave } from './filterWave';
@@ -11,6 +11,7 @@ import { createMagnitudify } from './magnitudify';
 import { createPipelineArrays } from './pipelineArrays';
 import { createPipelineTimer, PipelineProfile } from './pipelineTimer';
 import { createScaleView } from './scaleView';
+import { createSliceWaves } from './sliceWaves';
 
 export type CreatePipelineOptions = {
   canvas: HTMLCanvasElement;
@@ -20,12 +21,6 @@ export type CreatePipelineOptions = {
   viewParams: SignalViewParams;
   minDecibel: number;
   onProfile?: (profile: PipelineProfile) => void;
-};
-
-export type Pipeline = {
-  render: (wave: Float32Array, progress: number) => Promise<void>;
-  resize: () => void;
-  destroy: () => void;
 };
 export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
   const {
@@ -47,7 +42,7 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
   let isResizeRequested = false;
   let arrays = createPipelineArrays(windowSize, draw.width, draw.height);
 
-  const resize = timer.wrap('resize', () => {
+  const configure = timer.wrap('configure', () => {
     draw.resize();
     arrays = createPipelineArrays(windowSize, draw.width, draw.height);
   });
@@ -63,7 +58,7 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
   const render = timer.wrap('total', (wave: Float32Array, progress: number) => {
     if (isResizeRequested) {
       isResizeRequested = false;
-      return resize();
+      configure();
     }
     const { signal, view } = arrays;
     const { height } = draw;

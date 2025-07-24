@@ -19,4 +19,4 @@ export type FourierTimestampWrites = {
 export type CreateGpuFourier = (
   device: GPUDevice,
   timestampWrites?: FourierTimestampWrites,
-) => Promise<GpuFourier>;
+) => GpuFourier;
