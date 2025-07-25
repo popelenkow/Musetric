@@ -17,5 +17,23 @@ export const sliceWaves = (
   }
 };
 
-export type SliceWaves = typeof sliceWaves;
-export const createSliceWaves = (): SliceWaves => sliceWaves;
+export type SliceWaves = {
+  run: (wave: Float32Array, waves: ComplexArray) => void;
+  configure: (windowSize: number, windowCount: number) => void;
+};
+export const createSliceWaves = (): SliceWaves => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let windowSize: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let windowCount: number = undefined!;
+
+  return {
+    run: (wave: Float32Array, waves: ComplexArray): void => {
+      sliceWaves(windowSize, windowCount, wave, waves);
+    },
+    configure: (newWindowSize: number, newWindowCount: number): void => {
+      windowSize = newWindowSize;
+      windowCount = newWindowCount;
+    },
+  };
+};

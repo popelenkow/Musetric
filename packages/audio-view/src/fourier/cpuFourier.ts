@@ -1,9 +1,9 @@
 import { ComplexArray } from '../common';
 
 export type CpuFourier = {
-  forward: (signal: ComplexArray, windowCount: number) => void;
-  inverse: (signal: ComplexArray, windowCount: number) => void;
-  configure: (windowSize: number) => void;
+  forward: (signal: ComplexArray) => void;
+  inverse: (signal: ComplexArray) => void;
+  configure: (windowSize: number, windowCount: number) => void;
 };
 
 export type CreateCpuFourier = () => CpuFourier;

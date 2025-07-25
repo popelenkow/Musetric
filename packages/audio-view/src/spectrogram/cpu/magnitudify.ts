@@ -18,5 +18,21 @@ export const magnitudify = (
   }
 };
 
-export type Magnitudify = typeof magnitudify;
-export const createMagnitudify = (): Magnitudify => magnitudify;
+export type Magnitudify = {
+  run: (signal: ComplexArray) => void;
+  configure: (windowSize: number, windowCount: number) => void;
+};
+export const createMagnitudify = (): Magnitudify => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let windowSize: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let windowCount: number = undefined!;
+
+  return {
+    run: (signal) => magnitudify(windowSize, windowCount, signal),
+    configure: (newWindowSize, newWindowCount) => {
+      windowSize = newWindowSize;
+      windowCount = newWindowCount;
+    },
+  };
+};

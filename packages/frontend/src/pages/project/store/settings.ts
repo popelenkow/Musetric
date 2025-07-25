@@ -10,15 +10,6 @@ export type SettingsState = {
   minDecibel: number;
 };
 
-export type SettingsActions = {
-  setOpen: (open: boolean) => void;
-  setFourierMode: (mode: FourierMode) => void;
-  setWindowSize: (size: number) => void;
-  setMinFrequency: (value: number) => void;
-  setMaxFrequency: (value: number) => void;
-  setMinDecibel: (value: number) => void;
-};
-
 const initialState: SettingsState = {
   open: false,
   fourierMode: 'gpuFftRadix4',
@@ -28,14 +19,22 @@ const initialState: SettingsState = {
   minDecibel: -45,
 };
 
-export const useSettingsStore = create<SettingsState & SettingsActions>(
-  (set) => ({
-    ...initialState,
-    setOpen: (open) => set({ open }),
-    setFourierMode: (fourierMode) => set({ fourierMode }),
-    setWindowSize: (windowSize) => set({ windowSize }),
-    setMinFrequency: (minFrequency) => set({ minFrequency }),
-    setMaxFrequency: (maxFrequency) => set({ maxFrequency }),
-    setMinDecibel: (minDecibel) => set({ minDecibel }),
-  }),
-);
+export type SettingsActions = {
+  setOpen: (open: boolean) => void;
+  setFourierMode: (mode: FourierMode) => void;
+  setWindowSize: (size: number) => void;
+  setMinFrequency: (value: number) => void;
+  setMaxFrequency: (value: number) => void;
+  setMinDecibel: (value: number) => void;
+};
+
+type State = SettingsState & SettingsActions;
+export const useSettingsStore = create<State>((set) => ({
+  ...initialState,
+  setOpen: (open) => set({ open }),
+  setFourierMode: (fourierMode) => set({ fourierMode }),
+  setWindowSize: (windowSize) => set({ windowSize }),
+  setMinFrequency: (minFrequency) => set({ minFrequency }),
+  setMaxFrequency: (maxFrequency) => set({ maxFrequency }),
+  setMinDecibel: (minDecibel) => set({ minDecibel }),
+}));

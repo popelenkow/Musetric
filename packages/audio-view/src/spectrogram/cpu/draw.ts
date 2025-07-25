@@ -63,6 +63,5 @@ export const createDraw = (canvas: HTMLCanvasElement): Draw => {
     },
   };
 
-  drawer.resize();
   return drawer;
 };

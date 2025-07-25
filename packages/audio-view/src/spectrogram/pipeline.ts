@@ -10,6 +10,7 @@ export type PipelineConfigureOptions = {
 };
 export type Pipeline = {
   render: (wave: Float32Array, progress: number) => Promise<void>;
+  configure: (options: PipelineConfigureOptions) => void;
   resize: () => void;
   destroy: () => void;
 };

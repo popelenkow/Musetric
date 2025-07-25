@@ -1,48 +1,48 @@
 import { Colors } from '../../colors';
-import { createBuffers } from './buffers';
-import { createBindGroup, createSampler, createTexture } from './common';
+import { createColors } from './colors';
 import { createPipeline } from './pipeline';
+import { createProgress } from './progress';
+import { createTexture } from './texture';
 
 export type Draw = {
-  run: (encoder: GPUCommandEncoder) => void;
-  resize: () => void;
-  writeProgress: (progress: number) => void;
   width: number;
   height: number;
   getTextureView: () => GPUTextureView;
+  run: (encoder: GPUCommandEncoder) => void;
+  resize: () => void;
+  configure: (colors: Colors) => void;
+  writeProgress: (progress: number) => void;
   destroy: () => void;
 };
-
-export type CreateDrawOptions = {
-  device: GPUDevice;
-  canvas: HTMLCanvasElement;
-  colors: Colors;
-  timestampWrites?: GPUComputePassTimestampWrites;
-};
-
-export const createDraw = (options: CreateDrawOptions): Draw => {
-  const { device, canvas, colors, timestampWrites } = options;
+export const createDraw = (
+  device: GPUDevice,
+  canvas: HTMLCanvasElement,
+  timestampWrites?: GPUComputePassTimestampWrites,
+): Draw => {
   const context = canvas.getContext('webgpu');
   if (!context) {
     throw new Error('WebGPU context not available on the canvas');
   }
 
   const pipeline = createPipeline(device, context);
+  const colors = createColors(device);
+  const progress = createProgress(device);
+  const sampler = device.createSampler({
+    label: 'draw-sampler',
+    magFilter: 'nearest',
+    minFilter: 'nearest',
+  });
 
-  const buffers = createBuffers(device, colors);
-  const sampler = createSampler(device);
-
-  let texture = createTexture(device, 1, 1);
-
-  let bindGroup = createBindGroup(
-    device,
-    pipeline,
-    buffers,
-    sampler,
-    texture.view,
-  );
+  const texture = createTexture(device);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let bindGroup: GPUBindGroup = undefined!;
 
   const drawer: Draw = {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    width: undefined!,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    height: undefined!,
+    getTextureView: () => texture.view,
     run: (encoder) => {
       const view = context.getCurrentTexture().createView({
         label: 'draw-view',
@@ -72,28 +72,28 @@ export const createDraw = (options: CreateDrawOptions): Draw => {
       canvas.width = width;
       canvas.height = height;
 
-      texture.destroy();
-      texture = createTexture(device, width, height);
-      bindGroup = createBindGroup(
-        device,
-        pipeline,
-        buffers,
-        sampler,
-        texture.view,
-      );
+      texture.resize(width, height);
+      bindGroup = device.createBindGroup({
+        label: 'draw-bind-group',
+        layout: pipeline.getBindGroupLayout(0),
+        entries: [
+          { binding: 0, resource: { buffer: colors.buffer } },
+          { binding: 1, resource: { buffer: progress.buffer } },
+          { binding: 2, resource: sampler },
+          { binding: 3, resource: texture.view },
+        ],
+      });
     },
-    writeProgress: buffers.writeProgress,
-    width: 0,
-    height: 0,
-    getTextureView: () => texture.view,
-
+    configure: (value) => {
+      colors.write(value);
+    },
+    writeProgress: progress.write,
     destroy: () => {
-      buffers.destroy();
+      colors.destroy();
+      progress.destroy();
       texture.destroy();
-      context.unconfigure();
     },
   };
 
-  drawer.resize();
   return drawer;
 };

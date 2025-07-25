@@ -27,5 +27,29 @@ export const decibelify = (
   }
 };
 
-export type Decibelify = typeof decibelify;
-export const createDecibelify = (): Decibelify => decibelify;
+export type Decibelify = {
+  run: (magnitudes: Float32Array) => void;
+  configure: (
+    windowSize: number,
+    windowCount: number,
+    minDecibel: number,
+  ) => void;
+};
+export const createDecibelify = (): Decibelify => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let windowSize: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let windowCount: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let minDecibel: number = undefined!;
+
+  return {
+    run: (magnitudes) =>
+      decibelify(windowSize, windowCount, magnitudes, minDecibel),
+    configure: (newWindowSize, newWindowCount, newMinDecibel) => {
+      windowSize = newWindowSize;
+      windowCount = newWindowCount;
+      minDecibel = newMinDecibel;
+    },
+  };
+};

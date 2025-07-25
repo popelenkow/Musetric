@@ -45,8 +45,8 @@ export const createPipelineBuffers = (device: GPUDevice) => {
       buffers.signalArray = createComplexArray(windowSize * windowCount);
     },
     destroy: () => {
-      buffers.signal.real.destroy();
-      buffers.signal.imag.destroy();
+      buffers.signal?.real.destroy();
+      buffers.signal?.imag.destroy();
     },
   };
 
