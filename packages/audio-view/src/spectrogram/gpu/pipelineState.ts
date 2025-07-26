@@ -29,23 +29,23 @@ export type PipelineState = {
 export const createPipelineState = (
   createOptions: CreatePipelineOptions,
 ): PipelineState => {
-  const { device, fourierMode, canvas, onProfile } = createOptions;
+  const { device, fourierMode, canvas, onMetrics } = createOptions;
 
-  const timer = createPipelineTimer(device, onProfile);
+  const timer = createPipelineTimer(device, onMetrics);
 
   const buffers = createPipelineBuffers(device);
   const sliceWaves = createSliceWaves();
   sliceWaves.run = timer.wrap('sliceWaves', sliceWaves.run);
-  const filterWave = createFilterWave(device, timer.tw.filterWave);
+  const filterWave = createFilterWave(device, timer.marker.filterWave);
   const createFourier = gpuFouriers[fourierMode];
   const fourier = createFourier(device, {
-    reverse: timer.tw.fourierReverse,
-    transform: timer.tw.fourierTransform,
+    reverse: timer.marker.fourierReverse,
+    transform: timer.marker.fourierTransform,
   });
-  const magnitudify = createMagnitudify(device, timer.tw.magnitudify);
-  const decibelify = createDecibelify(device, timer.tw.decibelify);
-  const scaleView = createScaleView(device, timer.tw.scaleView);
-  const draw = createDraw(device, canvas, timer.tw.draw);
+  const magnitudify = createMagnitudify(device, timer.marker.magnitudify);
+  const decibelify = createDecibelify(device, timer.marker.decibelify);
+  const scaleView = createScaleView(device, timer.marker.scaleView);
+  const draw = createDraw(device, canvas, timer.marker.draw);
 
   const state: PipelineState = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

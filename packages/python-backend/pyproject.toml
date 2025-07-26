@@ -20,7 +20,7 @@ dev = [
 packages = ["musetric"]
 
 [tool.isort]
-profile = "black"
+metrics = "black"
 
 [tool.ruff]
 lint.select = ["TID"]

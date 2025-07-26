@@ -1,6 +1,6 @@
 import { createCpuTimer, createGpuTimer, roundDuration } from '../../common';
 
-export const metricKeys = [
+export const timerLabels = [
   'configure',
   'sliceWaves',
   'writeBuffers',
@@ -16,10 +16,10 @@ export const metricKeys = [
   'other',
   'total',
 ] as const;
-export type MetricKey = (typeof metricKeys)[number];
-export type PipelineProfile = Record<MetricKey, number>;
+export type TimerLabel = (typeof timerLabels)[number];
+export type PipelineMetrics = Record<TimerLabel, number>;
 
-const gpuKeys = [
+const gpuLabels = [
   'filterWave',
   'fourierReverse',
   'fourierTransform',
@@ -27,20 +27,20 @@ const gpuKeys = [
   'decibelify',
   'scaleView',
   'draw',
-] as const satisfies MetricKey[];
+] as const satisfies TimerLabel[];
 
-const cpuKeys = [
+const cpuLabels = [
   'configure',
   'sliceWaves',
   'writeBuffers',
   'createCommand',
   'submitCommand',
   'total',
-] as const satisfies MetricKey[];
+] as const satisfies TimerLabel[];
 
 const create = (device: GPUDevice) => ({
-  gpu: createGpuTimer(device, gpuKeys),
-  cpu: createCpuTimer(cpuKeys),
+  gpu: createGpuTimer(device, gpuLabels),
+  cpu: createCpuTimer(cpuLabels),
 });
 
 type Timer = ReturnType<typeof create>;
@@ -48,7 +48,7 @@ type Timer = ReturnType<typeof create>;
 export type PipelineTimer = {
   wrap: Timer['cpu']['wrap'];
   wrapAsync: Timer['cpu']['wrapAsync'];
-  tw: Partial<Timer['gpu']['timestampWrites']>;
+  marker: Partial<Timer['gpu']['timestampWrites']>;
   resolve: (encoder: GPUCommandEncoder) => void;
   finish: () => Promise<void>;
   destroy: () => void;
@@ -56,13 +56,13 @@ export type PipelineTimer = {
 
 export const createPipelineTimer = (
   device: GPUDevice,
-  onProfile?: (profile: PipelineProfile) => void,
+  onMetrics?: (metrics: PipelineMetrics) => void,
 ): PipelineTimer => {
-  if (!onProfile) {
+  if (!onMetrics) {
     return {
       wrap: (_, fn) => fn,
       wrapAsync: (_, fn) => fn,
-      tw: {},
+      marker: {},
       resolve: () => {
         /** Nothing */
       },
@@ -79,31 +79,31 @@ export const createPipelineTimer = (
   const pipelineTimer: PipelineTimer = {
     wrap: timer.cpu.wrap,
     wrapAsync: timer.cpu.wrapAsync,
-    tw: timer.gpu.timestampWrites,
+    marker: timer.gpu.timestampWrites,
     resolve: timer.gpu.resolve,
     finish: async () => {
       const gpuDuration = await timer.gpu.read();
       const cpuDuration = timer.cpu.read();
-      const profile: PipelineProfile = {
+      const metrics: PipelineMetrics = {
         ...gpuDuration,
         ...cpuDuration,
         other: 0,
       };
-      const gpuSum = gpuKeys.reduce((acc, key) => acc + profile[key], 0);
-      profile.submitCommand = roundDuration(profile.submitCommand - gpuSum);
-      const sum = metricKeys
+      const gpuSum = gpuLabels.reduce((acc, key) => acc + metrics[key], 0);
+      metrics.submitCommand = roundDuration(metrics.submitCommand - gpuSum);
+      const sum = timerLabels
         .slice(0, -2)
-        .reduce((acc, key) => acc + profile[key], 0);
-      profile.other = roundDuration(profile.total - sum);
-      const sortedProfile = metricKeys.reduce<PipelineProfile>(
+        .reduce((acc, key) => acc + metrics[key], 0);
+      metrics.other = roundDuration(metrics.total - sum);
+      const sortedMetrics = timerLabels.reduce<PipelineMetrics>(
         (acc, key) => ({
           ...acc,
-          [key]: profile[key],
+          [key]: metrics[key],
         }),
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        {} as PipelineProfile,
+        {} as PipelineMetrics,
       );
-      onProfile(sortedProfile);
+      onMetrics(sortedMetrics);
     },
     destroy: timer.gpu.destroy,
   };

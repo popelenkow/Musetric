@@ -30,7 +30,7 @@ const getWindowSizes = () => {
 };
 export const windowSizes = getWindowSizes();
 
-export const getMetricKeys = (mode: FourierMode): readonly string[] =>
+export const getTimerLabels = (mode: FourierMode): readonly string[] =>
   isGpuFourierMode(mode)
-    ? spectrogram.gpu.metricKeys
-    : spectrogram.cpu.metricKeys;
+    ? spectrogram.gpu.timerLabels
+    : spectrogram.cpu.timerLabels;

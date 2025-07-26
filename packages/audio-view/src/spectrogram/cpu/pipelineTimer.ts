@@ -1,6 +1,6 @@
 import { createCpuTimer, roundDuration } from '../../common';
 
-export const metricKeys = [
+export const timerLabels = [
   'configure',
   'sliceWaves',
   'filterWave',
@@ -12,10 +12,10 @@ export const metricKeys = [
   'other',
   'total',
 ] as const;
-export type MetricKey = (typeof metricKeys)[number];
-export type PipelineProfile = Record<MetricKey, number>;
+export type TimerLabel = (typeof timerLabels)[number];
+export type PipelineMetrics = Record<TimerLabel, number>;
 
-const create = () => createCpuTimer(metricKeys);
+const create = () => createCpuTimer(timerLabels);
 type Timer = ReturnType<typeof create>;
 
 export type PipelineTimer = {
@@ -25,9 +25,9 @@ export type PipelineTimer = {
 };
 
 export const createPipelineTimer = (
-  onProfile?: (profile: PipelineProfile) => void,
+  onMetrics?: (metrics: PipelineMetrics) => void,
 ): PipelineTimer => {
-  if (!onProfile) {
+  if (!onMetrics) {
     return {
       wrap: (_label, fn) => fn,
       wrapAsync: (_label, fn) => fn,
@@ -43,12 +43,12 @@ export const createPipelineTimer = (
     wrap: timer.wrap,
     wrapAsync: timer.wrapAsync,
     finish: async () => {
-      const profile = timer.read();
-      const sum = metricKeys
+      const metrics = timer.read();
+      const sum = timerLabels
         .slice(0, -2)
-        .reduce((acc, key) => acc + profile[key], 0);
-      profile.other = roundDuration(profile.total - sum);
-      onProfile(profile);
+        .reduce((acc, key) => acc + metrics[key], 0);
+      metrics.other = roundDuration(metrics.total - sum);
+      onMetrics(metrics);
     },
   };
 };

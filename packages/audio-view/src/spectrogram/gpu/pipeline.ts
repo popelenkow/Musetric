@@ -2,13 +2,13 @@ import { createCallLatest } from '../../common';
 import { GpuFourierMode } from '../../fourier';
 import { Pipeline, PipelineConfigureOptions } from '../pipeline';
 import { createPipelineState } from './pipelineState';
-import { PipelineProfile } from './pipelineTimer';
+import { PipelineMetrics } from './pipelineTimer';
 
 export type CreatePipelineOptions = {
   device: GPUDevice;
   fourierMode: GpuFourierMode;
   canvas: HTMLCanvasElement;
-  onProfile?: (profile: PipelineProfile) => void;
+  onMetrics?: (metrics: PipelineMetrics) => void;
 };
 export const createPipeline = (
   createOptions: CreatePipelineOptions,
