@@ -1,3 +1,4 @@
+import { ViewSize } from '../common';
 import { Colors } from './colors';
 
 export type PipelineConfigureOptions = {
@@ -11,6 +12,6 @@ export type PipelineConfigureOptions = {
 export type Pipeline = {
   render: (wave: Float32Array, progress: number) => Promise<void>;
   configure: (options: PipelineConfigureOptions) => void;
-  resize: () => void;
+  resize: (viewSize: ViewSize) => void;
   destroy: () => void;
 };

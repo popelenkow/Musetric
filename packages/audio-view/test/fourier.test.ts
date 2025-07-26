@@ -99,10 +99,7 @@ describe('fourier', async () => {
           const buffers = createGpuBuffers(device, fixture.windowSize);
           const createFourier = gpuFouriers[mode];
           const fourier = createFourier(device);
-          fourier.configure(buffers.signal, {
-            windowSize: fixture.windowSize,
-            windowCount,
-          });
+          fourier.configure(buffers.signal, fixture.windowSize, windowCount);
           const reader = createComplexGpuBufferReader({
             device,
             typeSize: Float32Array.BYTES_PER_ELEMENT,

@@ -1,5 +1,9 @@
 import { useTheme } from '@mui/material';
-import { spectrogram, subscribeResizeObserver } from '@musetric/audio-view';
+import {
+  resizeCanvas,
+  spectrogram,
+  subscribeResizeObserver,
+} from '@musetric/audio-view';
 import { FC, useEffect, useRef } from 'react';
 import { usePlayerStore } from './store/player';
 import { useSettingsStore } from './store/settings';
@@ -34,7 +38,8 @@ export const Spectrogram: FC = () => {
   }, [unmount]);
 
   useEffect(() => {
-    if (!pipeline || !buffer) return;
+    const canvas = canvasRef.current;
+    if (!pipeline || !buffer || !canvas) return;
     const data = buffer.getChannelData(0);
     const { sampleRate } = buffer;
     const colors: spectrogram.Colors = {
@@ -51,6 +56,8 @@ export const Spectrogram: FC = () => {
       minDecibel,
     };
     pipeline.configure(configureOptions);
+    const viewSize = resizeCanvas(canvas);
+    pipeline.resize(viewSize);
     void pipeline.render(data, progress);
   }, [
     pipeline,
@@ -68,7 +75,8 @@ export const Spectrogram: FC = () => {
     if (!canvas || !pipeline || !buffer) return;
     const data = buffer.getChannelData(0);
     return subscribeResizeObserver(canvas, async () => {
-      pipeline.resize();
+      const viewSize = resizeCanvas(canvas);
+      pipeline.resize(viewSize);
       await pipeline.render(data, progress);
     });
   }, [pipeline, buffer, progress]);

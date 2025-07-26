@@ -1,5 +1,4 @@
 import { ComplexGpuBuffer } from '../../common';
-import { GpuFourierParams } from '../gpuFourier';
 import { assertWindowSizePowerOfTwo } from '../isPowerOfTwo';
 import { createParams, StateParams } from './params';
 import { createReversePipeline, createTransformPipeline } from './pipeline';
@@ -18,7 +17,11 @@ export type State = {
   pipelines: Pipelines;
   bindGroups: BindGroups;
   params: StateParams;
-  configure: (signal: ComplexGpuBuffer, value: GpuFourierParams) => void;
+  configure: (
+    signal: ComplexGpuBuffer,
+    windowSize: number,
+    windowCount: number,
+  ) => void;
   destroy: () => void;
 };
 export const createState = (device: GPUDevice) => {
@@ -36,11 +39,11 @@ export const createState = (device: GPUDevice) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroups: undefined!,
     params,
-    configure: (signal, value) => {
-      assertWindowSizePowerOfTwo(value.windowSize);
-      params.write(value);
+    configure: (signal, windowSize, windowCount) => {
+      assertWindowSizePowerOfTwo(windowSize);
+      params.write({ windowSize, windowCount });
       reverseTable.resize(params.shader.reverseWidth);
-      trigTable.resize(value.windowSize);
+      trigTable.resize(windowSize);
       ref.bindGroups = {
         reverse: device.createBindGroup({
           label: 'fft4-reverse-bind-group',

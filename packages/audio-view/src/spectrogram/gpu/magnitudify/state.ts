@@ -1,12 +1,16 @@
 import { ComplexGpuBuffer } from '../../../common';
-import { createParams, MagnitudifyParams, StateParams } from './params';
+import { createParams, StateParams } from './params';
 import { createPipeline } from './pipeline';
 
 export type State = {
   pipeline: GPUComputePipeline;
   params: StateParams;
   bindGroup: GPUBindGroup;
-  configure: (signal: ComplexGpuBuffer, value: MagnitudifyParams) => void;
+  configure: (
+    signal: ComplexGpuBuffer,
+    windowSize: number,
+    windowCount: number,
+  ) => void;
   destroy: () => void;
 };
 
@@ -19,8 +23,8 @@ export const createState = (device: GPUDevice) => {
     params,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroup: undefined!,
-    configure: (signal, value) => {
-      ref.params.write(value);
+    configure: (signal, windowSize, windowCount) => {
+      ref.params.write({ windowSize, windowCount });
       ref.bindGroup = device.createBindGroup({
         label: 'magnitudify-bind-group',
         layout: pipeline.getBindGroupLayout(0),

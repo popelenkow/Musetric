@@ -1,20 +1,23 @@
+import { ViewSize } from '../../../common';
+
 export type StateTexture = {
   instance: GPUTexture;
   view: GPUTextureView;
-  resize: (width: number, height: number) => void;
+  resize: (viewSize: ViewSize) => void;
   destroy: () => void;
 };
 
-export const createTexture = (device: GPUDevice) => {
+export const createStateTexture = (device: GPUDevice): StateTexture => {
   const ref: StateTexture = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     instance: undefined!,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     view: undefined!,
-    resize: (width, height) => {
+    resize: (viewSize) => {
+      const { width, height } = viewSize;
       ref.instance?.destroy();
       ref.instance = device.createTexture({
-        label: 'draw-texture',
+        label: 'pipeline-texture',
         size: { width, height },
         format: 'rgba8unorm',
         usage:
@@ -23,7 +26,7 @@ export const createTexture = (device: GPUDevice) => {
           GPUTextureUsage.STORAGE_BINDING,
       });
       ref.view = ref.instance.createView({
-        label: 'draw-texture-view',
+        label: 'pipeline-texture-view',
       });
     },
     destroy: () => {

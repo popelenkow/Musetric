@@ -1,14 +1,14 @@
 import { createCallLatest } from '../../common';
 import { GpuFourierMode, gpuFouriers } from '../../fourier';
+import { createSliceWaves } from '../cpu/sliceWaves';
 import { Pipeline, PipelineConfigureOptions } from '../pipeline';
 import { createDecibelify } from './decibelify';
 import { createDraw } from './draw';
 import { createFilterWave } from './filterWave';
 import { createMagnitudify } from './magnitudify';
-import { createPipelineBuffers } from './pipelineBuffers';
+import { createPipelineState } from './pipelineState';
 import { createPipelineTimer, PipelineMetrics } from './pipelineTimer';
 import { createScaleView } from './scaleView';
-import { createSliceWaves } from './sliceWaves';
 
 export type CreatePipelineOptions = {
   device: GPUDevice;
@@ -22,13 +22,11 @@ export const createPipeline = (
   const { device, fourierMode, canvas, onMetrics } = createOptions;
 
   let isConfigureRequested = true;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let options: PipelineConfigureOptions = undefined!;
 
   const timer = createPipelineTimer(device, onMetrics);
   const { markers } = timer;
 
-  const buffers = createPipelineBuffers(device);
+  const state = createPipelineState(device, markers.writeBuffers);
   const sliceWaves = createSliceWaves(markers.sliceWaves);
   const filterWave = createFilterWave(device, markers.filterWave);
   const fourier = gpuFouriers[fourierMode](device, {
@@ -48,47 +46,26 @@ export const createPipeline = (
       minFrequency,
       maxFrequency,
       minDecibel,
-    } = options;
+    } = state.options;
+    const { width, height } = state.viewSize;
 
-    draw.resize();
-    const windowCount = draw.width;
-    const halfSize = windowSize / 2;
-    buffers.resize(windowSize, windowCount);
-    const { signal } = buffers;
+    const windowCount = width;
+    state.configure();
+    const { signal, texture, progress } = state;
     sliceWaves.configure(windowSize, windowCount);
-    filterWave.configure(signal.real, {
-      windowSize,
-      windowCount,
-    });
-    fourier.configure(signal, {
-      windowSize,
-      windowCount,
-    });
-    magnitudify.configure(signal, {
-      windowSize,
-      windowCount,
-    });
-    decibelify.configure(signal.real, {
-      halfSize,
-      windowCount,
-      minDecibel,
-    });
-    draw.configure(colors);
-    scaleView.configure(signal.real, draw.getTextureView(), {
+    filterWave.configure(signal.real, windowSize, windowCount);
+    fourier.configure(signal, windowSize, windowCount);
+    magnitudify.configure(signal, windowSize, windowCount);
+    decibelify.configure(signal.real, windowSize, windowCount, minDecibel);
+    scaleView.configure(signal.real, texture.view, {
       sampleRate,
       minFrequency,
       maxFrequency,
       windowSize,
-      width: draw.width,
-      height: draw.height,
+      width,
+      height,
     });
-  });
-
-  const writeBuffers = markers.writeBuffers((progress: number) => {
-    const { signal, signalArray } = buffers;
-    device.queue.writeBuffer(signal.real, 0, signalArray.real);
-    device.queue.writeBuffer(signal.imag, 0, signalArray.imag);
-    draw.writeProgress(progress);
+    draw.configure(texture.view, progress.buffer, colors);
   });
 
   const createCommand = markers.createCommand(() => {
@@ -117,8 +94,8 @@ export const createPipeline = (
       isConfigureRequested = false;
       configure();
     }
-    sliceWaves.run(wave, buffers.signalArray);
-    writeBuffers(progress);
+    sliceWaves.run(wave, state.signalArray);
+    state.writeBuffers(progress);
     const command = createCommand();
     await submitCommand(command);
   });
@@ -129,15 +106,16 @@ export const createPipeline = (
       await timer.finish();
     }),
     configure: (newOptions: PipelineConfigureOptions) => {
-      options = newOptions;
+      state.options = newOptions;
       isConfigureRequested = true;
     },
-    resize: () => {
+    resize: (viewSize) => {
+      state.viewSize = viewSize;
       isConfigureRequested = true;
     },
     destroy: () => {
       timer.destroy();
-      buffers.destroy();
+      state.destroy();
       filterWave.destroy();
       fourier.destroy();
       magnitudify.destroy();

@@ -3,7 +3,7 @@ export * from './draw';
 export * from './filterWave';
 export * from './magnitudify';
 export * from './pipeline';
-export * from './pipelineArrays';
+export * from './pipelineState';
 export * from './pipelineTimer';
 export * from './scaleView';
 export * from './sliceWaves';

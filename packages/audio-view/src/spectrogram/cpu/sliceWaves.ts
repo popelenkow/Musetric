@@ -28,10 +28,10 @@ export const createSliceWaves = (marker?: CpuMarker): SliceWaves => {
   let windowCount: number = undefined!;
 
   const ref: SliceWaves = {
-    run: (wave: Float32Array, waves: ComplexArray): void => {
+    run: (wave, waves) => {
       sliceWaves(windowSize, windowCount, wave, waves);
     },
-    configure: (newWindowSize: number, newWindowCount: number): void => {
+    configure: (newWindowSize, newWindowCount) => {
       windowSize = newWindowSize;
       windowCount = newWindowCount;
     },

@@ -1,20 +1,19 @@
 export type StateProgress = {
   buffer: GPUBuffer;
-  write: (value: number) => void;
+  write: (progress: number) => void;
   destroy: () => void;
 };
-export const createProgress = (device: GPUDevice): StateProgress => {
+export const createStateProgress = (device: GPUDevice): StateProgress => {
   const array = new Float32Array([1]);
   const buffer = device.createBuffer({
-    label: 'draw-progress-buffer',
+    label: 'pipeline-progress-buffer',
     size: array.byteLength,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
-
   const ref: StateProgress = {
     buffer,
-    write: (value: number) => {
-      array[0] = value;
+    write: (progress: number) => {
+      array[0] = progress;
       device.queue.writeBuffer(buffer, 0, array);
     },
     destroy: () => {

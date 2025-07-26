@@ -1,17 +1,14 @@
 import { Colors } from '../../colors';
 import { createColors } from './colors';
 import { createPipeline } from './pipeline';
-import { createProgress } from './progress';
-import { createTexture } from './texture';
 
 export type Draw = {
-  width: number;
-  height: number;
-  getTextureView: () => GPUTextureView;
   run: (encoder: GPUCommandEncoder) => void;
-  resize: () => void;
-  configure: (colors: Colors) => void;
-  writeProgress: (progress: number) => void;
+  configure: (
+    view: GPUTextureView,
+    progress: GPUBuffer,
+    colors: Colors,
+  ) => void;
   destroy: () => void;
 };
 export const createDraw = (
@@ -26,23 +23,15 @@ export const createDraw = (
 
   const pipeline = createPipeline(device, context);
   const colors = createColors(device);
-  const progress = createProgress(device);
   const sampler = device.createSampler({
     label: 'draw-sampler',
     magFilter: 'nearest',
     minFilter: 'nearest',
   });
-
-  const texture = createTexture(device);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let bindGroup: GPUBindGroup = undefined!;
 
-  const drawer: Draw = {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    width: undefined!,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    height: undefined!,
-    getTextureView: () => texture.view,
+  const ref: Draw = {
     run: (encoder) => {
       const view = context.getCurrentTexture().createView({
         label: 'draw-view',
@@ -64,36 +53,23 @@ export const createDraw = (
       pass.draw(3);
       pass.end();
     },
-    resize: () => {
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      drawer.width = width;
-      drawer.height = height;
-      canvas.width = width;
-      canvas.height = height;
-
-      texture.resize(width, height);
+    configure: (view, progress, colorsValue) => {
       bindGroup = device.createBindGroup({
         label: 'draw-bind-group',
         layout: pipeline.getBindGroupLayout(0),
         entries: [
           { binding: 0, resource: { buffer: colors.buffer } },
-          { binding: 1, resource: { buffer: progress.buffer } },
+          { binding: 1, resource: { buffer: progress } },
           { binding: 2, resource: sampler },
-          { binding: 3, resource: texture.view },
+          { binding: 3, resource: view },
         ],
       });
+      colors.write(colorsValue);
     },
-    configure: (value) => {
-      colors.write(value);
-    },
-    writeProgress: progress.write,
     destroy: () => {
       colors.destroy();
-      progress.destroy();
-      texture.destroy();
     },
   };
 
-  return drawer;
+  return ref;
 };
