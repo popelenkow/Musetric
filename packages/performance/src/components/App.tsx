@@ -50,7 +50,8 @@ export const App: FC = () => {
         p: 2,
         bgcolor: 'background.default',
         color: 'text.primary',
-        minHeight: '100vh',
+        height: '100vh',
+        overflow: 'auto',
       }}
     >
       <FormControlLabel

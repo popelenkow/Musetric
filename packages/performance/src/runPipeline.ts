@@ -39,14 +39,13 @@ export const runPipeline = async (
         canvas,
         fourierMode,
         onMetrics: (metrics) => metricsArray.push(metrics),
-        ...configureOptions,
       })
     : spectrogram.cpu.createPipeline({
         canvas,
         fourierMode,
         onMetrics: (metrics) => metricsArray.push(metrics),
-        ...configureOptions,
       });
+  pipeline.configure(configureOptions);
 
   for (let i = 0; i < skipRuns + runs; i++) {
     await pipeline.render(wave, 0);
