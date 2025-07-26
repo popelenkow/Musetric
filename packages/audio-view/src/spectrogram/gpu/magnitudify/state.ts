@@ -14,14 +14,14 @@ export const createState = (device: GPUDevice) => {
   const pipeline = createPipeline(device);
   const params = createParams(device);
 
-  const state: State = {
+  const ref: State = {
     pipeline,
     params,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroup: undefined!,
     configure: (signal, value) => {
-      state.params.write(value);
-      state.bindGroup = device.createBindGroup({
+      ref.params.write(value);
+      ref.bindGroup = device.createBindGroup({
         label: 'magnitudify-bind-group',
         layout: pipeline.getBindGroupLayout(0),
         entries: [
@@ -35,6 +35,5 @@ export const createState = (device: GPUDevice) => {
       params.destroy();
     },
   };
-
-  return state;
+  return ref;
 };

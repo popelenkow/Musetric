@@ -10,7 +10,7 @@ export type State = {
   configure: (windowSize: number, windowCount: number) => void;
 };
 export const createState = (): State => {
-  const state: State = {
+  const ref: State = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     windowSize: undefined!,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -24,13 +24,12 @@ export const createState = (): State => {
     configure: (windowSize, windowCount) => {
       assertWindowSizePowerOfTwo(windowSize);
 
-      state.windowSize = windowSize;
-      state.windowCount = windowCount;
-      state.reverseWidth = utilsRadix4.getReverseWidth(windowSize);
-      state.reverseTable = utilsRadix4.createReverseTable(state.reverseWidth);
-      state.trigTable = utilsRadix4.createTrigTable(windowSize);
+      ref.windowSize = windowSize;
+      ref.windowCount = windowCount;
+      ref.reverseWidth = utilsRadix4.getReverseWidth(windowSize);
+      ref.reverseTable = utilsRadix4.createReverseTable(ref.reverseWidth);
+      ref.trigTable = utilsRadix4.createTrigTable(windowSize);
     },
   };
-
-  return state;
+  return ref;
 };

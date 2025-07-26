@@ -64,11 +64,10 @@ export const useSpectrogramStore = create<State>((set, get) => {
     },
   );
 
-  const state: State = {
+  const ref: State = {
     ...initialState,
     mount: run,
     unmount: run,
   };
-
-  return state;
+  return ref;
 });

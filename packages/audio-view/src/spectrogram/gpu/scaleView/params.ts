@@ -58,12 +58,12 @@ export const createParams = (device: GPUDevice) => {
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
 
-  const state: StateParams = {
+  const ref: StateParams = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     value: undefined!,
     buffer,
     write: (value) => {
-      state.value = value;
+      ref.value = value;
       const shader = toShaderParams(value);
 
       array.setUint32(0, shader.halfSize, true);
@@ -80,5 +80,5 @@ export const createParams = (device: GPUDevice) => {
       buffer.destroy();
     },
   };
-  return state;
+  return ref;
 };

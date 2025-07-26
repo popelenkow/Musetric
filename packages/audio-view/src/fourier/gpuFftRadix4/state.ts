@@ -31,7 +31,7 @@ export const createState = (device: GPUDevice) => {
   const reverseTable = createReverseTable(device);
   const trigTable = createTrigTable(device);
 
-  const state: State = {
+  const ref: State = {
     pipelines,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroups: undefined!,
@@ -41,7 +41,7 @@ export const createState = (device: GPUDevice) => {
       params.write(value);
       reverseTable.resize(params.shader.reverseWidth);
       trigTable.resize(value.windowSize);
-      state.bindGroups = {
+      ref.bindGroups = {
         reverse: device.createBindGroup({
           label: 'fft4-reverse-bind-group',
           layout: pipelines.reverse.getBindGroupLayout(0),
@@ -70,6 +70,5 @@ export const createState = (device: GPUDevice) => {
       trigTable.destroy();
     },
   };
-
-  return state;
+  return ref;
 };

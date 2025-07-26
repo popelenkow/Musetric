@@ -1,3 +1,5 @@
+import { CpuMarker } from '../../common';
+
 export const scaleView = (
   windowSize: number,
   windowCount: number,
@@ -44,7 +46,7 @@ export type ScaleView = {
     maxFrequency: number,
   ) => void;
 };
-export const createScaleView = (): ScaleView => {
+export const createScaleView = (marker?: CpuMarker): ScaleView => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let windowSize: number = undefined!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -58,7 +60,7 @@ export const createScaleView = (): ScaleView => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let maxFrequency: number = undefined!;
 
-  return {
+  const ref: ScaleView = {
     run: (magnitudes, view) =>
       scaleView(
         windowSize,
@@ -86,4 +88,6 @@ export const createScaleView = (): ScaleView => {
       maxFrequency = newMaxFrequency;
     },
   };
+  ref.run = marker?.(ref.run) ?? ref.run;
+  return ref;
 };

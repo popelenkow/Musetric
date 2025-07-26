@@ -1,4 +1,4 @@
-import { ComplexArray } from '../../common';
+import { ComplexArray, CpuMarker } from '../../common';
 
 export const sliceWaves = (
   windowSize: number,
@@ -21,13 +21,13 @@ export type SliceWaves = {
   run: (wave: Float32Array, waves: ComplexArray) => void;
   configure: (windowSize: number, windowCount: number) => void;
 };
-export const createSliceWaves = (): SliceWaves => {
+export const createSliceWaves = (marker?: CpuMarker): SliceWaves => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let windowSize: number = undefined!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let windowCount: number = undefined!;
 
-  return {
+  const ref: SliceWaves = {
     run: (wave: Float32Array, waves: ComplexArray): void => {
       sliceWaves(windowSize, windowCount, wave, waves);
     },
@@ -36,4 +36,6 @@ export const createSliceWaves = (): SliceWaves => {
       windowCount = newWindowCount;
     },
   };
+  ref.run = marker?.(ref.run) ?? ref.run;
+  return ref;
 };

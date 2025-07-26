@@ -17,7 +17,7 @@ export type Draw = {
 export const createDraw = (
   device: GPUDevice,
   canvas: HTMLCanvasElement,
-  timestampWrites?: GPUComputePassTimestampWrites,
+  marker?: GPUComputePassTimestampWrites,
 ): Draw => {
   const context = canvas.getContext('webgpu');
   if (!context) {
@@ -57,7 +57,7 @@ export const createDraw = (
             storeOp: 'store',
           },
         ],
-        timestampWrites,
+        timestampWrites: marker,
       });
       pass.setPipeline(pipeline);
       pass.setBindGroup(0, bindGroup);

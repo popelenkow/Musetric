@@ -17,12 +17,12 @@ export const createParams = (device: GPUDevice): StateParams => {
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
 
-  const state: StateParams = {
+  const ref: StateParams = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     value: undefined!,
     buffer,
     write: (value) => {
-      state.value = value;
+      ref.value = value;
       array[0] = value.windowSize;
       array[1] = value.windowCount;
       device.queue.writeBuffer(buffer, 0, array);
@@ -31,6 +31,5 @@ export const createParams = (device: GPUDevice): StateParams => {
       buffer.destroy();
     },
   };
-
-  return state;
+  return ref;
 };

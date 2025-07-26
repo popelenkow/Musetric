@@ -4,7 +4,6 @@ export * from './filterWave';
 export * from './magnitudify';
 export * from './pipeline';
 export * from './pipelineBuffers';
-export * from './pipelineState';
 export * from './pipelineTimer';
 export * from './scaleView';
 export * from './sliceWaves';

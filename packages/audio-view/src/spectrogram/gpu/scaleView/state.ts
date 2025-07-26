@@ -17,14 +17,14 @@ export const createState = (device: GPUDevice) => {
   const pipeline = createPipeline(device);
   const params = createParams(device);
 
-  const state: State = {
+  const ref: State = {
     pipeline,
     params,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroup: undefined!,
     configure: (signal, texture, value) => {
       params.write(value);
-      state.bindGroup = device.createBindGroup({
+      ref.bindGroup = device.createBindGroup({
         label: 'scale-view-column-bind-group',
         layout: pipeline.getBindGroupLayout(0),
         entries: [
@@ -35,8 +35,8 @@ export const createState = (device: GPUDevice) => {
       });
     },
     destroy: () => {
-      state.params.destroy();
+      ref.params.destroy();
     },
   };
-  return state;
+  return ref;
 };

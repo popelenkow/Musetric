@@ -1,9 +1,9 @@
-import { ComplexArray, subComplexArray } from '../../common';
-import { CreateCpuFourier } from '../cpuFourier';
+import { ComplexArray, CpuMarker, subComplexArray } from '../../common';
+import { CpuFourier, CreateCpuFourier } from '../cpuFourier';
 import { createState } from './state';
 import { transform4 } from './utils';
 
-export const createCpuFftRadix4: CreateCpuFourier = () => {
+export const createCpuFftRadix4: CreateCpuFourier = (marker?: CpuMarker) => {
   const state = createState();
 
   const transform = (signal: ComplexArray, inverse: boolean) => {
@@ -30,7 +30,7 @@ export const createCpuFftRadix4: CreateCpuFourier = () => {
     }
   };
 
-  return {
+  const ref: CpuFourier = {
     forward: (signal) => {
       transform(signal, false);
     },
@@ -39,4 +39,7 @@ export const createCpuFftRadix4: CreateCpuFourier = () => {
     },
     configure: state.configure,
   };
+  ref.forward = marker?.(ref.forward) ?? ref.forward;
+  ref.inverse = marker?.(ref.inverse) ?? ref.inverse;
+  return ref;
 };

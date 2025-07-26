@@ -1,3 +1,5 @@
+import { CpuMarker } from '../../common';
+
 export const decibelify = (
   windowSize: number,
   windowCount: number,
@@ -35,7 +37,7 @@ export type Decibelify = {
     minDecibel: number,
   ) => void;
 };
-export const createDecibelify = (): Decibelify => {
+export const createDecibelify = (marker?: CpuMarker): Decibelify => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let windowSize: number = undefined!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -43,7 +45,7 @@ export const createDecibelify = (): Decibelify => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let minDecibel: number = undefined!;
 
-  return {
+  const ref: Decibelify = {
     run: (magnitudes) =>
       decibelify(windowSize, windowCount, magnitudes, minDecibel),
     configure: (newWindowSize, newWindowCount, newMinDecibel) => {
@@ -52,4 +54,6 @@ export const createDecibelify = (): Decibelify => {
       minDecibel = newMinDecibel;
     },
   };
+  ref.run = marker?.(ref.run) ?? ref.run;
+  return ref;
 };

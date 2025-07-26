@@ -6,7 +6,7 @@ export type StateWindowFilter = {
   destroy: () => void;
 };
 export const createWindowFilter = (device: GPUDevice): StateWindowFilter => {
-  const state: StateWindowFilter = {
+  const ref: StateWindowFilter = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     buffer: undefined!,
     resize: (windowSize: number) => {
@@ -18,13 +18,12 @@ export const createWindowFilter = (device: GPUDevice): StateWindowFilter => {
       });
       device.queue.writeBuffer(buffer, 0, array);
 
-      state.buffer?.destroy();
-      state.buffer = buffer;
+      ref.buffer?.destroy();
+      ref.buffer = buffer;
     },
     destroy: () => {
-      state.buffer?.destroy();
+      ref.buffer?.destroy();
     },
   };
-
-  return state;
+  return ref;
 };

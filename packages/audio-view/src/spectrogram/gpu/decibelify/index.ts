@@ -7,7 +7,7 @@ export type Decibelify = {
 };
 export const createDecibelify = (
   device: GPUDevice,
-  timestampWrites?: GPUComputePassTimestampWrites,
+  marker?: GPUComputePassTimestampWrites,
 ): Decibelify => {
   const state = createState(device);
 
@@ -16,7 +16,7 @@ export const createDecibelify = (
       const { windowCount } = state.params.value;
       const pass = encoder.beginComputePass({
         label: 'decibelify-pass',
-        timestampWrites,
+        timestampWrites: marker,
       });
       pass.setPipeline(state.pipeline);
       pass.setBindGroup(0, state.bindGroup);

@@ -45,10 +45,10 @@ const create = (device: GPUDevice) => ({
 
 type Timer = ReturnType<typeof create>;
 
+type Markers = Partial<Timer['gpu']['markers']> & Timer['cpu']['markers'];
+
 export type PipelineTimer = {
-  wrap: Timer['cpu']['wrap'];
-  wrapAsync: Timer['cpu']['wrapAsync'];
-  marker: Partial<Timer['gpu']['timestampWrites']>;
+  markers: Markers;
   resolve: (encoder: GPUCommandEncoder) => void;
   finish: () => Promise<void>;
   destroy: () => void;
@@ -60,9 +60,14 @@ export const createPipelineTimer = (
 ): PipelineTimer => {
   if (!onMetrics) {
     return {
-      wrap: (_, fn) => fn,
-      wrapAsync: (_, fn) => fn,
-      marker: {},
+      markers: cpuLabels.reduce(
+        (acc, label) => {
+          acc[label] = (fn) => fn;
+          return acc;
+        },
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        {} as Markers,
+      ),
       resolve: () => {
         /** Nothing */
       },
@@ -76,17 +81,20 @@ export const createPipelineTimer = (
   }
 
   const timer = create(device);
+  const markers: Markers = {
+    ...timer.gpu.markers,
+    ...timer.cpu.markers,
+  };
+
   const pipelineTimer: PipelineTimer = {
-    wrap: timer.cpu.wrap,
-    wrapAsync: timer.cpu.wrapAsync,
-    marker: timer.gpu.timestampWrites,
+    markers,
     resolve: timer.gpu.resolve,
     finish: async () => {
-      const gpuDuration = await timer.gpu.read();
-      const cpuDuration = timer.cpu.read();
+      const gpuMetrics = await timer.gpu.read();
+      const cpuMetrics = timer.cpu.read();
       const metrics: PipelineMetrics = {
-        ...gpuDuration,
-        ...cpuDuration,
+        ...gpuMetrics,
+        ...cpuMetrics,
         other: 0,
       };
       const gpuSum = gpuLabels.reduce((acc, key) => acc + metrics[key], 0);

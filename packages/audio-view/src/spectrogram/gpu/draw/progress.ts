@@ -11,7 +11,7 @@ export const createProgress = (device: GPUDevice): StateProgress => {
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
 
-  const state: StateProgress = {
+  const ref: StateProgress = {
     buffer,
     write: (value: number) => {
       array[0] = value;
@@ -21,6 +21,5 @@ export const createProgress = (device: GPUDevice): StateProgress => {
       buffer.destroy();
     },
   };
-
-  return state;
+  return ref;
 };
