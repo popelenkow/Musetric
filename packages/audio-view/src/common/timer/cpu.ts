@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
-
 import { roundDuration } from './roundDuration';
 
 type TimeRange = {
@@ -17,14 +14,12 @@ const getDuration = (range: TimeRange): number => {
   return roundDuration(duration);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type CpuMarker = <T extends (...args: any[]) => any>(fn: T) => T;
+export type CpuMarkers<Label extends string> = Record<Label, CpuMarker>;
+
 export type CpuTimer<Label extends string> = {
-  start: (label: Label) => void;
-  end: (label: Label) => void;
-  wrap: <T extends (...args: any[]) => any>(label: Label, fn: T) => T;
-  wrapAsync: <T extends (...args: any[]) => Promise<any>>(
-    label: Label,
-    fn: T,
-  ) => T;
+  markers: CpuMarkers<Label>;
   read: () => Record<Label, number>;
 };
 
@@ -38,38 +33,44 @@ export const createCpuTimer = <Labels extends readonly string[]>(
       acc[label] = {};
       return acc;
     },
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     {} as Record<Label, TimeRange>,
   );
 
-  return {
-    start: (label) => {
-      ranges[label].start = performance.now();
-    },
-    end: (label) => {
-      ranges[label].end = performance.now();
-    },
-    wrap: (label, fn) => {
+  const getMarker =
+    (label: Label): CpuMarker =>
+    (fn) => {
       const wrapped = (...args: Parameters<typeof fn>) => {
         try {
           ranges[label].start = performance.now();
-          return fn(...args);
+          const result = fn(...args);
+
+          if (result instanceof Promise) {
+            return result.finally(() => {
+              ranges[label].end = performance.now();
+            });
+          }
+          return result;
         } finally {
           ranges[label].end = performance.now();
         }
       };
+
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       return wrapped as typeof fn;
+    };
+
+  const markers = labels.reduce(
+    (acc, label) => {
+      acc[label] = getMarker(label);
+      return acc;
     },
-    wrapAsync: (label, fn) => {
-      const wrapped = async (...args: Parameters<typeof fn>) => {
-        try {
-          ranges[label].start = performance.now();
-          return await fn(...args);
-        } finally {
-          ranges[label].end = performance.now();
-        }
-      };
-      return wrapped as typeof fn;
-    },
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    {} as CpuMarkers<Label>,
+  );
+
+  return {
+    markers,
     read: () =>
       labels.reduce(
         (acc, label) => {
@@ -79,6 +80,7 @@ export const createCpuTimer = <Labels extends readonly string[]>(
           range.end = undefined;
           return acc;
         },
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         {} as Record<Label, number>,
       ),
   };

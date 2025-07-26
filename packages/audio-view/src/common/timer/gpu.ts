@@ -1,9 +1,12 @@
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
-
 import { roundDuration } from './roundDuration';
 
+export type GpuMarkers<Label extends string> = Record<
+  Label,
+  GPUComputePassTimestampWrites
+>;
+
 export type GpuTimer<Label extends string> = {
-  timestampWrites: Record<Label, GPUComputePassTimestampWrites>;
+  markers: GpuMarkers<Label>;
   resolve: (encoder: GPUCommandEncoder) => void;
   read: () => Promise<Record<Label, number>>;
   destroy: () => void;
@@ -30,7 +33,7 @@ export const createGpuTimer = <Labels extends readonly string[]>(
     usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
   });
 
-  const timestampWrites = labels.reduce(
+  const markers = labels.reduce(
     (acc, label, i) => {
       const base = i * 2;
       acc[label] = {
@@ -40,11 +43,12 @@ export const createGpuTimer = <Labels extends readonly string[]>(
       };
       return acc;
     },
-    {} as Record<Label, GPUComputePassTimestampWrites>,
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    {} as GpuMarkers<Label>,
   );
 
   return {
-    timestampWrites,
+    markers,
     resolve: (encoder) => {
       encoder.resolveQuerySet(querySet, 0, count, resolveBuffer, 0);
       encoder.copyBufferToBuffer(resolveBuffer, 0, readBuffer, 0, size);
@@ -60,6 +64,7 @@ export const createGpuTimer = <Labels extends readonly string[]>(
           acc[label] = roundDuration(duration);
           return acc;
         },
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         {} as Record<Label, number>,
       );
       readBuffer.unmap();

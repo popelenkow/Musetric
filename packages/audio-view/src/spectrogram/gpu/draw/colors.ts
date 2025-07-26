@@ -19,7 +19,7 @@ export const createColors = (device: GPUDevice): StateColors => {
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
 
-  const state: StateColors = {
+  const ref: StateColors = {
     buffer,
     write: (value: Colors) => {
       array.set([
@@ -33,6 +33,5 @@ export const createColors = (device: GPUDevice): StateColors => {
       buffer.destroy();
     },
   };
-
-  return state;
+  return ref;
 };

@@ -10,7 +10,7 @@ export type FilterWave = {
 
 export const createFilterWave = (
   device: GPUDevice,
-  timestampWrites?: GPUComputePassTimestampWrites,
+  marker?: GPUComputePassTimestampWrites,
 ): FilterWave => {
   const state = createState(device);
   return {
@@ -19,7 +19,7 @@ export const createFilterWave = (
       const xCount = Math.ceil(windowSize / workgroupSize);
       const pass = encoder.beginComputePass({
         label: 'filter-wave-pass',
-        timestampWrites,
+        timestampWrites: marker,
       });
       pass.setPipeline(state.pipeline);
       pass.setBindGroup(0, state.bindGroup);

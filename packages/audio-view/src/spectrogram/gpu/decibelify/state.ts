@@ -13,14 +13,14 @@ export const createState = (device: GPUDevice) => {
   const pipeline = createPipeline(device);
   const params = createParams(device);
 
-  const state: State = {
+  const ref: State = {
     pipeline,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroup: undefined!,
     params,
     configure: (signal, value) => {
       params.write(value);
-      state.bindGroup = device.createBindGroup({
+      ref.bindGroup = device.createBindGroup({
         label: 'decibelify-bind-group',
         layout: pipeline.getBindGroupLayout(0),
         entries: [
@@ -33,6 +33,5 @@ export const createState = (device: GPUDevice) => {
       params.destroy();
     },
   };
-
-  return state;
+  return ref;
 };

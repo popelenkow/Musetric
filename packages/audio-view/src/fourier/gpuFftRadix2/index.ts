@@ -1,10 +1,7 @@
 import { CreateGpuFourier, GpuFourier } from '../gpuFourier';
 import { createState } from './state';
 
-export const createGpuFftRadix2: CreateGpuFourier = (
-  device,
-  timestampWrites,
-) => {
+export const createGpuFftRadix2: CreateGpuFourier = (device, markers) => {
   const state = createState(device);
 
   const reverse = (encoder: GPUCommandEncoder) => {
@@ -12,7 +9,7 @@ export const createGpuFftRadix2: CreateGpuFourier = (
 
     const pass = encoder.beginComputePass({
       label: 'fft2-reverse-pass',
-      timestampWrites: timestampWrites?.reverse,
+      timestampWrites: markers?.reverse,
     });
     pass.setPipeline(state.pipelines.reverse);
     pass.setBindGroup(0, state.bindGroups.reverse);
@@ -25,7 +22,7 @@ export const createGpuFftRadix2: CreateGpuFourier = (
 
     const pass = encoder.beginComputePass({
       label: 'fft2-transform-pass',
-      timestampWrites: timestampWrites?.transform,
+      timestampWrites: markers?.transform,
     });
     pass.setPipeline(state.pipelines.transform);
     pass.setBindGroup(0, state.bindGroups.transform);

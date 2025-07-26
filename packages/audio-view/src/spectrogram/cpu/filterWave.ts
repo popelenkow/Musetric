@@ -1,3 +1,4 @@
+import { CpuMarker } from '../../common';
 import { hammingWindowFilter } from '../windowFilters';
 
 export type FilterWave = {
@@ -5,7 +6,7 @@ export type FilterWave = {
   configure: (windowSize: number, windowCount: number) => void;
 };
 
-export const createFilterWave = (): FilterWave => {
+export const createFilterWave = (marker?: CpuMarker): FilterWave => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let windowSize: number = undefined!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -13,7 +14,7 @@ export const createFilterWave = (): FilterWave => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let windowFilter: Float32Array = undefined!;
 
-  const state: FilterWave = {
+  const ref: FilterWave = {
     run: (signal) => {
       for (let windowIndex = 0; windowIndex < windowCount; windowIndex++) {
         const windowOffset = windowSize * windowIndex;
@@ -28,6 +29,6 @@ export const createFilterWave = (): FilterWave => {
       windowFilter = hammingWindowFilter(windowSize);
     },
   };
-
-  return state;
+  ref.run = marker?.(ref.run) ?? ref.run;
+  return ref;
 };

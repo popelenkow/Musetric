@@ -6,7 +6,7 @@ export type StateTrigTable = {
   destroy: () => void;
 };
 export const createTrigTable = (device: GPUDevice) => {
-  const state: StateTrigTable = {
+  const ref: StateTrigTable = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     buffer: undefined!,
     resize: (windowSize) => {
@@ -18,13 +18,12 @@ export const createTrigTable = (device: GPUDevice) => {
       });
       device.queue.writeBuffer(buffer, 0, array);
 
-      state.buffer?.destroy();
-      state.buffer = buffer;
+      ref.buffer?.destroy();
+      ref.buffer = buffer;
     },
     destroy: () => {
-      state.buffer?.destroy();
+      ref.buffer?.destroy();
     },
   };
-
-  return state;
+  return ref;
 };

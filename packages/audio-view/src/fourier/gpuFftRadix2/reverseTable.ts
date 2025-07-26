@@ -6,7 +6,7 @@ export type StateReverseTable = {
   destroy: () => void;
 };
 export const createReverseTable = (device: GPUDevice) => {
-  const state: StateReverseTable = {
+  const ref: StateReverseTable = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     buffer: undefined!,
     resize: (windowSize) => {
@@ -19,13 +19,12 @@ export const createReverseTable = (device: GPUDevice) => {
       });
       device.queue.writeBuffer(buffer, 0, array);
 
-      state.buffer?.destroy();
-      state.buffer = buffer;
+      ref.buffer?.destroy();
+      ref.buffer = buffer;
     },
     destroy: () => {
-      state.buffer?.destroy();
+      ref.buffer?.destroy();
     },
   };
-
-  return state;
+  return ref;
 };

@@ -26,26 +26,19 @@ export const createPipeline = (
   let options: PipelineConfigureOptions = undefined!;
 
   const timer = createPipelineTimer(onMetrics);
+  const { markers } = timer;
 
   const arrays = createPipelineArrays();
 
-  const sliceWaves = createSliceWaves();
-  sliceWaves.run = timer.wrap('sliceWaves', sliceWaves.run);
-  const filterWave = createFilterWave();
-  filterWave.run = timer.wrap('filterWave', filterWave.run);
-  const createFourier = cpuFouriers[fourierMode];
-  const fourier = createFourier();
-  fourier.forward = timer.wrap('fourier', fourier.forward);
-  const magnitudify = createMagnitudify();
-  magnitudify.run = timer.wrap('magnitudify', magnitudify.run);
-  const decibelify = createDecibelify();
-  decibelify.run = timer.wrap('decibelify', decibelify.run);
-  const scaleView = createScaleView();
-  scaleView.run = timer.wrap('scaleView', scaleView.run);
-  const draw = createDraw(canvas);
-  draw.run = timer.wrap('draw', draw.run);
+  const sliceWaves = createSliceWaves(markers.sliceWaves);
+  const filterWave = createFilterWave(markers.filterWave);
+  const fourier = cpuFouriers[fourierMode](markers.fourier);
+  const magnitudify = createMagnitudify(markers.magnitudify);
+  const decibelify = createDecibelify(markers.decibelify);
+  const scaleView = createScaleView(markers.scaleView);
+  const draw = createDraw(canvas, markers.draw);
 
-  const configure = timer.wrap('configure', () => {
+  const configure = markers.configure(() => {
     const {
       windowSize,
       colors,
@@ -54,6 +47,7 @@ export const createPipeline = (
       maxFrequency,
       minDecibel,
     } = options;
+
     draw.resize();
     const windowCount = draw.width;
     arrays.resize(windowSize, windowCount, draw.height);
@@ -73,7 +67,7 @@ export const createPipeline = (
     draw.configure(colors);
   });
 
-  const render = timer.wrap('total', (wave: Float32Array, progress: number) => {
+  const render = markers.total((wave: Float32Array, progress: number) => {
     if (isConfigureRequested) {
       isConfigureRequested = false;
       configure();

@@ -1,4 +1,4 @@
-import { ComplexArray } from '../common';
+import { ComplexArray, CpuMarker } from '../common';
 
 export type CpuFourier = {
   forward: (signal: ComplexArray) => void;
@@ -6,4 +6,4 @@ export type CpuFourier = {
   configure: (windowSize: number, windowCount: number) => void;
 };
 
-export type CreateCpuFourier = () => CpuFourier;
+export type CreateCpuFourier = (marker?: CpuMarker) => CpuFourier;

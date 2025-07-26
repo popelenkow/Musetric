@@ -10,7 +10,7 @@ export type Magnitudify = {
 
 export const createMagnitudify = (
   device: GPUDevice,
-  timestampWrites?: GPUComputePassTimestampWrites,
+  marker?: GPUComputePassTimestampWrites,
 ): Magnitudify => {
   const state = createState(device);
 
@@ -21,7 +21,7 @@ export const createMagnitudify = (
       const xCount = Math.ceil(halfSize / workgroupSize);
       const pass = encoder.beginComputePass({
         label: 'magnitudify-pass',
-        timestampWrites,
+        timestampWrites: marker,
       });
       pass.setPipeline(state.pipeline);
       pass.setBindGroup(0, state.bindGroup);

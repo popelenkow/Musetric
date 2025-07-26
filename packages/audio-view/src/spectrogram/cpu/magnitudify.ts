@@ -1,4 +1,4 @@
-import { ComplexArray } from '../../common';
+import { ComplexArray, CpuMarker } from '../../common';
 
 export const magnitudify = (
   windowSize: number,
@@ -22,17 +22,19 @@ export type Magnitudify = {
   run: (signal: ComplexArray) => void;
   configure: (windowSize: number, windowCount: number) => void;
 };
-export const createMagnitudify = (): Magnitudify => {
+export const createMagnitudify = (marker?: CpuMarker): Magnitudify => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let windowSize: number = undefined!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let windowCount: number = undefined!;
 
-  return {
+  const ref: Magnitudify = {
     run: (signal) => magnitudify(windowSize, windowCount, signal),
     configure: (newWindowSize, newWindowCount) => {
       windowSize = newWindowSize;
       windowCount = newWindowCount;
     },
   };
+  ref.run = marker?.(ref.run) ?? ref.run;
+  return ref;
 };

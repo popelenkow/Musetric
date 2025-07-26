@@ -1,4 +1,4 @@
-import { createGradient, parseHexColor } from '../../common';
+import { CpuMarker, createGradient, parseHexColor } from '../../common';
 import { Colors, Gradients } from '../colors';
 
 export type Draw = {
@@ -9,7 +9,10 @@ export type Draw = {
   configure: (colors: Colors) => void;
 };
 
-export const createDraw = (canvas: HTMLCanvasElement): Draw => {
+export const createDraw = (
+  canvas: HTMLCanvasElement,
+  marker?: CpuMarker,
+): Draw => {
   const context = canvas.getContext('2d');
   if (!context) {
     throw new Error('Context 2D not available on the canvas');
@@ -20,11 +23,11 @@ export const createDraw = (canvas: HTMLCanvasElement): Draw => {
 
   let image = context.createImageData(1, 1);
 
-  const drawer: Draw = {
+  const ref: Draw = {
     width: 0,
     height: 0,
     run: (view, progress) => {
-      const { width, height } = drawer;
+      const { width, height } = ref;
 
       const played = Math.floor(progress * width);
       for (let x = 0; x < width; x++) {
@@ -45,9 +48,9 @@ export const createDraw = (canvas: HTMLCanvasElement): Draw => {
       context.putImageData(image, 0, 0);
     },
     resize: () => {
-      drawer.width = canvas.clientWidth;
-      drawer.height = canvas.clientHeight;
-      image = context.createImageData(drawer.width, drawer.height);
+      ref.width = canvas.clientWidth;
+      ref.height = canvas.clientHeight;
+      image = context.createImageData(ref.width, ref.height);
     },
     configure: (colors) => {
       gradients = {
@@ -62,6 +65,6 @@ export const createDraw = (canvas: HTMLCanvasElement): Draw => {
       };
     },
   };
-
-  return drawer;
+  ref.run = marker?.(ref.run) ?? ref.run;
+  return ref;
 };

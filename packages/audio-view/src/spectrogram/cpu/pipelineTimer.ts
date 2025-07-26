@@ -18,9 +18,10 @@ export type PipelineMetrics = Record<TimerLabel, number>;
 const create = () => createCpuTimer(timerLabels);
 type Timer = ReturnType<typeof create>;
 
+export type Markers = Timer['markers'];
+
 export type PipelineTimer = {
-  wrap: Timer['wrap'];
-  wrapAsync: Timer['wrapAsync'];
+  markers: Markers;
   finish: () => void;
 };
 
@@ -29,8 +30,14 @@ export const createPipelineTimer = (
 ): PipelineTimer => {
   if (!onMetrics) {
     return {
-      wrap: (_label, fn) => fn,
-      wrapAsync: (_label, fn) => fn,
+      markers: timerLabels.reduce(
+        (acc, label) => {
+          acc[label] = (fn) => fn;
+          return acc;
+        },
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        {} as Markers,
+      ),
       finish: async () => {
         /** Nothing */
       },
@@ -40,8 +47,7 @@ export const createPipelineTimer = (
   const timer = create();
 
   return {
-    wrap: timer.wrap,
-    wrapAsync: timer.wrapAsync,
+    markers: timer.markers,
     finish: async () => {
       const metrics = timer.read();
       const sum = timerLabels

@@ -10,7 +10,7 @@ export type ScaleView = {
 
 export const createScaleView = (
   device: GPUDevice,
-  timestampWrites?: GPUComputePassTimestampWrites,
+  marker?: GPUComputePassTimestampWrites,
 ): ScaleView => {
   const state = createState(device);
 
@@ -22,7 +22,7 @@ export const createScaleView = (
 
       const pass = encoder.beginComputePass({
         label: 'scale-view-column-pass',
-        timestampWrites,
+        timestampWrites: marker,
       });
       pass.setPipeline(state.pipeline);
       pass.setBindGroup(0, state.bindGroup);
