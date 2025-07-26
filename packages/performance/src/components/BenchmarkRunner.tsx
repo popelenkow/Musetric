@@ -30,20 +30,12 @@ export const BenchmarkRunner: FC<BenchmarkRunnerProps> = (props) => {
     void run();
   }, [onUpdate, fourierMode, windowSize]);
 
-  const style = {
-    width: '100%',
-    height: 'auto',
-    display: 'block',
-    background: '#000',
-  } as const;
-
   return (
     <canvas
       ref={canvasRef}
       key={`${fourierMode}-${windowSize}`}
       width={canvasWidth}
       height={canvasHeight}
-      style={style}
     />
   );
 };
