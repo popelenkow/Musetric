@@ -7,25 +7,25 @@ import { createDraw } from './draw';
 import { createFilterWave } from './filterWave';
 import { createMagnitudify } from './magnitudify';
 import { createPipelineArrays } from './pipelineArrays';
-import { createPipelineTimer, PipelineProfile } from './pipelineTimer';
+import { createPipelineTimer, PipelineMetrics } from './pipelineTimer';
 import { createScaleView } from './scaleView';
 import { createSliceWaves } from './sliceWaves';
 
 export type CreatePipelineOptions = {
   canvas: HTMLCanvasElement;
   fourierMode: CpuFourierMode;
-  onProfile?: (profile: PipelineProfile) => void;
+  onMetrics?: (metrics: PipelineMetrics) => void;
 };
 export const createPipeline = (
   createOptions: CreatePipelineOptions,
 ): Pipeline => {
-  const { canvas, fourierMode, onProfile } = createOptions;
+  const { canvas, fourierMode, onMetrics } = createOptions;
 
   let isConfigureRequested = true;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let options: PipelineConfigureOptions = undefined!;
 
-  const timer = createPipelineTimer(onProfile);
+  const timer = createPipelineTimer(onMetrics);
 
   const arrays = createPipelineArrays();
 

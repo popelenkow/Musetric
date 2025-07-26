@@ -24,7 +24,7 @@ export const runPipeline = async (
   first: Record<string, number>;
   average: Record<string, number>;
 }> => {
-  const profiles: Record<string, number>[] = [];
+  const metricsArray: Record<string, number>[] = [];
   const configureOptions: spectrogram.PipelineConfigureOptions = {
     windowSize,
     colors,
@@ -38,13 +38,13 @@ export const runPipeline = async (
         device,
         canvas,
         fourierMode,
-        onProfile: (profile) => profiles.push(profile),
+        onMetrics: (metrics) => metricsArray.push(metrics),
         ...configureOptions,
       })
     : spectrogram.cpu.createPipeline({
         canvas,
         fourierMode,
-        onProfile: (profile) => profiles.push(profile),
+        onMetrics: (metrics) => metricsArray.push(metrics),
         ...configureOptions,
       });
 
@@ -54,13 +54,13 @@ export const runPipeline = async (
   }
   pipeline.destroy();
 
-  const first = profiles[0] ?? {};
+  const first = metricsArray[0] ?? {};
   const average: Record<string, number> = {};
   const keys = Object.keys(first);
   for (const key of keys) {
     let sum = 0;
-    for (const profile of profiles.slice(skipRuns)) {
-      sum += profile[key] ?? 0;
+    for (const metrics of metricsArray.slice(skipRuns)) {
+      sum += metrics[key] ?? 0;
     }
     average[key] = sum / runs;
   }

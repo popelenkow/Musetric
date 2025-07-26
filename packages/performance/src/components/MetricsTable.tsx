@@ -9,7 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { type FourierMode } from '@musetric/audio-view';
-import { getMetricKeys, windowSizes } from '../constants';
+import { getTimerLabels, windowSizes } from '../constants';
 import type { MetricsData } from '../runBenchmarks';
 import { FC } from 'react';
 import { getMetric } from '../getMetric';
@@ -23,7 +23,7 @@ export type MetricsTableProps = {
 export const MetricsTable: FC<MetricsTableProps> = (props) => {
   const { mode, results, showFirst, showPercent } = props;
 
-  const metrics = getMetricKeys(mode);
+  const metrics = getTimerLabels(mode);
   const theme = useTheme();
   const divider = `1px solid ${theme.palette.divider}`;
 

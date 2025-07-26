@@ -41,9 +41,9 @@ export const useSpectrogramStore = create<State>((set, get) => {
           device,
           fourierMode,
           canvas,
-          onProfile: profiling
-            ? (profile) => {
-                console.table(profile);
+          onMetrics: profiling
+            ? (metrics) => {
+                console.table(metrics);
               }
             : undefined,
         });
@@ -54,9 +54,9 @@ export const useSpectrogramStore = create<State>((set, get) => {
       const pipeline = spectrogram.cpu.createPipeline({
         fourierMode,
         canvas,
-        onProfile: profiling
-          ? (profile) => {
-              console.table(profile);
+        onMetrics: profiling
+          ? (metrics) => {
+              console.table(metrics);
             }
           : undefined,
       });
