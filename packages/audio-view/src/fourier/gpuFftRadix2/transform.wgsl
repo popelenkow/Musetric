@@ -55,6 +55,4 @@ fn main(
     workgroupBarrier();
     sectionSize = sectionSize << 1u;
   }
-
-
 }

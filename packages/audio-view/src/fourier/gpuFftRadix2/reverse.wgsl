@@ -4,9 +4,8 @@ struct GpuFourierParams {
 };
 
 @group(0) @binding(0) var<storage, read_write> dataReal: array<f32>;
-@group(0) @binding(1) var<storage, read_write> dataImag: array<f32>;
-@group(0) @binding(2) var<storage, read> reverseTable: array<u32>;
-@group(0) @binding(3) var<uniform> params: GpuFourierParams;
+@group(0) @binding(1) var<storage, read> reverseTable: array<u32>;
+@group(0) @binding(2) var<uniform> params: GpuFourierParams;
 
 @compute @workgroup_size(64)
 fn main(
@@ -28,11 +27,8 @@ fn main(
       let a = windowOffset + index;
       let b = windowOffset + reversedIndex;
       let tempReal = dataReal[a];
-      let tempImag = dataImag[a];
       dataReal[a] = dataReal[b];
-      dataImag[a] = dataImag[b];
       dataReal[b] = tempReal;
-      dataImag[b] = tempImag;
     }
   }
 }
