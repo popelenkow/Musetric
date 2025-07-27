@@ -2,6 +2,7 @@ import {
   spectrogram,
   isGpuFourierMode,
   FourierMode,
+  ViewSize,
 } from '@musetric/audio-view';
 import {
   colors,
@@ -26,8 +27,13 @@ export const runPipeline = async (
   average: Record<string, number>;
 }> => {
   const metricsArray: Record<string, number>[] = [];
+  const viewSize: ViewSize = {
+    width: canvas.clientWidth,
+    height: canvas.clientHeight,
+  };
   const configureOptions: spectrogram.PipelineConfigureOptions = {
     windowSize,
+    viewSize,
     colors,
     sampleRate,
     minFrequency,
@@ -48,10 +54,6 @@ export const runPipeline = async (
         onMetrics: (metrics) => metricsArray.push(metrics),
       });
   pipeline.configure(configureOptions);
-  pipeline.resize({
-    width: canvas.clientWidth,
-    height: canvas.clientHeight,
-  });
 
   for (let i = 0; i < skipRuns + runs; i++) {
     await pipeline.render(wave, 0);

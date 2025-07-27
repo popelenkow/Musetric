@@ -2,13 +2,14 @@ import {
   CpuMarker,
   createGradient,
   parseHexColor,
+  ViewColors,
+  ViewGradients,
   ViewSize,
 } from '../../common';
-import { Colors, Gradients } from '../colors';
 
 export type Draw = {
   run: (view: Uint8Array, progress: number) => void;
-  configure: (viewSize: ViewSize, colors: Colors) => void;
+  configure: (viewSize: ViewSize, colors: ViewColors) => void;
 };
 
 export const createDraw = (
@@ -21,7 +22,7 @@ export const createDraw = (
   }
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let gradients: Gradients = undefined!;
+  let gradients: ViewGradients = undefined!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let image: ImageData = undefined!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

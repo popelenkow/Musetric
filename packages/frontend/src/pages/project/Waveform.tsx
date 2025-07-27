@@ -1,35 +1,31 @@
-import { subscribeResizeObserver } from '@musetric/audio-view';
-import { FC, useEffect, useRef } from 'react';
-import { useWaveformPipeline } from './common/waveformPipeline';
+import { FC, useEffect, useState } from 'react';
 import { usePlayerStore } from './store/player';
+import { useWaveformStore } from './store/waveform';
 
 export const Waveform: FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const buffer = usePlayerStore((s) => s.buffer);
-  const progress = usePlayerStore((s) => s.progress);
+  const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
   const seek = usePlayerStore((s) => s.seek);
-
-  const pipeline = useWaveformPipeline(canvasRef);
+  const mount = useWaveformStore((s) => s.mount);
+  const unmount = useWaveformStore((s) => s.unmount);
 
   useEffect(() => {
-    if (!canvasRef.current || !buffer || !pipeline) return;
-    const data = buffer.getChannelData(0);
-    pipeline.render(data, progress);
-    return subscribeResizeObserver(canvasRef.current, async () => {
-      await pipeline.render(data, progress);
-    });
-  }, [buffer, progress, pipeline]);
+    if (!canvas) return;
+    mount(canvas);
+  }, [mount, canvas]);
+
+  useEffect(() => {
+    return unmount;
+  }, [unmount]);
 
   return (
     <canvas
-      ref={canvasRef}
+      ref={setCanvas}
       style={{ height: '100%', width: '100%', display: 'block' }}
       onClick={async (event) => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const rect = canvas.getBoundingClientRect();
+        const targetCanvas = event.currentTarget;
+        const rect = targetCanvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
-        await seek(x / canvas.clientWidth);
+        await seek(x / targetCanvas.clientWidth);
       }}
     />
   );

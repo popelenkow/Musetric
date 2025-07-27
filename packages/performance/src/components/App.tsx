@@ -1,4 +1,3 @@
-import { useState, FC, useMemo } from 'react';
 import {
   Box,
   Checkbox,
@@ -8,11 +7,12 @@ import {
   LinearProgress,
   Typography,
 } from '@mui/material';
-import { windowSizes } from '../constants';
 import { allFourierModes, type FourierMode } from '@musetric/audio-view';
-import { MetricsTable } from './MetricsTable';
-import { BenchmarkRunner } from './BenchmarkRunner';
+import { useState, FC, useMemo } from 'react';
+import { windowSizes } from '../constants';
 import type { BenchmarkData } from '../runBenchmarks';
+import { BenchmarkRunner } from './BenchmarkRunner';
+import { MetricsTable } from './MetricsTable';
 
 type Task = {
   fourierMode: FourierMode;
@@ -22,6 +22,7 @@ type Task = {
 const initialData: BenchmarkData = allFourierModes.reduce((acc, mode) => {
   acc[mode] = {};
   return acc;
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 }, {} as BenchmarkData);
 
 const allTasks: Task[] = allFourierModes.flatMap((fourierMode) =>

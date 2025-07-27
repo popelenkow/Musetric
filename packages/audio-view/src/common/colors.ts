@@ -10,6 +10,17 @@ export type RgbGradient = {
   blue: Uint8ClampedArray;
 };
 
+export type ViewColors = {
+  played: string;
+  unplayed: string;
+  background: string;
+};
+
+export type ViewGradients = {
+  played: RgbGradient;
+  unplayed: RgbGradient;
+};
+
 export const parseHexColor = (hex: string): Rgb => {
   let h = hex.startsWith('#') ? hex.slice(1) : hex;
   if (h.length === 3) {

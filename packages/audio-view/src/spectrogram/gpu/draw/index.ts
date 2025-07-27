@@ -1,4 +1,4 @@
-import { Colors } from '../../colors';
+import { ViewColors } from '../../../common';
 import { createColors } from './colors';
 import { createPipeline } from './pipeline';
 
@@ -7,7 +7,7 @@ export type Draw = {
   configure: (
     view: GPUTextureView,
     progress: GPUBuffer,
-    colors: Colors,
+    colors: ViewColors,
   ) => void;
   destroy: () => void;
 };

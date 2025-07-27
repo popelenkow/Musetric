@@ -11,6 +11,7 @@ import { Player } from './Player';
 import { Settings } from './Settings';
 import { Spectrogram } from './Spectrogram';
 import { usePlayerStore } from './store/player';
+import { ThemeViewColors } from './ThemeViewColors';
 import { Waveform } from './Waveform';
 
 export const ProjectPage: FC = () => {
@@ -74,6 +75,7 @@ export const ProjectPage: FC = () => {
         </Box>
         <Player />
       </Stack>
+      <ThemeViewColors />
     </Stack>
   );
 };

@@ -38,6 +38,7 @@ export const createPipeline = (
   const configure = markers.configure(() => {
     const {
       windowSize,
+      viewSize,
       colors,
       sampleRate,
       minFrequency,
@@ -45,8 +46,6 @@ export const createPipeline = (
       minDecibel,
       windowFilter,
     } = state.options;
-
-    const { viewSize } = state;
     const { width, height } = viewSize;
     const windowCount = width;
     state.configure();
@@ -89,10 +88,6 @@ export const createPipeline = (
     }),
     configure: (newOptions: PipelineConfigureOptions) => {
       state.options = newOptions;
-      isConfigureRequested = true;
-    },
-    resize: (viewSize) => {
-      state.viewSize = viewSize;
       isConfigureRequested = true;
     },
     destroy: () => {

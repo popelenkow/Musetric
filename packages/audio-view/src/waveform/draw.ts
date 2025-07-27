@@ -1,8 +1,8 @@
-import { Colors } from './colors';
+import { ViewColors } from '../common';
 import { WaveSegment } from './generateSegments';
 
 export type Draw = {
-  run: (segments: WaveSegment[], progress: number, colors: Colors) => void;
+  run: (segments: WaveSegment[], progress: number, colors: ViewColors) => void;
 };
 export const createDraw = (canvas: HTMLCanvasElement): Draw => {
   const context = canvas.getContext('2d');
