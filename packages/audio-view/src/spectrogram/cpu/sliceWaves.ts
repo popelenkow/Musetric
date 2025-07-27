@@ -1,10 +1,10 @@
-import { ComplexArray, CpuMarker } from '../../common';
+import { CpuMarker } from '../../common';
 
 export const sliceWaves = (
   windowSize: number,
   windowCount: number,
   wave: Float32Array,
-  waves: ComplexArray,
+  waves: Float32Array,
 ): void => {
   const step = (wave.length - windowSize) / windowCount;
 
@@ -12,13 +12,12 @@ export const sliceWaves = (
     const offset = i * windowSize;
     const start = Math.floor(i * step);
     const slice = wave.subarray(start, start + windowSize);
-    waves.real.set(slice, offset);
-    waves.imag.fill(0, offset, offset + windowSize);
+    waves.set(slice, offset);
   }
 };
 
 export type SliceWaves = {
-  run: (wave: Float32Array, waves: ComplexArray) => void;
+  run: (wave: Float32Array, waves: Float32Array) => void;
   configure: (windowSize: number, windowCount: number) => void;
 };
 export const createSliceWaves = (marker?: CpuMarker): SliceWaves => {
