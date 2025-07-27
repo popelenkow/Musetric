@@ -1,22 +1,26 @@
 import { Colors } from './colors';
-import { createDrawer } from './drawer';
+import { createDraw } from './draw';
 import { generateSegments } from './generateSegments';
 
-export type PipelineRender = (buffer: Float32Array, progress: number) => void;
-
 export type Pipeline = {
-  render: PipelineRender;
+  render: (buffer: Float32Array, progress: number) => void;
 };
-
 export const createPipeline = (
   canvas: HTMLCanvasElement,
   colors: Colors,
 ): Pipeline => {
-  const drawer = createDrawer(canvas);
+  const draw = createDraw(canvas);
 
-  const render: PipelineRender = async (buffer, progress) => {
-    const segments = generateSegments(buffer, canvas.clientWidth);
-    drawer.render(segments, progress, colors);
+  const barStep = 3;
+
+  return {
+    render: async (buffer, progress) => {
+      const segmentCount = Math.max(
+        1,
+        Math.floor(canvas.clientWidth / barStep),
+      );
+      const segments = generateSegments(buffer, segmentCount);
+      draw.run(segments, progress, colors);
+    },
   };
-  return { render };
 };
