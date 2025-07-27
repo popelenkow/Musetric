@@ -1,4 +1,4 @@
-import type { FourierMode } from '@musetric/audio-view';
+import type { FourierMode, spectrogram } from '@musetric/audio-view';
 import { create } from 'zustand';
 
 export type SettingsState = {
@@ -8,6 +8,7 @@ export type SettingsState = {
   minFrequency: number;
   maxFrequency: number;
   minDecibel: number;
+  windowFilter: spectrogram.WindowFilterKey;
 };
 
 const initialState: SettingsState = {
@@ -17,6 +18,7 @@ const initialState: SettingsState = {
   minFrequency: 120,
   maxFrequency: 5000,
   minDecibel: -45,
+  windowFilter: 'hamming',
 };
 
 export type SettingsActions = {
@@ -26,6 +28,7 @@ export type SettingsActions = {
   setMinFrequency: (value: number) => void;
   setMaxFrequency: (value: number) => void;
   setMinDecibel: (value: number) => void;
+  setWindowFilter: (value: spectrogram.WindowFilterKey) => void;
 };
 
 type State = SettingsState & SettingsActions;
@@ -37,4 +40,5 @@ export const useSettingsStore = create<State>((set) => ({
   setMinFrequency: (minFrequency) => set({ minFrequency }),
   setMaxFrequency: (maxFrequency) => set({ maxFrequency }),
   setMinDecibel: (minDecibel) => set({ minDecibel }),
+  setWindowFilter: (windowFilter) => set({ windowFilter }),
 }));

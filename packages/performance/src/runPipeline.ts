@@ -11,6 +11,7 @@ import {
   sampleRate,
   minFrequency,
   maxFrequency,
+  windowFilter,
 } from './constants';
 import { waitNextFrame } from './waitNextFrame';
 
@@ -32,6 +33,7 @@ export const runPipeline = async (
     minFrequency,
     maxFrequency,
     minDecibel,
+    windowFilter,
   };
   const pipeline = isGpuFourierMode(fourierMode)
     ? spectrogram.gpu.createPipeline({

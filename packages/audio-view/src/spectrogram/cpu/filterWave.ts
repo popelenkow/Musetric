@@ -1,9 +1,13 @@
 import { CpuMarker } from '../../common';
-import { hammingWindowFilter } from '../windowFilters';
+import { windowFilters, WindowFilterKey } from '../windowFilters';
 
 export type FilterWave = {
   run: (signal: Float32Array) => void;
-  configure: (windowSize: number, windowCount: number) => void;
+  configure: (
+    windowSize: number,
+    windowCount: number,
+    windowFilterKey: WindowFilterKey,
+  ) => void;
 };
 
 export const createFilterWave = (marker?: CpuMarker): FilterWave => {
@@ -23,10 +27,10 @@ export const createFilterWave = (marker?: CpuMarker): FilterWave => {
         }
       }
     },
-    configure: (newWindowSize, newWindowCount) => {
+    configure: (newWindowSize, newWindowCount, windowFilterKey) => {
       windowSize = newWindowSize;
       windowCount = newWindowCount;
-      windowFilter = hammingWindowFilter(windowSize);
+      windowFilter = windowFilters[windowFilterKey](windowSize);
     },
   };
   ref.run = marker?.(ref.run) ?? ref.run;

@@ -18,6 +18,8 @@ export const colors: spectrogram.Colors = {
 export const minFrequency = 120;
 export const maxFrequency = 5000;
 
+export const windowFilter: spectrogram.WindowFilterKey = 'hamming';
+
 export const canvasWidth = 1920;
 export const canvasHeight = 1080;
 

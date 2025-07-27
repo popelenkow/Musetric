@@ -22,6 +22,7 @@ export const Spectrogram: FC = () => {
   const minFrequency = useSettingsStore((s) => s.minFrequency);
   const maxFrequency = useSettingsStore((s) => s.maxFrequency);
   const minDecibel = useSettingsStore((s) => s.minDecibel);
+  const windowFilter = useSettingsStore((s) => s.windowFilter);
 
   const pipeline = useSpectrogramStore((s) => s.pipeline);
   const mount = useSpectrogramStore((s) => s.mount);
@@ -54,6 +55,7 @@ export const Spectrogram: FC = () => {
       minFrequency,
       maxFrequency,
       minDecibel,
+      windowFilter,
     };
     pipeline.configure(configureOptions);
     const viewSize = resizeCanvas(canvas);
@@ -67,6 +69,7 @@ export const Spectrogram: FC = () => {
     minFrequency,
     maxFrequency,
     minDecibel,
+    windowFilter,
     progress,
   ]);
 

@@ -8,6 +8,7 @@ import { FourierModeField } from './FourierModeField';
 import { MaxFrequencyField } from './MaxFrequencyField';
 import { MinDecibelField } from './MinDecibelField';
 import { MinFrequencyField } from './MinFrequencyField';
+import { WindowFilterField } from './WindowFilterField';
 import { WindowSizeField } from './WindowSizeField';
 
 export const Settings: FC = () => {
@@ -32,6 +33,7 @@ export const Settings: FC = () => {
               </IconButton>
             </Stack>
             <FourierModeField />
+            <WindowFilterField />
             <WindowSizeField />
             <MinFrequencyField />
             <MaxFrequencyField />
