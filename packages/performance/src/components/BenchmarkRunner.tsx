@@ -1,7 +1,7 @@
-import { useEffect, useRef, FC } from 'react';
-import { MetricsData, runBenchmark } from '../runBenchmarks';
-import { canvasWidth, canvasHeight } from '../constants';
 import { FourierMode } from '@musetric/audio-view';
+import { useEffect, useRef, FC } from 'react';
+import { canvasWidth, canvasHeight } from '../constants';
+import { MetricsData, runBenchmark } from '../runBenchmarks';
 
 export type BenchmarkRunnerProps = {
   fourierMode: FourierMode;

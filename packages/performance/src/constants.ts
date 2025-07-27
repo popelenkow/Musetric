@@ -2,6 +2,7 @@ import {
   spectrogram,
   FourierMode,
   isGpuFourierMode,
+  ViewColors,
 } from '@musetric/audio-view';
 
 export const runs = 10;
@@ -9,7 +10,7 @@ export const skipRuns = 10;
 export const sampleRate = 44100;
 export const minDecibel = -45;
 
-export const colors: spectrogram.Colors = {
+export const colors: ViewColors = {
   played: '#a26da8',
   unplayed: '#8d8eba',
   background: '#000000',

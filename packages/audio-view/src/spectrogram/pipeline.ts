@@ -1,10 +1,10 @@
-import { ViewSize } from '../common';
-import { Colors } from './colors';
+import { ViewColors, ViewSize } from '../common';
 import { WindowFilterKey } from './windowFilters';
 
 export type PipelineConfigureOptions = {
   windowSize: number;
-  colors: Colors;
+  viewSize: ViewSize;
+  colors: ViewColors;
   sampleRate: number;
   minFrequency: number;
   maxFrequency: number;
@@ -14,6 +14,5 @@ export type PipelineConfigureOptions = {
 export type Pipeline = {
   render: (wave: Float32Array, progress: number) => Promise<void>;
   configure: (options: PipelineConfigureOptions) => void;
-  resize: (viewSize: ViewSize) => void;
   destroy: () => void;
 };

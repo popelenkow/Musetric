@@ -4,7 +4,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "check:ts": "tsc --noEmit",
+    "check:lint": "eslint . --cache",
+    "fix:lint": "eslint . --fix --cache"
   },
   "devDependencies": {
     "@emotion/react": "11.14.0",
@@ -13,6 +16,7 @@
     "@musetric/audio-view": "workspace:*",
     "@musetric/eslint-config": "workspace:*",
     "@types/react": "19.1.8",
+    "eslint": "9.32.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "typescript": "5.8.3",

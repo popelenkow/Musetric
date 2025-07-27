@@ -41,20 +41,21 @@ export const createPipeline = (
   const configure = markers.configure(() => {
     const {
       windowSize,
+      viewSize,
       colors,
       sampleRate,
       minFrequency,
       maxFrequency,
       minDecibel,
-      windowFilter: filterName,
+      windowFilter,
     } = state.options;
-    const { width, height } = state.viewSize;
+    const { width, height } = viewSize;
 
     const windowCount = width;
     state.configure();
     const { signal, texture, progress } = state;
     sliceWaves.configure(windowSize, windowCount);
-    filterWave.configure(signal.real, windowSize, windowCount, filterName);
+    filterWave.configure(signal.real, windowSize, windowCount, windowFilter);
     fourier.configure(signal, windowSize, windowCount);
     magnitudify.configure(signal, windowSize, windowCount);
     decibelify.configure(signal.real, windowSize, windowCount, minDecibel);
@@ -109,10 +110,6 @@ export const createPipeline = (
     }),
     configure: (newOptions: PipelineConfigureOptions) => {
       state.options = newOptions;
-      isConfigureRequested = true;
-    },
-    resize: (viewSize) => {
-      state.viewSize = viewSize;
       isConfigureRequested = true;
     },
     destroy: () => {

@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material';
 
-export const theme = createTheme({
+export const appTheme = createTheme({
   palette: { mode: 'dark' },
   components: {
     MuiButton: {

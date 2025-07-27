@@ -1,8 +1,8 @@
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './components/App';
-import { CssBaseline, ThemeProvider } from '@mui/material';
-import { theme } from './theme';
+import { appTheme } from './theme';
 
 const run = () => {
   const rootElement = document.getElementById('root');
@@ -13,7 +13,7 @@ const run = () => {
 
   createRoot(rootElement).render(
     <StrictMode>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={appTheme}>
         <CssBaseline />
         <App />
       </ThemeProvider>

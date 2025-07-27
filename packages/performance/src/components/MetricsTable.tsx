@@ -9,10 +9,10 @@ import {
   useTheme,
 } from '@mui/material';
 import { type FourierMode } from '@musetric/audio-view';
-import { getTimerLabels, windowSizes } from '../constants';
-import type { MetricsData } from '../runBenchmarks';
 import { FC } from 'react';
+import { getTimerLabels, windowSizes } from '../constants';
 import { getMetric } from '../getMetric';
+import type { MetricsData } from '../runBenchmarks';
 
 export type MetricsTableProps = {
   mode: FourierMode;

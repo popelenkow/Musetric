@@ -1,4 +1,4 @@
-import { Colors } from './colors';
+import { ViewColors } from '../common';
 import { createDraw } from './draw';
 import { generateSegments } from './generateSegments';
 
@@ -7,7 +7,7 @@ export type Pipeline = {
 };
 export const createPipeline = (
   canvas: HTMLCanvasElement,
-  colors: Colors,
+  colors: ViewColors,
 ): Pipeline => {
   const draw = createDraw(canvas);
 
