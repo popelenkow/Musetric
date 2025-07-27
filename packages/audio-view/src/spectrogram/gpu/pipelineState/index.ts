@@ -1,10 +1,4 @@
-import {
-  ComplexArray,
-  ComplexGpuBuffer,
-  CpuMarker,
-  createComplexArray,
-  ViewSize,
-} from '../../../common';
+import { ComplexGpuBuffer, CpuMarker, ViewSize } from '../../../common';
 import { PipelineConfigureOptions } from '../../pipeline';
 import { createStateProgress, StateProgress } from './progress';
 import { createSignalBuffer } from './signalBuffer';
@@ -14,11 +8,12 @@ export type PipelineState = {
   options: PipelineConfigureOptions;
   viewSize: ViewSize;
   signal: ComplexGpuBuffer;
-  signalArray: ComplexArray;
+  signalArray: Float32Array;
   texture: StateTexture;
   progress: StateProgress;
   configure: () => void;
   writeBuffers: (progress: number) => void;
+  zerofyImag: (encoder: GPUCommandEncoder) => void;
   destroy: () => void;
 };
 export const createPipelineState = (device: GPUDevice, marker?: CpuMarker) => {
@@ -40,14 +35,16 @@ export const createPipelineState = (device: GPUDevice, marker?: CpuMarker) => {
       ref.signal?.real.destroy();
       ref.signal?.imag.destroy();
       ref.signal = createSignalBuffer(device, windowSize, windowCount);
-      ref.signalArray = createComplexArray(windowSize * windowCount);
+      ref.signalArray = new Float32Array(windowSize * windowCount);
       ref.texture.resize(viewSize);
     },
     writeBuffers: (progress: number) => {
       const { signal, signalArray } = ref;
-      device.queue.writeBuffer(signal.real, 0, signalArray.real);
-      device.queue.writeBuffer(signal.imag, 0, signalArray.imag);
+      device.queue.writeBuffer(signal.real, 0, signalArray);
       ref.progress.write(progress);
+    },
+    zerofyImag: (encoder) => {
+      encoder.clearBuffer(ref.signal.imag);
     },
     destroy: () => {
       ref.signal?.real.destroy();

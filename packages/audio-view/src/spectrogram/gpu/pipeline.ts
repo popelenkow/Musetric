@@ -73,6 +73,7 @@ export const createPipeline = (
     const encoder = device.createCommandEncoder({
       label: 'pipeline-render-encoder',
     });
+    state.zerofyImag(encoder);
     filterWave.run(encoder);
     fourier.forward(encoder);
     magnitudify.run(encoder);

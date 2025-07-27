@@ -3,6 +3,7 @@ import { createCpuTimer, roundDuration } from '../../common';
 export const timerLabels = [
   'configure',
   'sliceWaves',
+  'zerofyImag',
   'filterWave',
   'fourier',
   'magnitudify',

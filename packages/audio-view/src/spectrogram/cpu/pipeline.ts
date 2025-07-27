@@ -26,7 +26,7 @@ export const createPipeline = (
   const timer = createPipelineTimer(onMetrics);
   const { markers } = timer;
 
-  const state = createPipelineState();
+  const state = createPipelineState(markers.zerofyImag);
   const sliceWaves = createSliceWaves(markers.sliceWaves);
   const filterWave = createFilterWave(markers.filterWave);
   const fourier = cpuFouriers[fourierMode](markers.fourier);
@@ -72,7 +72,8 @@ export const createPipeline = (
       configure();
     }
     const { signal, view } = state;
-    sliceWaves.run(wave, signal);
+    sliceWaves.run(wave, signal.real);
+    state.zerofyImag();
     filterWave.run(signal.real);
     fourier.forward(signal);
     magnitudify.run(signal);
