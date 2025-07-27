@@ -22,8 +22,47 @@ fn main(
   let threadIndex = localId.x;
   let windowOffset = windowIndex * params.windowSize;
   var step = 1u << params.reverseWidth;
-  step = step >> 1u;
+  var len = params.windowSize >> params.reverseWidth;
   let sign = 1.0;
+
+  if (len == 2u) {
+    for (var outOff : u32 = threadIndex * 2u; outOff < params.windowSize; outOff += 2u * 64u) {
+      let evenR = dataReal[windowOffset + outOff];
+      let oddR = dataReal[windowOffset + outOff + 1u];
+      dataReal[windowOffset + outOff] = evenR + oddR;
+      dataImag[windowOffset + outOff] = 0.0;
+      dataReal[windowOffset + outOff + 1u] = evenR - oddR;
+      dataImag[windowOffset + outOff + 1u] = 0.0;
+    }
+  } else {
+    for (var outOff : u32 = threadIndex * 4u; outOff < params.windowSize; outOff += 4u * 64u) {
+      let Ar = dataReal[windowOffset + outOff];
+      let Br = dataReal[windowOffset + outOff + 1u];
+      let Cr = dataReal[windowOffset + outOff + 2u];
+      let Dr = dataReal[windowOffset + outOff + 3u];
+
+      let T0r = Ar + Cr;
+      let T1r = Ar - Cr;
+      let T2r = Br + Dr;
+      let T3r = sign * (Br - Dr);
+
+      let FAr = T0r + T2r;
+      let FBr = T1r;
+      let FCr = T0r - T2r;
+      let FDr = T1r;
+
+      dataReal[windowOffset + outOff] = FAr;
+      dataImag[windowOffset + outOff] = 0.0;
+      dataReal[windowOffset + outOff + 1u] = FBr;
+      dataImag[windowOffset + outOff + 1u] = -T3r;
+      dataReal[windowOffset + outOff + 2u] = FCr;
+      dataImag[windowOffset + outOff + 2u] = 0.0;
+      dataReal[windowOffset + outOff + 3u] = FDr;
+      dataImag[windowOffset + outOff + 3u] = T3r;
+    }
+  }
+
+  step = step >> 1u;
 
   while (step >= 2u) {
     let len = (params.windowSize / step) << 1u;
@@ -94,8 +133,5 @@ fn main(
       workgroupBarrier();
     }
     step = step >> 2u;
-    workgroupBarrier();
   }
-
-
 }

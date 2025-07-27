@@ -49,9 +49,8 @@ export const createState = (device: GPUDevice) => {
           layout: pipelines.reverse.getBindGroupLayout(0),
           entries: [
             { binding: 0, resource: { buffer: signal.real } },
-            { binding: 1, resource: { buffer: signal.imag } },
-            { binding: 2, resource: { buffer: reverseTable.buffer } },
-            { binding: 3, resource: { buffer: params.buffer } },
+            { binding: 1, resource: { buffer: reverseTable.buffer } },
+            { binding: 2, resource: { buffer: params.buffer } },
           ],
         }),
         transform: device.createBindGroup({
