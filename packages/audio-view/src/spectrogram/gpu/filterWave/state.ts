@@ -1,3 +1,4 @@
+import { WindowFilterKey } from '../../windowFilters';
 import { createParams, StateParams } from './params';
 import { createPipeline } from './pipeline';
 import { createWindowFilter } from './windowFilter';
@@ -10,6 +11,7 @@ export type State = {
     signal: GPUBuffer,
     windowSize: number,
     windowCount: number,
+    windowFilterKey: WindowFilterKey,
   ) => void;
   destroy: () => void;
 };
@@ -23,12 +25,12 @@ export const createState = (device: GPUDevice): State => {
     params,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroup: undefined!,
-    configure: (signal, windowSize, windowCount) => {
+    configure: (signal, windowSize, windowCount, windowFilterKey) => {
       params.write({
         windowSize,
         windowCount,
       });
-      windowFilter.resize(windowSize);
+      windowFilter.configure(windowSize, windowFilterKey);
       ref.bindGroup = device.createBindGroup({
         label: 'filter-wave-bind-group',
         layout: pipeline.getBindGroupLayout(0),

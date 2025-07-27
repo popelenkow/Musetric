@@ -46,6 +46,7 @@ export const createPipeline = (
       minFrequency,
       maxFrequency,
       minDecibel,
+      windowFilter: filterName,
     } = state.options;
     const { width, height } = state.viewSize;
 
@@ -53,7 +54,7 @@ export const createPipeline = (
     state.configure();
     const { signal, texture, progress } = state;
     sliceWaves.configure(windowSize, windowCount);
-    filterWave.configure(signal.real, windowSize, windowCount);
+    filterWave.configure(signal.real, windowSize, windowCount, filterName);
     fourier.configure(signal, windowSize, windowCount);
     magnitudify.configure(signal, windowSize, windowCount);
     decibelify.configure(signal.real, windowSize, windowCount, minDecibel);

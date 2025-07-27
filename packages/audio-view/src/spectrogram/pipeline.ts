@@ -1,5 +1,6 @@
 import { ViewSize } from '../common';
 import { Colors } from './colors';
+import { WindowFilterKey } from './windowFilters';
 
 export type PipelineConfigureOptions = {
   windowSize: number;
@@ -8,6 +9,7 @@ export type PipelineConfigureOptions = {
   minFrequency: number;
   maxFrequency: number;
   minDecibel: number;
+  windowFilter: WindowFilterKey;
 };
 export type Pipeline = {
   render: (wave: Float32Array, progress: number) => Promise<void>;

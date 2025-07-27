@@ -1,14 +1,6 @@
 /* Licensed by MIT. Based on https://github.com/corbanbrook/dsp.js/tree/c6144fcd75b65f72eac4791ab9f7268a814f44a8 */
 
-export const zeroWindowFilter = (windowSize: number): Float32Array => {
-  const filter = new Float32Array(windowSize);
-  for (let i = 0; i < windowSize; i++) {
-    filter[i] = 0;
-  }
-  return filter;
-};
-
-export const bartlettWindowFilter = (windowSize: number): Float32Array => {
+export const bartlett = (windowSize: number): Float32Array => {
   const filter = new Float32Array(windowSize);
   const last = windowSize - 1;
   for (let i = 0; i < windowSize; i++) {
@@ -16,7 +8,7 @@ export const bartlettWindowFilter = (windowSize: number): Float32Array => {
   }
   return filter;
 };
-export const bartlettHannWindowFilter = (windowSize: number): Float32Array => {
+export const bartlettHann = (windowSize: number): Float32Array => {
   const filter = new Float32Array(windowSize);
   const last = windowSize - 1;
   for (let i = 0; i < windowSize; i++) {
@@ -25,7 +17,7 @@ export const bartlettHannWindowFilter = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const blackmanWindowFilter = (windowSize: number): Float32Array => {
+export const blackman = (windowSize: number): Float32Array => {
   const filter = new Float32Array(windowSize);
   const last = windowSize - 1;
   const alpha = 0.16;
@@ -37,7 +29,7 @@ export const blackmanWindowFilter = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const cosineWindowFilter = (windowSize: number): Float32Array => {
+export const cosine = (windowSize: number): Float32Array => {
   const filter = new Float32Array(windowSize);
   for (let i = 0; i < windowSize; i++) {
     filter[i] = Math.cos((Math.PI * i) / (windowSize - 1) - Math.PI / 2);
@@ -45,7 +37,7 @@ export const cosineWindowFilter = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const gaussWindowFilter = (windowSize: number): Float32Array => {
+export const gauss = (windowSize: number): Float32Array => {
   const filter = new Float32Array(windowSize);
   const alpha = 0.25;
   for (let i = 0; i < windowSize; i++) {
@@ -55,7 +47,7 @@ export const gaussWindowFilter = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const hammingWindowFilter = (windowSize: number): Float32Array => {
+export const hamming = (windowSize: number): Float32Array => {
   const filter = new Float32Array(windowSize);
   for (let i = 0; i < windowSize; i++) {
     filter[i] = 0.54 - 0.46 * Math.cos((Math.PI * 2 * i) / (windowSize - 1));
@@ -63,7 +55,7 @@ export const hammingWindowFilter = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const hannWindowFilter = (windowSize: number): Float32Array => {
+export const hann = (windowSize: number): Float32Array => {
   const filter = new Float32Array(windowSize);
   for (let i = 0; i < windowSize; i++) {
     filter[i] = 0.5 * (1 - Math.cos((Math.PI * 2 * i) / (windowSize - 1)));
@@ -71,7 +63,7 @@ export const hannWindowFilter = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const lanczozWindowFilter = (windowSize: number): Float32Array => {
+export const lanczoz = (windowSize: number): Float32Array => {
   const filter = new Float32Array(windowSize);
   const last = windowSize - 1;
   for (let i = 0; i < windowSize; i++) {
@@ -82,7 +74,7 @@ export const lanczozWindowFilter = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const rectangularWindowFilter = (windowSize: number): Float32Array => {
+export const rectangular = (windowSize: number): Float32Array => {
   const filter = new Float32Array(windowSize);
   for (let i = 0; i < windowSize; i++) {
     filter[i] = 1;
@@ -90,7 +82,7 @@ export const rectangularWindowFilter = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const triangularWindowFilter = (windowSize: number): Float32Array => {
+export const triangular = (windowSize: number): Float32Array => {
   const filter = new Float32Array(windowSize);
   for (let i = 0; i < windowSize; i++) {
     filter[i] =
@@ -98,3 +90,20 @@ export const triangularWindowFilter = (windowSize: number): Float32Array => {
   }
   return filter;
 };
+
+export const windowFilters = {
+  bartlett,
+  bartlettHann,
+  blackman,
+  cosine,
+  gauss,
+  hamming,
+  hann,
+  lanczoz,
+  rectangular,
+  triangular,
+} as const;
+
+export type WindowFilterKey = keyof typeof windowFilters;
+// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+export const windowFilterKeys = Object.keys(windowFilters) as WindowFilterKey[];
