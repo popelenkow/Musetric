@@ -1,4 +1,5 @@
 export * from './callLatest';
+export * from './canvas';
 export * from './colors';
 export * from './complexArray';
 export * from './gpuBufferReader';

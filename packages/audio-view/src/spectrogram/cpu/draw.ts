@@ -1,12 +1,14 @@
-import { CpuMarker, createGradient, parseHexColor } from '../../common';
+import {
+  CpuMarker,
+  createGradient,
+  parseHexColor,
+  ViewSize,
+} from '../../common';
 import { Colors, Gradients } from '../colors';
 
 export type Draw = {
-  width: number;
-  height: number;
   run: (view: Uint8Array, progress: number) => void;
-  resize: () => void;
-  configure: (colors: Colors) => void;
+  configure: (viewSize: ViewSize, colors: Colors) => void;
 };
 
 export const createDraw = (
@@ -20,15 +22,14 @@ export const createDraw = (
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let gradients: Gradients = undefined!;
-
-  let image = context.createImageData(1, 1);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let image: ImageData = undefined!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let viewSize: ViewSize = undefined!;
 
   const ref: Draw = {
-    width: 0,
-    height: 0,
     run: (view, progress) => {
-      const { width, height } = ref;
-
+      const { width, height } = viewSize;
       const played = Math.floor(progress * width);
       for (let x = 0; x < width; x++) {
         const columnOffset = x * height;
@@ -42,17 +43,11 @@ export const createDraw = (
           image.data[idx + 3] = 255;
         }
       }
-
-      canvas.width = width;
-      canvas.height = height;
       context.putImageData(image, 0, 0);
     },
-    resize: () => {
-      ref.width = canvas.clientWidth;
-      ref.height = canvas.clientHeight;
-      image = context.createImageData(ref.width, ref.height);
-    },
-    configure: (colors) => {
+    configure: (newViewSize, colors) => {
+      viewSize = newViewSize;
+      image = context.createImageData(viewSize.width, viewSize.height);
       gradients = {
         played: createGradient(
           parseHexColor(colors.background),

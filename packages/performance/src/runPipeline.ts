@@ -46,6 +46,10 @@ export const runPipeline = async (
         onMetrics: (metrics) => metricsArray.push(metrics),
       });
   pipeline.configure(configureOptions);
+  pipeline.resize({
+    width: canvas.clientWidth,
+    height: canvas.clientHeight,
+  });
 
   for (let i = 0; i < skipRuns + runs; i++) {
     await pipeline.render(wave, 0);

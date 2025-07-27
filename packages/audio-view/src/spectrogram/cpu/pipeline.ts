@@ -6,7 +6,7 @@ import { createDecibelify } from './decibelify';
 import { createDraw } from './draw';
 import { createFilterWave } from './filterWave';
 import { createMagnitudify } from './magnitudify';
-import { createPipelineArrays } from './pipelineArrays';
+import { createPipelineState } from './pipelineState';
 import { createPipelineTimer, PipelineMetrics } from './pipelineTimer';
 import { createScaleView } from './scaleView';
 import { createSliceWaves } from './sliceWaves';
@@ -22,14 +22,11 @@ export const createPipeline = (
   const { canvas, fourierMode, onMetrics } = createOptions;
 
   let isConfigureRequested = true;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let options: PipelineConfigureOptions = undefined!;
 
   const timer = createPipelineTimer(onMetrics);
   const { markers } = timer;
 
-  const arrays = createPipelineArrays();
-
+  const state = createPipelineState();
   const sliceWaves = createSliceWaves(markers.sliceWaves);
   const filterWave = createFilterWave(markers.filterWave);
   const fourier = cpuFouriers[fourierMode](markers.fourier);
@@ -46,11 +43,12 @@ export const createPipeline = (
       minFrequency,
       maxFrequency,
       minDecibel,
-    } = options;
+    } = state.options;
 
-    draw.resize();
-    const windowCount = draw.width;
-    arrays.resize(windowSize, windowCount, draw.height);
+    const { viewSize } = state;
+    const { width, height } = viewSize;
+    const windowCount = width;
+    state.configure();
     sliceWaves.configure(windowSize, windowCount);
     filterWave.configure(windowSize, windowCount);
     fourier.configure(windowSize, windowCount);
@@ -59,12 +57,12 @@ export const createPipeline = (
     scaleView.configure(
       windowSize,
       windowCount,
-      draw.height,
+      height,
       sampleRate,
       minFrequency,
       maxFrequency,
     );
-    draw.configure(colors);
+    draw.configure(viewSize, colors);
   });
 
   const render = markers.total((wave: Float32Array, progress: number) => {
@@ -72,7 +70,7 @@ export const createPipeline = (
       isConfigureRequested = false;
       configure();
     }
-    const { signal, view } = arrays;
+    const { signal, view } = state;
     sliceWaves.run(wave, signal);
     filterWave.run(signal.real);
     fourier.forward(signal);
@@ -88,10 +86,11 @@ export const createPipeline = (
       timer.finish();
     }),
     configure: (newOptions: PipelineConfigureOptions) => {
-      options = newOptions;
+      state.options = newOptions;
       isConfigureRequested = true;
     },
-    resize: () => {
+    resize: (viewSize) => {
+      state.viewSize = viewSize;
       isConfigureRequested = true;
     },
     destroy: () => {

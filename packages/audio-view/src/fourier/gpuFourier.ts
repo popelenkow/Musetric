@@ -7,7 +7,11 @@ export type GpuFourierParams = {
 
 export type GpuFourier = {
   forward: (encoder: GPUCommandEncoder) => void;
-  configure: (signal: ComplexGpuBuffer, params: GpuFourierParams) => void;
+  configure: (
+    signal: ComplexGpuBuffer,
+    windowSize: number,
+    windowCount: number,
+  ) => void;
   destroy: () => void;
 };
 
