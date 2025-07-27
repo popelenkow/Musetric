@@ -10,12 +10,14 @@ export const MinDecibelField: FC = () => {
 
   return (
     <TextField
+      key={minDecibel}
       size='small'
       type='number'
       label={t('pages.project.settings.fields.minDecibel.label')}
-      value={minDecibel}
-      onChange={(event) => {
+      defaultValue={minDecibel}
+      onBlur={(event) => {
         const value = Number(event.target.value);
+        if (Number.isNaN(value)) return;
         setMinDecibel(value);
       }}
     />

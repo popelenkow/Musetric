@@ -10,13 +10,15 @@ export const MinFrequencyField: FC = () => {
 
   return (
     <TextField
+      key={minFrequency}
       size='small'
       type='number'
       label={t('pages.project.settings.fields.minFrequency.label')}
-      value={minFrequency}
-      onChange={(event) => {
+      defaultValue={minFrequency}
+      onBlur={(event) => {
         const value = Number(event.target.value);
-        setMinFrequency(value);
+        if (Number.isNaN(value)) return;
+        setMinFrequency(Math.max(value, 0));
       }}
     />
   );

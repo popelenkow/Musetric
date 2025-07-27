@@ -10,13 +10,15 @@ export const MaxFrequencyField: FC = () => {
 
   return (
     <TextField
+      key={maxFrequency}
       size='small'
       type='number'
       label={t('pages.project.settings.fields.maxFrequency.label')}
-      value={maxFrequency}
-      onChange={(event) => {
+      defaultValue={maxFrequency}
+      onBlur={(event) => {
         const value = Number(event.target.value);
-        setMaxFrequency(value);
+        if (Number.isNaN(value)) return;
+        setMaxFrequency(Math.max(value, 0));
       }}
     />
   );
