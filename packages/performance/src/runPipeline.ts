@@ -25,6 +25,7 @@ export const runPipeline = async (
 ): Promise<{
   first: Record<string, number>;
   average: Record<string, number>;
+  maxDeviation: Record<string, { positive: number; negative: number }>;
 }> => {
   const metricsArray: Record<string, number>[] = [];
   const viewSize: ViewSize = {
@@ -63,7 +64,10 @@ export const runPipeline = async (
 
   const first = metricsArray[0] ?? {};
   const average: Record<string, number> = {};
+  const maxDeviation: Record<string, { positive: number; negative: number }> =
+    {};
   const keys = Object.keys(first);
+
   for (const key of keys) {
     let sum = 0;
     for (const metrics of metricsArray.slice(skipRuns)) {
@@ -71,5 +75,28 @@ export const runPipeline = async (
     }
     average[key] = sum / runs;
   }
-  return { first, average };
+
+  for (const key of keys) {
+    let maxPositive = 0;
+    let maxNegative = 0;
+    const avg = average[key] ?? 0;
+
+    for (const metrics of metricsArray.slice(skipRuns)) {
+      const value = metrics[key] ?? 0;
+      const deviation = value - avg;
+      if (deviation > maxPositive) {
+        maxPositive = deviation;
+      }
+      if (deviation < maxNegative) {
+        maxNegative = deviation;
+      }
+    }
+
+    maxDeviation[key] = {
+      positive: maxPositive,
+      negative: Math.abs(maxNegative),
+    };
+  }
+
+  return { first, average, maxDeviation };
 };
