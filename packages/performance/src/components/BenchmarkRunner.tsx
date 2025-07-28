@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import { FourierMode } from '@musetric/audio-view';
 import { useEffect, useRef, FC } from 'react';
 import { canvasWidth, canvasHeight } from '../constants';
@@ -31,11 +32,20 @@ export const BenchmarkRunner: FC<BenchmarkRunnerProps> = (props) => {
   }, [onUpdate, fourierMode, windowSize]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      key={`${fourierMode}-${windowSize}`}
-      width={canvasWidth}
-      height={canvasHeight}
-    />
+    <Box
+      sx={{
+        width: '100%',
+        maxWidth: '100%',
+        overflowX: 'auto',
+        overflowY: 'hidden',
+      }}
+    >
+      <canvas
+        ref={canvasRef}
+        key={`${fourierMode}-${windowSize}`}
+        width={canvasWidth}
+        height={canvasHeight}
+      />
+    </Box>
   );
 };

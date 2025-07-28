@@ -33,6 +33,7 @@ export const App: FC = () => {
   const [data, setData] = useState<BenchmarkData>(initialData);
   const [showFirst, setShowFirst] = useState(false);
   const [showPercent, setShowPercent] = useState(false);
+  const [showDeviations, setShowDeviations] = useState(false);
   const [mode, setMode] = useState<FourierMode>(allFourierModes[0]);
   const [toDo, setToDo] = useState<Task[]>(allTasks);
 
@@ -48,44 +49,65 @@ export const App: FC = () => {
   return (
     <Box
       sx={{
-        p: 2,
+        p: 1,
         bgcolor: 'background.default',
         color: 'text.primary',
         height: '100vh',
+        width: '100vw',
+        maxWidth: '100vw',
         overflow: 'auto',
+        boxSizing: 'border-box',
       }}
     >
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={showFirst}
-            onClick={() => setShowFirst(!showFirst)}
-          />
-        }
-        label='Show first run'
-      />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={showPercent}
-            onClick={() => setShowPercent(!showPercent)}
-          />
-        }
-        label='Show percent'
-      />
-      <ToggleButtonGroup value={mode} exclusive sx={{ my: 2 }}>
-        {allFourierModes.map((fourierMode) => (
-          <ToggleButton
-            key={fourierMode}
-            value={fourierMode}
-            onClick={() => setMode(fourierMode)}
-          >
-            {fourierMode}
-          </ToggleButton>
-        ))}
-      </ToggleButtonGroup>
-
-      <Box sx={{ width: '100%', mb: 3 }}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showFirst}
+              onClick={() => setShowFirst(!showFirst)}
+            />
+          }
+          label='Show first run'
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showPercent}
+              onClick={() => setShowPercent(!showPercent)}
+            />
+          }
+          label='Show percent'
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showDeviations}
+              onClick={() => setShowDeviations(!showDeviations)}
+            />
+          }
+          label='Show max deviations'
+        />
+        <ToggleButtonGroup
+          value={mode}
+          exclusive
+          sx={{
+            my: 2,
+            minWidth: 'max-content',
+          }}
+        >
+          {allFourierModes.map((fourierMode) => (
+            <ToggleButton
+              key={fourierMode}
+              size='small'
+              value={fourierMode}
+              onClick={() => setMode(fourierMode)}
+            >
+              {fourierMode}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+      </Box>
+      <Box sx={{ width: '100%', mb: 2 }}>
         <Typography variant='body2' sx={{ mt: 1, textAlign: 'center' }}>
           {`${status.done} of ${status.total} tasks completed`}
         </Typography>
@@ -97,6 +119,7 @@ export const App: FC = () => {
         results={data[mode]}
         showFirst={showFirst}
         showPercent={showPercent}
+        showDeviations={showDeviations}
       />
 
       {task && (

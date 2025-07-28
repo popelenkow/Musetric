@@ -22,7 +22,7 @@ export const appTheme = createTheme({
     MuiTableCell: {
       styleOverrides: {
         root: ({ theme }) => ({
-          padding: theme.spacing(0.5, 1),
+          padding: theme.spacing(0.5, 0.5),
         }),
       },
     },
