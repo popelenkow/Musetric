@@ -22,7 +22,6 @@ export const initialState: SpectrogramState = {};
 export type SpectrogramActions = {
   mount: (canvas: HTMLCanvasElement) => void;
   unmount: () => void;
-  setViewSize: (viewSize: ViewSize) => void;
 };
 
 type State = SpectrogramState & SpectrogramActions;
@@ -84,6 +83,8 @@ export const useSpectrogramStore = create<State>((set, get) => {
       minDecibel,
       windowFilter,
       colors,
+      visibleTimeBefore,
+      visibleTimeAfter,
     } = useSettingsStore.getState();
     if (!pipeline || !sampleRate || !viewSize) return;
 
@@ -96,6 +97,8 @@ export const useSpectrogramStore = create<State>((set, get) => {
       maxFrequency,
       minDecibel,
       windowFilter,
+      visibleTimeBefore,
+      visibleTimeAfter,
     };
     pipeline.configure(options);
   };
@@ -156,11 +159,6 @@ export const useSpectrogramStore = create<State>((set, get) => {
     unmount: async () => {
       canvas = undefined;
       await mount();
-    },
-    setViewSize: (viewSize) => {
-      set({ viewSize });
-      configure();
-      void render();
     },
   };
   return ref;

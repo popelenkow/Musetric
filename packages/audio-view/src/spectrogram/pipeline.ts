@@ -10,6 +10,8 @@ export type PipelineConfigureOptions = {
   maxFrequency: number;
   minDecibel: number;
   windowFilter: WindowFilterKey;
+  visibleTimeBefore: number;
+  visibleTimeAfter: number;
 };
 export type Pipeline = {
   render: (wave: Float32Array, progress: number) => Promise<void>;

@@ -7,6 +7,8 @@
   "pages.project.settings.fields.maxFrequency.label": "Max frequency",
   "pages.project.settings.fields.minDecibel.label": "Min decibel",
   "pages.project.settings.fields.minFrequency.label": "Min frequency",
+  "pages.project.settings.fields.visibleTimeAfter.label": "Visible time after",
+  "pages.project.settings.fields.visibleTimeBefore.label": "Visible time before",
   "pages.project.settings.fields.windowFilter.label": "Window filter",
   "pages.project.settings.fields.windowSize.label": "Window size",
   "pages.project.settings.title": "Settings",

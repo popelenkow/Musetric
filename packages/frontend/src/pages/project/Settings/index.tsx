@@ -8,6 +8,8 @@ import { FourierModeField } from './FourierModeField';
 import { MaxFrequencyField } from './MaxFrequencyField';
 import { MinDecibelField } from './MinDecibelField';
 import { MinFrequencyField } from './MinFrequencyField';
+import { VisibleTimeAfterField } from './VisibleTimeAfterField';
+import { VisibleTimeBeforeField } from './VisibleTimeBeforeField';
 import { WindowFilterField } from './WindowFilterField';
 import { WindowSizeField } from './WindowSizeField';
 
@@ -38,6 +40,8 @@ export const Settings: FC = () => {
             <MinFrequencyField />
             <MaxFrequencyField />
             <MinDecibelField />
+            <VisibleTimeBeforeField />
+            <VisibleTimeAfterField />
           </Stack>
         </Box>
       </Drawer>

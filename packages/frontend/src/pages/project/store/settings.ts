@@ -7,24 +7,28 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
 export type SettingsState = {
-  open: boolean;
   fourierMode: FourierMode;
+  windowFilter: spectrogram.WindowFilterKey;
   windowSize: number;
   minFrequency: number;
   maxFrequency: number;
   minDecibel: number;
-  windowFilter: spectrogram.WindowFilterKey;
+  visibleTimeBefore: number;
+  visibleTimeAfter: number;
+  open: boolean;
   colors: ViewColors;
 };
 
 const initialState: SettingsState = {
-  open: false,
   fourierMode: 'gpuFftRadix4',
+  windowFilter: 'hamming',
   windowSize: 1024 * 16,
   minFrequency: 120,
   maxFrequency: 5000,
   minDecibel: -45,
-  windowFilter: 'hamming',
+  visibleTimeBefore: 2.0,
+  visibleTimeAfter: 2.0,
+  open: false,
   colors: {
     background: '#000000',
     played: '#ffffff',
@@ -33,13 +37,15 @@ const initialState: SettingsState = {
 };
 
 export type SettingsActions = {
-  setOpen: (open: boolean) => void;
   setFourierMode: (mode: FourierMode) => void;
+  setWindowFilter: (value: spectrogram.WindowFilterKey) => void;
   setWindowSize: (size: number) => void;
   setMinFrequency: (value: number) => void;
   setMaxFrequency: (value: number) => void;
   setMinDecibel: (value: number) => void;
-  setWindowFilter: (value: spectrogram.WindowFilterKey) => void;
+  setVisibleTimeBefore: (value: number) => void;
+  setVisibleTimeAfter: (value: number) => void;
+  setOpen: (open: boolean) => void;
   setColors: (colors: ViewColors) => void;
 };
 
@@ -47,13 +53,15 @@ type State = SettingsState & SettingsActions;
 export const useSettingsStore = create<State>()(
   subscribeWithSelector((set) => ({
     ...initialState,
-    setOpen: (open) => set({ open }),
     setFourierMode: (fourierMode) => set({ fourierMode }),
+    setWindowFilter: (windowFilter) => set({ windowFilter }),
     setWindowSize: (windowSize) => set({ windowSize }),
     setMinFrequency: (minFrequency) => set({ minFrequency }),
     setMaxFrequency: (maxFrequency) => set({ maxFrequency }),
     setMinDecibel: (minDecibel) => set({ minDecibel }),
-    setWindowFilter: (windowFilter) => set({ windowFilter }),
+    setVisibleTimeBefore: (visibleTimeBefore) => set({ visibleTimeBefore }),
+    setVisibleTimeAfter: (visibleTimeAfter) => set({ visibleTimeAfter }),
+    setOpen: (open) => set({ open }),
     setColors: (colors) => set({ colors }),
   })),
 );

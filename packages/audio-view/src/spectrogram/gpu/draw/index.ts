@@ -1,13 +1,15 @@
 import { ViewColors } from '../../../common';
 import { createColors } from './colors';
 import { createPipeline } from './pipeline';
+import { createStateProgress } from './progress';
 
 export type Draw = {
   run: (encoder: GPUCommandEncoder) => void;
   configure: (
     view: GPUTextureView,
-    progress: GPUBuffer,
     colors: ViewColors,
+    visibleTimeBefore: number,
+    visibleTimeAfter: number,
   ) => void;
   destroy: () => void;
 };
@@ -23,6 +25,7 @@ export const createDraw = (
 
   const pipeline = createPipeline(device, context);
   const colors = createColors(device);
+  const progress = createStateProgress(device);
   const sampler = device.createSampler({
     label: 'draw-sampler',
     magFilter: 'nearest',
@@ -53,13 +56,16 @@ export const createDraw = (
       pass.draw(3);
       pass.end();
     },
-    configure: (view, progress, colorsValue) => {
+    configure: (view, colorsValue, visibleTimeBefore, visibleTimeAfter) => {
+      const ratio = visibleTimeBefore / (visibleTimeBefore + visibleTimeAfter);
+      progress.write(ratio);
+
       bindGroup = device.createBindGroup({
         label: 'draw-bind-group',
         layout: pipeline.getBindGroupLayout(0),
         entries: [
           { binding: 0, resource: { buffer: colors.buffer } },
-          { binding: 1, resource: { buffer: progress } },
+          { binding: 1, resource: { buffer: progress.buffer } },
           { binding: 2, resource: sampler },
           { binding: 3, resource: view },
         ],
@@ -68,6 +74,7 @@ export const createDraw = (
     },
     destroy: () => {
       colors.destroy();
+      progress.destroy();
     },
   };
 
