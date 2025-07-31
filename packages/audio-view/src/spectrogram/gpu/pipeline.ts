@@ -1,6 +1,5 @@
 import { createCallLatest } from '../../common';
 import { GpuFourierMode, gpuFouriers } from '../../fourier';
-import { createSliceWaves } from '../cpu/sliceWaves';
 import { Pipeline, PipelineConfigureOptions } from '../pipeline';
 import { createDecibelify } from './decibelify';
 import { createDraw } from './draw';
@@ -9,6 +8,7 @@ import { createMagnitudify } from './magnitudify';
 import { createPipelineState } from './pipelineState';
 import { createPipelineTimer, PipelineMetrics } from './pipelineTimer';
 import { createScaleView } from './scaleView';
+import { createSliceWaves } from './sliceWaves';
 
 export type CreatePipelineOptions = {
   device: GPUDevice;
@@ -26,8 +26,12 @@ export const createPipeline = (
   const timer = createPipelineTimer(device, onMetrics);
   const { markers } = timer;
 
-  const state = createPipelineState(device, markers.writeBuffers);
-  const sliceWaves = createSliceWaves(markers.sliceWaves);
+  const state = createPipelineState(device);
+  const sliceWaves = createSliceWaves(
+    device,
+    markers.sliceWaves,
+    markers.writeBuffers,
+  );
   const filterWave = createFilterWave(device, markers.filterWave);
   const fourier = gpuFouriers[fourierMode](device, {
     reverse: markers.fourierReverse,
@@ -56,13 +60,13 @@ export const createPipeline = (
     const windowCount = width;
     state.configure();
     const { signal, texture } = state;
-    sliceWaves.configure(
+    sliceWaves.configure(signal.real, {
       windowSize,
       windowCount,
+      sampleRate,
       visibleTimeBefore,
       visibleTimeAfter,
-      sampleRate,
-    );
+    });
     filterWave.configure(signal.real, windowSize, windowCount, windowFilter);
     fourier.configure(signal, windowSize, windowCount);
     magnitudify.configure(signal, windowSize, windowCount);
@@ -82,6 +86,7 @@ export const createPipeline = (
     const encoder = device.createCommandEncoder({
       label: 'pipeline-render-encoder',
     });
+    sliceWaves.run(encoder);
     state.zerofyImag(encoder);
     filterWave.run(encoder);
     fourier.forward(encoder);
@@ -105,8 +110,8 @@ export const createPipeline = (
       isConfigureRequested = false;
       configure();
     }
-    sliceWaves.run(wave, state.signalArray, progress);
-    state.writeBuffers();
+
+    sliceWaves.write(wave, progress);
     const command = createCommand();
     await submitCommand(command);
   });
