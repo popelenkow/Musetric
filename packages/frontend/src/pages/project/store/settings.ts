@@ -22,10 +22,10 @@ export type SettingsState = {
 const initialState: SettingsState = {
   fourierMode: 'gpuFftRadix4',
   windowFilter: 'hamming',
-  windowSize: 1024 * 16,
+  windowSize: 1024 * 4,
   minFrequency: 120,
-  maxFrequency: 5000,
-  minDecibel: -45,
+  maxFrequency: 4000,
+  minDecibel: -40,
   visibleTimeBefore: 2.0,
   visibleTimeAfter: 2.0,
   open: false,
