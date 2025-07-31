@@ -2,10 +2,10 @@ import { createCpuTimer, createGpuTimer, roundDuration } from '../../common';
 
 export const timerLabels = [
   'configure',
-  'sliceWaves',
   'writeBuffers',
   'createCommand',
   'submitCommand',
+  'sliceWaves',
   'filterWave',
   'fourierReverse',
   'fourierTransform',
@@ -20,6 +20,7 @@ export type TimerLabel = (typeof timerLabels)[number];
 export type PipelineMetrics = Record<TimerLabel, number>;
 
 const gpuLabels = [
+  'sliceWaves',
   'filterWave',
   'fourierReverse',
   'fourierTransform',
@@ -31,7 +32,6 @@ const gpuLabels = [
 
 const cpuLabels = [
   'configure',
-  'sliceWaves',
   'writeBuffers',
   'createCommand',
   'submitCommand',

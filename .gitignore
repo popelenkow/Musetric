@@ -17,6 +17,7 @@ __snapshots__/
 *.egg-info/
 generated/
 public/
+.claude
 
 .yarn/*
 !.yarn/cache
