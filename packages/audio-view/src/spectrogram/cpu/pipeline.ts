@@ -45,11 +45,19 @@ export const createPipeline = (
       maxFrequency,
       minDecibel,
       windowFilter,
+      visibleTimeBefore,
+      visibleTimeAfter,
     } = state.options;
     const { width, height } = viewSize;
     const windowCount = width;
     state.configure();
-    sliceWaves.configure(windowSize, windowCount);
+    sliceWaves.configure(
+      windowSize,
+      windowCount,
+      visibleTimeBefore,
+      visibleTimeAfter,
+      sampleRate,
+    );
     filterWave.configure(windowSize, windowCount, windowFilter);
     fourier.configure(windowSize, windowCount);
     magnitudify.configure(windowSize, windowCount);
@@ -62,7 +70,7 @@ export const createPipeline = (
       minFrequency,
       maxFrequency,
     );
-    draw.configure(viewSize, colors);
+    draw.configure(viewSize, colors, visibleTimeBefore, visibleTimeAfter);
   });
 
   const render = markers.total((wave: Float32Array, progress: number) => {
@@ -71,14 +79,14 @@ export const createPipeline = (
       configure();
     }
     const { signal, view } = state;
-    sliceWaves.run(wave, signal.real);
+    sliceWaves.run(wave, signal.real, progress);
     state.zerofyImag();
     filterWave.run(signal.real);
     fourier.forward(signal);
     magnitudify.run(signal);
     decibelify.run(signal.real);
     scaleView.run(signal.real, view);
-    draw.run(view, progress);
+    draw.run(view);
   });
 
   return {

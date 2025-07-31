@@ -8,8 +8,13 @@ import {
 } from '../../common';
 
 export type Draw = {
-  run: (view: Uint8Array, progress: number) => void;
-  configure: (viewSize: ViewSize, colors: ViewColors) => void;
+  run: (view: Uint8Array) => void;
+  configure: (
+    viewSize: ViewSize,
+    colors: ViewColors,
+    visibleTimeBefore: number,
+    visibleTimeAfter: number,
+  ) => void;
 };
 
 export const createDraw = (
@@ -27,9 +32,11 @@ export const createDraw = (
   let image: ImageData = undefined!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let viewSize: ViewSize = undefined!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let progress: number = undefined!;
 
   const ref: Draw = {
-    run: (view, progress) => {
+    run: (view) => {
       const { width, height } = viewSize;
       const played = Math.floor(progress * width);
       for (let x = 0; x < width; x++) {
@@ -46,9 +53,10 @@ export const createDraw = (
       }
       context.putImageData(image, 0, 0);
     },
-    configure: (newViewSize, colors) => {
+    configure: (newViewSize, colors, visibleTimeBefore, visibleTimeAfter) => {
       viewSize = newViewSize;
       image = context.createImageData(viewSize.width, viewSize.height);
+      progress = visibleTimeBefore / (visibleTimeBefore + visibleTimeAfter);
       gradients = {
         played: createGradient(
           parseHexColor(colors.background),

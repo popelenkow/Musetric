@@ -9,6 +9,7 @@ export const runs = 10;
 export const skipRuns = 10;
 export const sampleRate = 44100;
 export const minDecibel = -45;
+export const progress = 0.5;
 
 export const colors: ViewColors = {
   played: '#a26da8',
@@ -18,6 +19,9 @@ export const colors: ViewColors = {
 
 export const minFrequency = 120;
 export const maxFrequency = 5000;
+
+export const visibleTimeBefore = 2.0;
+export const visibleTimeAfter = 2.0;
 
 export const windowFilter: spectrogram.WindowFilterKey = 'hamming';
 
@@ -32,6 +36,15 @@ const getWindowSizes = () => {
   return sizes;
 };
 export const windowSizes = getWindowSizes();
+
+const createWave = () => {
+  const result = new Float32Array(sampleRate * 60 * 3);
+  for (let i = 0; i < result.length; i++) {
+    result[i] = Math.random() * 2 - 1;
+  }
+  return result;
+};
+export const wave = createWave();
 
 export const getTimerLabels = (mode: FourierMode): readonly string[] =>
   isGpuFourierMode(mode)

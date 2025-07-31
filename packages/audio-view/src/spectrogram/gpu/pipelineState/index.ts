@@ -1,6 +1,5 @@
 import { ComplexGpuBuffer, CpuMarker } from '../../../common';
 import { PipelineConfigureOptions } from '../../pipeline';
-import { createStateProgress, StateProgress } from './progress';
 import { createSignalBuffer } from './signalBuffer';
 import { createStateTexture, StateTexture } from './texture';
 
@@ -9,9 +8,8 @@ export type PipelineState = {
   signal: ComplexGpuBuffer;
   signalArray: Float32Array;
   texture: StateTexture;
-  progress: StateProgress;
   configure: () => void;
-  writeBuffers: (progress: number) => void;
+  writeBuffers: () => void;
   zerofyImag: (encoder: GPUCommandEncoder) => void;
   destroy: () => void;
 };
@@ -24,7 +22,6 @@ export const createPipelineState = (device: GPUDevice, marker?: CpuMarker) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     signalArray: undefined!,
     texture: createStateTexture(device),
-    progress: createStateProgress(device),
     configure: () => {
       const { windowSize, viewSize } = ref.options;
       const windowCount = viewSize.width;
@@ -34,10 +31,9 @@ export const createPipelineState = (device: GPUDevice, marker?: CpuMarker) => {
       ref.signalArray = new Float32Array(windowSize * windowCount);
       ref.texture.resize(viewSize);
     },
-    writeBuffers: (progress: number) => {
+    writeBuffers: () => {
       const { signal, signalArray } = ref;
       device.queue.writeBuffer(signal.real, 0, signalArray);
-      ref.progress.write(progress);
     },
     zerofyImag: (encoder) => {
       encoder.clearBuffer(ref.signal.imag);
@@ -46,7 +42,6 @@ export const createPipelineState = (device: GPUDevice, marker?: CpuMarker) => {
       ref.signal?.real.destroy();
       ref.signal?.imag.destroy();
       ref.texture.destroy();
-      ref.progress.destroy();
     },
   };
   ref.writeBuffers = marker?.(ref.writeBuffers) ?? ref.writeBuffers;

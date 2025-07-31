@@ -12,14 +12,17 @@ import {
   sampleRate,
   minFrequency,
   maxFrequency,
+  visibleTimeBefore,
+  visibleTimeAfter,
   windowFilter,
+  progress,
+  wave,
 } from './constants';
 import { waitNextFrame } from './waitNextFrame';
 
 export const runPipeline = async (
   fourierMode: FourierMode,
   windowSize: number,
-  wave: Float32Array,
   device: GPUDevice,
   canvas: HTMLCanvasElement,
 ): Promise<{
@@ -41,6 +44,8 @@ export const runPipeline = async (
     maxFrequency,
     minDecibel,
     windowFilter,
+    visibleTimeBefore,
+    visibleTimeAfter,
   };
   const pipeline = isGpuFourierMode(fourierMode)
     ? spectrogram.gpu.createPipeline({
@@ -57,7 +62,7 @@ export const runPipeline = async (
   pipeline.configure(configureOptions);
 
   for (let i = 0; i < skipRuns + runs; i++) {
-    await pipeline.render(wave, 0);
+    await pipeline.render(wave, progress);
     await waitNextFrame(15);
   }
   pipeline.destroy();
