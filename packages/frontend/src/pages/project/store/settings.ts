@@ -1,8 +1,4 @@
-import type {
-  FourierMode,
-  spectrogram,
-  ViewColors,
-} from '@musetric/audio-view';
+import { spectrogram, FourierMode, ViewColors } from '@musetric/audio-view';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
@@ -21,21 +17,9 @@ export type SettingsState = {
 };
 
 const initialState: SettingsState = {
+  ...spectrogram.defaultConfig,
   fourierMode: 'gpuFftRadix4',
-  windowFilter: 'hamming',
-  windowSize: 1024 * 4,
-  minFrequency: 120,
-  maxFrequency: 4000,
-  minDecibel: -40,
-  visibleTimeBefore: 2.0,
-  visibleTimeAfter: 2.0,
-  zeroPaddingFactor: 2,
   open: false,
-  colors: {
-    background: '#000000',
-    played: '#ffffff',
-    unplayed: '#888888',
-  },
 };
 
 export type SettingsActions = {

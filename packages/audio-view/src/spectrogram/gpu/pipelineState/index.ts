@@ -1,10 +1,10 @@
 import { ComplexGpuBuffer } from '../../../common';
-import { PipelineConfigureOptions } from '../../pipeline';
+import { PipelineConfig } from '../../pipeline';
 import { createSignalBuffer } from './signal';
 import { createStateTexture, StateTexture } from './texture';
 
 export type PipelineState = {
-  options: PipelineConfigureOptions;
+  config: PipelineConfig;
   signal: ComplexGpuBuffer;
   texture: StateTexture;
   configure: () => void;
@@ -14,12 +14,12 @@ export type PipelineState = {
 export const createPipelineState = (device: GPUDevice) => {
   const ref: PipelineState = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    options: undefined!,
+    config: undefined!,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     signal: undefined!,
     texture: createStateTexture(device),
     configure: () => {
-      const { windowSize, viewSize, zeroPaddingFactor } = ref.options;
+      const { windowSize, viewSize, zeroPaddingFactor } = ref.config;
       const windowCount = viewSize.width;
       const paddedWindowSize = windowSize * zeroPaddingFactor;
       ref.signal?.real.destroy();

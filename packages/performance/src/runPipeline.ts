@@ -4,21 +4,7 @@ import {
   FourierMode,
   ViewSize,
 } from '@musetric/audio-view';
-import {
-  colors,
-  minDecibel,
-  runs,
-  skipRuns,
-  sampleRate,
-  minFrequency,
-  maxFrequency,
-  visibleTimeBefore,
-  visibleTimeAfter,
-  windowFilter,
-  progress,
-  wave,
-  zeroPaddingFactor,
-} from './constants';
+import { progress, runs, skipRuns, wave } from './constants';
 import { waitNextFrame } from './waitNextFrame';
 
 export const runPipeline = async (
@@ -36,18 +22,10 @@ export const runPipeline = async (
     width: canvas.clientWidth,
     height: canvas.clientHeight,
   };
-  const configureOptions: spectrogram.PipelineConfigureOptions = {
+  const config: spectrogram.PipelineConfig = {
+    ...spectrogram.defaultConfig,
     windowSize,
     viewSize,
-    colors,
-    sampleRate,
-    minFrequency,
-    maxFrequency,
-    minDecibel,
-    windowFilter,
-    visibleTimeBefore,
-    visibleTimeAfter,
-    zeroPaddingFactor,
   };
   const pipeline = isGpuFourierMode(fourierMode)
     ? spectrogram.gpu.createPipeline({
@@ -61,7 +39,7 @@ export const runPipeline = async (
         fourierMode,
         onMetrics: (metrics) => metricsArray.push(metrics),
       });
-  pipeline.configure(configureOptions);
+  pipeline.configure(config);
 
   for (let i = 0; i < skipRuns + runs; i++) {
     await pipeline.render(wave, progress);

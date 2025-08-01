@@ -89,7 +89,7 @@ export const useSpectrogramStore = create<State>((set, get) => {
     } = useSettingsStore.getState();
     if (!pipeline || !sampleRate || !viewSize) return;
 
-    const options: spectrogram.PipelineConfigureOptions = {
+    const config: spectrogram.PipelineConfig = {
       windowSize,
       viewSize,
       colors,
@@ -102,7 +102,7 @@ export const useSpectrogramStore = create<State>((set, get) => {
       visibleTimeAfter,
       zeroPaddingFactor,
     };
-    pipeline.configure(options);
+    pipeline.configure(config);
   };
 
   const render = async () => {
