@@ -12,6 +12,7 @@ export type State = {
     windowSize: number,
     windowCount: number,
     windowFilterKey: WindowFilterKey,
+    zeroPaddingFactor: number,
   ) => void;
   destroy: () => void;
 };
@@ -25,10 +26,17 @@ export const createState = (device: GPUDevice): State => {
     params,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroup: undefined!,
-    configure: (signal, windowSize, windowCount, windowFilterKey) => {
+    configure: (
+      signal,
+      windowSize,
+      windowCount,
+      windowFilterKey,
+      zeroPaddingFactor,
+    ) => {
       params.write({
         windowSize,
         windowCount,
+        zeroPaddingFactor,
       });
       windowFilter.configure(windowSize, windowFilterKey);
       ref.bindGroup = device.createBindGroup({

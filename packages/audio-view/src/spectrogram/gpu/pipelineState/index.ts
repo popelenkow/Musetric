@@ -19,11 +19,12 @@ export const createPipelineState = (device: GPUDevice) => {
     signal: undefined!,
     texture: createStateTexture(device),
     configure: () => {
-      const { windowSize, viewSize } = ref.options;
+      const { windowSize, viewSize, zeroPaddingFactor } = ref.options;
       const windowCount = viewSize.width;
+      const paddedWindowSize = windowSize * zeroPaddingFactor;
       ref.signal?.real.destroy();
       ref.signal?.imag.destroy();
-      ref.signal = createSignalBuffer(device, windowSize, windowCount);
+      ref.signal = createSignalBuffer(device, paddedWindowSize, windowCount);
       ref.texture.resize(viewSize);
     },
     zerofyImag: (encoder) => {

@@ -54,10 +54,12 @@ export const createPipeline = (
       windowFilter,
       visibleTimeBefore,
       visibleTimeAfter,
+      zeroPaddingFactor,
     } = state.options;
     const { width, height } = viewSize;
 
     const windowCount = width;
+    const paddedWindowSize = windowSize * zeroPaddingFactor;
     state.configure();
     const { signal, texture } = state;
     sliceWaves.configure(signal.real, {
@@ -66,16 +68,28 @@ export const createPipeline = (
       sampleRate,
       visibleTimeBefore,
       visibleTimeAfter,
+      zeroPaddingFactor,
     });
-    filterWave.configure(signal.real, windowSize, windowCount, windowFilter);
-    fourier.configure(signal, windowSize, windowCount);
-    magnitudify.configure(signal, windowSize, windowCount);
-    decibelify.configure(signal.real, windowSize, windowCount, minDecibel);
+    filterWave.configure(
+      signal.real,
+      windowSize,
+      windowCount,
+      windowFilter,
+      zeroPaddingFactor,
+    );
+    fourier.configure(signal, paddedWindowSize, windowCount);
+    magnitudify.configure(signal, paddedWindowSize, windowCount);
+    decibelify.configure(
+      signal.real,
+      paddedWindowSize,
+      windowCount,
+      minDecibel,
+    );
     scaleView.configure(signal.real, texture.view, {
       sampleRate,
       minFrequency,
       maxFrequency,
-      windowSize,
+      windowSize: paddedWindowSize,
       width,
       height,
     });

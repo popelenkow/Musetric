@@ -17,6 +17,7 @@ import {
   windowFilter,
   progress,
   wave,
+  zeroPaddingFactor,
 } from './constants';
 import { waitNextFrame } from './waitNextFrame';
 
@@ -46,6 +47,7 @@ export const runPipeline = async (
     windowFilter,
     visibleTimeBefore,
     visibleTimeAfter,
+    zeroPaddingFactor,
   };
   const pipeline = isGpuFourierMode(fourierMode)
     ? spectrogram.gpu.createPipeline({

@@ -12,6 +12,7 @@ import { VisibleTimeAfterField } from './VisibleTimeAfterField';
 import { VisibleTimeBeforeField } from './VisibleTimeBeforeField';
 import { WindowFilterField } from './WindowFilterField';
 import { WindowSizeField } from './WindowSizeField';
+import { ZeroPaddingFactorField } from './ZeroPaddingFactorField';
 
 export const Settings: FC = () => {
   const { t } = useTranslation();
@@ -42,6 +43,7 @@ export const Settings: FC = () => {
             <MinDecibelField />
             <VisibleTimeBeforeField />
             <VisibleTimeAfterField />
+            <ZeroPaddingFactorField />
           </Stack>
         </Box>
       </Drawer>

@@ -85,6 +85,7 @@ export const useSpectrogramStore = create<State>((set, get) => {
       colors,
       visibleTimeBefore,
       visibleTimeAfter,
+      zeroPaddingFactor,
     } = useSettingsStore.getState();
     if (!pipeline || !sampleRate || !viewSize) return;
 
@@ -99,6 +100,7 @@ export const useSpectrogramStore = create<State>((set, get) => {
       windowFilter,
       visibleTimeBefore,
       visibleTimeAfter,
+      zeroPaddingFactor,
     };
     pipeline.configure(options);
   };

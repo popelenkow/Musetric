@@ -17,10 +17,11 @@ export const createPipelineState = (marker?: CpuMarker): PipelineArrays => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     view: undefined!,
     configure: () => {
-      const { windowSize, viewSize } = ref.options;
+      const { windowSize, viewSize, zeroPaddingFactor } = ref.options;
       const { width, height } = viewSize;
       const windowCount = width;
-      const windowLength = windowSize * windowCount;
+      const paddedWindowSize = windowSize * zeroPaddingFactor;
+      const windowLength = paddedWindowSize * windowCount;
       ref.signal = createComplexArray(windowLength);
       ref.view = new Uint8Array(windowCount * height);
     },
