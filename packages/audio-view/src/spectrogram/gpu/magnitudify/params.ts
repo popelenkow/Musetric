@@ -1,12 +1,19 @@
+import { Config } from './state';
+
 export type MagnitudifyParams = {
   windowSize: number;
   windowCount: number;
 };
 
+const toParams = (config: Config): MagnitudifyParams => ({
+  windowSize: config.windowSize * config.zeroPaddingFactor,
+  windowCount: config.windowCount,
+});
+
 export type StateParams = {
   value: MagnitudifyParams;
   buffer: GPUBuffer;
-  write: (value: MagnitudifyParams) => void;
+  write: (config: Config) => void;
   destroy: () => void;
 };
 
@@ -22,10 +29,10 @@ export const createParams = (device: GPUDevice) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     value: undefined!,
     buffer,
-    write: (value) => {
-      ref.value = value;
-      array[0] = value.windowSize;
-      array[1] = value.windowCount;
+    write: (config) => {
+      ref.value = toParams(config);
+      array[0] = ref.value.windowSize;
+      array[1] = ref.value.windowCount;
       device.queue.writeBuffer(buffer, 0, array);
     },
     destroy: () => {

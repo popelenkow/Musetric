@@ -1,16 +1,16 @@
-import { ViewColors } from '../../../common';
+import { ExtPipelineConfig } from '../../pipeline';
 import { createColors } from './colors';
 import { createPipeline } from './pipeline';
 import { createStateProgress } from './progress';
 
+export type Config = Pick<
+  ExtPipelineConfig,
+  'visibleTimeBefore' | 'visibleTimeAfter' | 'colors'
+>;
+
 export type Draw = {
   run: (encoder: GPUCommandEncoder) => void;
-  configure: (
-    view: GPUTextureView,
-    colors: ViewColors,
-    visibleTimeBefore: number,
-    visibleTimeAfter: number,
-  ) => void;
+  configure: (view: GPUTextureView, config: Config) => void;
   destroy: () => void;
 };
 export const createDraw = (
@@ -24,15 +24,15 @@ export const createDraw = (
   }
 
   const pipeline = createPipeline(device, context);
-  const colors = createColors(device);
   const progress = createStateProgress(device);
+  const colors = createColors(device);
   const sampler = device.createSampler({
     label: 'draw-sampler',
     magFilter: 'nearest',
     minFilter: 'nearest',
   });
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let bindGroup: GPUBindGroup = undefined!;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let bindGroup: GPUBindGroup;
 
   const ref: Draw = {
     run: (encoder) => {
@@ -56,10 +56,9 @@ export const createDraw = (
       pass.draw(3);
       pass.end();
     },
-    configure: (view, colorsValue, visibleTimeBefore, visibleTimeAfter) => {
-      const ratio = visibleTimeBefore / (visibleTimeBefore + visibleTimeAfter);
-      progress.write(ratio);
-
+    configure: (view, config) => {
+      progress.write(config);
+      colors.write(config);
       bindGroup = device.createBindGroup({
         label: 'draw-bind-group',
         layout: pipeline.getBindGroupLayout(0),
@@ -70,7 +69,6 @@ export const createDraw = (
           { binding: 3, resource: view },
         ],
       });
-      colors.write(colorsValue);
     },
     destroy: () => {
       colors.destroy();

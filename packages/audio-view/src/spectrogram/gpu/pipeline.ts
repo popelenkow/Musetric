@@ -1,6 +1,6 @@
 import { createCallLatest } from '../../common';
 import { GpuFourierMode, gpuFouriers } from '../../fourier';
-import { Pipeline, PipelineConfig } from '../pipeline';
+import { Pipeline } from '../pipeline';
 import { createDecibelify } from './decibelify';
 import { createDraw } from './draw';
 import { createFilterWave } from './filterWave';
@@ -16,10 +16,8 @@ export type CreatePipelineOptions = {
   canvas: HTMLCanvasElement;
   onMetrics?: (metrics: PipelineMetrics) => void;
 };
-export const createPipeline = (
-  createOptions: CreatePipelineOptions,
-): Pipeline => {
-  const { device, fourierMode, canvas, onMetrics } = createOptions;
+export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
+  const { device, fourierMode, canvas, onMetrics } = options;
 
   let isConfigureRequested = true;
 
@@ -43,57 +41,18 @@ export const createPipeline = (
   const draw = createDraw(device, canvas, markers.draw);
 
   const configure = markers.configure(() => {
-    const {
-      windowSize,
-      viewSize,
-      colors,
-      sampleRate,
-      minFrequency,
-      maxFrequency,
-      minDecibel,
-      windowFilter,
-      visibleTimeBefore,
-      visibleTimeAfter,
-      zeroPaddingFactor,
-    } = state.config;
-    const { width, height } = viewSize;
-
-    const windowCount = width;
-    const paddedWindowSize = windowSize * zeroPaddingFactor;
     state.configure();
-    const { signal, texture } = state;
-    sliceWaves.configure(signal.real, {
-      windowSize,
-      windowCount,
-      sampleRate,
-      visibleTimeBefore,
-      visibleTimeAfter,
-      zeroPaddingFactor,
+    const { config, signal, texture } = state;
+    sliceWaves.configure(signal.real, config);
+    filterWave.configure(signal.real, config);
+    fourier.configure(signal, {
+      ...config,
+      windowSize: config.windowSize * config.zeroPaddingFactor,
     });
-    filterWave.configure(
-      signal.real,
-      windowSize,
-      windowCount,
-      windowFilter,
-      zeroPaddingFactor,
-    );
-    fourier.configure(signal, paddedWindowSize, windowCount);
-    magnitudify.configure(signal, paddedWindowSize, windowCount);
-    decibelify.configure(
-      signal.real,
-      paddedWindowSize,
-      windowCount,
-      minDecibel,
-    );
-    scaleView.configure(signal.real, texture.view, {
-      sampleRate,
-      minFrequency,
-      maxFrequency,
-      windowSize: paddedWindowSize,
-      width,
-      height,
-    });
-    draw.configure(texture.view, colors, visibleTimeBefore, visibleTimeAfter);
+    magnitudify.configure(signal, config);
+    decibelify.configure(signal.real, config);
+    scaleView.configure(signal.real, texture.view, config);
+    draw.configure(texture.view, config);
   });
 
   const createCommand = markers.createCommand(() => {
@@ -135,8 +94,11 @@ export const createPipeline = (
       await render(wave, progress);
       await timer.finish();
     }),
-    configure: (newConfig: PipelineConfig) => {
-      state.config = newConfig;
+    configure: (newConfig) => {
+      state.config = {
+        ...newConfig,
+        windowCount: newConfig.viewSize.width,
+      };
       isConfigureRequested = true;
     },
     destroy: () => {

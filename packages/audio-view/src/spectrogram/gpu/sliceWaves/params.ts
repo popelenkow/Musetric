@@ -1,4 +1,6 @@
-export type SliceWavesShaderParams = {
+import { Config } from './state';
+
+export type SliceWavesParams = {
   windowSize: number;
   paddedWindowSize: number;
   windowCount: number;
@@ -6,16 +8,7 @@ export type SliceWavesShaderParams = {
   step: number;
 };
 
-export type SliceWavesParams = {
-  windowSize: number;
-  windowCount: number;
-  sampleRate: number;
-  visibleTimeBefore: number;
-  visibleTimeAfter: number;
-  zeroPaddingFactor: number;
-};
-
-const toShaderParams = (params: SliceWavesParams): SliceWavesShaderParams => {
+const toParams = (config: Config): SliceWavesParams => {
   const {
     windowSize,
     windowCount,
@@ -23,7 +16,7 @@ const toShaderParams = (params: SliceWavesParams): SliceWavesShaderParams => {
     visibleTimeBefore,
     visibleTimeAfter,
     zeroPaddingFactor,
-  } = params;
+  } = config;
   const paddedWindowSize = windowSize * zeroPaddingFactor;
   const beforeSamples = visibleTimeBefore * sampleRate + windowSize;
   const afterSamples = visibleTimeAfter * sampleRate;
@@ -40,9 +33,8 @@ const toShaderParams = (params: SliceWavesParams): SliceWavesShaderParams => {
 
 export type StateParams = {
   value: SliceWavesParams;
-  shader: SliceWavesShaderParams;
   buffer: GPUBuffer;
-  write: (value: SliceWavesParams) => void;
+  write: (config: Config) => void;
   destroy: () => void;
 };
 
@@ -57,18 +49,14 @@ export const createParams = (device: GPUDevice): StateParams => {
   const ref: StateParams = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     value: undefined!,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    shader: undefined!,
     buffer,
-    write: (value) => {
-      ref.value = value;
-      const shader = toShaderParams(value);
-      ref.shader = shader;
-      array.setUint32(0, shader.windowSize, true);
-      array.setUint32(4, shader.paddedWindowSize, true);
-      array.setUint32(8, shader.windowCount, true);
-      array.setUint32(12, shader.visibleSamples, true);
-      array.setFloat32(16, shader.step, true);
+    write: (config) => {
+      ref.value = toParams(config);
+      array.setUint32(0, ref.value.windowSize, true);
+      array.setUint32(4, ref.value.paddedWindowSize, true);
+      array.setUint32(8, ref.value.windowCount, true);
+      array.setUint32(12, ref.value.visibleSamples, true);
+      array.setFloat32(16, ref.value.step, true);
       device.queue.writeBuffer(buffer, 0, array.buffer);
     },
     destroy: () => {

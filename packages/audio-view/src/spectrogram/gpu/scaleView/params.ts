@@ -1,4 +1,6 @@
-export type ScaleViewShaderParams = {
+import { Config } from './state';
+
+export type ScaleViewParams = {
   halfSize: number;
   width: number;
   height: number;
@@ -8,18 +10,16 @@ export type ScaleViewShaderParams = {
   logRange: number;
 };
 
-export type ScaleViewParams = {
-  sampleRate: number;
-  minFrequency: number;
-  maxFrequency: number;
-  width: number;
-  height: number;
-  windowSize: number;
-};
-
-const toShaderParams = (params: ScaleViewParams): ScaleViewShaderParams => {
-  const { windowSize, sampleRate, minFrequency, maxFrequency, width, height } =
-    params;
+const toParams = (config: Config): ScaleViewParams => {
+  const {
+    sampleRate,
+    zeroPaddingFactor,
+    minFrequency,
+    maxFrequency,
+    viewSize,
+  } = config;
+  const { width, height } = viewSize;
+  const windowSize = config.windowSize * zeroPaddingFactor;
   const halfSize = windowSize / 2;
   const maxBin = Math.min(
     Math.floor((maxFrequency / sampleRate) * windowSize),
@@ -45,7 +45,7 @@ const toShaderParams = (params: ScaleViewParams): ScaleViewShaderParams => {
 export type StateParams = {
   value: ScaleViewParams;
   buffer: GPUBuffer;
-  write: (value: ScaleViewParams) => void;
+  write: (config: Config) => void;
   destroy: () => void;
 };
 
@@ -62,18 +62,15 @@ export const createParams = (device: GPUDevice) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     value: undefined!,
     buffer,
-    write: (value) => {
-      ref.value = value;
-      const shader = toShaderParams(value);
-
-      array.setUint32(0, shader.halfSize, true);
-      array.setUint32(4, shader.width, true);
-      array.setUint32(8, shader.height, true);
-      array.setUint32(12, shader.minBin, true);
-      array.setUint32(16, shader.maxBin, true);
-      array.setFloat32(20, shader.logMin, true);
-      array.setFloat32(24, shader.logRange, true);
-
+    write: (config) => {
+      ref.value = toParams(config);
+      array.setUint32(0, ref.value.halfSize, true);
+      array.setUint32(4, ref.value.width, true);
+      array.setUint32(8, ref.value.height, true);
+      array.setUint32(12, ref.value.minBin, true);
+      array.setUint32(16, ref.value.maxBin, true);
+      array.setFloat32(20, ref.value.logMin, true);
+      array.setFloat32(24, ref.value.logRange, true);
       device.queue.writeBuffer(buffer, 0, array.buffer);
     },
     destroy: () => {

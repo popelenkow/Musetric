@@ -1,28 +1,26 @@
 import { CpuMarker } from '../../common';
-import { windowFilters, WindowFilterKey } from '../windowFilters';
+import { ExtPipelineConfig } from '../pipeline';
+import { windowFilters } from '../windowFilters';
+
+type Config = Pick<
+  ExtPipelineConfig,
+  'windowSize' | 'windowCount' | 'zeroPaddingFactor' | 'windowFilter'
+>;
 
 export type FilterWave = {
   run: (signal: Float32Array) => void;
-  configure: (
-    windowSize: number,
-    windowCount: number,
-    windowFilterKey: WindowFilterKey,
-    zeroPaddingFactor: number,
-  ) => void;
+  configure: (config: Config) => void;
 };
 
 export const createFilterWave = (marker?: CpuMarker): FilterWave => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let windowSize: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let windowCount: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let windowFilter: Float32Array = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let zeroPaddingFactor: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let config: Config;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let windowFilter: Float32Array;
 
   const ref: FilterWave = {
     run: (signal) => {
+      const { windowSize, windowCount, zeroPaddingFactor } = config;
       const paddedWindowSize = windowSize * zeroPaddingFactor;
       for (let windowIndex = 0; windowIndex < windowCount; windowIndex++) {
         const windowOffset = paddedWindowSize * windowIndex;
@@ -31,16 +29,9 @@ export const createFilterWave = (marker?: CpuMarker): FilterWave => {
         }
       }
     },
-    configure: (
-      newWindowSize,
-      newWindowCount,
-      windowFilterKey,
-      newZeroPaddingFactor,
-    ) => {
-      windowSize = newWindowSize;
-      windowCount = newWindowCount;
-      windowFilter = windowFilters[windowFilterKey](windowSize);
-      zeroPaddingFactor = newZeroPaddingFactor;
+    configure: (newConfig) => {
+      config = newConfig;
+      windowFilter = windowFilters[config.windowFilter](config.windowSize);
     },
   };
   ref.run = marker?.(ref.run) ?? ref.run;

@@ -1,28 +1,45 @@
 import { CpuMarker } from '../../common';
+import { ExtPipelineConfig } from '../pipeline';
+
+type Config = Pick<
+  ExtPipelineConfig,
+  | 'windowSize'
+  | 'sampleRate'
+  | 'zeroPaddingFactor'
+  | 'minFrequency'
+  | 'maxFrequency'
+  | 'viewSize'
+>;
 
 export const scaleView = (
-  windowSize: number,
-  windowCount: number,
-  height: number,
-  sampleRate: number,
-  minFrequency: number,
-  maxFrequency: number,
+  config: Config,
   magnitudes: Float32Array,
   view: Uint8Array,
 ) => {
-  const halfSize = windowSize / 2;
+  const {
+    windowSize,
+    sampleRate,
+    zeroPaddingFactor,
+    minFrequency,
+    maxFrequency,
+    viewSize,
+  } = config;
+  const { width, height } = viewSize;
+  const paddedWindowSize = windowSize * zeroPaddingFactor;
+
+  const halfSize = paddedWindowSize / 2;
   const maxBin = Math.min(
-    Math.floor((maxFrequency / sampleRate) * windowSize),
+    Math.floor((maxFrequency / sampleRate) * paddedWindowSize),
     halfSize,
   );
   const minBin = Math.max(
-    Math.floor((minFrequency / sampleRate) * windowSize),
+    Math.floor((minFrequency / sampleRate) * paddedWindowSize),
     0,
   );
   const logMin = Math.log(minBin + 1);
   const logRange = Math.log(maxBin + 1) - logMin;
 
-  for (let x = 0; x < windowCount; x++) {
+  for (let x = 0; x < width; x++) {
     const windowOffset = x * halfSize;
     const columnOffset = x * height;
     for (let y = 0; y < height; y++) {
@@ -37,55 +54,16 @@ export const scaleView = (
 
 export type ScaleView = {
   run: (magnitudes: Float32Array, view: Uint8Array) => void;
-  configure: (
-    windowSize: number,
-    windowCount: number,
-    height: number,
-    sampleRate: number,
-    minFrequency: number,
-    maxFrequency: number,
-  ) => void;
+  configure: (config: Config) => void;
 };
 export const createScaleView = (marker?: CpuMarker): ScaleView => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let windowSize: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let windowCount: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let height: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let sampleRate: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let minFrequency: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let maxFrequency: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let config: Config;
 
   const ref: ScaleView = {
-    run: (magnitudes, view) =>
-      scaleView(
-        windowSize,
-        windowCount,
-        height,
-        sampleRate,
-        minFrequency,
-        maxFrequency,
-        magnitudes,
-        view,
-      ),
-    configure: (
-      newWindowSize,
-      newWindowCount,
-      newHeight,
-      newSampleRate,
-      newMinFrequency,
-      newMaxFrequency,
-    ) => {
-      windowSize = newWindowSize;
-      windowCount = newWindowCount;
-      height = newHeight;
-      sampleRate = newSampleRate;
-      minFrequency = newMinFrequency;
-      maxFrequency = newMaxFrequency;
+    run: (magnitudes, view) => scaleView(config, magnitudes, view),
+    configure: (newConfig) => {
+      config = newConfig;
     },
   };
   ref.run = marker?.(ref.run) ?? ref.run;

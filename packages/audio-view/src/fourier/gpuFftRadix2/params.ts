@@ -1,9 +1,13 @@
-import { GpuFourierParams } from '../gpuFourier';
+import { FourierConfig } from '../config';
 
+type FourierParams = {
+  windowSize: number;
+  windowCount: number;
+};
 export type StateParams = {
-  value: GpuFourierParams;
+  value: FourierParams;
   buffer: GPUBuffer;
-  write: (value: GpuFourierParams) => void;
+  write: (config: FourierConfig) => void;
   destroy: () => void;
 };
 export const createParams = (device: GPUDevice) => {
@@ -18,10 +22,10 @@ export const createParams = (device: GPUDevice) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     value: undefined!,
     buffer,
-    write: (value) => {
-      ref.value = value;
-      array[0] = value.windowSize;
-      array[1] = value.windowCount;
+    write: (config) => {
+      ref.value = config;
+      array[0] = ref.value.windowSize;
+      array[1] = ref.value.windowCount;
       device.queue.writeBuffer(buffer, 0, array);
     },
     destroy: () => {

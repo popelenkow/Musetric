@@ -1,25 +1,22 @@
-import { GpuFourierParams } from '../gpuFourier';
+import { FourierConfig } from '../config';
 import { utilsRadix4 } from '../utilsRadix4';
 
-export type GpuFftRadix4ShaderParams = {
+export type GpuFftRadix4Params = {
   windowSize: number;
   windowCount: number;
   reverseWidth: number;
 };
 
-const toShaderParams = (
-  params: GpuFourierParams,
-): GpuFftRadix4ShaderParams => ({
-  windowSize: params.windowSize,
-  windowCount: params.windowCount,
-  reverseWidth: utilsRadix4.getReverseWidth(params.windowSize),
+const toParams = (config: FourierConfig): GpuFftRadix4Params => ({
+  windowSize: config.windowSize,
+  windowCount: config.windowCount,
+  reverseWidth: utilsRadix4.getReverseWidth(config.windowSize),
 });
 
 export type StateParams = {
-  value: GpuFourierParams;
-  shader: GpuFftRadix4ShaderParams;
+  value: GpuFftRadix4Params;
   buffer: GPUBuffer;
-  write: (value: GpuFourierParams) => void;
+  write: (config: FourierConfig) => void;
   destroy: () => void;
 };
 export const createParams = (device: GPUDevice) => {
@@ -33,16 +30,12 @@ export const createParams = (device: GPUDevice) => {
   const ref: StateParams = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     value: undefined!,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    shader: undefined!,
     buffer,
-    write: (value) => {
-      ref.value = value;
-      const shader = toShaderParams(value);
-      ref.shader = shader;
-      array[0] = shader.windowSize;
-      array[1] = shader.windowCount;
-      array[2] = shader.reverseWidth;
+    write: (config) => {
+      ref.value = toParams(config);
+      array[0] = ref.value.windowSize;
+      array[1] = ref.value.windowCount;
+      array[2] = ref.value.reverseWidth;
       device.queue.writeBuffer(buffer, 0, array);
     },
     destroy: () => {

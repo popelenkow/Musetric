@@ -16,6 +16,9 @@ export type PipelineConfig = {
   viewSize: ViewSize;
   colors: ViewColors;
 };
+export type ExtPipelineConfig = PipelineConfig & {
+  windowCount: number;
+};
 export const defaultConfig: PipelineConfig = {
   windowSize: 1024 * 4,
   sampleRate: 44100,

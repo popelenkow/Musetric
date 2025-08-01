@@ -1,4 +1,5 @@
 import { ComplexGpuBuffer } from '../../common';
+import { FourierConfig } from '../config';
 import { assertWindowSizePowerOfTwo } from '../isPowerOfTwo';
 import { createParams, StateParams } from './params';
 import { createReversePipeline, createTransformPipeline } from './pipeline';
@@ -17,11 +18,7 @@ export type State = {
   pipelines: Pipelines;
   bindGroups: BindGroups;
   params: StateParams;
-  configure: (
-    signal: ComplexGpuBuffer,
-    windowSize: number,
-    windowCount: number,
-  ) => void;
+  configure: (signal: ComplexGpuBuffer, config: FourierConfig) => void;
   destroy: () => void;
 };
 export const createState = (device: GPUDevice) => {
@@ -39,10 +36,11 @@ export const createState = (device: GPUDevice) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroups: undefined!,
     params,
-    configure: (signal, windowSize, windowCount) => {
+    configure: (signal, config) => {
+      const { windowSize } = config;
       assertWindowSizePowerOfTwo(windowSize);
-      params.write({ windowSize, windowCount });
-      reverseTable.resize(params.shader.reverseWidth);
+      params.write(config);
+      reverseTable.resize(params.value.reverseWidth);
       trigTable.resize(windowSize);
       ref.bindGroups = {
         reverse: device.createBindGroup({

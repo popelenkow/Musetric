@@ -64,7 +64,10 @@ describe('fourier', async () => {
         describe(fixture.name, () => {
           const createFourier = cpuFouriers[mode];
           const fourier = createFourier();
-          fourier.configure(fixture.windowSize, windowCount);
+          fourier.configure({
+            windowSize: fixture.windowSize,
+            windowCount,
+          });
 
           it('forward', () => {
             const zeroImag = new Float32Array(fixture.windowSize).fill(0);
@@ -99,7 +102,10 @@ describe('fourier', async () => {
           const buffers = createGpuBuffers(device, fixture.windowSize);
           const createFourier = gpuFouriers[mode];
           const fourier = createFourier(device);
-          fourier.configure(buffers.signal, fixture.windowSize, windowCount);
+          fourier.configure(buffers.signal, {
+            windowSize: fixture.windowSize,
+            windowCount,
+          });
           const reader = createComplexGpuBufferReader({
             device,
             typeSize: Float32Array.BYTES_PER_ELEMENT,

@@ -19,7 +19,7 @@ export const createSliceWaves = (
 
   return {
     run: (encoder) => {
-      const { paddedWindowSize, windowCount } = state.params.shader;
+      const { paddedWindowSize, windowCount } = state.params.value;
       const xGroups = Math.ceil(paddedWindowSize / workgroupSize);
       const pass = encoder.beginComputePass({
         label: 'slice-waves-pass',

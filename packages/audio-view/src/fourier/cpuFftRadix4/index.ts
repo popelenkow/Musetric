@@ -7,8 +7,8 @@ export const createCpuFftRadix4: CreateCpuFourier = (marker?: CpuMarker) => {
   const state = createState();
 
   const transform = (signal: ComplexArray, inverse: boolean) => {
-    const { windowSize, windowCount, reverseWidth, reverseTable, trigTable } =
-      state;
+    const { config, reverseWidth, reverseTable, trigTable } = state;
+    const { windowSize, windowCount } = config;
     for (let i = 0; i < windowCount; i++) {
       const start = i * windowSize;
       const end = start + windowSize;
