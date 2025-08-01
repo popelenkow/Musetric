@@ -2,6 +2,7 @@ import { CpuMarker } from '../../common';
 
 export const sliceWaves = (
   windowSize: number,
+  paddedWindowSize: number,
   windowCount: number,
   visibleTimeBefore: number,
   visibleTimeAfter: number,
@@ -18,9 +19,11 @@ export const sliceWaves = (
   const step = (visibleSamples - windowSize) / (windowCount - 1);
 
   for (let i = 0; i < windowCount; i++) {
-    const windowOffset = i * windowSize;
+    const windowOffset = i * paddedWindowSize;
     const start = Math.floor(startOffset + i * step);
     const end = start + windowSize;
+
+    waves.fill(0, windowOffset + windowSize, windowOffset + paddedWindowSize);
     if (start >= 0 && end < wave.length) {
       const slice = wave.subarray(start, end);
       waves.set(slice, windowOffset);
@@ -42,11 +45,14 @@ export type SliceWaves = {
     visibleTimeBefore: number,
     visibleTimeAfter: number,
     sampleRate: number,
+    zeroPaddingFactor: number,
   ) => void;
 };
 export const createSliceWaves = (marker?: CpuMarker): SliceWaves => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let windowSize: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let paddedWindowSize: number = undefined!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let windowCount: number = undefined!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -60,6 +66,7 @@ export const createSliceWaves = (marker?: CpuMarker): SliceWaves => {
     run: (wave, waves, progress) => {
       sliceWaves(
         windowSize,
+        paddedWindowSize,
         windowCount,
         visibleTimeBefore,
         visibleTimeAfter,
@@ -75,12 +82,14 @@ export const createSliceWaves = (marker?: CpuMarker): SliceWaves => {
       newVisibleTimeBefore,
       newVisibleTimeAfter,
       newSampleRate,
+      newZeroPaddingFactor,
     ) => {
       windowSize = newWindowSize;
       windowCount = newWindowCount;
       visibleTimeBefore = newVisibleTimeBefore;
       visibleTimeAfter = newVisibleTimeAfter;
       sampleRate = newSampleRate;
+      paddedWindowSize = newWindowSize * newZeroPaddingFactor;
     },
   };
   ref.run = marker?.(ref.run) ?? ref.run;

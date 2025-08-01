@@ -1,6 +1,7 @@
 export type FilterWaveParams = {
   windowSize: number;
   windowCount: number;
+  zeroPaddingFactor: number;
 };
 
 export type StateParams = {
@@ -10,7 +11,7 @@ export type StateParams = {
   destroy: () => void;
 };
 export const createParams = (device: GPUDevice): StateParams => {
-  const array = new Uint32Array(2);
+  const array = new Uint32Array(3);
   const buffer = device.createBuffer({
     label: 'filter-wave-params-buffer',
     size: array.byteLength,
@@ -23,8 +24,10 @@ export const createParams = (device: GPUDevice): StateParams => {
     buffer,
     write: (value) => {
       ref.value = value;
+      const paddedWindowSize = value.windowSize * value.zeroPaddingFactor;
       array[0] = value.windowSize;
-      array[1] = value.windowCount;
+      array[1] = paddedWindowSize;
+      array[2] = value.windowCount;
       device.queue.writeBuffer(buffer, 0, array);
     },
     destroy: () => {

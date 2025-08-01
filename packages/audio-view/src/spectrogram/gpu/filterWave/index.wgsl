@@ -1,5 +1,6 @@
 struct FilterWaveParams {
   windowSize: u32,
+  paddedWindowSize: u32,
   windowCount: u32,
 };
 
@@ -14,7 +15,7 @@ fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
   if (sampleIndex >= params.windowSize || windowIndex >= params.windowCount) {
     return;
   }
-  let offset = windowIndex * params.windowSize + sampleIndex;
+  let offset = windowIndex * params.paddedWindowSize + sampleIndex;
   let coeff = coefficients[sampleIndex];
   samples[offset] = samples[offset] * coeff;
 }

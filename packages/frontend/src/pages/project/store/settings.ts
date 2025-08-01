@@ -15,6 +15,7 @@ export type SettingsState = {
   minDecibel: number;
   visibleTimeBefore: number;
   visibleTimeAfter: number;
+  zeroPaddingFactor: spectrogram.ZeroPaddingFactor;
   open: boolean;
   colors: ViewColors;
 };
@@ -28,6 +29,7 @@ const initialState: SettingsState = {
   minDecibel: -40,
   visibleTimeBefore: 2.0,
   visibleTimeAfter: 2.0,
+  zeroPaddingFactor: 2,
   open: false,
   colors: {
     background: '#000000',
@@ -45,6 +47,7 @@ export type SettingsActions = {
   setMinDecibel: (value: number) => void;
   setVisibleTimeBefore: (value: number) => void;
   setVisibleTimeAfter: (value: number) => void;
+  setZeroPaddingFactor: (value: spectrogram.ZeroPaddingFactor) => void;
   setOpen: (open: boolean) => void;
   setColors: (colors: ViewColors) => void;
 };
@@ -61,6 +64,7 @@ export const useSettingsStore = create<State>()(
     setMinDecibel: (minDecibel) => set({ minDecibel }),
     setVisibleTimeBefore: (visibleTimeBefore) => set({ visibleTimeBefore }),
     setVisibleTimeAfter: (visibleTimeAfter) => set({ visibleTimeAfter }),
+    setZeroPaddingFactor: (zeroPaddingFactor) => set({ zeroPaddingFactor }),
     setOpen: (open) => set({ open }),
     setColors: (colors) => set({ colors }),
   })),

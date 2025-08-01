@@ -24,6 +24,7 @@ export const visibleTimeBefore = 2.0;
 export const visibleTimeAfter = 2.0;
 
 export const windowFilter: spectrogram.WindowFilterKey = 'hamming';
+export const zeroPaddingFactor: spectrogram.ZeroPaddingFactor = 2;
 
 export const canvasWidth = 1920;
 export const canvasHeight = 1080;
