@@ -1,6 +1,6 @@
 import { createCallLatest } from '../../common';
 import { GpuFourierMode, gpuFouriers } from '../../fourier';
-import { Pipeline, PipelineConfigureOptions } from '../pipeline';
+import { Pipeline, PipelineConfig } from '../pipeline';
 import { createDecibelify } from './decibelify';
 import { createDraw } from './draw';
 import { createFilterWave } from './filterWave';
@@ -55,7 +55,7 @@ export const createPipeline = (
       visibleTimeBefore,
       visibleTimeAfter,
       zeroPaddingFactor,
-    } = state.options;
+    } = state.config;
     const { width, height } = viewSize;
 
     const windowCount = width;
@@ -135,8 +135,8 @@ export const createPipeline = (
       await render(wave, progress);
       await timer.finish();
     }),
-    configure: (newOptions: PipelineConfigureOptions) => {
-      state.options = newOptions;
+    configure: (newConfig: PipelineConfig) => {
+      state.config = newConfig;
       isConfigureRequested = true;
     },
     destroy: () => {
