@@ -1,76 +1,57 @@
-import { CpuMarker } from '../../../common';
 import { ExtPipelineConfig } from '../../pipeline';
 import { createParams, StateParams } from './params';
 import { createPipeline } from './pipeline';
-import { createStateWave, StateWave } from './wave';
 
 export type Config = Pick<
   ExtPipelineConfig,
   | 'windowSize'
-  | 'windowCount'
   | 'sampleRate'
-  | 'visibleTimeBefore'
-  | 'visibleTimeAfter'
   | 'zeroPaddingFactor'
+  | 'minFrequency'
+  | 'maxFrequency'
+  | 'viewSize'
 >;
 
 export type State = {
   pipeline: GPUComputePipeline;
   config: Config;
   params: StateParams;
-  wave: StateWave;
   bindGroup: GPUBindGroup;
-  configure: (waves: GPUBuffer, config: Config) => void;
-  write: (waveArray: Float32Array, progress: number) => void;
+  configure: (
+    signal: GPUBuffer,
+    texture: GPUTextureView,
+    config: Config,
+  ) => void;
   destroy: () => void;
 };
 
-export const createState = (
-  device: GPUDevice,
-  writeBuffersMarker?: CpuMarker,
-): State => {
+export const createState = (device: GPUDevice) => {
   const pipeline = createPipeline(device);
   const params = createParams(device);
-  const wave = createStateWave(device, writeBuffersMarker);
 
   const ref: State = {
     pipeline,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     config: undefined!,
     params,
-    wave,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroup: undefined!,
-    configure: (out, config) => {
+    configure: (signal, texture, config) => {
       ref.config = config;
       params.write(config);
-      const { visibleSamples } = params.value;
-      wave.resize(visibleSamples);
       ref.bindGroup = device.createBindGroup({
-        label: 'slice-waves-bind-group',
+        label: 'remap-column-bind-group',
         layout: pipeline.getBindGroupLayout(0),
         entries: [
-          { binding: 0, resource: { buffer: wave.buffer } },
-          { binding: 1, resource: { buffer: out } },
+          { binding: 0, resource: { buffer: signal } },
+          { binding: 1, resource: texture },
           { binding: 2, resource: { buffer: params.buffer } },
         ],
       });
     },
-    write: (waveArray, progress) => {
-      const { windowSize, sampleRate, visibleTimeBefore } = ref.config;
-      wave.write(
-        waveArray,
-        progress,
-        windowSize,
-        sampleRate,
-        visibleTimeBefore,
-      );
-    },
     destroy: () => {
-      params.destroy();
-      wave.destroy();
+      ref.params.destroy();
     },
   };
-
   return ref;
 };

@@ -1,11 +1,11 @@
 import { ExtPipelineConfig } from '../../pipeline';
 import { createParams, StateParams } from './params';
 import { createPipeline } from './pipeline';
-import { createWindowFilter } from './windowFilter';
+import { createWindowFunction } from './windowFunction';
 
 export type Config = Pick<
   ExtPipelineConfig,
-  'windowSize' | 'windowCount' | 'zeroPaddingFactor' | 'windowFilter'
+  'windowSize' | 'windowCount' | 'zeroPaddingFactor' | 'windowName'
 >;
 
 export type State = {
@@ -19,7 +19,7 @@ export type State = {
 export const createState = (device: GPUDevice): State => {
   const pipeline = createPipeline(device);
   const params = createParams(device);
-  const windowFilter = createWindowFilter(device);
+  const windowFunction = createWindowFunction(device);
 
   const ref: State = {
     pipeline,
@@ -31,20 +31,20 @@ export const createState = (device: GPUDevice): State => {
     configure: (signal, config) => {
       ref.config = config;
       params.write(config);
-      windowFilter.configure(config);
+      windowFunction.configure(config);
       ref.bindGroup = device.createBindGroup({
-        label: 'filter-wave-bind-group',
+        label: 'windowing-bind-group',
         layout: pipeline.getBindGroupLayout(0),
         entries: [
           { binding: 0, resource: { buffer: signal } },
           { binding: 1, resource: { buffer: params.buffer } },
-          { binding: 2, resource: { buffer: windowFilter.buffer } },
+          { binding: 2, resource: { buffer: windowFunction.buffer } },
         ],
       });
     },
     destroy: () => {
       params.destroy();
-      windowFilter.destroy();
+      windowFunction.destroy();
     },
   };
   return ref;

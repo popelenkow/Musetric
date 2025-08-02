@@ -1,19 +1,19 @@
 import { Config } from './state';
 
-export type FilterWaveParams = {
+export type WindowingParams = {
   windowSize: number;
   paddedWindowSize: number;
   windowCount: number;
 };
 
-const toParams = (config: Config): FilterWaveParams => ({
+const toParams = (config: Config): WindowingParams => ({
   windowSize: config.windowSize,
   paddedWindowSize: config.windowSize * config.zeroPaddingFactor,
   windowCount: config.windowCount,
 });
 
 export type StateParams = {
-  value: FilterWaveParams;
+  value: WindowingParams;
   buffer: GPUBuffer;
   write: (config: Config) => void;
   destroy: () => void;
@@ -21,7 +21,7 @@ export type StateParams = {
 export const createParams = (device: GPUDevice): StateParams => {
   const array = new Uint32Array(3);
   const buffer = device.createBuffer({
-    label: 'filter-wave-params-buffer',
+    label: 'windowing-params-buffer',
     size: array.byteLength,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });

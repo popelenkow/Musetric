@@ -1,23 +1,14 @@
-import { CpuMarker } from '../../../common';
+import { Config } from './state';
 
 export type StateWave = {
   buffer: GPUBuffer;
   array: Float32Array;
   resize: (visibleSamples: number) => void;
-  write: (
-    wave: Float32Array,
-    progress: number,
-    windowSize: number,
-    sampleRate: number,
-    visibleTimeBefore: number,
-  ) => void;
+  write: (wave: Float32Array, progress: number, config: Config) => void;
   destroy: () => void;
 };
 
-export const createStateWave = (
-  device: GPUDevice,
-  marker?: CpuMarker,
-): StateWave => {
+export const createStateWave = (device: GPUDevice): StateWave => {
   const ref: StateWave = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     buffer: undefined!,
@@ -32,9 +23,12 @@ export const createStateWave = (
         usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
       });
     },
-    write: (wave, progress, windowSize, sampleRate, visibleTimeBefore) => {
-      const visibleSamples = ref.array.length;
+    write: (wave, progress, config) => {
+      const { windowSize, sampleRate, visibleTimeBefore, visibleTimeAfter } =
+        config;
       const beforeSamples = visibleTimeBefore * sampleRate + windowSize;
+      const afterSamples = visibleTimeAfter * sampleRate;
+      const visibleSamples = beforeSamples + afterSamples;
       const startIndex = Math.floor(progress * wave.length - beforeSamples);
 
       const from = Math.max(0, -startIndex);
@@ -56,6 +50,5 @@ export const createStateWave = (
       ref.buffer?.destroy();
     },
   };
-  ref.write = marker?.(ref.write) ?? ref.write;
   return ref;
 };

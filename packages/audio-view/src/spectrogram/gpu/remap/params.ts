@@ -1,6 +1,6 @@
 import { Config } from './state';
 
-export type ScaleViewParams = {
+export type RemapParams = {
   halfSize: number;
   width: number;
   height: number;
@@ -10,7 +10,7 @@ export type ScaleViewParams = {
   logRange: number;
 };
 
-const toParams = (config: Config): ScaleViewParams => {
+const toParams = (config: Config): RemapParams => {
   const {
     sampleRate,
     zeroPaddingFactor,
@@ -43,7 +43,7 @@ const toParams = (config: Config): ScaleViewParams => {
 };
 
 export type StateParams = {
-  value: ScaleViewParams;
+  value: RemapParams;
   buffer: GPUBuffer;
   write: (config: Config) => void;
   destroy: () => void;
@@ -53,7 +53,7 @@ export const createParams = (device: GPUDevice) => {
   const array = new DataView(new ArrayBuffer(28));
 
   const buffer = device.createBuffer({
-    label: 'scale-view-params-buffer',
+    label: 'remap-params-buffer',
     size: array.byteLength,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });

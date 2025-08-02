@@ -6,7 +6,7 @@ type Config = Pick<
   'windowSize' | 'windowCount' | 'zeroPaddingFactor' | 'minDecibel'
 >;
 
-export const decibelify = (config: Config, magnitudes: Float32Array): void => {
+export const decibelify = (signal: Float32Array, config: Config): void => {
   const { windowSize, windowCount, zeroPaddingFactor, minDecibel } = config;
   const paddedWindowSize = windowSize * zeroPaddingFactor;
   const halfSize = paddedWindowSize / 2;
@@ -18,22 +18,22 @@ export const decibelify = (config: Config, magnitudes: Float32Array): void => {
     const windowOffset = windowIndex * halfSize;
     let maxMagnitude = 0;
     for (let i = 0; i < halfSize; i++) {
-      const amplitude = magnitudes[windowOffset + i];
+      const amplitude = signal[windowOffset + i];
       if (amplitude > maxMagnitude) maxMagnitude = amplitude;
     }
 
     const inverseMax = 1 / maxMagnitude;
     for (let i = 0; i < halfSize; i++) {
       const idx = windowOffset + i;
-      const magnitude = magnitudes[idx] * inverseMax + epsilon;
+      const magnitude = signal[idx] * inverseMax + epsilon;
       const decibel = Math.log(magnitude) * decibelFactor + 1;
-      magnitudes[idx] = decibel > 0 ? decibel : 0;
+      signal[idx] = decibel > 0 ? decibel : 0;
     }
   }
 };
 
 export type Decibelify = {
-  run: (magnitudes: Float32Array) => void;
+  run: (signal: Float32Array) => void;
   configure: (config: Config) => void;
 };
 export const createDecibelify = (marker?: CpuMarker): Decibelify => {
@@ -41,7 +41,7 @@ export const createDecibelify = (marker?: CpuMarker): Decibelify => {
   let config: Config;
 
   const ref: Decibelify = {
-    run: (magnitudes) => decibelify(config, magnitudes),
+    run: (signal) => decibelify(signal, config),
     configure: (newConfig) => {
       config = newConfig;
     },

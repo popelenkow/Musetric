@@ -1,5 +1,5 @@
 import { ViewColors, ViewSize } from '../common';
-import { WindowFilterKey } from './windowFilters';
+import { WindowName } from './windowFunction';
 
 export type ZeroPaddingFactor = 1 | 2 | 4;
 
@@ -9,7 +9,7 @@ export type PipelineConfig = {
   visibleTimeBefore: number;
   visibleTimeAfter: number;
   zeroPaddingFactor: ZeroPaddingFactor;
-  windowFilter: WindowFilterKey;
+  windowName: WindowName;
   minDecibel: number;
   minFrequency: number;
   maxFrequency: number;
@@ -25,7 +25,7 @@ export const defaultConfig: PipelineConfig = {
   visibleTimeBefore: 2.0,
   visibleTimeAfter: 2.0,
   zeroPaddingFactor: 2,
-  windowFilter: 'hamming',
+  windowName: 'hamming',
   minDecibel: -40,
   minFrequency: 120,
   maxFrequency: 4000,

@@ -4,7 +4,7 @@ struct DecibelifyParams {
   minDecibel: f32,
 };
 
-@group(0) @binding(0) var<storage, read_write> magnitudes: array<f32>;
+@group(0) @binding(0) var<storage, read_write> signal: array<f32>;
 @group(0) @binding(1) var<uniform> params: DecibelifyParams;
 
 @compute @workgroup_size(1)
@@ -16,7 +16,7 @@ fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
   let windowOffset = windowIndex * params.halfSize * 2u;
   var maxMagnitude: f32 = 0.0;
   for (var i: u32 = 0u; i < params.halfSize; i = i + 1u) {
-    let value = magnitudes[windowOffset + i];
+    let value = signal[windowOffset + i];
     if (value > maxMagnitude) {
       maxMagnitude = value;
     }
@@ -26,12 +26,12 @@ fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
   let decibelFactor = 8.685889f / -params.minDecibel;
   for (var i: u32 = 0u; i < params.halfSize; i = i + 1u) {
     let sampleIndex = windowOffset + i;
-    let normalizedMagnitude = magnitudes[sampleIndex] * inverseMaximum + epsilon;
+    let normalizedMagnitude = signal[sampleIndex] * inverseMaximum + epsilon;
     var decibel = log(normalizedMagnitude) * decibelFactor + 1.0;
     if (decibel > 0.0) {
-      magnitudes[sampleIndex] = decibel;
+      signal[sampleIndex] = decibel;
     } else {
-      magnitudes[sampleIndex] = 0.0;
+      signal[sampleIndex] = 0.0;
     }
   }
 }

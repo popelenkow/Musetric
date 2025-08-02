@@ -1,5 +1,3 @@
-/* Licensed by MIT. Based on https://github.com/corbanbrook/dsp.js/tree/c6144fcd75b65f72eac4791ab9f7268a814f44a8 */
-
 export const bartlett = (windowSize: number): Float32Array => {
   const filter = new Float32Array(windowSize);
   const last = windowSize - 1;
@@ -8,6 +6,7 @@ export const bartlett = (windowSize: number): Float32Array => {
   }
   return filter;
 };
+
 export const bartlettHann = (windowSize: number): Float32Array => {
   const filter = new Float32Array(windowSize);
   const last = windowSize - 1;
@@ -91,7 +90,7 @@ export const triangular = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const windowFilters = {
+export const windowFunctions = {
   bartlett,
   bartlettHann,
   blackman,
@@ -104,6 +103,6 @@ export const windowFilters = {
   triangular,
 } as const;
 
-export type WindowFilterKey = keyof typeof windowFilters;
+export type WindowName = keyof typeof windowFunctions;
 // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-export const windowFilterKeys = Object.keys(windowFilters) as WindowFilterKey[];
+export const windowNames = Object.keys(windowFunctions) as WindowName[];

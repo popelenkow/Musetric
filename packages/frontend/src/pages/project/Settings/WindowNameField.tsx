@@ -4,21 +4,21 @@ import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSettingsStore } from '../store/settings';
 
-export const WindowFilterField: FC = () => {
+export const WindowNameField: FC = () => {
   const { t } = useTranslation();
-  const currentFilter = useSettingsStore((s) => s.windowFilter);
-  const setFilter = useSettingsStore((s) => s.setWindowFilter);
+  const currentFilter = useSettingsStore((s) => s.windowName);
+  const setFilter = useSettingsStore((s) => s.setWindowName);
 
   return (
     <FormControl size='small'>
       <InputLabel>
-        {t('pages.project.settings.fields.windowFilter.label')}
+        {t('pages.project.settings.fields.windowName.label')}
       </InputLabel>
       <Select
         value={currentFilter}
-        label={t('pages.project.settings.fields.windowFilter.label')}
+        label={t('pages.project.settings.fields.windowName.label')}
       >
-        {spectrogram.windowFilterKeys.map((name) => (
+        {spectrogram.windowNames.map((name) => (
           <MenuItem key={name} value={name} onClick={() => setFilter(name)}>
             {name}
           </MenuItem>

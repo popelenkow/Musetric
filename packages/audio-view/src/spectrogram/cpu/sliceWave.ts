@@ -11,11 +11,11 @@ type Config = Pick<
   | 'zeroPaddingFactor'
 >;
 
-export const sliceWaves = (
-  config: Config,
+export const sliceWave = (
   wave: Float32Array,
-  waves: Float32Array,
+  signal: Float32Array,
   progress: number,
+  config: Config,
 ): void => {
   const {
     windowSize,
@@ -39,31 +39,31 @@ export const sliceWaves = (
     const start = Math.floor(startOffset + i * step);
     const end = start + windowSize;
 
-    waves.fill(0, windowOffset + windowSize, windowOffset + paddedWindowSize);
+    signal.fill(0, windowOffset + windowSize, windowOffset + paddedWindowSize);
     if (start >= 0 && end < wave.length) {
       const slice = wave.subarray(start, end);
-      waves.set(slice, windowOffset);
+      signal.set(slice, windowOffset);
       continue;
     }
     for (let j = 0; j < windowSize; j++) {
       const index = start + j;
       const value = index >= 0 && index < wave.length ? wave[index] : 0;
-      waves[windowOffset + j] = value;
+      signal[windowOffset + j] = value;
     }
   }
 };
 
-export type SliceWaves = {
+export type SliceWave = {
   run: (wave: Float32Array, waves: Float32Array, progress: number) => void;
   configure: (config: Config) => void;
 };
-export const createSliceWaves = (marker?: CpuMarker): SliceWaves => {
+export const createSliceWave = (marker?: CpuMarker): SliceWave => {
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let config: Config;
 
-  const ref: SliceWaves = {
-    run: (wave, waves, progress) => {
-      sliceWaves(config, wave, waves, progress);
+  const ref: SliceWave = {
+    run: (wave, signal, progress) => {
+      sliceWave(wave, signal, progress, config);
     },
     configure: (newConfig) => {
       config = newConfig;

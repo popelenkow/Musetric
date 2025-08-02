@@ -2,11 +2,11 @@ import shaderCode from './index.wgsl?raw';
 
 export const createPipeline = (device: GPUDevice) => {
   const module = device.createShaderModule({
-    label: 'scale-view-column-shader',
+    label: 'windowing-shader',
     code: shaderCode,
   });
   return device.createComputePipeline({
-    label: 'scale-view-column-pipeline',
+    label: 'windowing-pipeline',
     layout: 'auto',
     compute: { module, entryPoint: 'main' },
   });

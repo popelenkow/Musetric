@@ -4,12 +4,12 @@ import { cpuFouriers } from '../../fourier';
 import { Pipeline } from '../pipeline';
 import { createDecibelify } from './decibelify';
 import { createDraw } from './draw';
-import { createFilterWave } from './filterWave';
 import { createMagnitudify } from './magnitudify';
 import { createPipelineState } from './pipelineState';
 import { createPipelineTimer, PipelineMetrics } from './pipelineTimer';
-import { createScaleView } from './scaleView';
-import { createSliceWaves } from './sliceWaves';
+import { createRemap } from './remap';
+import { createSliceWave } from './sliceWave';
+import { createWindowing } from './windowing';
 
 export type CreatePipelineOptions = {
   canvas: HTMLCanvasElement;
@@ -25,26 +25,26 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
   const { markers } = timer;
 
   const state = createPipelineState(markers.zerofyImag);
-  const sliceWaves = createSliceWaves(markers.sliceWaves);
-  const filterWave = createFilterWave(markers.filterWave);
+  const sliceWave = createSliceWave(markers.sliceWave);
+  const windowing = createWindowing(markers.windowing);
   const fourier = cpuFouriers[fourierMode](markers.fourier);
   const magnitudify = createMagnitudify(markers.magnitudify);
   const decibelify = createDecibelify(markers.decibelify);
-  const scaleView = createScaleView(markers.scaleView);
+  const remap = createRemap(markers.remap);
   const draw = createDraw(canvas, markers.draw);
 
   const configure = markers.configure(() => {
     state.configure();
     const { config } = state;
-    sliceWaves.configure(config);
-    filterWave.configure(config);
+    sliceWave.configure(config);
+    windowing.configure(config);
     fourier.configure({
       ...config,
       windowSize: config.windowSize * config.zeroPaddingFactor,
     });
     magnitudify.configure(config);
     decibelify.configure(config);
-    scaleView.configure(config);
+    remap.configure(config);
     draw.configure(config);
   });
 
@@ -54,13 +54,13 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
       configure();
     }
     const { signal, view } = state;
-    sliceWaves.run(wave, signal.real, progress);
+    sliceWave.run(wave, signal.real, progress);
     state.zerofyImag();
-    filterWave.run(signal.real);
+    windowing.run(signal.real);
     fourier.forward(signal);
     magnitudify.run(signal);
     decibelify.run(signal.real);
-    scaleView.run(signal.real, view);
+    remap.run(signal.real, view);
     draw.run(view);
   });
 

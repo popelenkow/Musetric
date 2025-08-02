@@ -2,23 +2,23 @@ import { createState, State } from './state';
 
 const workgroupSize = 64;
 
-export type FilterWave = {
+export type Windowing = {
   run: (encoder: GPUCommandEncoder) => void;
   configure: State['configure'];
   destroy: State['destroy'];
 };
 
-export const createFilterWave = (
+export const createWindowing = (
   device: GPUDevice,
   marker?: GPUComputePassTimestampWrites,
-): FilterWave => {
+): Windowing => {
   const state = createState(device);
   return {
     run: (encoder) => {
       const { windowSize, windowCount } = state.params.value;
       const xCount = Math.ceil(windowSize / workgroupSize);
       const pass = encoder.beginComputePass({
-        label: 'filter-wave-pass',
+        label: 'windowing-pass',
         timestampWrites: marker,
       });
       pass.setPipeline(state.pipeline);

@@ -1,4 +1,4 @@
-struct SliceWavesParams {
+struct SliceWaveParams {
   windowSize : u32,
   paddedWindowSize : u32,
   windowCount : u32,
@@ -7,8 +7,8 @@ struct SliceWavesParams {
 };
 
 @group(0) @binding(0) var<storage, read> wave : array<f32>;
-@group(0) @binding(1) var<storage, read_write> waves : array<f32>;
-@group(0) @binding(2) var<uniform> params : SliceWavesParams;
+@group(0) @binding(1) var<storage, read_write> signal : array<f32>;
+@group(0) @binding(2) var<uniform> params : SliceWaveParams;
 
 @compute @workgroup_size(64)
 fn main(@builtin(global_invocation_id) gid : vec3<u32>) {
@@ -25,5 +25,5 @@ fn main(@builtin(global_invocation_id) gid : vec3<u32>) {
       value = wave[srcIndex];
     }
   }
-  waves[windowIndex * params.paddedWindowSize + sampleIndex] = value;
+  signal[windowIndex * params.paddedWindowSize + sampleIndex] = value;
 }

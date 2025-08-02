@@ -2,13 +2,13 @@ import { createCpuTimer, roundDuration } from '../../common';
 
 export const timerLabels = [
   'configure',
-  'sliceWaves',
+  'sliceWave',
   'zerofyImag',
-  'filterWave',
+  'windowing',
   'fourier',
   'magnitudify',
   'decibelify',
-  'scaleView',
+  'remap',
   'draw',
   'other',
   'total',
