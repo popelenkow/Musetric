@@ -1,14 +1,26 @@
-import { createParams, ScaleViewParams, StateParams } from './params';
+import { ExtPipelineConfig } from '../../pipeline';
+import { createParams, StateParams } from './params';
 import { createPipeline } from './pipeline';
+
+export type Config = Pick<
+  ExtPipelineConfig,
+  | 'windowSize'
+  | 'sampleRate'
+  | 'zeroPaddingFactor'
+  | 'minFrequency'
+  | 'maxFrequency'
+  | 'viewSize'
+>;
 
 export type State = {
   pipeline: GPUComputePipeline;
+  config: Config;
   params: StateParams;
   bindGroup: GPUBindGroup;
   configure: (
     signal: GPUBuffer,
     texture: GPUTextureView,
-    value: ScaleViewParams,
+    config: Config,
   ) => void;
   destroy: () => void;
 };
@@ -19,11 +31,14 @@ export const createState = (device: GPUDevice) => {
 
   const ref: State = {
     pipeline,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    config: undefined!,
     params,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroup: undefined!,
-    configure: (signal, texture, value) => {
-      params.write(value);
+    configure: (signal, texture, config) => {
+      ref.config = config;
+      params.write(config);
       ref.bindGroup = device.createBindGroup({
         label: 'scale-view-column-bind-group',
         layout: pipeline.getBindGroupLayout(0),

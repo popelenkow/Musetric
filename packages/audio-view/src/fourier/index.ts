@@ -1,3 +1,4 @@
+export * from './config';
 export * from './cpuFftRadix4';
 export * from './cpuFourier';
 export * from './fouriers';

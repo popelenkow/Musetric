@@ -1,14 +1,26 @@
 import { CpuMarker } from '../../../common';
-import { createParams, SliceWavesParams, StateParams } from './params';
+import { ExtPipelineConfig } from '../../pipeline';
+import { createParams, StateParams } from './params';
 import { createPipeline } from './pipeline';
 import { createStateWave, StateWave } from './wave';
 
+export type Config = Pick<
+  ExtPipelineConfig,
+  | 'windowSize'
+  | 'windowCount'
+  | 'sampleRate'
+  | 'visibleTimeBefore'
+  | 'visibleTimeAfter'
+  | 'zeroPaddingFactor'
+>;
+
 export type State = {
   pipeline: GPUComputePipeline;
+  config: Config;
   params: StateParams;
   wave: StateWave;
   bindGroup: GPUBindGroup;
-  configure: (waves: GPUBuffer, params: SliceWavesParams) => void;
+  configure: (waves: GPUBuffer, config: Config) => void;
   write: (waveArray: Float32Array, progress: number) => void;
   destroy: () => void;
 };
@@ -23,13 +35,16 @@ export const createState = (
 
   const ref: State = {
     pipeline,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    config: undefined!,
     params,
     wave,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroup: undefined!,
-    configure: (out, paramsValue) => {
-      params.write(paramsValue);
-      const { visibleSamples } = params.shader;
+    configure: (out, config) => {
+      ref.config = config;
+      params.write(config);
+      const { visibleSamples } = params.value;
       wave.resize(visibleSamples);
       ref.bindGroup = device.createBindGroup({
         label: 'slice-waves-bind-group',
@@ -42,7 +57,7 @@ export const createState = (
       });
     },
     write: (waveArray, progress) => {
-      const { windowSize, sampleRate, visibleTimeBefore } = ref.params.value;
+      const { windowSize, sampleRate, visibleTimeBefore } = ref.config;
       wave.write(
         waveArray,
         progress,

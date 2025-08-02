@@ -1,13 +1,21 @@
+import { Config } from './state';
+
 export type FilterWaveParams = {
   windowSize: number;
+  paddedWindowSize: number;
   windowCount: number;
-  zeroPaddingFactor: number;
 };
+
+const toParams = (config: Config): FilterWaveParams => ({
+  windowSize: config.windowSize,
+  paddedWindowSize: config.windowSize * config.zeroPaddingFactor,
+  windowCount: config.windowCount,
+});
 
 export type StateParams = {
   value: FilterWaveParams;
   buffer: GPUBuffer;
-  write: (value: FilterWaveParams) => void;
+  write: (config: Config) => void;
   destroy: () => void;
 };
 export const createParams = (device: GPUDevice): StateParams => {
@@ -22,12 +30,11 @@ export const createParams = (device: GPUDevice): StateParams => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     value: undefined!,
     buffer,
-    write: (value) => {
-      ref.value = value;
-      const paddedWindowSize = value.windowSize * value.zeroPaddingFactor;
-      array[0] = value.windowSize;
-      array[1] = paddedWindowSize;
-      array[2] = value.windowCount;
+    write: (config) => {
+      ref.value = toParams(config);
+      array[0] = ref.value.windowSize;
+      array[1] = ref.value.paddedWindowSize;
+      array[2] = ref.value.windowCount;
       device.queue.writeBuffer(buffer, 0, array);
     },
     destroy: () => {

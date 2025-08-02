@@ -1,10 +1,10 @@
 import { ComplexGpuBuffer } from '../../../common';
-import { PipelineConfig } from '../../pipeline';
+import { ExtPipelineConfig } from '../../pipeline';
 import { createSignalBuffer } from './signal';
 import { createStateTexture, StateTexture } from './texture';
 
 export type PipelineState = {
-  config: PipelineConfig;
+  config: ExtPipelineConfig;
   signal: ComplexGpuBuffer;
   texture: StateTexture;
   configure: () => void;
@@ -19,8 +19,8 @@ export const createPipelineState = (device: GPUDevice) => {
     signal: undefined!,
     texture: createStateTexture(device),
     configure: () => {
-      const { windowSize, viewSize, zeroPaddingFactor } = ref.config;
-      const windowCount = viewSize.width;
+      const { windowSize, windowCount, viewSize, zeroPaddingFactor } =
+        ref.config;
       const paddedWindowSize = windowSize * zeroPaddingFactor;
       ref.signal?.real.destroy();
       ref.signal?.imag.destroy();

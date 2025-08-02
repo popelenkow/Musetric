@@ -76,31 +76,13 @@ export const useSpectrogramStore = create<State>((set, get) => {
   const configure = () => {
     const { pipeline, viewSize } = get();
     const { sampleRate } = usePlayerStore.getState();
-    const {
-      windowSize,
-      minFrequency,
-      maxFrequency,
-      minDecibel,
-      windowFilter,
-      colors,
-      visibleTimeBefore,
-      visibleTimeAfter,
-      zeroPaddingFactor,
-    } = useSettingsStore.getState();
+    const settings = useSettingsStore.getState();
     if (!pipeline || !sampleRate || !viewSize) return;
 
     const config: spectrogram.PipelineConfig = {
-      windowSize,
+      ...settings,
       viewSize,
-      colors,
       sampleRate,
-      minFrequency,
-      maxFrequency,
-      minDecibel,
-      windowFilter,
-      visibleTimeBefore,
-      visibleTimeAfter,
-      zeroPaddingFactor,
     };
     pipeline.configure(config);
   };

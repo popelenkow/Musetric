@@ -1,8 +1,8 @@
 import { ComplexArray, CpuMarker, createComplexArray } from '../../common';
-import { PipelineConfig } from '../pipeline';
+import { ExtPipelineConfig } from '../pipeline';
 
 export type PipelineArrays = {
-  config: PipelineConfig;
+  config: ExtPipelineConfig;
   signal: ComplexArray;
   view: Uint8Array;
   configure: () => void;
@@ -17,9 +17,9 @@ export const createPipelineState = (marker?: CpuMarker): PipelineArrays => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     view: undefined!,
     configure: () => {
-      const { windowSize, viewSize, zeroPaddingFactor } = ref.config;
-      const { width, height } = viewSize;
-      const windowCount = width;
+      const { windowSize, windowCount, zeroPaddingFactor, viewSize } =
+        ref.config;
+      const { height } = viewSize;
       const paddedWindowSize = windowSize * zeroPaddingFactor;
       const windowLength = paddedWindowSize * windowCount;
       ref.signal = createComplexArray(windowLength);

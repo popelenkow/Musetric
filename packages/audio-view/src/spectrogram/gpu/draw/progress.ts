@@ -1,6 +1,8 @@
+import { Config } from '.';
+
 export type StateProgress = {
   buffer: GPUBuffer;
-  write: (progress: number) => void;
+  write: (config: Config) => void;
   destroy: () => void;
 };
 export const createStateProgress = (device: GPUDevice): StateProgress => {
@@ -12,7 +14,10 @@ export const createStateProgress = (device: GPUDevice): StateProgress => {
   });
   const ref: StateProgress = {
     buffer,
-    write: (progress: number) => {
+    write: (config: Config) => {
+      const { visibleTimeBefore, visibleTimeAfter } = config;
+      const progress =
+        visibleTimeBefore / (visibleTimeBefore + visibleTimeAfter);
       array[0] = progress;
       device.queue.writeBuffer(buffer, 0, array);
     },

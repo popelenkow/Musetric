@@ -1,16 +1,18 @@
+import { ExtPipelineConfig } from '../../pipeline';
 import { createParams, StateParams } from './params';
 import { createPipeline } from './pipeline';
 
+export type Config = Pick<
+  ExtPipelineConfig,
+  'windowSize' | 'windowCount' | 'zeroPaddingFactor' | 'minDecibel'
+>;
+
 export type State = {
   pipeline: GPUComputePipeline;
-  bindGroup: GPUBindGroup;
+  config: Config;
   params: StateParams;
-  configure: (
-    signal: GPUBuffer,
-    windowSize: number,
-    windowCount: number,
-    minDecibel: number,
-  ) => void;
+  bindGroup: GPUBindGroup;
+  configure: (signal: GPUBuffer, config: Config) => void;
   destroy: () => void;
 };
 
@@ -21,11 +23,13 @@ export const createState = (device: GPUDevice) => {
   const ref: State = {
     pipeline,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    bindGroup: undefined!,
+    config: undefined!,
     params,
-    configure: (signal, windowSize, windowCount, minDecibel) => {
-      const halfSize = windowSize / 2;
-      params.write({ halfSize, windowCount, minDecibel });
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    bindGroup: undefined!,
+    configure: (signal, config) => {
+      ref.config = config;
+      params.write(config);
       ref.bindGroup = device.createBindGroup({
         label: 'decibelify-bind-group',
         layout: pipeline.getBindGroupLayout(0),

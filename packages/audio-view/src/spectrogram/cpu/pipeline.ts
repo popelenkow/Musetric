@@ -1,7 +1,7 @@
 import { createCallLatest } from '../../common';
 import type { CpuFourierMode } from '../../fourier';
 import { cpuFouriers } from '../../fourier';
-import { Pipeline, PipelineConfig } from '../pipeline';
+import { Pipeline } from '../pipeline';
 import { createDecibelify } from './decibelify';
 import { createDraw } from './draw';
 import { createFilterWave } from './filterWave';
@@ -16,10 +16,8 @@ export type CreatePipelineOptions = {
   fourierMode: CpuFourierMode;
   onMetrics?: (metrics: PipelineMetrics) => void;
 };
-export const createPipeline = (
-  createOptions: CreatePipelineOptions,
-): Pipeline => {
-  const { canvas, fourierMode, onMetrics } = createOptions;
+export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
+  const { canvas, fourierMode, onMetrics } = options;
 
   let isConfigureRequested = true;
 
@@ -36,49 +34,18 @@ export const createPipeline = (
   const draw = createDraw(canvas, markers.draw);
 
   const configure = markers.configure(() => {
-    const {
-      windowSize,
-      viewSize,
-      colors,
-      sampleRate,
-      minFrequency,
-      maxFrequency,
-      minDecibel,
-      windowFilter,
-      visibleTimeBefore,
-      visibleTimeAfter,
-      zeroPaddingFactor,
-    } = state.config;
-    const { width, height } = viewSize;
-    const windowCount = width;
-    const paddedWindowSize = windowSize * zeroPaddingFactor;
     state.configure();
-    sliceWaves.configure(
-      windowSize,
-      windowCount,
-      visibleTimeBefore,
-      visibleTimeAfter,
-      sampleRate,
-      zeroPaddingFactor,
-    );
-    filterWave.configure(
-      windowSize,
-      windowCount,
-      windowFilter,
-      zeroPaddingFactor,
-    );
-    fourier.configure(paddedWindowSize, windowCount);
-    magnitudify.configure(paddedWindowSize, windowCount);
-    decibelify.configure(paddedWindowSize, windowCount, minDecibel);
-    scaleView.configure(
-      paddedWindowSize,
-      windowCount,
-      height,
-      sampleRate,
-      minFrequency,
-      maxFrequency,
-    );
-    draw.configure(viewSize, colors, visibleTimeBefore, visibleTimeAfter);
+    const { config } = state;
+    sliceWaves.configure(config);
+    filterWave.configure(config);
+    fourier.configure({
+      ...config,
+      windowSize: config.windowSize * config.zeroPaddingFactor,
+    });
+    magnitudify.configure(config);
+    decibelify.configure(config);
+    scaleView.configure(config);
+    draw.configure(config);
   });
 
   const render = markers.total((wave: Float32Array, progress: number) => {
@@ -102,8 +69,11 @@ export const createPipeline = (
       render(wave, progress);
       timer.finish();
     }),
-    configure: (newConfig: PipelineConfig) => {
-      state.config = newConfig;
+    configure: (newConfig) => {
+      state.config = {
+        ...newConfig,
+        windowCount: newConfig.viewSize.width,
+      };
       isConfigureRequested = true;
     },
     destroy: () => {

@@ -2,18 +2,12 @@ import { spectrogram, FourierMode, ViewColors } from '@musetric/audio-view';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
-export type SettingsState = {
+export type SettingsState = Omit<
+  spectrogram.PipelineConfig,
+  'sampleRate' | 'viewSize'
+> & {
   fourierMode: FourierMode;
-  windowFilter: spectrogram.WindowFilterKey;
-  windowSize: number;
-  minFrequency: number;
-  maxFrequency: number;
-  minDecibel: number;
-  visibleTimeBefore: number;
-  visibleTimeAfter: number;
-  zeroPaddingFactor: spectrogram.ZeroPaddingFactor;
   open: boolean;
-  colors: ViewColors;
 };
 
 const initialState: SettingsState = {

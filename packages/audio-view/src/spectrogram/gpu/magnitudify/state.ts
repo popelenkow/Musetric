@@ -1,16 +1,19 @@
 import { ComplexGpuBuffer } from '../../../common';
+import { ExtPipelineConfig } from '../../pipeline';
 import { createParams, StateParams } from './params';
 import { createPipeline } from './pipeline';
 
+export type Config = Pick<
+  ExtPipelineConfig,
+  'windowSize' | 'windowCount' | 'zeroPaddingFactor'
+>;
+
 export type State = {
   pipeline: GPUComputePipeline;
+  config: Config;
   params: StateParams;
   bindGroup: GPUBindGroup;
-  configure: (
-    signal: ComplexGpuBuffer,
-    windowSize: number,
-    windowCount: number,
-  ) => void;
+  configure: (signal: ComplexGpuBuffer, config: Config) => void;
   destroy: () => void;
 };
 
@@ -20,11 +23,14 @@ export const createState = (device: GPUDevice) => {
 
   const ref: State = {
     pipeline,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    config: undefined!,
     params,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     bindGroup: undefined!,
-    configure: (signal, windowSize, windowCount) => {
-      ref.params.write({ windowSize, windowCount });
+    configure: (signal, config) => {
+      ref.config = config;
+      ref.params.write(config);
       ref.bindGroup = device.createBindGroup({
         label: 'magnitudify-bind-group',
         layout: pipeline.getBindGroupLayout(0),

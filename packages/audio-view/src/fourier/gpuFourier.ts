@@ -1,17 +1,9 @@
 import { ComplexGpuBuffer } from '../common';
-
-export type GpuFourierParams = {
-  windowSize: number;
-  windowCount: number;
-};
+import { FourierConfig } from './config';
 
 export type GpuFourier = {
   forward: (encoder: GPUCommandEncoder) => void;
-  configure: (
-    signal: ComplexGpuBuffer,
-    windowSize: number,
-    windowCount: number,
-  ) => void;
+  configure: (signal: ComplexGpuBuffer, config: FourierConfig) => void;
   destroy: () => void;
 };
 

@@ -1,4 +1,5 @@
-import { parseHexColor, ViewColors } from '../../../common';
+import { parseHexColor } from '../../../common';
+import { Config } from '.';
 
 const toVec4 = (hex: string): [number, number, number, number] => {
   const { red, green, blue } = parseHexColor(hex);
@@ -7,7 +8,7 @@ const toVec4 = (hex: string): [number, number, number, number] => {
 
 export type StateColors = {
   buffer: GPUBuffer;
-  write: (value: ViewColors) => void;
+  write: (config: Config) => void;
   destroy: () => void;
 };
 export const createColors = (device: GPUDevice): StateColors => {
@@ -20,11 +21,12 @@ export const createColors = (device: GPUDevice): StateColors => {
 
   const ref: StateColors = {
     buffer,
-    write: (value: ViewColors) => {
+    write: (config: Config) => {
+      const { colors } = config;
       array.set([
-        ...toVec4(value.played),
-        ...toVec4(value.unplayed),
-        ...toVec4(value.background),
+        ...toVec4(colors.played),
+        ...toVec4(colors.unplayed),
+        ...toVec4(colors.background),
       ]);
       device.queue.writeBuffer(buffer, 0, array);
     },

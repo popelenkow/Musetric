@@ -1,12 +1,15 @@
 import { CpuMarker } from '../../common';
+import { ExtPipelineConfig } from '../pipeline';
 
-export const decibelify = (
-  windowSize: number,
-  windowCount: number,
-  magnitudes: Float32Array,
-  minDecibel: number,
-): void => {
-  const halfSize = windowSize / 2;
+type Config = Pick<
+  ExtPipelineConfig,
+  'windowSize' | 'windowCount' | 'zeroPaddingFactor' | 'minDecibel'
+>;
+
+export const decibelify = (config: Config, magnitudes: Float32Array): void => {
+  const { windowSize, windowCount, zeroPaddingFactor, minDecibel } = config;
+  const paddedWindowSize = windowSize * zeroPaddingFactor;
+  const halfSize = paddedWindowSize / 2;
 
   const epsilon = 1e-12;
   const decibelFactor = (20 * Math.LOG10E) / -minDecibel;
@@ -31,27 +34,16 @@ export const decibelify = (
 
 export type Decibelify = {
   run: (magnitudes: Float32Array) => void;
-  configure: (
-    windowSize: number,
-    windowCount: number,
-    minDecibel: number,
-  ) => void;
+  configure: (config: Config) => void;
 };
 export const createDecibelify = (marker?: CpuMarker): Decibelify => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let windowSize: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let windowCount: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let minDecibel: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let config: Config;
 
   const ref: Decibelify = {
-    run: (magnitudes) =>
-      decibelify(windowSize, windowCount, magnitudes, minDecibel),
-    configure: (newWindowSize, newWindowCount, newMinDecibel) => {
-      windowSize = newWindowSize;
-      windowCount = newWindowCount;
-      minDecibel = newMinDecibel;
+    run: (magnitudes) => decibelify(config, magnitudes),
+    configure: (newConfig) => {
+      config = newConfig;
     },
   };
   ref.run = marker?.(ref.run) ?? ref.run;

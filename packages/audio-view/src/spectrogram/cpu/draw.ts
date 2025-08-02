@@ -4,17 +4,28 @@ import {
   parseHexColor,
   ViewColors,
   ViewGradients,
-  ViewSize,
 } from '../../common';
+import { ExtPipelineConfig } from '../pipeline';
+
+type Config = Pick<
+  ExtPipelineConfig,
+  'visibleTimeBefore' | 'visibleTimeAfter' | 'viewSize' | 'colors'
+>;
+
+const createGradients = (colors: ViewColors): ViewGradients => ({
+  played: createGradient(
+    parseHexColor(colors.background),
+    parseHexColor(colors.played),
+  ),
+  unplayed: createGradient(
+    parseHexColor(colors.background),
+    parseHexColor(colors.unplayed),
+  ),
+});
 
 export type Draw = {
   run: (view: Uint8Array) => void;
-  configure: (
-    viewSize: ViewSize,
-    colors: ViewColors,
-    visibleTimeBefore: number,
-    visibleTimeAfter: number,
-  ) => void;
+  configure: (config: Config) => void;
 };
 
 export const createDraw = (
@@ -26,18 +37,18 @@ export const createDraw = (
     throw new Error('Context 2D not available on the canvas');
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let gradients: ViewGradients = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let image: ImageData = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let viewSize: ViewSize = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let progress: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let config: Config;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let progress: number;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let image: ImageData;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let gradients: ViewGradients;
 
   const ref: Draw = {
     run: (view) => {
-      const { width, height } = viewSize;
+      const { width, height } = config.viewSize;
       const played = Math.floor(progress * width);
       for (let x = 0; x < width; x++) {
         const columnOffset = x * height;
@@ -53,20 +64,13 @@ export const createDraw = (
       }
       context.putImageData(image, 0, 0);
     },
-    configure: (newViewSize, colors, visibleTimeBefore, visibleTimeAfter) => {
-      viewSize = newViewSize;
-      image = context.createImageData(viewSize.width, viewSize.height);
+    configure: (newConfig) => {
+      config = newConfig;
+      const { visibleTimeBefore, visibleTimeAfter, viewSize, colors } = config;
+      const { width, height } = viewSize;
       progress = visibleTimeBefore / (visibleTimeBefore + visibleTimeAfter);
-      gradients = {
-        played: createGradient(
-          parseHexColor(colors.background),
-          parseHexColor(colors.played),
-        ),
-        unplayed: createGradient(
-          parseHexColor(colors.background),
-          parseHexColor(colors.unplayed),
-        ),
-      };
+      image = context.createImageData(width, height);
+      gradients = createGradients(colors);
     },
   };
   ref.run = marker?.(ref.run) ?? ref.run;

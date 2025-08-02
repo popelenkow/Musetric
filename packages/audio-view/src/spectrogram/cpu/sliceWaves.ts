@@ -1,16 +1,32 @@
 import { CpuMarker } from '../../common';
+import { ExtPipelineConfig } from '../pipeline';
+
+type Config = Pick<
+  ExtPipelineConfig,
+  | 'windowSize'
+  | 'windowCount'
+  | 'sampleRate'
+  | 'visibleTimeBefore'
+  | 'visibleTimeAfter'
+  | 'zeroPaddingFactor'
+>;
 
 export const sliceWaves = (
-  windowSize: number,
-  paddedWindowSize: number,
-  windowCount: number,
-  visibleTimeBefore: number,
-  visibleTimeAfter: number,
-  sampleRate: number,
+  config: Config,
   wave: Float32Array,
   waves: Float32Array,
   progress: number,
 ): void => {
+  const {
+    windowSize,
+    windowCount,
+    sampleRate,
+    visibleTimeBefore,
+    visibleTimeAfter,
+    zeroPaddingFactor,
+  } = config;
+  const paddedWindowSize = windowSize * zeroPaddingFactor;
+
   const beforeSamples = visibleTimeBefore * sampleRate + windowSize;
   const afterSamples = visibleTimeAfter * sampleRate;
   const visibleSamples = beforeSamples + afterSamples;
@@ -39,57 +55,18 @@ export const sliceWaves = (
 
 export type SliceWaves = {
   run: (wave: Float32Array, waves: Float32Array, progress: number) => void;
-  configure: (
-    windowSize: number,
-    windowCount: number,
-    visibleTimeBefore: number,
-    visibleTimeAfter: number,
-    sampleRate: number,
-    zeroPaddingFactor: number,
-  ) => void;
+  configure: (config: Config) => void;
 };
 export const createSliceWaves = (marker?: CpuMarker): SliceWaves => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let windowSize: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let paddedWindowSize: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let windowCount: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let visibleTimeBefore: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let visibleTimeAfter: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let sampleRate: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let config: Config;
 
   const ref: SliceWaves = {
     run: (wave, waves, progress) => {
-      sliceWaves(
-        windowSize,
-        paddedWindowSize,
-        windowCount,
-        visibleTimeBefore,
-        visibleTimeAfter,
-        sampleRate,
-        wave,
-        waves,
-        progress,
-      );
+      sliceWaves(config, wave, waves, progress);
     },
-    configure: (
-      newWindowSize,
-      newWindowCount,
-      newVisibleTimeBefore,
-      newVisibleTimeAfter,
-      newSampleRate,
-      newZeroPaddingFactor,
-    ) => {
-      windowSize = newWindowSize;
-      windowCount = newWindowCount;
-      visibleTimeBefore = newVisibleTimeBefore;
-      visibleTimeAfter = newVisibleTimeAfter;
-      sampleRate = newSampleRate;
-      paddedWindowSize = newWindowSize * newZeroPaddingFactor;
+    configure: (newConfig) => {
+      config = newConfig;
     },
   };
   ref.run = marker?.(ref.run) ?? ref.run;

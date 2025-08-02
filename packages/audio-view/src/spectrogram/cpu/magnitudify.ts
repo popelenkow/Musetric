@@ -1,14 +1,18 @@
 import { ComplexArray, CpuMarker } from '../../common';
+import { ExtPipelineConfig } from '../pipeline';
 
-export const magnitudify = (
-  windowSize: number,
-  windowCount: number,
-  signal: ComplexArray,
-): void => {
-  const halfSize = windowSize / 2;
+type Config = Pick<
+  ExtPipelineConfig,
+  'windowSize' | 'windowCount' | 'zeroPaddingFactor'
+>;
+
+export const magnitudify = (config: Config, signal: ComplexArray): void => {
+  const { windowSize, windowCount, zeroPaddingFactor } = config;
+  const paddedWindowSize = windowSize * zeroPaddingFactor;
+  const halfSize = paddedWindowSize / 2;
 
   for (let windowIndex = 0; windowIndex < windowCount; windowIndex++) {
-    const windowOffset = windowIndex * windowSize;
+    const windowOffset = windowIndex * paddedWindowSize;
     const halfOffset = windowIndex * halfSize;
     for (let i = 0; i < halfSize; i++) {
       const real = signal.real[windowOffset + i];
@@ -20,19 +24,16 @@ export const magnitudify = (
 
 export type Magnitudify = {
   run: (signal: ComplexArray) => void;
-  configure: (windowSize: number, windowCount: number) => void;
+  configure: (config: Config) => void;
 };
 export const createMagnitudify = (marker?: CpuMarker): Magnitudify => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let windowSize: number = undefined!;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  let windowCount: number = undefined!;
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let config: Config;
 
   const ref: Magnitudify = {
-    run: (signal) => magnitudify(windowSize, windowCount, signal),
-    configure: (newWindowSize, newWindowCount) => {
-      windowSize = newWindowSize;
-      windowCount = newWindowCount;
+    run: (signal) => magnitudify(config, signal),
+    configure: (newConfig) => {
+      config = newConfig;
     },
   };
   ref.run = marker?.(ref.run) ?? ref.run;
