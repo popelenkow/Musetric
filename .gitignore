@@ -18,6 +18,7 @@ __snapshots__/
 generated/
 public/
 .claude
+CLAUDE.md
 
 .yarn/*
 !.yarn/cache
