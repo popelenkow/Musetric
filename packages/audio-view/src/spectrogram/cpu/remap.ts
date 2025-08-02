@@ -11,10 +11,10 @@ type Config = Pick<
   | 'viewSize'
 >;
 
-export const scaleView = (
-  config: Config,
-  magnitudes: Float32Array,
+export const remap = (
+  signal: Float32Array,
   view: Uint8Array,
+  config: Config,
 ) => {
   const {
     windowSize,
@@ -46,22 +46,22 @@ export const scaleView = (
       const ratio = 1 - y / (height - 1);
       const raw = Math.exp(logMin + logRange * ratio);
       const idx = Math.max(minBin, Math.min(Math.floor(raw) - 1, maxBin - 1));
-      const magnitude = magnitudes[windowOffset + idx];
+      const magnitude = signal[windowOffset + idx];
       view[columnOffset + y] = Math.round(magnitude * 255);
     }
   }
 };
 
-export type ScaleView = {
-  run: (magnitudes: Float32Array, view: Uint8Array) => void;
+export type Remap = {
+  run: (signal: Float32Array, view: Uint8Array) => void;
   configure: (config: Config) => void;
 };
-export const createScaleView = (marker?: CpuMarker): ScaleView => {
+export const createRemap = (marker?: CpuMarker): Remap => {
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let config: Config;
 
-  const ref: ScaleView = {
-    run: (magnitudes, view) => scaleView(config, magnitudes, view),
+  const ref: Remap = {
+    run: (signal, view) => remap(signal, view, config),
     configure: (newConfig) => {
       config = newConfig;
     },

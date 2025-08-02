@@ -1,25 +1,26 @@
-import { windowFilters } from '../../windowFilters';
+import { windowFunctions } from '../../windowFunction';
 import { Config } from './state';
 
-export type StateWindowFilter = {
+export type StateWindowFunction = {
   buffer: GPUBuffer;
   configure: (config: Config) => void;
   destroy: () => void;
 };
-export const createWindowFilter = (device: GPUDevice): StateWindowFilter => {
-  const ref: StateWindowFilter = {
+export const createWindowFunction = (
+  device: GPUDevice,
+): StateWindowFunction => {
+  const ref: StateWindowFunction = {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     buffer: undefined!,
     configure: (config) => {
-      const { windowSize, windowFilter } = config;
-      const array = windowFilters[windowFilter](windowSize);
+      const { windowSize, windowName } = config;
+      const array = windowFunctions[windowName](windowSize);
       const buffer = device.createBuffer({
-        label: 'filter-wave-window-filter-buffer',
+        label: 'windowing-window-function-buffer',
         size: array.byteLength,
         usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
       });
       device.queue.writeBuffer(buffer, 0, array);
-
       ref.buffer?.destroy();
       ref.buffer = buffer;
     },

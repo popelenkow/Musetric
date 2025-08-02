@@ -6,7 +6,7 @@ type Config = Pick<
   'windowSize' | 'windowCount' | 'zeroPaddingFactor'
 >;
 
-export const magnitudify = (config: Config, signal: ComplexArray): void => {
+export const magnitudify = (signal: ComplexArray, config: Config): void => {
   const { windowSize, windowCount, zeroPaddingFactor } = config;
   const paddedWindowSize = windowSize * zeroPaddingFactor;
   const halfSize = paddedWindowSize / 2;
@@ -31,7 +31,7 @@ export const createMagnitudify = (marker?: CpuMarker): Magnitudify => {
   let config: Config;
 
   const ref: Magnitudify = {
-    run: (signal) => magnitudify(config, signal),
+    run: (signal) => magnitudify(signal, config),
     configure: (newConfig) => {
       config = newConfig;
     },

@@ -2,16 +2,16 @@ import { createState, State } from './state';
 
 const workgroupSize = 16;
 
-export type ScaleView = {
+export type Remap = {
   run: (encoder: GPUCommandEncoder) => void;
   configure: State['configure'];
   destroy: State['destroy'];
 };
 
-export const createScaleView = (
+export const createRemap = (
   device: GPUDevice,
   marker?: GPUComputePassTimestampWrites,
-): ScaleView => {
+): Remap => {
   const state = createState(device);
 
   return {
@@ -21,7 +21,7 @@ export const createScaleView = (
       const yGroups = Math.ceil(height / workgroupSize);
 
       const pass = encoder.beginComputePass({
-        label: 'scale-view-column-pass',
+        label: 'remap-column-pass',
         timestampWrites: marker,
       });
       pass.setPipeline(state.pipeline);

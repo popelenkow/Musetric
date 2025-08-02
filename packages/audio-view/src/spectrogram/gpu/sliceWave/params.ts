@@ -1,6 +1,6 @@
 import { Config } from './state';
 
-export type SliceWavesParams = {
+export type SliceWaveParams = {
   windowSize: number;
   paddedWindowSize: number;
   windowCount: number;
@@ -8,7 +8,7 @@ export type SliceWavesParams = {
   step: number;
 };
 
-const toParams = (config: Config): SliceWavesParams => {
+const toParams = (config: Config): SliceWaveParams => {
   const {
     windowSize,
     windowCount,
@@ -32,7 +32,7 @@ const toParams = (config: Config): SliceWavesParams => {
 };
 
 export type StateParams = {
-  value: SliceWavesParams;
+  value: SliceWaveParams;
   buffer: GPUBuffer;
   write: (config: Config) => void;
   destroy: () => void;
@@ -41,7 +41,7 @@ export type StateParams = {
 export const createParams = (device: GPUDevice): StateParams => {
   const array = new DataView(new ArrayBuffer(20));
   const buffer = device.createBuffer({
-    label: 'slice-waves-params-buffer',
+    label: 'slice-wave-params-buffer',
     size: array.byteLength,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });

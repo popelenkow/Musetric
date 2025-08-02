@@ -3,12 +3,12 @@ import { GpuFourierMode, gpuFouriers } from '../../fourier';
 import { Pipeline } from '../pipeline';
 import { createDecibelify } from './decibelify';
 import { createDraw } from './draw';
-import { createFilterWave } from './filterWave';
 import { createMagnitudify } from './magnitudify';
 import { createPipelineState } from './pipelineState';
 import { createPipelineTimer, PipelineMetrics } from './pipelineTimer';
-import { createScaleView } from './scaleView';
-import { createSliceWaves } from './sliceWaves';
+import { createRemap } from './remap';
+import { createSliceWave } from './sliceWave';
+import { createWindowing } from './windowing';
 
 export type CreatePipelineOptions = {
   device: GPUDevice;
@@ -25,47 +25,48 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
   const { markers } = timer;
 
   const state = createPipelineState(device);
-  const sliceWaves = createSliceWaves(
-    device,
-    markers.sliceWaves,
-    markers.writeBuffers,
-  );
-  const filterWave = createFilterWave(device, markers.filterWave);
+  const sliceWave = createSliceWave(device, markers.sliceWave);
+  const windowing = createWindowing(device, markers.windowing);
   const fourier = gpuFouriers[fourierMode](device, {
     reverse: markers.fourierReverse,
     transform: markers.fourierTransform,
   });
   const magnitudify = createMagnitudify(device, markers.magnitudify);
   const decibelify = createDecibelify(device, markers.decibelify);
-  const scaleView = createScaleView(device, markers.scaleView);
+  const remap = createRemap(device, markers.remap);
   const draw = createDraw(device, canvas, markers.draw);
 
   const configure = markers.configure(() => {
     state.configure();
     const { config, signal, texture } = state;
-    sliceWaves.configure(signal.real, config);
-    filterWave.configure(signal.real, config);
+    sliceWave.configure(signal.real, config);
+    windowing.configure(signal.real, config);
     fourier.configure(signal, {
       ...config,
       windowSize: config.windowSize * config.zeroPaddingFactor,
     });
     magnitudify.configure(signal, config);
     decibelify.configure(signal.real, config);
-    scaleView.configure(signal.real, texture.view, config);
+    remap.configure(signal.real, texture.view, config);
     draw.configure(texture.view, config);
   });
 
+  const writeBuffers = markers.writeBuffers(
+    (wave: Float32Array, progress: number) => {
+      sliceWave.write(wave, progress);
+    },
+  );
   const createCommand = markers.createCommand(() => {
     const encoder = device.createCommandEncoder({
       label: 'pipeline-render-encoder',
     });
-    sliceWaves.run(encoder);
+    sliceWave.run(encoder);
     state.zerofyImag(encoder);
-    filterWave.run(encoder);
+    windowing.run(encoder);
     fourier.forward(encoder);
     magnitudify.run(encoder);
     decibelify.run(encoder);
-    scaleView.run(encoder);
+    remap.run(encoder);
     draw.run(encoder);
     timer.resolve(encoder);
     return encoder.finish();
@@ -84,7 +85,7 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
       configure();
     }
 
-    sliceWaves.write(wave, progress);
+    writeBuffers(wave, progress);
     const command = createCommand();
     await submitCommand(command);
   });
@@ -104,11 +105,11 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
     destroy: () => {
       timer.destroy();
       state.destroy();
-      filterWave.destroy();
+      windowing.destroy();
       fourier.destroy();
       magnitudify.destroy();
       decibelify.destroy();
-      scaleView.destroy();
+      remap.destroy();
       draw.destroy();
     },
   };

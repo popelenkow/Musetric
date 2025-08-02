@@ -10,7 +10,7 @@ import { MinDecibelField } from './MinDecibelField';
 import { MinFrequencyField } from './MinFrequencyField';
 import { VisibleTimeAfterField } from './VisibleTimeAfterField';
 import { VisibleTimeBeforeField } from './VisibleTimeBeforeField';
-import { WindowFilterField } from './WindowFilterField';
+import { WindowNameField } from './WindowNameField';
 import { WindowSizeField } from './WindowSizeField';
 import { ZeroPaddingFactorField } from './ZeroPaddingFactorField';
 
@@ -36,7 +36,7 @@ export const Settings: FC = () => {
               </IconButton>
             </Stack>
             <FourierModeField />
-            <WindowFilterField />
+            <WindowNameField />
             <WindowSizeField />
             <MinFrequencyField />
             <MaxFrequencyField />

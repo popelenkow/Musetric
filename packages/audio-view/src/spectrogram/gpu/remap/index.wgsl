@@ -1,4 +1,4 @@
-struct ScaleViewParams {
+struct RemapParams {
   halfSize: u32,
   width: u32,
   height: u32,
@@ -8,9 +8,9 @@ struct ScaleViewParams {
   logRange: f32,
 };
 
-@group(0) @binding(0) var<storage, read> magnitudes: array<f32>;
-@group(0) @binding(1) var columnTexture: texture_storage_2d<rgba8unorm, write>;
-@group(0) @binding(2) var<uniform> params: ScaleViewParams;
+@group(0) @binding(0) var<storage, read> signal: array<f32>;
+@group(0) @binding(1) var texture: texture_storage_2d<rgba8unorm, write>;
+@group(0) @binding(2) var<uniform> params: RemapParams;
 
 @compute @workgroup_size(16, 16)
 fn main(@builtin(global_invocation_id) gid : vec3<u32>) {
@@ -29,6 +29,6 @@ fn main(@builtin(global_invocation_id) gid : vec3<u32>) {
     idx = params.maxBin - 1u;
   }
   let offset = x * params.halfSize * 2u + idx;
-  let intensity = magnitudes[offset];
-  textureStore(columnTexture, vec2u(x, y), vec4f(intensity, 0.0, 0.0, 1.0));
+  let intensity = signal[offset];
+  textureStore(texture, vec2u(x, y), vec4f(intensity, 0.0, 0.0, 1.0));
 }

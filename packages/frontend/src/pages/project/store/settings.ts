@@ -2,13 +2,10 @@ import { spectrogram, FourierMode, ViewColors } from '@musetric/audio-view';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
-export type SettingsState = Omit<
-  spectrogram.PipelineConfig,
-  'sampleRate' | 'viewSize'
-> & {
+export type SettingsState = {
   fourierMode: FourierMode;
   open: boolean;
-};
+} & Omit<spectrogram.PipelineConfig, 'sampleRate' | 'viewSize'>;
 
 const initialState: SettingsState = {
   ...spectrogram.defaultConfig,
@@ -17,17 +14,17 @@ const initialState: SettingsState = {
 };
 
 export type SettingsActions = {
-  setFourierMode: (mode: FourierMode) => void;
-  setWindowFilter: (value: spectrogram.WindowFilterKey) => void;
-  setWindowSize: (size: number) => void;
+  setFourierMode: (value: FourierMode) => void;
+  setWindowName: (value: spectrogram.WindowName) => void;
+  setWindowSize: (value: number) => void;
   setMinFrequency: (value: number) => void;
   setMaxFrequency: (value: number) => void;
   setMinDecibel: (value: number) => void;
   setVisibleTimeBefore: (value: number) => void;
   setVisibleTimeAfter: (value: number) => void;
   setZeroPaddingFactor: (value: spectrogram.ZeroPaddingFactor) => void;
-  setOpen: (open: boolean) => void;
-  setColors: (colors: ViewColors) => void;
+  setOpen: (value: boolean) => void;
+  setColors: (value: ViewColors) => void;
 };
 
 type State = SettingsState & SettingsActions;
@@ -35,7 +32,7 @@ export const useSettingsStore = create<State>()(
   subscribeWithSelector((set) => ({
     ...initialState,
     setFourierMode: (fourierMode) => set({ fourierMode }),
-    setWindowFilter: (windowFilter) => set({ windowFilter }),
+    setWindowName: (windowName) => set({ windowName }),
     setWindowSize: (windowSize) => set({ windowSize }),
     setMinFrequency: (minFrequency) => set({ minFrequency }),
     setMaxFrequency: (maxFrequency) => set({ maxFrequency }),

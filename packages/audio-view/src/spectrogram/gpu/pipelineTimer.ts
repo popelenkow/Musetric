@@ -5,13 +5,13 @@ export const timerLabels = [
   'writeBuffers',
   'createCommand',
   'submitCommand',
-  'sliceWaves',
-  'filterWave',
+  'sliceWave',
+  'windowing',
   'fourierReverse',
   'fourierTransform',
   'magnitudify',
   'decibelify',
-  'scaleView',
+  'remap',
   'draw',
   'other',
   'total',
@@ -20,13 +20,13 @@ export type TimerLabel = (typeof timerLabels)[number];
 export type PipelineMetrics = Record<TimerLabel, number>;
 
 const gpuLabels = [
-  'sliceWaves',
-  'filterWave',
+  'sliceWave',
+  'windowing',
   'fourierReverse',
   'fourierTransform',
   'magnitudify',
   'decibelify',
-  'scaleView',
+  'remap',
   'draw',
 ] as const satisfies TimerLabel[];
 
