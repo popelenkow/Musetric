@@ -26,6 +26,7 @@ export const runPipeline = async (
     ...spectrogram.defaultConfig,
     windowSize,
     viewSize,
+    zeroPaddingFactor: 1,
   };
   const pipeline = isGpuFourierMode(fourierMode)
     ? spectrogram.gpu.createPipeline({
