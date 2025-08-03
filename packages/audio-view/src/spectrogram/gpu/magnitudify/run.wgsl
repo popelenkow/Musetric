@@ -9,13 +9,16 @@ struct MagnitudifyParams {
 
 @compute @workgroup_size(64)
 fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
+  let windowSize = params.windowSize;
+  let windowCount = params.windowCount;
+  
   let sampleIndex = gid.x;
   let windowIndex = gid.y;
-  let halfSize = params.windowSize / 2u;
-  if (sampleIndex >= halfSize || windowIndex >= params.windowCount) {
+  let halfSize = windowSize / 2u;
+  if (sampleIndex >= halfSize || windowIndex >= windowCount) {
     return;
   }
-  let offset = windowIndex * params.windowSize + sampleIndex;
+  let offset = windowSize * windowIndex + sampleIndex;
   let real = signalReal[offset];
   let imag = signalImag[offset];
   let magnitude = sqrt(real * real + imag * imag);

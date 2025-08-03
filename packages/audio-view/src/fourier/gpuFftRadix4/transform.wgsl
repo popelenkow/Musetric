@@ -14,19 +14,23 @@ fn main(
   @builtin(workgroup_id) workgroupId : vec3<u32>,
   @builtin(local_invocation_id) localId : vec3<u32>,
 ) {
+  let windowSize = params.windowSize;
+  let windowCount = params.windowCount;
+  let reverseWidth = params.reverseWidth;
+  
   let windowIndex = workgroupId.x;
-  if (windowIndex >= params.windowCount) {
+  if (windowIndex >= windowCount) {
     return;
   }
 
   let threadIndex = localId.x;
-  let windowOffset = windowIndex * params.windowSize;
-  var step = 1u << params.reverseWidth;
-  var len = params.windowSize >> params.reverseWidth;
+  let windowOffset = windowSize * windowIndex;
+  var step = 1u << reverseWidth;
+  var len = windowSize >> reverseWidth;
   let sign = 1.0;
 
   if (len == 2u) {
-    for (var outOff : u32 = threadIndex * 2u; outOff < params.windowSize; outOff += 2u * 64u) {
+    for (var outOff : u32 = threadIndex * 2u; outOff < windowSize; outOff += 2u * 64u) {
       let evenR = dataReal[windowOffset + outOff];
       let oddR = dataReal[windowOffset + outOff + 1u];
       dataReal[windowOffset + outOff] = evenR + oddR;
@@ -35,7 +39,7 @@ fn main(
       dataImag[windowOffset + outOff + 1u] = 0.0;
     }
   } else {
-    for (var outOff : u32 = threadIndex * 4u; outOff < params.windowSize; outOff += 4u * 64u) {
+    for (var outOff : u32 = threadIndex * 4u; outOff < windowSize; outOff += 4u * 64u) {
       let Ar = dataReal[windowOffset + outOff];
       let Br = dataReal[windowOffset + outOff + 1u];
       let Cr = dataReal[windowOffset + outOff + 2u];
@@ -65,11 +69,11 @@ fn main(
   step = step >> 1u;
 
   while (step >= 2u) {
-    let len = (params.windowSize / step) << 1u;
+    let len = (windowSize / step) << 1u;
     let quarterLen = len >> 2u;
-    for (var outOff : u32 = 0u; outOff < params.windowSize; outOff += len) {
+    for (var outOff : u32 = 0u; outOff < windowSize; outOff += len) {
       let limit = outOff + quarterLen;
-      for (var i : u32 = outOff + threadIndex; i < limit; i = i + 64u) {
+      for (var i : u32 = outOff + threadIndex; i < limit; i += 64u) {
         let k = (i - outOff) * step;
         let A = windowOffset + i;
         let B = quarterLen + A;
