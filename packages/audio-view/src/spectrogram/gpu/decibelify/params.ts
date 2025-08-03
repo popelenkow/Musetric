@@ -3,13 +3,13 @@ import { Config } from './state';
 export type DecibelifyParams = {
   halfSize: number;
   windowCount: number;
-  minDecibel: number;
+  decibelFactor: number;
 };
 
 const toParams = (config: Config): DecibelifyParams => ({
   halfSize: (config.windowSize * config.zeroPaddingFactor) / 2,
   windowCount: config.windowCount,
-  minDecibel: config.minDecibel,
+  decibelFactor: (20 * Math.LOG10E) / -config.minDecibel,
 });
 
 export type StateParams = {
@@ -34,7 +34,7 @@ export const createParams = (device: GPUDevice) => {
       ref.value = toParams(config);
       array.setUint32(0, ref.value.halfSize, true);
       array.setUint32(4, ref.value.windowCount, true);
-      array.setFloat32(8, ref.value.minDecibel, true);
+      array.setFloat32(8, ref.value.decibelFactor, true);
       device.queue.writeBuffer(buffer, 0, array.buffer);
     },
     destroy: () => {

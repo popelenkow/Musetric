@@ -1,6 +1,6 @@
 import { ExtPipelineConfig } from '../../pipeline';
 import { createParams, StateParams } from './params';
-import { createPipeline } from './pipeline';
+import { createPipelines, Pipelines } from './pipeline';
 
 export type Config = Pick<
   ExtPipelineConfig,
@@ -8,7 +8,7 @@ export type Config = Pick<
 >;
 
 export type State = {
-  pipeline: GPUComputePipeline;
+  pipelines: Pipelines;
   config: Config;
   params: StateParams;
   bindGroup: GPUBindGroup;
@@ -17,11 +17,11 @@ export type State = {
 };
 
 export const createState = (device: GPUDevice) => {
-  const pipeline = createPipeline(device);
+  const pipelines = createPipelines(device);
   const params = createParams(device);
 
   const ref: State = {
-    pipeline,
+    pipelines,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     config: undefined!,
     params,
@@ -32,7 +32,7 @@ export const createState = (device: GPUDevice) => {
       params.write(config);
       ref.bindGroup = device.createBindGroup({
         label: 'decibelify-bind-group',
-        layout: pipeline.getBindGroupLayout(0),
+        layout: pipelines.layout,
         entries: [
           { binding: 0, resource: { buffer: signal } },
           { binding: 1, resource: { buffer: params.buffer } },
