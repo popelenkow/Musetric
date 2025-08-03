@@ -12,18 +12,24 @@ struct SliceWaveParams {
 
 @compute @workgroup_size(64)
 fn main(@builtin(global_invocation_id) gid : vec3<u32>) {
+  let windowSize = params.windowSize;
+  let paddedWindowSize = params.paddedWindowSize;
+  let windowCount = params.windowCount;
+  let visibleSamples = params.visibleSamples;
+  let step = params.step;
+  
   let sampleIndex = gid.x;
   let windowIndex = gid.y;
-  if (sampleIndex >= params.paddedWindowSize || windowIndex >= params.windowCount) {
+  if (sampleIndex >= paddedWindowSize || windowIndex >= windowCount) {
     return;
   }
 
   var value : f32 = 0.0;
-  if (sampleIndex < params.windowSize) {
-    let srcIndex = u32(f32(windowIndex) * params.step) + sampleIndex;
-    if (srcIndex < params.visibleSamples) {
+  if (sampleIndex < windowSize) {
+    let srcIndex = u32(f32(windowIndex) * step) + sampleIndex;
+    if (srcIndex < visibleSamples) {
       value = wave[srcIndex];
     }
   }
-  signal[windowIndex * params.paddedWindowSize + sampleIndex] = value;
+  signal[paddedWindowSize * windowIndex + sampleIndex] = value;
 }

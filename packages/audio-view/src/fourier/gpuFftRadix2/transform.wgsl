@@ -14,13 +14,15 @@ fn main(
   @builtin(workgroup_id) workgroupId: vec3<u32>,
   @builtin(local_invocation_id) localId: vec3<u32>,
 ) {
+  let windowSize = params.windowSize;
+  let windowCount = params.windowCount;
+  
   let windowIndex = workgroupId.x;
-  if (windowIndex >= params.windowCount) {
+  if (windowIndex >= windowCount) {
     return;
   }
 
-  let windowSize = params.windowSize;
-  let windowOffset = windowIndex * windowSize;
+  let windowOffset = windowSize * windowIndex;
   let threadIndex = localId.x;
   let twiddleSign = -1.0;
 
@@ -28,8 +30,8 @@ fn main(
   while (sectionSize <= windowSize) {
     let halfSize = sectionSize >> 1u;
     let step = windowSize / sectionSize;
-    for (var blockStart: u32 = 0u; blockStart < windowSize; blockStart = blockStart + sectionSize) {
-      for (var twiddleIndex: u32 = threadIndex; twiddleIndex < halfSize; twiddleIndex = twiddleIndex + 64u) {
+    for (var blockStart: u32 = 0u; blockStart < windowSize; blockStart += sectionSize) {
+      for (var twiddleIndex: u32 = threadIndex; twiddleIndex < halfSize; twiddleIndex += 64u) {
         let firstIndex = windowOffset + blockStart + twiddleIndex;
         let secondIndex = firstIndex + halfSize;
 

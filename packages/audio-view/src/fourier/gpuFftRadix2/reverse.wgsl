@@ -12,23 +12,25 @@ fn main(
   @builtin(workgroup_id) workgroupId: vec3<u32>,
   @builtin(local_invocation_id) localId: vec3<u32>,
 ) {
+  let windowSize = params.windowSize;
+  let windowCount = params.windowCount;
+  
   let windowIndex = workgroupId.x;
-  if (windowIndex >= params.windowCount) {
+  if (windowIndex >= windowCount) {
     return;
   }
 
-  let windowSize = params.windowSize;
-  let windowOffset = windowIndex * windowSize;
+  let windowOffset = windowSize * windowIndex;
   let threadIndex = localId.x;
 
-  for (var index: u32 = threadIndex; index < windowSize; index = index + 64u) {
+  for (var index: u32 = threadIndex; index < windowSize; index += 64u) {
     let reversedIndex = reverseTable[index];
     if (reversedIndex > index) {
       let a = windowOffset + index;
       let b = windowOffset + reversedIndex;
-      let tempReal = dataReal[a];
+      let real = dataReal[a];
       dataReal[a] = dataReal[b];
-      dataReal[b] = tempReal;
+      dataReal[b] = real;
     }
   }
 }

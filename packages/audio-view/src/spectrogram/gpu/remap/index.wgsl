@@ -14,21 +14,29 @@ struct RemapParams {
 
 @compute @workgroup_size(16, 16)
 fn main(@builtin(global_invocation_id) gid : vec3<u32>) {
+  let halfSize = params.halfSize;
+  let width = params.width;
+  let height = params.height;
+  let minBin = params.minBin;
+  let maxBin = params.maxBin;
+  let logMin = params.logMin;
+  let logRange = params.logRange;
+  
   let x = gid.x;
   let y = gid.y;
-  if (x >= params.width || y >= params.height) {
+  if (x >= width || y >= height) {
     return;
   }
-  let ratio = 1.0 - f32(y) / f32(params.height - 1u);
-  let raw = exp(params.logMin + params.logRange * ratio);
+  let ratio = 1.0 - f32(y) / f32(height - 1u);
+  let raw = exp(logMin + logRange * ratio);
   var idx = u32(floor(raw) - 1.0);
-  if (idx < params.minBin) {
-    idx = params.minBin;
+  if (idx < minBin) {
+    idx = minBin;
   }
-  if (idx >= params.maxBin) {
-    idx = params.maxBin - 1u;
+  if (idx >= maxBin) {
+    idx = maxBin - 1u;
   }
-  let offset = x * params.halfSize + idx;
+  let offset = x * halfSize + idx;
   let intensity = signal[offset];
   textureStore(texture, vec2u(x, y), vec4f(intensity, 0.0, 0.0, 1.0));
 }

@@ -15,9 +15,11 @@ struct Params {
 
 @fragment
 fn main(@location(0) uv: vec2f) -> @location(0) vec4f {
+  let progress = params.progress;
+  
   let intensity = textureSample(columnTexture, valueSampler, vec2f(uv.x, 1.0 - uv.y)).r;
   var displayColor = colors.unplayed.xyz;
-  if (uv.x < params.progress) {
+  if (uv.x < progress) {
     displayColor = colors.played.xyz;
   }
   let color = mix(colors.background.xyz, displayColor, intensity);

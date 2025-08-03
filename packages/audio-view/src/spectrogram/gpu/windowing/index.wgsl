@@ -10,12 +10,16 @@ struct WindowingParams {
 
 @compute @workgroup_size(64)
 fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
+  let windowSize = params.windowSize;
+  let paddedWindowSize = params.paddedWindowSize;
+  let windowCount = params.windowCount;
+  
   let sampleIndex = gid.x;
   let windowIndex = gid.y;
-  if (sampleIndex >= params.windowSize || windowIndex >= params.windowCount) {
+  if (sampleIndex >= windowSize || windowIndex >= windowCount) {
     return;
   }
-  let offset = windowIndex * params.paddedWindowSize + sampleIndex;
+  let offset = paddedWindowSize * windowIndex + sampleIndex;
   let weight = windowFunction[sampleIndex];
   signal[offset] *= weight;
 }
