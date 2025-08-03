@@ -13,7 +13,7 @@ fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
   if (windowIndex >= params.windowCount) {
     return;
   }
-  let windowOffset = windowIndex * params.halfSize * 2u;
+  let windowOffset = windowIndex * params.halfSize;
   var maxMagnitude: f32 = 0.0;
   for (var i: u32 = 0u; i < params.halfSize; i = i + 1u) {
     let value = signal[windowOffset + i];

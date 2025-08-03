@@ -19,13 +19,20 @@ export const createMagnitudify = (
       const { windowSize, windowCount } = state.params.value;
       const halfSize = Math.ceil(windowSize / 2);
       const xCount = Math.ceil(halfSize / workgroupSize);
+
       const pass = encoder.beginComputePass({
         label: 'magnitudify-pass',
         timestampWrites: marker,
       });
-      pass.setPipeline(state.pipeline);
+
+      pass.setPipeline(state.pipelines.run);
       pass.setBindGroup(0, state.bindGroup);
       pass.dispatchWorkgroups(xCount, windowCount);
+
+      pass.setPipeline(state.pipelines.move);
+      pass.setBindGroup(0, state.bindGroup);
+      pass.dispatchWorkgroups(xCount, windowCount);
+
       pass.end();
     },
     configure: state.configure,
