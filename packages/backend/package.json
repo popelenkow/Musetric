@@ -6,8 +6,8 @@
     "schema": "./prisma/schema.prisma"
   },
   "scripts": {
-    "postinstall": "prisma db push",
-    "dev": "tsx watch src/index.ts",
+    "postinstall": "npx prisma generate",
+    "dev": "npx prisma db push && tsx watch src/index.ts",
     "build:docker": "docker build --progress=plain --file Dockerfile -t musetric ../..",
     "start:docker": "docker compose up -d",
     "check:ts": "tsc --noEmit",
