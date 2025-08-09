@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { createPort } from '../port';
 import { toArrays, type ChannelArrays } from './buffer';
 import type { FromWorkletEvent, ToWorkletEvent } from './event';
@@ -54,16 +53,19 @@ const createProcessor = (rawPort: MessagePort): Processor => {
   };
 };
 
+// eslint-disable-next-line no-restricted-syntax
 class PlayerProcessor extends AudioWorkletProcessor {
   private readonly processor: Processor;
   constructor() {
     super();
+    // eslint-disable-next-line no-restricted-syntax
     this.processor = createProcessor(this.port);
   }
   process(
     _inputs: Float32Array<ArrayBuffer>[][],
     outputs: Float32Array<ArrayBuffer>[][],
   ): boolean {
+    // eslint-disable-next-line no-restricted-syntax
     return this.processor.process(outputs[0]);
   }
 }
