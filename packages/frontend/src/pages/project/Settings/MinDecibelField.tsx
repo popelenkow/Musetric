@@ -20,6 +20,15 @@ export const MinDecibelField: FC = () => {
         if (Number.isNaN(value)) return;
         setMinDecibel(value);
       }}
+      slotProps={{
+        input: {
+          onKeyDown: (event) => {
+            if (event.key === 'Enter') {
+              event.currentTarget.blur();
+            }
+          },
+        },
+      }}
     />
   );
 };

@@ -20,6 +20,15 @@ export const MinFrequencyField: FC = () => {
         if (Number.isNaN(value)) return;
         setMinFrequency(Math.max(value, 0));
       }}
+      slotProps={{
+        input: {
+          onKeyDown: (event) => {
+            if (event.key === 'Enter') {
+              event.currentTarget.blur();
+            }
+          },
+        },
+      }}
     />
   );
 };

@@ -20,6 +20,15 @@ export const VisibleTimeAfterField: FC = () => {
         if (Number.isNaN(value)) return;
         setVisibleTimeAfter(Math.max(0, Math.min(value, 30)));
       }}
+      slotProps={{
+        input: {
+          onKeyDown: (event) => {
+            if (event.key === 'Enter') {
+              event.currentTarget.blur();
+            }
+          },
+        },
+      }}
     />
   );
 };
