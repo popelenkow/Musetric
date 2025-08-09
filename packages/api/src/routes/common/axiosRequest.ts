@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { AxiosInstance } from 'axios';
-import z from 'zod/v4';
+import z from 'zod';
 import { ApiRoute, RequestMethod } from './apiRoute';
 import { isUint8ArraySchema } from './uint8ArraySchema';
 

@@ -46,8 +46,8 @@ const createGpuBuffers = (device: GPUDevice, windowSize: number) => {
 
 export const assertArrayClose = (
   name: string,
-  received: Float32Array,
-  expected: Float32Array,
+  received: Float32Array<ArrayBuffer>,
+  expected: Float32Array<ArrayBuffer>,
 ) => {
   expect(received.length, `${name} length`).toBe(expected.length);
   for (let i = 0; i < expected.length; i++) {

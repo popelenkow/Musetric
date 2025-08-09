@@ -12,8 +12,8 @@ type Config = Pick<
 >;
 
 export const sliceWave = (
-  wave: Float32Array,
-  signal: Float32Array,
+  wave: Float32Array<ArrayBuffer>,
+  signal: Float32Array<ArrayBuffer>,
   progress: number,
   config: Config,
 ): void => {
@@ -54,7 +54,11 @@ export const sliceWave = (
 };
 
 export type SliceWave = {
-  run: (wave: Float32Array, waves: Float32Array, progress: number) => void;
+  run: (
+    wave: Float32Array<ArrayBuffer>,
+    waves: Float32Array<ArrayBuffer>,
+    progress: number,
+  ) => void;
   configure: (config: Config) => void;
 };
 export const createSliceWave = (marker?: CpuMarker): SliceWave => {

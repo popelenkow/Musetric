@@ -12,7 +12,7 @@ type Config = Pick<
 >;
 
 export const remap = (
-  signal: Float32Array,
+  signal: Float32Array<ArrayBuffer>,
   view: Uint8Array,
   config: Config,
 ) => {
@@ -53,7 +53,7 @@ export const remap = (
 };
 
 export type Remap = {
-  run: (signal: Float32Array, view: Uint8Array) => void;
+  run: (signal: Float32Array<ArrayBuffer>, view: Uint8Array) => void;
   configure: (config: Config) => void;
 };
 export const createRemap = (marker?: CpuMarker): Remap => {

@@ -15,10 +15,10 @@
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
     "@vitest/browser": "3.2.4",
-    "@webgpu/types": "0.1.63",
-    "eslint": "9.30.0",
-    "playwright": "1.42.1",
-    "typescript": "5.8.3",
+    "@webgpu/types": "0.1.64",
+    "eslint": "9.33.0",
+    "playwright": "1.54.2",
+    "typescript": "5.9.2",
     "vitest": "3.2.4"
   }
 }

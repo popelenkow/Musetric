@@ -3,7 +3,7 @@ import { createPort } from '../port';
 import { toArrays, type ChannelArrays } from './buffer';
 import type { FromWorkletEvent, ToWorkletEvent } from './event';
 
-type Process = (output: Float32Array[]) => boolean;
+type Process = (output: Float32Array<ArrayBuffer>[]) => boolean;
 
 type Processor = {
   process: Process;
@@ -60,7 +60,10 @@ class PlayerProcessor extends AudioWorkletProcessor {
     super();
     this.processor = createProcessor(this.port);
   }
-  process(_inputs: Float32Array[][], outputs: Float32Array[][]): boolean {
+  process(
+    _inputs: Float32Array<ArrayBuffer>[][],
+    outputs: Float32Array<ArrayBuffer>[][],
+  ): boolean {
     return this.processor.process(outputs[0]);
   }
 }

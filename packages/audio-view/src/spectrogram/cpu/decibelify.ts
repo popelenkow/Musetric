@@ -6,7 +6,10 @@ type Config = Pick<
   'windowSize' | 'windowCount' | 'zeroPaddingFactor' | 'minDecibel'
 >;
 
-export const decibelify = (signal: Float32Array, config: Config): void => {
+export const decibelify = (
+  signal: Float32Array<ArrayBuffer>,
+  config: Config,
+): void => {
   const { windowSize, windowCount, zeroPaddingFactor, minDecibel } = config;
   const paddedWindowSize = windowSize * zeroPaddingFactor;
   const halfSize = paddedWindowSize / 2;
@@ -33,7 +36,7 @@ export const decibelify = (signal: Float32Array, config: Config): void => {
 };
 
 export type Decibelify = {
-  run: (signal: Float32Array) => void;
+  run: (signal: Float32Array<ArrayBuffer>) => void;
   configure: (config: Config) => void;
 };
 export const createDecibelify = (marker?: CpuMarker): Decibelify => {

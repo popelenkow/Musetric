@@ -11,15 +11,15 @@
     "fix:lint": "eslint . --fix --cache"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "zustand": "^5.0.0"
+    "react": "19.1.1",
+    "zustand": "5.0.7"
   },
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
-    "@types/react": "19.1.8",
-    "eslint": "9.30.0",
-    "react": "19.1.0",
-    "typescript": "5.8.3",
-    "zustand": "5.0.6"
+    "@types/react": "19.1.9",
+    "eslint": "9.33.0",
+    "react": "19.1.1",
+    "typescript": "5.9.2",
+    "zustand": "5.0.7"
   }
 }

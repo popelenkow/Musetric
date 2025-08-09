@@ -1,4 +1,4 @@
-export const bartlett = (windowSize: number): Float32Array => {
+export const bartlett = (windowSize: number): Float32Array<ArrayBuffer> => {
   const filter = new Float32Array(windowSize);
   const last = windowSize - 1;
   for (let i = 0; i < windowSize; i++) {
@@ -7,7 +7,7 @@ export const bartlett = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const bartlettHann = (windowSize: number): Float32Array => {
+export const bartlettHann = (windowSize: number): Float32Array<ArrayBuffer> => {
   const filter = new Float32Array(windowSize);
   const last = windowSize - 1;
   for (let i = 0; i < windowSize; i++) {
@@ -16,7 +16,7 @@ export const bartlettHann = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const blackman = (windowSize: number): Float32Array => {
+export const blackman = (windowSize: number): Float32Array<ArrayBuffer> => {
   const filter = new Float32Array(windowSize);
   const last = windowSize - 1;
   const alpha = 0.16;
@@ -28,7 +28,7 @@ export const blackman = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const cosine = (windowSize: number): Float32Array => {
+export const cosine = (windowSize: number): Float32Array<ArrayBuffer> => {
   const filter = new Float32Array(windowSize);
   for (let i = 0; i < windowSize; i++) {
     filter[i] = Math.cos((Math.PI * i) / (windowSize - 1) - Math.PI / 2);
@@ -36,7 +36,7 @@ export const cosine = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const gauss = (windowSize: number): Float32Array => {
+export const gauss = (windowSize: number): Float32Array<ArrayBuffer> => {
   const filter = new Float32Array(windowSize);
   const alpha = 0.25;
   for (let i = 0; i < windowSize; i++) {
@@ -46,7 +46,7 @@ export const gauss = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const hamming = (windowSize: number): Float32Array => {
+export const hamming = (windowSize: number): Float32Array<ArrayBuffer> => {
   const filter = new Float32Array(windowSize);
   for (let i = 0; i < windowSize; i++) {
     filter[i] = 0.54 - 0.46 * Math.cos((Math.PI * 2 * i) / (windowSize - 1));
@@ -54,7 +54,7 @@ export const hamming = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const hann = (windowSize: number): Float32Array => {
+export const hann = (windowSize: number): Float32Array<ArrayBuffer> => {
   const filter = new Float32Array(windowSize);
   for (let i = 0; i < windowSize; i++) {
     filter[i] = 0.5 * (1 - Math.cos((Math.PI * 2 * i) / (windowSize - 1)));
@@ -62,7 +62,7 @@ export const hann = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const lanczoz = (windowSize: number): Float32Array => {
+export const lanczoz = (windowSize: number): Float32Array<ArrayBuffer> => {
   const filter = new Float32Array(windowSize);
   const last = windowSize - 1;
   for (let i = 0; i < windowSize; i++) {
@@ -73,7 +73,7 @@ export const lanczoz = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const rectangular = (windowSize: number): Float32Array => {
+export const rectangular = (windowSize: number): Float32Array<ArrayBuffer> => {
   const filter = new Float32Array(windowSize);
   for (let i = 0; i < windowSize; i++) {
     filter[i] = 1;
@@ -81,7 +81,7 @@ export const rectangular = (windowSize: number): Float32Array => {
   return filter;
 };
 
-export const triangular = (windowSize: number): Float32Array => {
+export const triangular = (windowSize: number): Float32Array<ArrayBuffer> => {
   const filter = new Float32Array(windowSize);
   for (let i = 0; i < windowSize; i++) {
     filter[i] =

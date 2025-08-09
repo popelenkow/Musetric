@@ -52,7 +52,7 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
   });
 
   const writeBuffers = markers.writeBuffers(
-    (wave: Float32Array, progress: number) => {
+    (wave: Float32Array<ArrayBuffer>, progress: number) => {
       sliceWave.write(wave, progress);
     },
   );
@@ -79,16 +79,18 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
     },
   );
 
-  const render = markers.total(async (wave: Float32Array, progress: number) => {
-    if (isConfigureRequested) {
-      isConfigureRequested = false;
-      configure();
-    }
+  const render = markers.total(
+    async (wave: Float32Array<ArrayBuffer>, progress: number) => {
+      if (isConfigureRequested) {
+        isConfigureRequested = false;
+        configure();
+      }
 
-    writeBuffers(wave, progress);
-    const command = createCommand();
-    await submitCommand(command);
-  });
+      writeBuffers(wave, progress);
+      const command = createCommand();
+      await submitCommand(command);
+    },
+  );
 
   return {
     render: createCallLatest(async (wave, progress) => {

@@ -1,4 +1,4 @@
-const createTrigTable = (windowSize: number): Float32Array => {
+const createTrigTable = (windowSize: number): Float32Array<ArrayBuffer> => {
   const table = new Float32Array(2 * windowSize);
   for (let i = 0; i < table.length; i += 2) {
     const angle = (Math.PI * i) / windowSize;
@@ -22,7 +22,7 @@ const getReverseWidth = (windowSize: number): number => {
   return reverseWidth - 1;
 };
 
-const createReverseTable = (reverseWidth: number): Uint32Array => {
+const createReverseTable = (reverseWidth: number): Uint32Array<ArrayBuffer> => {
   const reverseTable = new Uint32Array(1 << reverseWidth);
 
   for (let j = 0; j < reverseTable.length; j++) {
