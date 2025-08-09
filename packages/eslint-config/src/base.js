@@ -50,6 +50,14 @@ export const baseConfig = {
         selector: 'ExportDefaultDeclaration',
         message: 'Do not use export default',
       },
+      {
+        selector: 'ClassDeclaration',
+        message: 'Do not use class declarations',
+      },
+      {
+        selector: 'ClassExpression',
+        message: 'Do not use class expressions',
+      },
     ],
     'func-style': ['error'],
     'func-names': ['error'],
