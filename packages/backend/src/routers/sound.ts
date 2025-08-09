@@ -1,6 +1,7 @@
 import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound';
+import { blobStorage } from '../common/blobStorage';
 import { handleCachedFile } from '../common/cachedFile';
 import { prisma } from '../common/prisma';
 
@@ -11,29 +12,31 @@ export const soundRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.sound.get.route,
-    handler: async (request, reply) =>
-      prisma.$transaction(async (tx) => {
-        const { projectId, type } = request.params;
-        const sound = await tx.sound.findFirst({
-          where: { projectId, type },
-        });
-        assertFound(
-          sound,
-          `Sound for project ${projectId} and type ${type} not found`,
-        );
+    handler: async (request, reply) => {
+      const { projectId, type } = request.params;
+      const sound = await prisma.sound.findFirst({
+        where: { projectId, type },
+      });
+      assertFound(
+        sound,
+        `Sound for project ${projectId} and type ${type} not found`,
+      );
 
-        const isNotModified = handleCachedFile(request, reply, {
-          data: sound.data,
-          filename: sound.filename,
-          contentType: sound.contentType,
-        });
+      const data = await blobStorage.get(sound.blobId);
+      assertFound(data, `Sound blob for id ${sound.blobId} not found`);
 
-        if (isNotModified) {
-          return;
-        }
+      const isNotModified = handleCachedFile(request, reply, {
+        data,
+        filename: sound.filename,
+        contentType: sound.contentType,
+      });
 
-        return sound.data;
-      }),
+      if (isNotModified) {
+        return;
+      }
+
+      return data;
+    },
   });
 
   return Promise.resolve();

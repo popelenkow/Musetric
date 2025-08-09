@@ -33,7 +33,7 @@ model Sound {
   project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId   Int
   type        SoundType
-  data        Bytes
+  blobId      String    @unique
   filename    String
   contentType String
   @@index([projectId, type])
@@ -43,7 +43,7 @@ model Preview {
   id          Int       @id @default(autoincrement())
   project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId   Int       @unique
-  data        Bytes
+  blobId      String    @unique
   filename    String
   contentType String
 }
