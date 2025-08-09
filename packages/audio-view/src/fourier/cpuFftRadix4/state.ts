@@ -5,8 +5,8 @@ import { utilsRadix4 } from '../utilsRadix4';
 export type State = {
   config: FourierConfig;
   reverseWidth: number;
-  reverseTable: Uint32Array;
-  trigTable: Float32Array;
+  reverseTable: Uint32Array<ArrayBuffer>;
+  trigTable: Float32Array<ArrayBuffer>;
   configure: (config: FourierConfig) => void;
 };
 export const createState = (): State => {

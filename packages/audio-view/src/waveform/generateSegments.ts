@@ -4,7 +4,7 @@ export type WaveSegment = {
 };
 
 export const generateSegments = (
-  data: Float32Array,
+  data: Float32Array<ArrayBuffer>,
   width: number,
 ): WaveSegment[] => {
   const step = data.length / width;

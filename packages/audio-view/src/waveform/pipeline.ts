@@ -3,7 +3,7 @@ import { createDraw } from './draw';
 import { generateSegments } from './generateSegments';
 
 export type Pipeline = {
-  render: (buffer: Float32Array, progress: number) => void;
+  render: (buffer: Float32Array<ArrayBuffer>, progress: number) => void;
 };
 export const createPipeline = (
   canvas: HTMLCanvasElement,

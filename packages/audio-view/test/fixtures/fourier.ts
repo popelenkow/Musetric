@@ -3,7 +3,7 @@ import { ComplexArray } from '../../src';
 export type FourierFixture = {
   name: string;
   windowSize: number;
-  input: Float32Array;
+  input: Float32Array<ArrayBuffer>;
   output: ComplexArray;
 };
 

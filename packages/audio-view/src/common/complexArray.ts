@@ -9,8 +9,8 @@ export type ComplexCpuBuffer = {
 };
 
 export type ComplexArray = {
-  real: Float32Array;
-  imag: Float32Array;
+  real: Float32Array<ArrayBuffer>;
+  imag: Float32Array<ArrayBuffer>;
 };
 
 export const createComplexArray = (length: number): ComplexArray => ({

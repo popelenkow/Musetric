@@ -1,4 +1,4 @@
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { fastifyRoute, createApiRoute } from './common';
 import { axiosRequest } from './common/axiosRequest';
 import { preview } from '.';

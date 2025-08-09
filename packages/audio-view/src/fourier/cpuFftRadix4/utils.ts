@@ -90,8 +90,8 @@ export type Transform4Options = {
   inverse: boolean;
   windowSize: number;
   reverseWidth: number;
-  reverseTable: Uint32Array;
-  trigTable: Float32Array;
+  reverseTable: Uint32Array<ArrayBuffer>;
+  trigTable: Float32Array<ArrayBuffer>;
 };
 /** radix-4 implementation */
 export const transform4 = (options: Transform4Options): void => {

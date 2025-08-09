@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
-import z from 'zod/v4';
+import z from 'zod';
 import { ApiRoute, RequestMethod } from './apiRoute';
 import { coerceSchema } from './coerceSchema';
 import { error } from './error';

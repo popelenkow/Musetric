@@ -13,7 +13,7 @@ import { TFunction } from 'i18next';
 import { FC, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { getProjectApi, editProjectApi } from '../../../api/endpoints/project';
 import { routes } from '../../../app/router/routes';
 import { QueryError } from '../../../common/QueryView/QueryError';

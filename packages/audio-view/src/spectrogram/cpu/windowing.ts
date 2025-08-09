@@ -8,7 +8,7 @@ type Config = Pick<
 >;
 
 export type Windowing = {
-  run: (signal: Float32Array) => void;
+  run: (signal: Float32Array<ArrayBuffer>) => void;
   configure: (config: Config) => void;
 };
 
@@ -16,7 +16,7 @@ export const createWindowing = (marker?: CpuMarker): Windowing => {
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let config: Config;
   // eslint-disable-next-line @typescript-eslint/init-declarations
-  let windowFunction: Float32Array;
+  let windowFunction: Float32Array<ArrayBuffer>;
 
   const ref: Windowing = {
     run: (signal) => {

@@ -13,7 +13,7 @@ import { TFunction } from 'i18next';
 import { FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { createProjectApi } from '../../../api/endpoints/project';
 import { routes } from '../../../app/router/routes';
 import { stripExt } from '../../../common/stripExt';
