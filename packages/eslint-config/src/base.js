@@ -59,8 +59,14 @@ export const baseConfig = {
         message: 'Do not use class expressions',
       },
       {
-        selector: 'MethodDefinition:not([key.name=/^(constructor|get|set)$/])',
-        message: 'Do not use class methods, use arrow functions instead',
+        selector:
+          'Property[method=true]:not([key.name=/^(constructor|get|set)$/])',
+        message: 'Do not use object methods, use arrow functions instead',
+      },
+      {
+        selector: 'TSMethodSignature',
+        message:
+          'Do not use method signatures in types, use arrow function types instead',
       },
     ],
     'func-style': ['error'],
