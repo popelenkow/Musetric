@@ -61,7 +61,6 @@ class PlayerProcessor extends AudioWorkletProcessor {
     // eslint-disable-next-line no-restricted-syntax
     this.processor = createProcessor(this.port);
   }
-  // eslint-disable-next-line no-restricted-syntax
   process(
     _inputs: Float32Array<ArrayBuffer>[][],
     outputs: Float32Array<ArrayBuffer>[][],
