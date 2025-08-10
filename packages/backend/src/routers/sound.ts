@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
+import { assertFound } from '../common/assertFound';
 import { prisma } from '../common/prisma';
 
 export const soundRouter: FastifyPluginAsyncZod = async (app) => {
@@ -16,13 +17,10 @@ export const soundRouter: FastifyPluginAsyncZod = async (app) => {
         const sound = await tx.sound.findFirst({
           where: { projectId, type },
         });
-
-        if (!sound) {
-          reply.code(404);
-          return {
-            message: `Sound for project ${projectId} and type ${type} not found`,
-          };
-        }
+        assertFound(
+          sound,
+          `Sound for project ${projectId} and type ${type} not found`,
+        );
 
         const etag = crypto.createHash('md5').update(sound.data).digest('hex');
 

@@ -1,5 +1,6 @@
 import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
+import { assertFound } from '../common/assertFound';
 import { prisma } from '../common/prisma';
 import { changePreview, createPreview } from '../db/preview';
 
@@ -27,17 +28,14 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.get.route,
-    handler: (request, reply) =>
+    handler: (request) =>
       prisma.$transaction(async (tx) => {
         const { projectId } = request.params;
         const found = await tx.project.findUnique({
           where: { id: projectId },
           include: { preview: true },
         });
-        if (!found) {
-          reply.code(404);
-          return { message: `Project with id ${projectId} not found` };
-        }
+        assertFound(found, `Project with id ${projectId} not found`);
         const result: api.project.get.Response = {
           ...found,
           previewUrl: api.preview.get.url(found.preview?.id),
@@ -77,17 +75,14 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.edit.route,
-    handler: (request, reply) =>
+    handler: (request) =>
       prisma.$transaction(async (tx) => {
         const { projectId } = request.params;
         const { name, preview, withoutPreview } = request.body;
         const existing = await tx.project.findUnique({
           where: { id: projectId },
         });
-        if (!existing) {
-          reply.code(404);
-          return { message: `Project with id ${projectId} not found` };
-        }
+        assertFound(existing, `Project with id ${projectId} not found`);
         const updated = await tx.project.update({
           where: { id: projectId },
           data: { name },
@@ -108,18 +103,16 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.remove.route,
-    handler: (request, reply) =>
+    handler: (request) =>
       prisma.$transaction(async (tx) => {
         const { projectId } = request.params;
-        const existing = await tx.project.findUnique({
+        const { count } = await tx.project.deleteMany({
           where: { id: projectId },
-          include: { preview: true },
         });
-        if (!existing) {
-          reply.code(404);
-          return { message: `Project with id ${projectId} not found` };
-        }
-        await tx.project.delete({ where: { id: projectId } });
+        assertFound(
+          count || undefined,
+          `Project with id ${projectId} not found`,
+        );
         return;
       }),
   });

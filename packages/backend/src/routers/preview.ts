@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
+import { assertFound } from '../common/assertFound';
 import { prisma } from '../common/prisma';
 
 export const previewRouter: FastifyPluginAsyncZod = async (app) => {
@@ -16,11 +17,7 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
         const preview = await tx.preview.findUnique({
           where: { id: previewId },
         });
-
-        if (!preview) {
-          reply.code(404);
-          return { message: `Preview with id ${previewId} not found` };
-        }
+        assertFound(preview, `Preview with id ${previewId} not found`);
 
         const etag = crypto
           .createHash('md5')
