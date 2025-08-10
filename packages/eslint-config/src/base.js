@@ -58,6 +58,10 @@ export const baseConfig = {
         selector: 'ClassExpression',
         message: 'Do not use class expressions',
       },
+      {
+        selector: 'MethodDefinition:not([key.name=/^(constructor|get|set)$/])',
+        message: 'Do not use class methods, use arrow functions instead',
+      },
     ],
     'func-style': ['error'],
     'func-names': ['error'],
