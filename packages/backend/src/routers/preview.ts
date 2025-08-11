@@ -11,7 +11,7 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.preview.get.route,
-    handler: (request, reply) =>
+    handler: async (request, reply) =>
       prisma.$transaction(async (tx) => {
         const { previewId } = request.params;
         const preview = await tx.preview.findUnique({
@@ -32,4 +32,6 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
         return preview.data;
       }),
   });
+
+  return Promise.resolve();
 };

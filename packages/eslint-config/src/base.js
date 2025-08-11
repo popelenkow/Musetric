@@ -35,6 +35,8 @@ export const baseConfig = {
     '@typescript-eslint/no-unused-vars': ['error'],
     '@typescript-eslint/no-use-before-define': ['error'],
     '@typescript-eslint/no-useless-constructor': ['error'],
+    '@typescript-eslint/promise-function-async': 'error',
+    '@typescript-eslint/require-await': 'error',
     'func-names': ['error'],
     'func-style': ['error'],
     'import-x/order': [

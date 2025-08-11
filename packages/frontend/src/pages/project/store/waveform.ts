@@ -35,6 +35,7 @@ export const useWaveformStore = create<State>((set, get) => {
   const mount = createCallLatest(async () => {
     const pipeline = createPipeline();
     set({ pipeline });
+    return Promise.resolve();
   });
 
   const render = () => {
@@ -71,6 +72,7 @@ export const useWaveformStore = create<State>((set, get) => {
         newCanvas,
         async () => {
           render();
+          return Promise.resolve();
         },
       );
       render();

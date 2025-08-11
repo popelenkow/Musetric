@@ -13,7 +13,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.list.route,
-    handler: () =>
+    handler: async () =>
       prisma.$transaction(async (tx) => {
         const all = await tx.project.findMany({
           orderBy: { id: 'desc' },
@@ -28,7 +28,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.get.route,
-    handler: (request) =>
+    handler: async (request) =>
       prisma.$transaction(async (tx) => {
         const { projectId } = request.params;
         const found = await tx.project.findUnique({
@@ -46,7 +46,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.create.route,
-    handler: (request) =>
+    handler: async (request) =>
       prisma.$transaction(async (tx) => {
         const { song, name, preview } = request.body;
         const created = await tx.project.create({
@@ -75,7 +75,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.edit.route,
-    handler: (request) =>
+    handler: async (request) =>
       prisma.$transaction(async (tx) => {
         const { projectId } = request.params;
         const { name, preview, withoutPreview } = request.body;
@@ -103,7 +103,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.remove.route,
-    handler: (request) =>
+    handler: async (request) =>
       prisma.$transaction(async (tx) => {
         const { projectId } = request.params;
         const { count } = await tx.project.deleteMany({
@@ -116,4 +116,6 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         return;
       }),
   });
+
+  return Promise.resolve();
 };

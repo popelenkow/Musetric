@@ -11,7 +11,7 @@ export const soundRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.sound.get.route,
-    handler: (request, reply) =>
+    handler: async (request, reply) =>
       prisma.$transaction(async (tx) => {
         const { projectId, type } = request.params;
         const sound = await tx.sound.findFirst({
@@ -35,4 +35,6 @@ export const soundRouter: FastifyPluginAsyncZod = async (app) => {
         return sound.data;
       }),
   });
+
+  return Promise.resolve();
 };

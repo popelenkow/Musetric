@@ -6,7 +6,7 @@ import { mutationOptions } from '../queryClient';
 export const addOriginalSoundApi = (projectId: number) =>
   mutationOptions({
     mutationKey: ['addOriginalSoundApi', projectId],
-    mutationFn: (file: File) =>
+    mutationFn: async (file: File) =>
       api.sound.upload.request(axios, {
         params: { projectId },
         data: { file },
@@ -16,7 +16,7 @@ export const addOriginalSoundApi = (projectId: number) =>
 export const getSoundApi = (projectId: number, type: api.sound.Type) =>
   queryOptions({
     queryKey: ['getSoundApi', projectId, type],
-    queryFn: () =>
+    queryFn: async () =>
       api.sound.get.request(axios, {
         params: { projectId, type },
       }),
