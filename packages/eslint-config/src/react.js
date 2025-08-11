@@ -27,10 +27,10 @@ export default tsEslint.config({
     ...reactPlugin.configs.recommended.rules,
     ...reactPlugin.configs['jsx-runtime'].rules,
     ...reactHooksPlugin.configs.recommended.rules,
+    'jsx-quotes': ['error', 'prefer-single'],
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
     ],
-    'jsx-quotes': ['error', 'prefer-single'],
   },
 });
