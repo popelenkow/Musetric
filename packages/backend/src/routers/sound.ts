@@ -1,7 +1,7 @@
-import crypto from 'crypto';
 import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound';
+import { handleCachedFile } from '../common/cachedFile';
 import { prisma } from '../common/prisma';
 
 export const soundRouter: FastifyPluginAsyncZod = async (app) => {
@@ -22,17 +22,13 @@ export const soundRouter: FastifyPluginAsyncZod = async (app) => {
           `Sound for project ${projectId} and type ${type} not found`,
         );
 
-        const etag = crypto.createHash('md5').update(sound.data).digest('hex');
-
-        reply.headers({
-          'content-type': sound.contentType,
-          'content-disposition': `attachment; filename*=UTF-8''${encodeURIComponent(sound.filename)}`,
-          'cache-control': 'public, max-age=86400',
-          etag,
+        const isNotModified = handleCachedFile(request, reply, {
+          data: sound.data,
+          filename: sound.filename,
+          contentType: sound.contentType,
         });
 
-        if (request.headers['if-none-match'] === etag) {
-          reply.code(304);
+        if (isNotModified) {
           return;
         }
 

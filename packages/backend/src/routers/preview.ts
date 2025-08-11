@@ -1,7 +1,7 @@
-import crypto from 'crypto';
 import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound';
+import { handleCachedFile } from '../common/cachedFile';
 import { prisma } from '../common/prisma';
 
 export const previewRouter: FastifyPluginAsyncZod = async (app) => {
@@ -19,20 +19,13 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
         });
         assertFound(preview, `Preview with id ${previewId} not found`);
 
-        const etag = crypto
-          .createHash('md5')
-          .update(preview.data)
-          .digest('hex');
-
-        reply.headers({
-          'content-type': preview.contentType,
-          'content-disposition': `attachment; filename*=UTF-8''${encodeURIComponent(preview.filename)}`,
-          'cache-control': 'public, max-age=86400',
-          etag,
+        const isNotModified = handleCachedFile(request, reply, {
+          data: preview.data,
+          filename: preview.filename,
+          contentType: preview.contentType,
         });
 
-        if (request.headers['if-none-match'] === etag) {
-          reply.code(304);
+        if (isNotModified) {
           return;
         }
 
