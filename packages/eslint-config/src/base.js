@@ -28,13 +28,22 @@ export const baseConfig = {
     '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     '@typescript-eslint/init-declarations': ['error', 'always'],
     '@typescript-eslint/no-empty-function': ['error'],
-    '@typescript-eslint/no-unused-vars': ['error'],
-    '@typescript-eslint/no-useless-constructor': ['error'],
-    '@typescript-eslint/no-shadow': ['error'],
-    '@typescript-eslint/no-non-null-assertion': ['error'],
-    '@typescript-eslint/no-namespace': 'off',
     '@typescript-eslint/no-floating-promises': 'error',
+    '@typescript-eslint/no-namespace': 'off',
+    '@typescript-eslint/no-non-null-assertion': ['error'],
+    '@typescript-eslint/no-shadow': ['error'],
+    '@typescript-eslint/no-unused-vars': ['error'],
     '@typescript-eslint/no-use-before-define': ['error'],
+    '@typescript-eslint/no-useless-constructor': ['error'],
+    'func-names': ['error'],
+    'func-style': ['error'],
+    'import-x/order': [
+      'error',
+      {
+        alphabetize: { order: 'asc', caseInsensitive: true },
+        'newlines-between': 'never',
+      },
+    ],
     'no-restricted-syntax': [
       'error',
       {
@@ -69,16 +78,7 @@ export const baseConfig = {
           'Do not use method signatures in types, use arrow function types instead',
       },
     ],
-    'func-style': ['error'],
-    'func-names': ['error'],
-    'import-x/order': [
-      'error',
-      {
-        alphabetize: { order: 'asc', caseInsensitive: true },
-        'newlines-between': 'never',
-      },
-    ],
-    'simple-import-sort/exports': 'error',
     'object-shorthand': ['error', 'always'],
+    'simple-import-sort/exports': 'error',
   },
 };
