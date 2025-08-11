@@ -70,6 +70,7 @@ export const createPipeline = (options: CreatePipelineOptions): Pipeline => {
     render: createCallLatest(async (wave, progress) => {
       render(wave, progress);
       timer.finish();
+      return Promise.resolve();
     }),
     configure: (newConfig) => {
       state.config = {

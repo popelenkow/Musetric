@@ -11,14 +11,14 @@ const createCallLatestInternal = <Args extends unknown[], Result>(
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let latestFunction: () => PromiseResult;
 
-  const call: AsyncFunction<Args, Result> = (...args) => {
-    latestFunction = () => {
+  const call: AsyncFunction<Args, Result> = async (...args) => {
+    latestFunction = async () => {
       currentPromise = asyncFunction(...args);
       return currentPromise;
     };
 
     const promise = currentPromise;
-    return currentPromise.finally(() => {
+    return currentPromise.finally(async () => {
       if (promise !== currentPromise) {
         return currentPromise;
       }

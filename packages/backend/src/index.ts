@@ -55,7 +55,7 @@ export const startServer = async (): Promise<void> => {
   await registerSwagger(app);
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
-  await registerRouters(app);
+  registerRouters(app);
   await app.listen({
     port: envs.port,
     host: envs.host,

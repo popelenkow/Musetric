@@ -14,7 +14,7 @@ export const createPipeline = (
   const barStep = 3;
 
   return {
-    render: async (buffer, progress) => {
+    render: (buffer, progress) => {
       const segmentCount = Math.max(
         1,
         Math.floor(canvas.clientWidth / barStep),

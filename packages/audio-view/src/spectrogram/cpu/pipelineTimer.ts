@@ -39,7 +39,7 @@ export const createPipelineTimer = (
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         {} as Markers,
       ),
-      finish: async () => {
+      finish: () => {
         /** Nothing */
       },
     };
@@ -49,7 +49,7 @@ export const createPipelineTimer = (
 
   return {
     markers: timer.markers,
-    finish: async () => {
+    finish: () => {
       const metrics = timer.read();
       const sum = timerLabels
         .slice(0, -2)

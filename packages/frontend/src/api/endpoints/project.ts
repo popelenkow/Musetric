@@ -6,13 +6,13 @@ import { mutationOptions } from '../queryClient';
 export const getProjectsApi = () =>
   queryOptions({
     queryKey: ['getProjectsApi'],
-    queryFn: () => api.project.list.request(axios, {}),
+    queryFn: async () => api.project.list.request(axios, {}),
   });
 
 export const getProjectApi = (projectId: number) =>
   queryOptions({
     queryKey: ['getProjectApi', projectId],
-    queryFn: () =>
+    queryFn: async () =>
       api.project.get.request(axios, {
         params: { projectId },
       }),
@@ -21,7 +21,7 @@ export const getProjectApi = (projectId: number) =>
 export const createProjectApi = (queryClient: QueryClient) =>
   mutationOptions({
     mutationKey: ['createProjectApi'],
-    mutationFn: (data: api.project.create.Request) =>
+    mutationFn: async (data: api.project.create.Request) =>
       api.project.create.request(axios, {
         data,
       }),
@@ -36,7 +36,7 @@ export const createProjectApi = (queryClient: QueryClient) =>
 export const editProjectApi = (queryClient: QueryClient, projectId: number) =>
   mutationOptions({
     mutationKey: ['editProjectApi', projectId],
-    mutationFn: (data: api.project.edit.Request) =>
+    mutationFn: async (data: api.project.edit.Request) =>
       api.project.edit.request(axios, {
         params: { projectId },
         data,
@@ -51,7 +51,7 @@ export const editProjectApi = (queryClient: QueryClient, projectId: number) =>
 export const deleteProjectApi = (queryClient: QueryClient, projectId: number) =>
   mutationOptions({
     mutationKey: ['deleteProjectApi', projectId],
-    mutationFn: () =>
+    mutationFn: async () =>
       api.project.remove.request(axios, {
         params: { projectId },
       }),

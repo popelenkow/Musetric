@@ -1,6 +1,6 @@
 import { ComplexGpuBuffer } from '../complexArray';
 
-export const copyGpuBuffer = (
+export const copyGpuBuffer = async (
   device: GPUDevice,
   input: GPUBuffer,
   output: GPUBuffer,
@@ -14,7 +14,7 @@ export const copyGpuBuffer = (
   return device.queue.onSubmittedWorkDone();
 };
 
-export const copyComplexGpuBuffer = (
+export const copyComplexGpuBuffer = async (
   device: GPUDevice,
   input: ComplexGpuBuffer,
   output: ComplexGpuBuffer,
