@@ -4,4 +4,5 @@ export const envs = {
   port: process.env.PORT ? Number(process.env.PORT) : 3000,
   logLevel: process.env.LOG_LEVEL || 'info',
   protocol: process.env.PROTOCOL === 'http' ? 'http' : 'https',
+  blobsPath: process.env.BLOBS_PATH || './tmp/blobs',
 };
