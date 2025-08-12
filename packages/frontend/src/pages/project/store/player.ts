@@ -1,4 +1,6 @@
+import { api } from '@musetric/api';
 import { createAudioPlayer, AudioPlayer } from '@musetric/audio-in-out';
+import axios from 'axios';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
@@ -11,6 +13,7 @@ export type PlayerState = {
   offset: number;
   startTime: number;
   initialized: boolean;
+  currentTrackType?: 'original' | 'vocal' | 'instrumental';
 };
 
 export const initialState: PlayerState = {
@@ -21,6 +24,7 @@ export const initialState: PlayerState = {
   offset: 0,
   startTime: 0,
   initialized: false,
+  currentTrackType: undefined,
 };
 
 type Unmount = () => void;
@@ -28,6 +32,7 @@ type Unmount = () => void;
 export type PlayerActions = {
   mount: () => Unmount;
   load: (rawBuffer: Uint8Array<ArrayBufferLike>) => Promise<void>;
+  loadSmartTrack: (projectId: number) => Promise<'vocal' | 'original'>;
   play: () => Promise<void>;
   pause: () => void;
   seek: (fraction: number) => Promise<void>;
@@ -70,6 +75,30 @@ export const usePlayerStore = create<State>()(
         offset: 0,
         startTime: 0,
       });
+    },
+    loadSmartTrack: async (projectId: number) => {
+      // Try to load vocal track first
+      try {
+        const vocalBuffer = await api.sound.get.request(axios, {
+          params: { projectId, type: 'vocal' },
+        });
+        await get().load(vocalBuffer);
+        set({ currentTrackType: 'vocal' });
+        return 'vocal';
+      } catch {
+        // Fallback to original track
+        try {
+          const originalBuffer = await api.sound.get.request(axios, {
+            params: { projectId, type: 'original' },
+          });
+          await get().load(originalBuffer);
+          set({ currentTrackType: 'original' });
+          return 'original';
+        } catch (error) {
+          console.error('Failed to load any track:', error);
+          throw error;
+        }
+      }
     },
     play: async () => {
       const { player, buffer, offset } = get();

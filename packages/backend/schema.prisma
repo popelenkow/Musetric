@@ -8,7 +8,6 @@ generator client {
 }
 
 enum ProjectStage {
-  init
   pending
   progress
   done
