@@ -1,6 +1,5 @@
 import { execSync } from 'child_process';
 import { platform } from 'os';
-import { downloadModel } from './downloadModel.js';
 
 const isCheck = process.env.workspace_mode === 'check';
 const isMacOS = platform() === 'darwin';
@@ -25,10 +24,6 @@ try {
   execSync(command, {
     stdio: 'inherit',
   });
-
-  if (!isCheck) {
-    await downloadModel();
-  }
 } catch {
   process.exit(1);
 }

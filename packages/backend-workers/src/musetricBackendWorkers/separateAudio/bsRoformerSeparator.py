@@ -1,5 +1,4 @@
 import json
-import os
 import tempfile
 from typing import Dict
 
@@ -20,17 +19,15 @@ from musetricBackendWorkers.separateAudio.roformer.bsRoformer import BSRoformer
 class BSRoformerSeparator:
     def __init__(
         self,
-        modelsDir: str,
-        modelName: str,
+        modelPath: str,
+        modelConfigPath: str,
         sampleRate: int,
         outputFormat: str,
-        contentType: str,
     ):
-        self.modelPath = os.path.join(modelsDir, modelName)
-        self.configPath = os.path.join(modelsDir, modelName.replace(".ckpt", ".yaml"))
+        self.modelPath = modelPath
+        self.modelConfigPath = modelConfigPath
         self.sampleRate = sampleRate
         self.outputFormat = outputFormat
-        self.contentType = contentType
         self.device = self._getDevice()
         self.model = None
         self.config = None
@@ -48,7 +45,7 @@ class BSRoformerSeparator:
         return torch.device("cpu")
 
     def _loadConfig(self):
-        with open(self.configPath, "r") as f:
+        with open(self.modelConfigPath, "r") as f:
             return dictToNamespace(yaml.load(f, Loader=yaml.FullLoader))
 
     def _loadModel(self):
@@ -69,7 +66,7 @@ class BSRoformerSeparator:
 
     def separateAudio(
         self, sourcePath: str, vocalPath: str, instrumentalPath: str
-    ) -> Dict[str, Dict[str, str]]:
+    ) -> Dict[str, str]:
         with tempfile.TemporaryDirectory():
             self._loadModel()
 
@@ -94,15 +91,9 @@ class BSRoformerSeparator:
                         self.outputFormat,
                     )
 
-        metadata = {
-            "vocal": {
-                "filename": os.path.basename(vocalPath),
-                "contentType": self.contentType,
-            },
-            "instrumental": {
-                "filename": os.path.basename(instrumentalPath),
-                "contentType": self.contentType,
-            },
+        result = {
+            "vocal": vocalPath,
+            "instrumental": instrumentalPath,
         }
-        print(json.dumps({"type": "metadata", **metadata}), flush=True)
-        return metadata
+        print(json.dumps({"type": "result", **result}), flush=True)
+        return result

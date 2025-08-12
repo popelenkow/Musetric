@@ -10,11 +10,17 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./scripts": {
+      "monorepo": "./src/scripts/index.ts",
+      "types": "./dist/scripts/index.d.ts",
+      "import": "./dist/scripts/index.js",
+      "default": "./dist/scripts/index.js"
     }
   },
   "scripts": {
     "postinstall": "node --import tsx --conditions=monorepo scripts/install.ts",
-    "project:build": "tsc --project tsconfig.build.json",
+    "project:build": "cpx \"src/**/*.py\" dist --clean && tsc --project tsconfig.build.json",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache && uv run python scripts/check.py",
     "check:lint:fix": "eslint . --fix --cache && uv run python scripts/check.py --fix"
@@ -23,6 +29,7 @@
     "@musetric/eslint-config": "workspace:*",
     "@types/node": "24.2.1",
     "axios": "1.12.2",
+    "cpx2": "8.0.0",
     "eslint": "9.36.0",
     "tsx": "4.20.5",
     "typescript": "5.9.2"

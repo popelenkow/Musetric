@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import { basename } from 'node:path';
 import axios from 'axios';
 
@@ -11,15 +11,20 @@ const createProgressText = (
   downloaded: number,
   total: number,
 ): string => {
-  const getPercentProgress = () =>
-    `${((downloaded / total) * 100).toFixed(1)}%`;
+  const parts = [`Downloading ${fileName}...`];
 
-  const getBytesProgress = () =>
-    `(${formatBytes(downloaded)}/${formatBytes(total)} bytes)`;
+  if (total > 0) {
+    const percent = (downloaded / total) * 100;
+    const downloadedBytes = formatBytes(downloaded);
+    const totalBytes = formatBytes(total);
 
-  return total > 0
-    ? `Downloading ${fileName}... ${getPercentProgress()} ${getBytesProgress()}`
-    : `Downloading ${fileName}... ${formatBytes(downloaded)} bytes`;
+    parts.push(`${percent.toFixed(1)}%`);
+    parts.push(`(${downloadedBytes}/${totalBytes} bytes)`);
+  } else {
+    parts.push(`${formatBytes(downloaded)} bytes`);
+  }
+
+  return parts.join(' ');
 };
 
 export const downloadFile = async (
