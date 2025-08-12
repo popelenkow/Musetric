@@ -1,4 +1,6 @@
 import argparse
+import logging
+import sys
 
 from musetricBackendWorkers.common.envs import envs
 from musetricBackendWorkers.common.logger import setupLogging
@@ -37,22 +39,27 @@ def main() -> None:
     args = parseArguments()
 
     setupLogging(args.log_level)
-    ensureFfmpeg()
-    printAccelerationInfo()
-    setupTorchOptimization()
 
-    separator = BSRoformerSeparator(
-        modelsDir=envs.modelsDir,
-        modelName=envs.model,
-        sampleRate=envs.sampleRate,
-        outputFormat=envs.outputFormat,
-        contentType=envs.contentType,
-    )
-    separator.separateAudio(
-        sourcePath=args.source_path,
-        vocalPath=args.vocal_path,
-        instrumentalPath=args.instrumental_path,
-    )
+    try:
+        ensureFfmpeg()
+        printAccelerationInfo()
+        setupTorchOptimization()
+
+        separator = BSRoformerSeparator(
+            modelsDir=envs.modelsDir,
+            modelName=envs.model,
+            sampleRate=envs.sampleRate,
+            outputFormat=envs.outputFormat,
+            contentType=envs.contentType,
+        )
+        separator.separateAudio(
+            sourcePath=args.source_path,
+            vocalPath=args.vocal_path,
+            instrumentalPath=args.instrumental_path,
+        )
+    except Exception as error:
+        logging.error("Audio separation failed: %s", error)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

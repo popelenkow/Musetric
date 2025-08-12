@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 import numpy as np
@@ -9,7 +10,6 @@ def writeAudioFile(
     if audioTimeChannels.dtype != np.float32:
         audioTimeChannels = audioTimeChannels.astype(np.float32, order="C")
 
-    outputFormatLower = (outputFormat or "").strip().lower()
     ffmpegCommand = [
         "ffmpeg",
         "-f",
@@ -22,19 +22,26 @@ def writeAudioFile(
         "-",
     ]
 
-    if outputFormatLower == "flac":
+    if outputFormat == "flac":
         ffmpegCommand += ["-c:a", "flac", "-sample_fmt", "s32"]
-    elif outputFormatLower == "wav":
+    elif outputFormat == "wav":
         ffmpegCommand += ["-c:a", "pcm_f32le"]
 
-    ffmpegCommand += ["-y", outputPath]
+    ffmpegCommand += ["-f", outputFormat, "-y", outputPath]
 
     pcmInterleavedBytes = audioTimeChannels.tobytes(order="C")
 
-    subprocess.run(
-        ffmpegCommand,
-        input=pcmInterleavedBytes,
-        stdout=None,
-        stderr=None,
-        check=True,
-    )
+    os.makedirs(os.path.dirname(outputPath), exist_ok=True)
+
+    try:
+        subprocess.run(
+            ffmpegCommand,
+            input=pcmInterleavedBytes,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True,
+        )
+    except subprocess.CalledProcessError as error:
+        stderrOutput = (error.stderr or b"").decode("utf-8", errors="ignore").strip()
+        detail = f": {stderrOutput}" if stderrOutput else ""
+        raise RuntimeError(f"ffmpeg failed to write audio{detail}") from error

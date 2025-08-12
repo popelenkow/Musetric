@@ -19,12 +19,17 @@ def readAudioFile(audioFilePath: str, sampleRate: int, channels: int) -> np.ndar
         "-",
     ]
 
-    result = subprocess.run(
-        ffmpegCommand,
-        check=True,
-        stdout=subprocess.PIPE,
-        stderr=None,
-    )
+    try:
+        result = subprocess.run(
+            ffmpegCommand,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+    except subprocess.CalledProcessError as error:
+        stderrOutput = (error.stderr or b"").decode("utf-8", errors="ignore").strip()
+        detail = f": {stderrOutput}" if stderrOutput else ""
+        raise RuntimeError(f"ffmpeg failed to read audio{detail}") from error
 
     rawBytes = result.stdout
     if not rawBytes:

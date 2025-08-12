@@ -1,15 +1,24 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isLogLevel, LogLevel } from '@musetric/backend-workers';
 
 const rootPath = join(dirname(fileURLToPath(import.meta.url)), '../../');
+
+const getLogLevel = (): LogLevel => {
+  const envLogLevel = process.env.LOG_LEVEL;
+  if (envLogLevel && isLogLevel(envLogLevel)) {
+    return envLogLevel;
+  }
+  return 'info';
+};
 
 export const envs = {
   version: process.env.VERSION ?? '0.1.0',
   host: process.env.HOST ?? '0.0.0.0',
   port: process.env.PORT ? Number(process.env.PORT) : 3000,
-  logLevel: process.env.LOG_LEVEL ?? 'info',
+  logLevel: getLogLevel(),
   protocol: process.env.PROTOCOL === 'http' ? 'http' : 'https',
-  blobsPath: join(rootPath, process.env.BLOBS_PATH ?? 'tmp/blobs'),
+  blobsPath: join(rootPath, 'tmp/blobs'),
   publicPath: join(rootPath, 'public'),
   gcIntervalMs: 5 * 60 * 1000,
   blobRetentionMs: 5 * 60 * 1000,
