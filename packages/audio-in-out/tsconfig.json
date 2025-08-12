@@ -1,13 +1,9 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "module": "ES2022",
     "lib": ["ES2024", "DOM"],
-    "declaration": true,
-    "declarationMap": true,
-    "moduleResolution": "node",
     "outDir": "dist",
     "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
-  "include": ["src"]
+  "include": ["."]
 }

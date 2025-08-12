@@ -9,8 +9,8 @@
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache",
     "check:lint:fix": "eslint . --fix --cache",
-    "check:translations": "i18next -c ./i18next.parser.config.js --fail-on-update",
-    "check:translations:fix": "i18next -c ./i18next.parser.config.js"
+    "check:translations": "i18next -c ./i18next.parser.config.ts --fail-on-update",
+    "check:translations:fix": "i18next -c ./i18next.parser.config.ts"
   },
   "devDependencies": {
     "@emotion/react": "11.14.0",
