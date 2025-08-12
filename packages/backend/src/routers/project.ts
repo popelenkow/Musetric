@@ -2,6 +2,7 @@ import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound';
 import { prisma } from '../common/prisma';
+import { getSeparationProgress } from '../common/separation';
 
 export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   app.addHook('onRoute', (routeOptions) => {
@@ -17,10 +18,18 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         orderBy: { id: 'desc' },
         include: { preview: true },
       });
-      return all.map((project): api.project.list.Response[number] => ({
-        ...project,
-        previewUrl: api.preview.get.url(project.preview?.id),
-      }));
+      return all.map((project): api.project.list.Response[number] => {
+        const separationState = getSeparationProgress(project.id);
+        const actualStage = separationState ? 'progress' : project.stage;
+        return {
+          ...project,
+          stage: actualStage,
+          previewUrl: api.preview.get.url(project.preview?.id),
+          progressPercent: separationState
+            ? separationState.progress
+            : undefined,
+        };
+      });
     },
   });
 
@@ -54,7 +63,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
       return await prisma.$transaction(
         async (tx): Promise<api.project.create.Response> => {
           const created = await tx.project.create({
-            data: { name, stage: 'init' },
+            data: { name, stage: 'pending' },
           });
           const projectId = created.id;
 
@@ -148,6 +157,39 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         where: { id: projectId },
       });
       assertFound(count || undefined, `Project with id ${projectId} not found`);
+    },
+  });
+
+  app.route({
+    ...api.project.progress.route,
+    handler: async (request) => {
+      const { projectId } = request.params;
+      const project = await prisma.project.findUnique({
+        where: { id: projectId },
+        include: { sounds: true },
+      });
+      assertFound(project, `Project with id ${projectId} not found`);
+
+      const hasVocal = project.sounds.some((sound) => sound.type === 'vocal');
+      const hasInstrumental = project.sounds.some(
+        (sound) => sound.type === 'instrumental',
+      );
+
+      let progressPercent: number | undefined = undefined;
+      let actualStage = project.stage;
+
+      const separationState = getSeparationProgress(projectId);
+      if (separationState) {
+        actualStage = 'progress';
+        progressPercent = separationState.progress || 0;
+      }
+
+      return {
+        stage: actualStage,
+        progressPercent,
+        hasVocal,
+        hasInstrumental,
+      };
     },
   });
 

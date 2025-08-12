@@ -5,6 +5,7 @@ import { FC } from 'react';
 import { ProjectCardMenu } from './Menu';
 import { ProjectCardName } from './Name';
 import { ProjectCardPreview } from './Preview';
+import { StatusOverlay } from './StatusOverlay';
 
 export type ProjectCardProps = {
   projectInfo: api.project.Item;
@@ -21,7 +22,12 @@ export const ProjectCard: FC<ProjectCardProps> = (props) => {
       exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.35 } }}
       sx={{ background: 'none', boxShadow: 'none' }}
     >
-      <ProjectCardPreview projectInfo={projectInfo} />
+      <StatusOverlay
+        stage={projectInfo.stage}
+        progressPercent={projectInfo.progressPercent}
+      >
+        <ProjectCardPreview projectInfo={projectInfo} />
+      </StatusOverlay>
       <CardActions
         sx={{
           display: 'flex',

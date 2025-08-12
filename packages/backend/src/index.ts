@@ -1,10 +1,7 @@
 import { fastifyMultipart } from '@fastify/multipart';
 import { fastifyStatic } from '@fastify/static';
 import { createBlobGarbageCollector } from '@musetric/resource-utils/blobGarbageCollector';
-import {
-  BlobStorage,
-  createBlobStorage,
-} from '@musetric/resource-utils/blobStorage';
+import { createBlobStorage, BlobStorage } from '@musetric/resource-utils/blobStorage';
 import { fastify, FastifyInstance } from 'fastify';
 import {
   serializerCompiler,
@@ -15,6 +12,7 @@ import { envs } from './common/envs';
 import { logger } from './common/logger';
 import { getHttps } from './common/pems';
 import { prisma } from './common/prisma';
+import { createSeparationWorker } from './common/separation';
 import { registerSwagger } from './common/swagger';
 import { registerRouters } from './routers';
 
@@ -58,13 +56,16 @@ export const startServer = async (): Promise<void> => {
     },
   });
   app.decorate('blobStorage', blobStorage);
+  const separationWorker = createSeparationWorker(app.log);
 
   app.addHook('onReady', () => {
     blobGC.start();
+    separationWorker.start();
   });
 
   app.addHook('onClose', () => {
     blobGC.stop();
+    separationWorker.stop();
   });
   app.addHook('onRoute', (routeOptions) => {
     routeOptions.logLevel = 'warn';

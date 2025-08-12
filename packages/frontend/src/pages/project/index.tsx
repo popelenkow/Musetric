@@ -8,6 +8,7 @@ import { routes } from '../../app/router/routes';
 import { QueryPending } from '../../common/QueryView/QueryPending';
 import favicon from '../../favicon.ico';
 import { Player } from './Player';
+import { ProgressIndicator } from './ProgressIndicator';
 import { Settings } from './Settings';
 import { Spectrogram } from './Spectrogram';
 import { usePlayerStore } from './store/player';
@@ -18,10 +19,10 @@ export const ProjectPage: FC = () => {
   const { t } = useTranslation();
 
   const { projectId } = routes.project.useAssertMatch();
-  const { data } = useQuery(getSoundApi(projectId, 'original'));
+  useQuery(getSoundApi(projectId, 'original'));
 
   const init = usePlayerStore((s) => s.mount);
-  const load = usePlayerStore((s) => s.load);
+  const loadSmartTrack = usePlayerStore((s) => s.loadSmartTrack);
   const initialized = usePlayerStore((s) => s.initialized);
 
   useEffect(() => {
@@ -30,11 +31,11 @@ export const ProjectPage: FC = () => {
   }, [init]);
 
   useEffect(() => {
-    if (!initialized || !data) return;
-    void load(data);
-  }, [data, load, initialized]);
+    if (!initialized) return;
+    void loadSmartTrack(projectId);
+  }, [initialized, projectId, loadSmartTrack]);
 
-  if (!initialized || !data) {
+  if (!initialized) {
     return <QueryPending />;
   }
 
@@ -74,6 +75,7 @@ export const ProjectPage: FC = () => {
           <Waveform />
         </Box>
         <Player />
+        <ProgressIndicator projectId={projectId} />
       </Stack>
       <ThemeViewColors />
     </Stack>

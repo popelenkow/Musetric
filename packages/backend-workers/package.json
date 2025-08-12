@@ -11,7 +11,8 @@
     "postinstall": "node --import tsx scripts/install.ts",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache && uv run python scripts/check.py",
-    "check:lint:fix": "eslint . --fix --cache && uv run python scripts/check.py --fix"
+    "check:lint:fix": "eslint . --fix --cache && uv run python scripts/check.py --fix",
+    "test:separation": "tsx test-separation.ts"
   },
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
