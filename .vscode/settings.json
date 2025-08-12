@@ -1,6 +1,11 @@
 {
-  "typescript.preferences.importModuleSpecifier": "relative",
+  "editor.detectIndentation": false,
+  "editor.insertSpaces": true,
+  "editor.renderWhitespace": "all",
+  "editor.tabCompletion": "on",
   "javascript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "python.analysis.autoImportCompletions": true,
   "[javascript]": {
     "editor.tabSize": 2
   },
@@ -13,20 +18,19 @@
   "[typescriptreact]": {
     "editor.tabSize": 2
   },
-  "editor.tabCompletion": "on",
-  "editor.insertSpaces": true,
-  "editor.detectIndentation": false,
-  "editor.renderWhitespace": "all",
   "files.eol": "\n",
-  "python.analysis.autoImportCompletions": true,
-  "search.exclude": {
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.egg-info": true,
+    "**/.venv": true,
     "**/node_modules": true,
-    "**/.yarn": true,
-    "**/yarn.lock": true,
-    "**/.pnp.*": true,
-    "**/dist": true
+    "**/.yarn": true
   },
   "files.watcherExclude": {
     "**/dist/**": true
+  },
+  "search.exclude": {
+    "**/yarn.lock": true,
+    "**/dist": true
   }
 }
