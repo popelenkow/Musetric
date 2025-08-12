@@ -13,10 +13,16 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.project.list.route,
     handler: () => {
       const all = app.db.project.list();
-      return all.map((project): api.project.list.Response[number] => ({
-        ...project,
-        previewUrl: api.preview.get.url(project.preview?.id),
-      }));
+      return all.map((project): api.project.list.Response[number] => {
+        const separationProgress = app.separationWorker.getProgress(project.id);
+        const stage = separationProgress !== undefined ? 'progress' : project.stage;
+        return {
+          ...project,
+          stage,
+          previewUrl: api.preview.get.url(project.preview?.id),
+          separationProgress,
+        };
+      });
     },
   });
 

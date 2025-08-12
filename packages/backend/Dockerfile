@@ -34,6 +34,9 @@ COPY --from=builder /app/packages/backend/public ./packages/backend/public
 COPY --from=builder /app/packages/backend-db/package.json ./packages/backend-db/package.json
 COPY --from=builder /app/packages/backend-db/dist ./packages/backend-db/dist
 
+COPY --from=builder /app/packages/backend-workers/package.json ./packages/backend-workers/package.json
+COPY --from=builder /app/packages/backend-workers/dist ./packages/backend-workers/dist
+
 COPY --from=builder /app/packages/api/package.json ./packages/api/package.json
 COPY --from=builder /app/packages/api/dist ./packages/api/dist
 
