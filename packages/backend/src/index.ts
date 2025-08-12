@@ -7,10 +7,11 @@ import {
 } from 'fastify-type-provider-zod';
 import { createBlobGarbageCollector } from './common/blobGarbageCollector';
 import { killDevHost } from './common/dev';
+import { envs } from './common/envs';
 import { logger } from './common/logger';
 import { getHttps } from './common/pems';
+import { startSeparationWorker } from './common/separationWorker';
 import { registerSwagger } from './common/swagger';
-import { envs } from './envs';
 import { registerRouters } from './routers';
 
 // https://github.com/fastify/fastify-multipart/issues/574
@@ -31,6 +32,7 @@ export const startServer = async (): Promise<void> => {
 
   app.addHook('onReady', () => {
     blobGC.start();
+    startSeparationWorker(app.log);
   });
 
   app.addHook('onClose', () => {
