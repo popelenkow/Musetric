@@ -15,6 +15,7 @@ jobs:
       - run: corepack enable
       - run: corepack prepare yarn@4.9.1 --activate
       - run: yarn
+      - run: yarn check:deps
       - run: yarn check:ts
       - run: yarn check:lint
       - run: yarn check:translations

@@ -14,6 +14,8 @@
     "build:frontend": "yarn workspace @musetric/frontend build && npx ncp packages/frontend/dist packages/backend/public",
     "build:docker": "yarn workspace @musetric/backend build:docker",
     "start:docker": "yarn workspace @musetric/backend start:docker",
+    "check:deps": "yarn constraints && yarn dedupe --check",
+    "check:deps:fix": "yarn constraints --fix && yarn && yarn dedupe",
     "check:ts": "yarn workspaces foreach --all --topological run check:ts",
     "check:lint": "yarn workspaces foreach --all --topological run check:lint",
     "check:lint:fix": "yarn workspaces foreach --all --topological run check:lint:fix",
@@ -21,8 +23,7 @@
     "check:translations:fix": "yarn workspaces foreach --all --topological run check:translations:fix",
     "check:format": "prettier --check .",
     "check:format:fix": "prettier . --write",
-    "test": "yarn workspaces foreach --all --topological run test",
-    "show:peer": "yarn explain peer-requirements | npx grep-cli \"✘\""
+    "test": "yarn workspaces foreach --all --topological run test"
   },
   "devDependencies": {
     "grep-cli": "0.2.1",
