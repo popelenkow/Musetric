@@ -6,6 +6,10 @@ export type Logger = {
 };
 export type LogLevel = keyof Logger;
 
+const allLogLevels: LogLevel[] = ['debug', 'info', 'warn', 'error'];
+export const isLogLevel = (logLevel?: string): logLevel is LogLevel =>
+  allLogLevels.some((level) => level === logLevel);
+
 export const wrapLoggerWithProcessName = (
   logger: Logger,
   processName: string,

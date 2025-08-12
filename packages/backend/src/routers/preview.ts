@@ -2,7 +2,6 @@ import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound';
 import { handleCachedFile } from '../common/cachedFile';
-import { prisma } from '../common/prisma';
 
 export const previewRouter: FastifyPluginAsyncZod = async (app) => {
   app.addHook('onRoute', (opts) => {
@@ -13,7 +12,7 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.preview.get.route,
     handler: async (request, reply) => {
       const { previewId } = request.params;
-      const preview = await prisma.preview.findUnique({
+      const preview = await app.db.preview.findUnique({
         where: { id: previewId },
       });
       assertFound(preview, `Preview with id ${previewId} not found`);

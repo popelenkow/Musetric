@@ -14,12 +14,14 @@ def parseArguments():
     parser = argparse.ArgumentParser(
         description="Separate audio into vocal and instrumental parts"
     )
-    parser.add_argument("--input", required=True, help="Path to input audio file")
     parser.add_argument(
-        "--vocal-output", required=True, help="Path for vocal output file"
+        "--source-path", required=True, help="Path to source audio file"
     )
     parser.add_argument(
-        "--instrumental-output", required=True, help="Path for instrumental output file"
+        "--vocal-path", required=True, help="Path for vocal output file"
+    )
+    parser.add_argument(
+        "--instrumental-path", required=True, help="Path for instrumental output file"
     )
     parser.add_argument(
         "--log-level",
@@ -47,9 +49,9 @@ def main() -> None:
         contentType=envs.contentType,
     )
     separator.separateAudio(
-        inputPath=args.input,
-        vocalOutput=args.vocal_output,
-        instrumentalOutput=args.instrumental_output,
+        sourcePath=args.source_path,
+        vocalPath=args.vocal_path,
+        instrumentalPath=args.instrumental_path,
     )
 
 

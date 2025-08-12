@@ -2,7 +2,6 @@ import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound';
 import { handleCachedFile } from '../common/cachedFile';
-import { prisma } from '../common/prisma';
 
 export const soundRouter: FastifyPluginAsyncZod = async (app) => {
   app.addHook('onRoute', (opts) => {
@@ -13,7 +12,7 @@ export const soundRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.sound.get.route,
     handler: async (request, reply) => {
       const { projectId, type } = request.params;
-      const sound = await prisma.sound.findFirst({
+      const sound = await app.db.sound.findFirst({
         where: { projectId, type },
       });
       assertFound(

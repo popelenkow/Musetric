@@ -26,5 +26,5 @@
     "composite": true,
     "incremental": true
   },
-  "exclude": ["node_modules", "**/dist", ".venv"]
+  "exclude": ["node_modules", "**/dist", ".venv", "**/public"]
 }

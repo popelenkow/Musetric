@@ -2,11 +2,6 @@ import { envs } from '../common/envs';
 import { Logger, LogLevel, wrapLoggerWithProcessName } from '../common/logger';
 import { spawnPython } from '../common/spawnPython';
 
-export type SeparationProgress = {
-  stage: string;
-  progress: number;
-};
-
 export type SeparateAudioResultFile = {
   filename: string;
   contentType: string;
@@ -17,17 +12,17 @@ export type SeparateAudioResult = {
 };
 
 export type SeparateAudioOptions = {
-  inputPath: string;
+  sourcePath: string;
   vocalPath: string;
   instrumentalPath: string;
-  onProgress: (progress: SeparationProgress) => void;
+  onProgress: (progress: number) => void;
   logger: Logger;
   logLevel: LogLevel;
 };
 
 export const separateAudio = async (options: SeparateAudioOptions) => {
   const {
-    inputPath,
+    sourcePath,
     vocalPath,
     instrumentalPath,
     onProgress,
@@ -38,7 +33,6 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
 
   type ProgressMessage = {
     type: 'progress';
-    stage: string;
     progress: number;
   };
 
@@ -59,17 +53,14 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
   return spawnPython<SeparateAudioResult, WorkerMessage>({
     scriptPath: envs.separateScriptPath,
     args: {
-      '--input': inputPath,
-      '--vocal-output': vocalPath,
-      '--instrumental-output': instrumentalPath,
+      '--source-path': sourcePath,
+      '--vocal-path': vocalPath,
+      '--instrumental-path': instrumentalPath,
       '--log-level': logLevel,
     },
     handlers: {
       progress: (message) => {
-        onProgress({
-          stage: message.stage,
-          progress: message.progress,
-        });
+        onProgress(message.progress);
       },
       metadata: (message) => {
         metadata = {

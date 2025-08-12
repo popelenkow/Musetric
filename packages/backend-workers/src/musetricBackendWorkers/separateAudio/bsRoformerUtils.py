@@ -10,7 +10,7 @@ from musetricBackendWorkers.separateAudio.progress import reportProgress
 def updateProgress(current: int, total: int) -> None:
     if total > 0:
         progress = min(current / total, 1.0)
-        reportProgress(progress, "separating")
+        reportProgress(progress)
 
 
 def dictToNamespace(data: Any) -> Any:

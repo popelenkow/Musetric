@@ -1,7 +1,6 @@
 import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound';
-import { prisma } from '../common/prisma';
 
 export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   app.addHook('onRoute', (routeOptions) => {
@@ -13,7 +12,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   app.route({
     ...api.project.list.route,
     handler: async () => {
-      const all = await prisma.project.findMany({
+      const all = await app.db.project.findMany({
         orderBy: { id: 'desc' },
         include: { preview: true },
       });
@@ -28,7 +27,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.project.get.route,
     handler: async (request) => {
       const { projectId } = request.params;
-      const found = await prisma.project.findUnique({
+      const found = await app.db.project.findUnique({
         where: { id: projectId },
         include: { preview: true },
       });
@@ -51,10 +50,10 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         ? await app.blobStorage.addFile(preview)
         : undefined;
 
-      return await prisma.$transaction(
+      return await app.db.$transaction(
         async (tx): Promise<api.project.create.Response> => {
           const created = await tx.project.create({
-            data: { name, stage: 'init' },
+            data: { name, stage: 'pending' },
           });
           const projectId = created.id;
 
@@ -98,7 +97,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         ? await app.blobStorage.addFile(preview)
         : undefined;
 
-      return await prisma.$transaction(
+      return await app.db.$transaction(
         async (tx): Promise<api.project.edit.Response> => {
           const existing = await tx.project.findUnique({
             where: { id: projectId },
@@ -144,7 +143,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.project.remove.route,
     handler: async (request) => {
       const { projectId } = request.params;
-      const { count } = await prisma.project.deleteMany({
+      const { count } = await app.db.project.deleteMany({
         where: { id: projectId },
       });
       assertFound(count || undefined, `Project with id ${projectId} not found`);
