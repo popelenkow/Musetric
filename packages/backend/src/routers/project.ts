@@ -35,6 +35,25 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   });
 
   app.route({
+    ...api.project.status.route,
+    handler: (request, reply) => {
+      const unsubscribe = app.separationWorker.emitter.subscribe((event) => {
+        reply.sse({ data: api.project.status.stringifyEvent(event) });
+      });
+      const heartbeat = setInterval(() => {
+        reply.sse({ event: 'ping' });
+      }, 30_000);
+
+      request.socket.on('close', () => {
+        clearInterval(heartbeat);
+        unsubscribe();
+      });
+
+      reply.sse({ comment: 'connected' });
+    },
+  });
+
+  app.route({
     ...api.project.create.route,
     handler: async (request) => {
       const { song, name, preview } = request.body;
