@@ -1,5 +1,9 @@
 import { BlobStorage } from '@musetric/resource-utils/blobStorage';
 import { createCallLatest } from '@musetric/resource-utils/callLatest';
+import {
+  createEventEmitter,
+  type EventEmitter,
+} from '@musetric/resource-utils/eventEmitter';
 import { Logger, LogLevel } from '@musetric/resource-utils/logger';
 import { createScheduler, Scheduler } from '@musetric/resource-utils/scheduler';
 import { separateAudio, separationProcessName } from './separateAudio.js';
@@ -18,6 +22,14 @@ export type SeparationResult = {
 export type GetNextTask = () => SeparationTask | undefined;
 export type SaveResult = (result: SeparationResult) => void;
 
+export type SeparationWorkerStatus =
+  | { stage: 'progress'; projectId: number; progress: number }
+  | { stage: 'done'; projectId: number }
+  | { stage: 'pending'; projectId: number };
+
+export type SeparationWorkerStatusUpdates =
+  EventEmitter<SeparationWorkerStatus>;
+
 export type CreateSeparationWorkerOptions = {
   separationIntervalMs: number;
   modelPath: string;
@@ -32,7 +44,7 @@ export type CreateSeparationWorkerOptions = {
 };
 
 export type SeparationWorker = Scheduler & {
-  getProgress: (projectId: number) => number | undefined;
+  emitter: SeparationWorkerStatusUpdates;
 };
 
 export const createSeparationWorker = (
@@ -50,6 +62,8 @@ export const createSeparationWorker = (
     logLevel,
     logger,
   } = options;
+
+  const emitter = createEventEmitter<SeparationWorkerStatus>();
 
   const processAudio = async (
     blobId: string,
@@ -78,12 +92,6 @@ export const createSeparationWorker = (
     };
   };
 
-  type SeparationState = {
-    projectId: number;
-    progress: number;
-  };
-  let state: SeparationState | undefined = undefined;
-
   const run = async () => {
     const task = getNextTask();
     if (!task) {
@@ -97,14 +105,10 @@ export const createSeparationWorker = (
         'Starting separation',
       );
 
-      const currentState: SeparationState = {
-        projectId,
-        progress: 0,
-      };
-      state = currentState;
+      emitter.emit({ stage: 'progress', projectId, progress: 0 });
 
       const result = await processAudio(blobId, (progress) => {
-        currentState.progress = progress;
+        emitter.emit({ stage: 'progress', projectId, progress });
       });
 
       saveResult({
@@ -113,28 +117,28 @@ export const createSeparationWorker = (
         instrumentalBlobId: result.instrumentalBlobId,
       });
 
+      emitter.emit({ stage: 'done', projectId });
       logger.info(
         { processName: separationProcessName, projectId, blobId },
         'Finished separation',
       );
     } catch (error) {
+      emitter.emit({ stage: 'pending', projectId });
       logger.error(
         { processName: separationProcessName, projectId, blobId, error },
         'Separation failed',
       );
-    } finally {
-      state = undefined;
     }
   };
 
+  const scheduler = createScheduler(
+    createCallLatest(run),
+    separationIntervalMs,
+  );
+
   const ref: SeparationWorker = {
-    ...createScheduler(createCallLatest(run), separationIntervalMs),
-    getProgress: (projectId: number) => {
-      if (state?.projectId === projectId) {
-        return state.progress;
-      }
-      return undefined;
-    },
+    ...scheduler,
+    emitter,
   };
 
   return ref;
