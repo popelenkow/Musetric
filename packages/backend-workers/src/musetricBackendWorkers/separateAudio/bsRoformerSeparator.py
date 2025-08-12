@@ -1,6 +1,4 @@
-import json
 import tempfile
-from typing import Dict
 
 import numpy as np
 import torch
@@ -66,7 +64,7 @@ class BSRoformerSeparator:
 
     def separateAudio(
         self, sourcePath: str, vocalPath: str, instrumentalPath: str
-    ) -> Dict[str, str]:
+    ) -> None:
         with tempfile.TemporaryDirectory():
             self._loadModel()
 
@@ -90,10 +88,3 @@ class BSRoformerSeparator:
                         self.sampleRate,
                         self.outputFormat,
                     )
-
-        result = {
-            "vocal": vocalPath,
-            "instrumental": instrumentalPath,
-        }
-        print(json.dumps({"type": "result", **result}), flush=True)
-        return result
