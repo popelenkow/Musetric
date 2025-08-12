@@ -9,6 +9,7 @@ export default defineConfig({
   base: '/',
   mode: 'production',
   plugins: [react(), mkcert()],
+  envPrefix: ['VITE_', 'frontend'],
   resolve: {
     conditions: defaultClientConditions.concat('monorepo'),
   },

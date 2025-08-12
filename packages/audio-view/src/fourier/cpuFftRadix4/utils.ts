@@ -156,71 +156,71 @@ export const transform4 = (options: Transform4Options): void => {
       // Full case
       const limit = outOff + quarterLen;
       for (let i = outOff, k = 0; i < limit; i++, k += step) {
-        const A = i;
-        const B = A + quarterLen;
-        const C = B + quarterLen;
-        const D = C + quarterLen;
+        const a = i;
+        const b = a + quarterLen;
+        const c = b + quarterLen;
+        const d = c + quarterLen;
 
         // Original values
-        const Ar = signal.real[A];
-        const Ai = signal.imag[A];
-        const Br = signal.real[B];
-        const Bi = signal.imag[B];
-        const Cr = signal.real[C];
-        const Ci = signal.imag[C];
-        const Dr = signal.real[D];
-        const Di = signal.imag[D];
+        const ar = signal.real[a];
+        const ai = signal.imag[a];
+        const br = signal.real[b];
+        const bi = signal.imag[b];
+        const cr = signal.real[c];
+        const ci = signal.imag[c];
+        const dr = signal.real[d];
+        const di = signal.imag[d];
 
         // Middle values
-        const MAr = Ar;
-        const MAi = Ai;
+        const mar = ar;
+        const mai = ai;
 
         const tableBr = trigTable[k];
         const tableBi = sign * trigTable[k + 1];
-        const MBr = Br * tableBr - Bi * tableBi;
-        const MBi = Br * tableBi + Bi * tableBr;
+        const mbr = br * tableBr - bi * tableBi;
+        const mbi = br * tableBi + bi * tableBr;
 
         const tableCr = trigTable[2 * k];
         const tableCi = sign * trigTable[2 * k + 1];
-        const MCr = Cr * tableCr - Ci * tableCi;
-        const MCi = Cr * tableCi + Ci * tableCr;
+        const mcr = cr * tableCr - ci * tableCi;
+        const mci = cr * tableCi + ci * tableCr;
 
         const tableDr = trigTable[3 * k];
         const tableDi = sign * trigTable[3 * k + 1];
-        const MDr = Dr * tableDr - Di * tableDi;
-        const MDi = Dr * tableDi + Di * tableDr;
+        const mdr = dr * tableDr - di * tableDi;
+        const mdi = dr * tableDi + di * tableDr;
 
         // Pre-Final values
-        const T0r = MAr + MCr;
-        const T0i = MAi + MCi;
-        const T1r = MAr - MCr;
-        const T1i = MAi - MCi;
-        const T2r = MBr + MDr;
-        const T2i = MBi + MDi;
-        const T3r = sign * (MBr - MDr);
-        const T3i = sign * (MBi - MDi);
+        const t0r = mar + mcr;
+        const t0i = mai + mci;
+        const t1r = mar - mcr;
+        const t1i = mai - mci;
+        const t2r = mbr + mdr;
+        const t2i = mbi + mdi;
+        const t3r = sign * (mbr - mdr);
+        const t3i = sign * (mbi - mdi);
 
         // Final values
-        const FAr = T0r + T2r;
-        const FAi = T0i + T2i;
+        const far = t0r + t2r;
+        const fai = t0i + t2i;
 
-        const FCr = T0r - T2r;
-        const FCi = T0i - T2i;
+        const fcr = t0r - t2r;
+        const fci = t0i - t2i;
 
-        const FBr = T1r + T3i;
-        const FBi = T1i - T3r;
+        const fbr = t1r + t3i;
+        const fbi = t1i - t3r;
 
-        const FDr = T1r - T3i;
-        const FDi = T1i + T3r;
+        const fdr = t1r - t3i;
+        const fdi = t1i + t3r;
 
-        signal.real[A] = FAr;
-        signal.imag[A] = FAi;
-        signal.real[B] = FBr;
-        signal.imag[B] = FBi;
-        signal.real[C] = FCr;
-        signal.imag[C] = FCi;
-        signal.real[D] = FDr;
-        signal.imag[D] = FDi;
+        signal.real[a] = far;
+        signal.imag[a] = fai;
+        signal.real[b] = fbr;
+        signal.imag[b] = fbi;
+        signal.real[c] = fcr;
+        signal.imag[c] = fci;
+        signal.real[d] = fdr;
+        signal.imag[d] = fdi;
       }
     }
   }
