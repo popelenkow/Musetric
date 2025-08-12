@@ -9,6 +9,7 @@ import { https } from './services/https';
 import { logger } from './services/logger';
 import { registerMultipart } from './services/multipart';
 import { registerSchemaCompiler } from './services/schemaCompiler';
+import { registerSeparationWorker } from './services/separationWorker';
 import { registerSwagger } from './services/swagger';
 
 export const createServerApp = (): FastifyInstance => {
@@ -21,6 +22,7 @@ export const createServerApp = (): FastifyInstance => {
   registerDb(app);
   registerBlobStorage(app);
   registerBlobGarbageCollector(app);
+  registerSeparationWorker(app);
   registerMultipart(app);
   registerSchemaCompiler(app);
   registerSwagger(app);
