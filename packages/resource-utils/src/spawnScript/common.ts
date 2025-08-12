@@ -21,14 +21,21 @@ export const createTextProcessor = (
     while (text.includes('\n')) {
       const newlineIndex = text.indexOf('\n');
       const chunk = text.substring(0, newlineIndex);
-      const processedChunk = chunk.trim();
+      const line = chunk.trim();
       text = text.substring(newlineIndex + 1);
 
-      if (processedChunk) {
+      if (line) {
         try {
-          onLine(processedChunk);
+          onLine(line);
         } catch (error) {
-          logger.error({ processName, error }, 'Text processor handler error');
+          logger.error(
+            {
+              processName,
+              error,
+              line,
+            },
+            'Text processor handler error',
+          );
         }
       }
     }

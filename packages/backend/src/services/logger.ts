@@ -1,8 +1,13 @@
 import { FastifyLoggerOptions } from 'fastify';
-import type { LoggerOptions as PinoLoggerOptions } from 'pino';
+import { stdSerializers, LoggerOptions } from 'pino';
 import { envs } from '../common/envs.js';
 
-export const logger: FastifyLoggerOptions & PinoLoggerOptions = {
+export const logger: FastifyLoggerOptions & LoggerOptions = {
+  serializers: {
+    error: stdSerializers.err,
+    err: stdSerializers.err,
+  },
+  errorKey: 'error',
   transport: {
     target: 'pino-pretty',
     options: {
