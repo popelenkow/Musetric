@@ -34,6 +34,16 @@ yarn start:docker
 - **Source:** https://github.com/indutny/fft.js by Fedor Indutny (MIT)
 - **Usage:** Fast Fourier Transform - CPU implementation adapted, GPU version ported
 
+### BSRoformer Neural Network
+
+- **Source:** https://github.com/lucidrains/BS-RoFormer by Phil Wang (MIT)
+- **Usage:** Audio source separation model (adapted)
+
+### Research & Development Support
+
+- **Thanks to:** https://github.com/nomadkaraoke/python-audio-separator (MIT)
+- **Usage:** Research tool that helped validate BSRoformer approach and integration patterns
+
 ## License
 
 Musetric is [MIT licensed](https://github.com/popelenkow/Musetric/blob/main/license.md).

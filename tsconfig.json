@@ -8,6 +8,7 @@
     { "path": "packages/audio-in-out" },
     { "path": "packages/audio-view" },
     { "path": "packages/backend" },
+    { "path": "packages/backend-workers" },
     { "path": "packages/frontend" },
     { "path": "packages/spa-router" },
     { "path": "packages/resource-utils" },
