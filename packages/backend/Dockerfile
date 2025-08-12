@@ -2,7 +2,7 @@ FROM node:24.7.0-slim AS base
 WORKDIR /app
 
 RUN corepack enable
-RUN corepack prepare yarn@4.9.1 --activate
+RUN corepack prepare yarn@4.9.3 --activate
 
 COPY . .
 RUN find /app -maxdepth 3 | sed 's|/app/||g'
