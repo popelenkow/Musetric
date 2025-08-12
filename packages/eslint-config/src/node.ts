@@ -1,8 +1,8 @@
 import globals from 'globals';
 import tsEslint from 'typescript-eslint';
-import { baseConfig } from './base.js';
+import { baseConfig } from './base';
 
-export default tsEslint.config({
+export const config = tsEslint.config({
   ...baseConfig,
   languageOptions: {
     ...baseConfig.languageOptions,

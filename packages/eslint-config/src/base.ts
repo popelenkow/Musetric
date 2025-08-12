@@ -1,9 +1,9 @@
 import eslint from '@eslint/js';
 import importPlugin from 'eslint-plugin-import-x';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
-import tsEslint from 'typescript-eslint';
+import tsEslint, { ConfigWithExtends } from 'typescript-eslint';
 
-export const baseConfig = {
+export const baseConfig: ConfigWithExtends = {
   extends: [eslint.configs.recommended, ...tsEslint.configs.recommended],
   files: ['**/*.ts'],
   ignores: ['**/*.config.ts'],
