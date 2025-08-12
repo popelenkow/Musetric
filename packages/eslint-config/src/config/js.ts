@@ -59,6 +59,10 @@ export const jsConfig: ConfigWithExtends = {
         message:
           'Do not use method signatures in types, use arrow function types instead',
       },
+      {
+        selector: 'SwitchStatement',
+        message: 'Do not use switch statements',
+      },
     ],
     'no-restricted-globals': [
       'error',
