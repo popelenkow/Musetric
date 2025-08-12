@@ -34,5 +34,6 @@
   "pages.projects.fields.preview.erase": "Erase",
   "pages.projects.fields.preview.label": "Preview",
   "pages.projects.fields.preview.select": "Select",
+  "pages.projects.stages.pending": "Queued",
   "pages.projects.title": "Projects"
 }
