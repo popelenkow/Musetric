@@ -1,1 +1,1 @@
-export * from './musetricBackendWorkers/index.js';
+export * from './separateAudio/index.js';
