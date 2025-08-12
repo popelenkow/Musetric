@@ -16,10 +16,16 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         orderBy: { id: 'desc' },
         include: { preview: true },
       });
-      return all.map((project): api.project.list.Response[number] => ({
-        ...project,
-        previewUrl: api.preview.get.url(project.preview?.id),
-      }));
+      return all.map((project): api.project.list.Response[number] => {
+        const progress = app.separationWorker.getProgress(project.id);
+        const stage = progress !== undefined ? 'progress' : project.stage;
+        return {
+          ...project,
+          stage,
+          previewUrl: api.preview.get.url(project.preview?.id),
+          progressPercent: progress,
+        };
+      });
     },
   });
 
@@ -147,6 +153,34 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         where: { id: projectId },
       });
       assertFound(count || undefined, `Project with id ${projectId} not found`);
+    },
+  });
+
+  app.route({
+    ...api.project.progress.route,
+    handler: async (request) => {
+      const { projectId } = request.params;
+      const project = await app.db.project.findUnique({
+        where: { id: projectId },
+        include: { sounds: true },
+      });
+      assertFound(project, `Project with id ${projectId} not found`);
+
+      const hasVocal = project.sounds.some((sound) => sound.type === 'vocal');
+      const hasInstrumental = project.sounds.some(
+        (sound) => sound.type === 'instrumental',
+      );
+
+      const progress = app.separationWorker.getProgress(projectId);
+      const stage = progress !== undefined ? 'progress' : project.stage;
+
+      const result: api.project.progress.Response = {
+        stage,
+        progressPercent: progress,
+        hasVocal,
+        hasInstrumental,
+      };
+      return result;
     },
   });
 

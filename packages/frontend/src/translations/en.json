@@ -3,6 +3,9 @@
   "common.queryView.notFound": "Not found",
   "pages.notFound.goHome": "Back to home",
   "pages.notFound.title": "Page Not Found",
+  "pages.project.progress.init": "Awaiting separation...",
+  "pages.project.progress.inProgress": "Separating tracks...",
+  "pages.project.progress.pending": "Queued for processing...",
   "pages.project.settings.fields.fourier.label": "Fourier",
   "pages.project.settings.fields.maxFrequency.label": "Max frequency",
   "pages.project.settings.fields.minDecibel.label": "Min decibel",
@@ -34,5 +37,9 @@
   "pages.projects.fields.preview.erase": "Erase",
   "pages.projects.fields.preview.label": "Preview",
   "pages.projects.fields.preview.select": "Select",
+  "pages.projects.stages.done": "Completed",
+  "pages.projects.stages.init": "New",
+  "pages.projects.stages.pending": "Queued",
+  "pages.projects.stages.progress": "Processing",
   "pages.projects.title": "Projects"
 }
