@@ -6,7 +6,7 @@ import { ConfigWithExtends } from 'typescript-eslint';
 export const jsConfig: ConfigWithExtends = {
   extends: [eslint.configs.recommended],
   files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
-  ignores: ['**/*.config.js'],
+  ignores: ['.venv/**/*'],
   languageOptions: {
     ecmaVersion: 2024,
     sourceType: 'module',
@@ -22,6 +22,7 @@ export const jsConfig: ConfigWithExtends = {
     ...importPlugin.configs.recommended.rules,
     'func-names': ['error'],
     'func-style': ['error'],
+    'import-x/no-default-export': 'error',
     'import-x/order': [
       'error',
       {
@@ -39,10 +40,6 @@ export const jsConfig: ConfigWithExtends = {
         selector:
           "Literal[raw='null']:not(CallExpression[callee.name='useRef'] > Literal[raw='null'])",
         message: 'Do not use null',
-      },
-      {
-        selector: 'ExportDefaultDeclaration',
-        message: 'Do not use export default',
       },
       {
         selector: 'ClassDeclaration',

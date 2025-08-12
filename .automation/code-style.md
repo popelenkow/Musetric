@@ -8,11 +8,10 @@ Before starting any development work, you MUST read and understand the coding ru
 
 ### Python Coding Standards
 
-Python code MUST be syntactically similar to TypeScript wherever possible:
+Python code MUST follow PEP 8 standards with the following exception:
 
-- ALL naming must use camelCase (not snake_case)
-- Functions: `getUserData()`, `processAudioFile()`
-- Variables: `userName`, `audioBuffer`, `maxRetries`
-- Constants: `maxFileSize`, `defaultTimeout` (not UPPER_SNAKE_CASE)
-- Class names: `AudioProcessor`, `DataValidator`
-- File names: `audioProcessor.py`, `dataValidator.py`
+- ALL constants must use camelCase (not UPPER_SNAKE_CASE)
+- Functions: `get_user_data()`, `process_audio_file()` (snake_case per PEP 8)
+- Variables: `user_name`, `audio_buffer`, `max_retries` (snake_case per PEP 8)
+- Class names: `AudioProcessor`, `DataValidator` (PascalCase per PEP 8)
+- File names: `audio_processor.py`, `data_validator.py` (snake_case per PEP 8)
