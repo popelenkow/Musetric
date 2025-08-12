@@ -8,13 +8,13 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { api } from '@musetric/api';
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { routes } from '../../../../app/router/routes.js';
+import type { ProjectListItem } from '../../../../api/endpoints/project.js';
 
 export type ProjectCardMenuProps = {
-  projectInfo: api.project.Item;
+  projectInfo: ProjectListItem;
 };
 export const ProjectCardMenu: FC<ProjectCardMenuProps> = (props) => {
   const { projectInfo } = props;

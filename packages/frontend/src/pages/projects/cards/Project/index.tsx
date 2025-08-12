@@ -1,13 +1,14 @@
 import { Card, CardActions } from '@mui/material';
-import { api } from '@musetric/api';
 import { motion } from 'framer-motion';
 import { FC } from 'react';
+import type { ProjectListItem } from '../../../../api/endpoints/project.js';
 import { ProjectCardMenu } from './Menu.js';
 import { ProjectCardName } from './Name.js';
 import { ProjectCardPreview } from './Preview.js';
+import { StatusOverlay } from './StatusOverlay.js';
 
 export type ProjectCardProps = {
-  projectInfo: api.project.Item;
+  projectInfo: ProjectListItem;
 };
 export const ProjectCard: FC<ProjectCardProps> = (props) => {
   const { projectInfo } = props;
@@ -21,7 +22,12 @@ export const ProjectCard: FC<ProjectCardProps> = (props) => {
       exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.35 } }}
       sx={{ background: 'none', boxShadow: 'none' }}
     >
-      <ProjectCardPreview projectInfo={projectInfo} />
+      <StatusOverlay
+        stage={projectInfo.stage}
+        separationProgress={projectInfo.separationProgress}
+      >
+        <ProjectCardPreview projectInfo={projectInfo} />
+      </StatusOverlay>
       <CardActions
         sx={{
           display: 'flex',

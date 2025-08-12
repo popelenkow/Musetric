@@ -3,10 +3,17 @@ import { QueryClient, queryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 import { mutationOptions } from '../queryClient.js';
 
+export type ProjectListResponse = api.project.list.Response;
+export type ProjectListItem = ProjectListResponse[number] & {
+  separationProgress?: number;
+};
+export type ProjectListData = ProjectListItem[];
+
 export const getProjectsApi = () =>
-  queryOptions({
-    queryKey: ['getProjectsApi'],
+  queryOptions<ProjectListResponse, unknown, ProjectListData>({
+    queryKey: ['getProjectsApi'] as const,
     queryFn: async () => api.project.list.request(axios, {}),
+    select: (projects) => projects as ProjectListData,
   });
 
 export const getProjectApi = (projectId: number) =>
