@@ -89,13 +89,14 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.remove.route,
-    handler: (request) => {
+    handler: (request, reply) => {
       const { projectId } = request.params;
       const isRemoved = app.db.project.remove(projectId);
       assertFound(
         isRemoved || undefined,
         `Project with id ${projectId} not found`,
       );
+      reply.status(200).send();
     },
   });
 
