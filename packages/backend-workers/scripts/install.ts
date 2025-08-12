@@ -3,6 +3,7 @@ import { platform } from 'os';
 
 const isCheck = process.env.workspace_mode === 'check';
 const isBuild = process.env.workspace_mode === 'build';
+const isDocker = process.env.workspace_mode === 'docker';
 const isMacOS = platform() === 'darwin';
 
 const hasCudaSupport = (): boolean => {
@@ -17,7 +18,7 @@ const hasCudaSupport = (): boolean => {
   }
 };
 
-try {
+const syncUv = () => {
   const isCuda = hasCudaSupport();
   const frozen = isCheck || isBuild ? ' --frozen' : '';
   const groupCheck = isBuild ? '' : ' --group check';
@@ -27,6 +28,12 @@ try {
   execSync(command, {
     stdio: 'inherit',
   });
+};
+
+try {
+  if (!isDocker) {
+    syncUv();
+  }
 } catch {
   process.exit(1);
 }

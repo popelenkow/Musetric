@@ -22,6 +22,7 @@
     "@fastify/swagger-ui": "5.2.3",
     "@musetric/api": "workspace:*",
     "@musetric/backend-db": "workspace:*",
+    "@musetric/backend-workers": "workspace:*",
     "@musetric/resource-utils": "workspace:*",
     "fastify": "5.4.0",
     "fastify-type-provider-zod": "6.0.0",
