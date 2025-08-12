@@ -8,6 +8,7 @@ export const itemSchema = z.object({
   name: z.string().min(3),
   stage: z.enum(['init', 'pending', 'progress', 'done']),
   previewUrl: z.string().optional(),
+  progressPercent: z.number().min(0).max(100).optional(),
 });
 export type Item = z.infer<typeof itemSchema>;
 
@@ -90,6 +91,26 @@ export namespace remove {
     paramsSchema: z.object({ projectId: z.number() }),
     requestSchema: z.void(),
     responseSchema: z.void(),
+  });
+  export const route = fastifyRoute(base);
+  export const request = axiosRequest(base);
+  export type Params = z.infer<typeof base.paramsSchema>;
+  export type Request = z.infer<typeof base.requestSchema>;
+  export type Response = z.infer<typeof base.responseSchema>;
+}
+
+export namespace progress {
+  export const base = createApiRoute({
+    method: 'get',
+    path: '/api/project/:projectId/progress',
+    paramsSchema: z.object({ projectId: z.number() }),
+    requestSchema: z.void(),
+    responseSchema: z.object({
+      stage: z.enum(['init', 'pending', 'progress', 'done']),
+      progressPercent: z.number().min(0).max(100).optional(),
+      hasVocal: z.boolean(),
+      hasInstrumental: z.boolean(),
+    }),
   });
   export const route = fastifyRoute(base);
   export const request = axiosRequest(base);

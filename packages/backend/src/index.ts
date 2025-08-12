@@ -10,6 +10,7 @@ import { createBlobGarbageCollector } from './common/blobGarbageCollector';
 import { envs } from './common/envs';
 import { logger } from './common/logger';
 import { getHttps } from './common/pems';
+import { startSeparationWorker } from './common/separationWorker';
 import { registerSwagger } from './common/swagger';
 import { registerRouters } from './routers';
 
@@ -31,6 +32,7 @@ export const startServer = async (): Promise<void> => {
 
   app.addHook('onReady', () => {
     blobGC.start();
+    startSeparationWorker();
   });
 
   app.addHook('onClose', () => {

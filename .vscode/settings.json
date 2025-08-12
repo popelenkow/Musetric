@@ -6,6 +6,10 @@
   "javascript.preferences.importModuleSpecifier": "relative",
   "typescript.preferences.importModuleSpecifier": "relative",
   "python.analysis.autoImportCompletions": true,
+  "python.analysis.extraPaths": [
+    "./packages/backend-workers/.venv/Lib/site-packages",
+    "./packages/backend-workers/src"
+  ],
   "[javascript]": {
     "editor.tabSize": 2
   },

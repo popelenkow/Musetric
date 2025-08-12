@@ -1,0 +1,18 @@
+{
+  "name": "@musetric/backend-workers",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "postinstall": "node scripts/install.js",
+    "check:ts": "tsc --noEmit",
+    "check:lint": "eslint . --cache && uv run check-lint",
+    "check:lint:fix": "eslint . --fix --cache && uv run check-lint-fix"
+  },
+  "devDependencies": {
+    "@musetric/eslint-config": "workspace:*",
+    "@types/node": "24.2.1",
+    "eslint": "9.33.0",
+    "typescript": "5.9.2"
+  }
+}

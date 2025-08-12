@@ -1,0 +1,53 @@
+[project]
+name = "musetric-backend-workers"
+version = "0.1.0"
+description = "Musetric Backend Workers"
+authors = [{ name = "Vladlen Popelenkov", email = "popelenkow@gmail.com" }]
+requires-python = "==3.12.6"
+dependencies = [
+    "audio-separator[gpu]==0.35.2",
+    "torch==2.4.1",
+    "torchaudio==2.4.1",
+    "onnxruntime-gpu==1.22.0"
+]
+
+[dependency-groups]
+dev = [
+    "black==25.1.0",
+    "isort==6.0.1",
+    "ruff==0.11.10"
+]
+
+[[tool.uv.index]]
+name = "pytorch-cuda"
+url = "https://download.pytorch.org/whl/cu121"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cuda" }
+torchaudio = { index = "pytorch-cuda" }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+check-lint = "scripts.check:check"
+check-lint-fix = "scripts.check:fix"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/separate", "scripts"]
+
+[tool.black]
+exclude = ".venv"
+
+[tool.isort]
+profile = "black"
+skip = [".venv"]
+
+[tool.ruff]
+exclude = [".venv"]
+lint.select = ["TID"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
