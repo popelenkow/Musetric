@@ -1,11 +1,12 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isLogLevel, LogLevel } from '@musetric/backend-workers';
 
 const rootPath = join(dirname(fileURLToPath(import.meta.url)), '../../');
 
-const getLogLevel = () => {
+const getLogLevel = (): LogLevel => {
   const envLogLevel = process.env.LOG_LEVEL;
-  if (envLogLevel) {
+  if (envLogLevel && isLogLevel(envLogLevel)) {
     return envLogLevel;
   }
   return 'info';
@@ -22,4 +23,5 @@ export const envs = {
   databasePath: join(rootPath, 'tmp/app.db'),
   gcIntervalMs: 5 * 60 * 1000,
   blobRetentionMs: 5 * 60 * 1000,
+  separationIntervalMs: 10 * 1000,
 };

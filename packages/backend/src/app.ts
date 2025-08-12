@@ -24,6 +24,7 @@ export const createServerApp = (): FastifyInstance => {
   registerDb(app);
   registerBlobStorage(app);
   registerBlobGarbageCollector(app);
+  registerSeparationWorker(app);
   registerMultipart(app);
   registerSchemaCompiler(app);
   registerSwagger(app);

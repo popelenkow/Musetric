@@ -22,6 +22,7 @@
     "@fastify/swagger-ui": "5.2.3",
     "@musetric/api": "workspace:*",
     "@musetric/backend-db": "workspace:*",
+    "@musetric/backend-workers": "workspace:*",
     "@musetric/eslint-config": "workspace:*",
     "@musetric/kill-process": "workspace:*",
     "@musetric/resource-utils": "workspace:*",

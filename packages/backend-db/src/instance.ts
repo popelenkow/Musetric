@@ -21,6 +21,7 @@ export const createInstance = (databasePath: string) => {
     project: project.createInstance(database),
     preview: preview.createInstance(database),
     sound: sound.createInstance(database),
+    separation: separation.createInstance(database),
     blob: blob.createInstance(database),
     disconnect: () => {
       if (database.isOpen) {

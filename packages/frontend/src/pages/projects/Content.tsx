@@ -8,7 +8,21 @@ import { PlaceholderCard } from './cards/Placeholder.js';
 import { ProjectCard } from './cards/Project/index.js';
 
 export const ProjectsContent: FC = () => {
-  const projectList = useQuery(getProjectsApi());
+  const projectList = useQuery({
+    ...getProjectsApi(),
+    refetchInterval: (query) => {
+      const projects = query.state.data;
+      if (!projects || projects.length === 0) {
+        return 1000;
+      }
+
+      const allCompleted = projects.every(
+        (project) => project.stage === 'done',
+      );
+      return allCompleted ? false : 1000;
+    },
+    refetchIntervalInBackground: true,
+  });
 
   if (projectList.isError) {
     return <QueryError error={projectList.error} />;
