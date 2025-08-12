@@ -1,6 +1,8 @@
-import { ComplexArray } from '../../common';
+// Based on FFT.js by Fedor Indutny (MIT License)
+// Source: https://github.com/indutny/fft.js
+// Adapted for TypeScript and Musetric project
 
-/* Licensed by MIT. Based on https://github.com/indutny/fft.js/tree/4a18cf88fcdbd4ad5acca6eaea06a0b462047835 */
+import { ComplexArray } from '../../common';
 
 type SingleTransform2Options = {
   signal: ComplexArray;

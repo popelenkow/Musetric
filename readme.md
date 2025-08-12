@@ -27,6 +27,13 @@ yarn build:docker
 yarn start:docker
 ```
 
+## Third-party Components
+
+### FFT Algorithm (CPU & GPU)
+
+- **Source:** https://github.com/indutny/fft.js by Fedor Indutny (MIT)
+- **Usage:** Fast Fourier Transform - CPU implementation adapted, GPU version ported
+
 ## License
 
 Musetric is [MIT licensed](https://github.com/popelenkow/Musetric/blob/main/license.md).
