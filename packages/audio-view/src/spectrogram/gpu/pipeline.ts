@@ -1,4 +1,4 @@
-import { createCallLatest } from '../../common';
+import { createCallLatest } from '@musetric/resource-utils';
 import { GpuFourierMode, gpuFouriers } from '../../fourier';
 import { Pipeline } from '../pipeline';
 import { createDecibelify } from './decibelify';
