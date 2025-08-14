@@ -1,3 +1,8 @@
+import {
+  ControlledPromise,
+  createControlledPromise,
+} from './controlledPromise';
+
 type AsyncFunction<Args extends unknown[], Result> = (
   ...args: Args
 ) => Promise<Result>;
@@ -5,28 +10,41 @@ type AsyncFunction<Args extends unknown[], Result> = (
 const createCallLatestInternal = <Args extends unknown[], Result>(
   asyncFunction: AsyncFunction<Args, Result>,
 ): AsyncFunction<Args, Result> => {
-  type PromiseResult = Promise<Result>;
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  let currentPromise = Promise.resolve() as PromiseResult;
-  // eslint-disable-next-line @typescript-eslint/init-declarations
-  let latestFunction: () => PromiseResult;
-
-  const call: AsyncFunction<Args, Result> = async (...args) => {
-    latestFunction = async () => {
-      currentPromise = asyncFunction(...args);
-      return currentPromise;
-    };
-
-    const promise = currentPromise;
-    return currentPromise.finally(async () => {
-      if (promise !== currentPromise) {
-        return currentPromise;
-      }
-      return latestFunction();
-    });
+  let currentPromise: ControlledPromise<Result> | undefined = undefined;
+  let nextPromise: ControlledPromise<Result> | undefined = undefined;
+  let call = () => {
+    /** Nothing */
   };
 
-  return call;
+  const getPromise = () => {
+    if (!currentPromise) {
+      currentPromise = createControlledPromise<Result>();
+      return [currentPromise, true] as const;
+    }
+    if (!nextPromise) {
+      nextPromise = createControlledPromise<Result>();
+    }
+    return [nextPromise, false] as const;
+  };
+
+  return async (...args: Args): Promise<Result> => {
+    const [promise, isCallRightNow] = getPromise();
+    call = () => {
+      void asyncFunction(...args)
+        .then(promise.resolve)
+        .finally(() => {
+          currentPromise = nextPromise;
+          nextPromise = undefined;
+          if (currentPromise) {
+            call();
+          }
+        });
+    };
+    if (isCallRightNow) {
+      call();
+    }
+    return promise.promise;
+  };
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

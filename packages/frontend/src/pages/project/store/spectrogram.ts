@@ -5,7 +5,7 @@ import {
   subscribeResizeObserver,
   ViewSize,
 } from '@musetric/audio-view';
-import { createCallLatest } from '@musetric/resource-utils';
+import { createCallLatest } from '@musetric/resource-utils/callLatest';
 import { create } from 'zustand';
 import { envs } from '../../../common/envs';
 import { getGpuDevice } from '../../../common/gpu';

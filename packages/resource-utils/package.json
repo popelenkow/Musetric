@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "license": "MIT",
   "type": "module",
-  "main": "src/index.ts",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
   "scripts": {
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache",
-    "fix:lint": "eslint . --fix --cache"
+    "fix:lint": "eslint . --fix --cache",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
