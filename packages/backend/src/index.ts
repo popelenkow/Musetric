@@ -6,6 +6,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
+import { createBlobGarbageCollector } from './common/blobGarbageCollector';
 import { envs } from './common/envs';
 import { logger } from './common/logger';
 import { getHttps } from './common/pems';
@@ -24,6 +25,16 @@ export const startServer = async (): Promise<void> => {
   const app: FastifyInstance = fastify({
     logger,
     https: getHttps(),
+  });
+
+  const blobGC = createBlobGarbageCollector();
+
+  app.addHook('onReady', () => {
+    blobGC.start();
+  });
+
+  app.addHook('onClose', () => {
+    blobGC.stop();
   });
   app.addHook('onRoute', (routeOptions) => {
     routeOptions.logLevel = 'warn';

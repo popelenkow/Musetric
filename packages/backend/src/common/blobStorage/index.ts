@@ -1,14 +1,13 @@
-import crypto, { randomUUID } from 'crypto';
+import { randomUUID } from 'crypto';
 import fs from 'fs/promises';
 import path from 'path';
-import { envs } from './envs';
+import { envs } from '../envs';
+import {
+  getBlobPath,
+  getDirectoryShardPaths,
+  getDirectoriesBlobIds,
+} from './common';
 
-const getBlobPath = (rootPath: string, blobId: string) => {
-  const hash = crypto.createHash('sha256').update(blobId).digest('hex');
-  const level1 = hash.substring(0, 2);
-  const level2 = hash.substring(2, 4);
-  return path.join(rootPath, level1, level2, blobId);
-};
 export type BlobFile = {
   blobId: string;
   filename: string;
@@ -20,8 +19,8 @@ export type BlobStorage = {
   get: (blobId: string) => Promise<Buffer | undefined>;
   remove: (blobId: string) => Promise<void>;
   exists: (blobId: string) => Promise<boolean>;
+  getAllBlobIds: () => Promise<string[]>;
 };
-
 export const createBlobStorage = (rootPath: string): BlobStorage => {
   const ref: BlobStorage = {
     add: async (buffer) => {
@@ -58,6 +57,11 @@ export const createBlobStorage = (rootPath: string): BlobStorage => {
         () => true,
         () => false,
       );
+    },
+    getAllBlobIds: async () => {
+      const shardPaths = await getDirectoryShardPaths(rootPath);
+      const blobIds = await getDirectoriesBlobIds(shardPaths);
+      return blobIds;
     },
   };
 
