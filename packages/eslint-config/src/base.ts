@@ -38,6 +38,13 @@ export const baseConfig: ConfigWithExtends = {
     '@typescript-eslint/no-unused-vars': ['error'],
     '@typescript-eslint/no-use-before-define': ['error'],
     '@typescript-eslint/no-useless-constructor': ['error'],
+    '@typescript-eslint/naming-convention': [
+      'error',
+      {
+        selector: 'variable',
+        format: ['camelCase', 'PascalCase'],
+      },
+    ],
     '@typescript-eslint/promise-function-async': 'error',
     '@typescript-eslint/require-await': 'error',
     'func-names': ['error'],
