@@ -10,7 +10,10 @@ export const baseConfig: ConfigWithExtends = {
   languageOptions: {
     ecmaVersion: 2024,
     sourceType: 'module',
-    parserOptions: { project: true },
+    parserOptions: {
+      project: true,
+      tsconfigRootDir: process.cwd(),
+    },
   },
   plugins: {
     'import-x': importPlugin,
