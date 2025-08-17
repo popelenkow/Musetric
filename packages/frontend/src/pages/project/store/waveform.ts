@@ -1,8 +1,5 @@
-import {
-  createCallLatest,
-  waveform,
-  subscribeResizeObserver,
-} from '@musetric/audio-view';
+import { waveform, subscribeResizeObserver } from '@musetric/audio-view';
+import { createCallLatest } from '@musetric/resource-utils';
 import { create } from 'zustand';
 import { usePlayerStore } from './player';
 import { useSettingsStore } from './settings';

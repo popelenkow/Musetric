@@ -1291,6 +1291,7 @@ __metadata:
   resolution: "@musetric/audio-view@workspace:packages/audio-view"
   dependencies:
     "@musetric/eslint-config": "workspace:*"
+    "@musetric/resource-utils": "workspace:*"
     "@vitest/browser": "npm:3.2.4"
     "@webgpu/types": "npm:0.1.64"
     eslint: "npm:9.33.0"
@@ -1417,6 +1418,17 @@ __metadata:
 "@musetric/python-backend@workspace:packages/python-backend":
   version: 0.0.0-use.local
   resolution: "@musetric/python-backend@workspace:packages/python-backend"
+  languageName: unknown
+  linkType: soft
+
+"@musetric/resource-utils@workspace:*, @musetric/resource-utils@workspace:packages/resource-utils":
+  version: 0.0.0-use.local
+  resolution: "@musetric/resource-utils@workspace:packages/resource-utils"
+  dependencies:
+    "@musetric/eslint-config": "workspace:*"
+    eslint: "npm:9.33.0"
+    typescript: "npm:5.9.2"
+    vitest: "npm:3.2.4"
   languageName: unknown
   linkType: soft
 
