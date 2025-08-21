@@ -1,4 +1,4 @@
-import { ComplexArray } from '../../src';
+import { ComplexArray } from '../../../common';
 
 export type FourierFixture = {
   name: string;

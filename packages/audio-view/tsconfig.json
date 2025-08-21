@@ -6,7 +6,7 @@
     "jsx": "react-jsx",
     "declaration": true,
     "declarationMap": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "outDir": "dist",
     "types": ["@webgpu/types"],
     "tsBuildInfoFile": "tsconfig.tsbuildinfo"
