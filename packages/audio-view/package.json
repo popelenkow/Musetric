@@ -5,7 +5,7 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "postinstall": "node ./scripts/install-playwright.js",
+    "postinstall": "node ./scripts/install.js",
     "build": "tsc",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache",
