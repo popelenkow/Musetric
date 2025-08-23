@@ -1311,6 +1311,7 @@ __metadata:
     "@fastify/swagger-ui": "npm:5.2.3"
     "@musetric/api": "workspace:*"
     "@musetric/eslint-config": "workspace:*"
+    "@musetric/resource-utils": "workspace:*"
     "@prisma/client": "npm:6.13.0"
     "@types/node": "npm:24.2.1"
     axios: "npm:1.11.0"

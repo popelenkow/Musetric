@@ -13,8 +13,8 @@ packages/**
 !packages/api/**
 !packages/eslint-config/
 !packages/eslint-config/**
-!packages/fastify-type-provider-zod/
-!packages/fastify-type-provider-zod/**
+!packages/resource-utils/
+!packages/resource-utils/**
 
 **/Dockerfile
 **/*.dockerignore

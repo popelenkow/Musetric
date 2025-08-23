@@ -19,6 +19,7 @@
     "@fastify/swagger-ui": "5.2.3",
     "@musetric/api": "workspace:*",
     "@musetric/eslint-config": "workspace:*",
+    "@musetric/resource-utils": "workspace:*",
     "@prisma/client": "6.13.0",
     "@types/node": "24.2.1",
     "axios": "1.11.0",
