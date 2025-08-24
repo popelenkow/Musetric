@@ -9,7 +9,7 @@
     "start:docker": "docker compose up -d",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache",
-    "fix:lint": "eslint . --fix --cache",
+    "check:lint:fix": "eslint . --fix --cache",
     "studio:db": "prisma studio"
   },
   "devDependencies": {
