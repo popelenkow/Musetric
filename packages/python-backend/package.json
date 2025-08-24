@@ -5,6 +5,6 @@
   "type": "module",
   "scripts": {
     "dev-ignore": "uv run dev.py 3001",
-    "lint:fix": "uv run lint.py"
+    "check:lint:fix": "uv run lint.py"
   }
 }
