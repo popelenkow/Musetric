@@ -1,12 +1,13 @@
 import crypto from 'crypto';
 import fs from 'fs/promises';
 import path from 'path';
+import { envs } from '../../envs';
 
-export const getBlobPath = (rootPath: string, blobId: string) => {
+export const getBlobPath = (blobId: string) => {
   const hash = crypto.createHash('sha256').update(blobId).digest('hex');
   const level1 = hash.substring(0, 2);
   const level2 = hash.substring(2, 4);
-  return path.join(rootPath, level1, level2, blobId);
+  return path.join(envs.blobsPath, level1, level2, blobId);
 };
 
 const getSubDirectoryPaths = async (
@@ -37,9 +38,8 @@ const getDirectoryBlobIds = async (
     .map((entry) => entry.name);
 };
 
-export const getDirectoryShardPaths = async (
-  rootPath: string,
-): Promise<string[]> => {
+export const getDirectoryShardPaths = async (): Promise<string[]> => {
+  const rootPath = envs.blobsPath;
   if (!(await isDirectoryExists(rootPath))) {
     return [];
   }

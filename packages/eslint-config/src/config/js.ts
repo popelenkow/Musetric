@@ -6,7 +6,7 @@ import { ConfigWithExtends } from 'typescript-eslint';
 export const jsConfig: ConfigWithExtends = {
   extends: [eslint.configs.recommended],
   files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
-  ignores: ['.venv/**/*'],
+  ignores: ['.venv/**/*', 'dist/**/*'],
   languageOptions: {
     ecmaVersion: 2024,
     sourceType: 'module',
@@ -58,6 +58,31 @@ export const jsConfig: ConfigWithExtends = {
         selector: 'TSMethodSignature',
         message:
           'Do not use method signatures in types, use arrow function types instead',
+      },
+    ],
+    'no-restricted-globals': [
+      'error',
+      {
+        name: '__dirname',
+        message:
+          'Use import.meta.url with fileURLToPath() instead of __dirname in ES modules',
+      },
+      {
+        name: '__filename',
+        message: 'Use import.meta.url instead of __filename in ES modules',
+      },
+      {
+        name: 'require',
+        message: 'Use import statements instead of require() in ES modules',
+      },
+      {
+        name: 'exports',
+        message: 'Use export statements instead of exports in ES modules',
+      },
+      {
+        name: 'module',
+        message:
+          'Use export statements instead of module.exports in ES modules',
       },
     ],
     'object-shorthand': ['error', 'always'],

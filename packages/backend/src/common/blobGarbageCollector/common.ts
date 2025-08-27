@@ -1,7 +1,6 @@
 import fs from 'fs/promises';
 import { blobStorage } from '../blobStorage';
 import { getBlobPath } from '../blobStorage/common';
-import { envs } from '../envs';
 import { prisma } from '../prisma';
 
 export const gcTimeoutMs = 5 * 60 * 1000;
@@ -9,7 +8,8 @@ const minAgeMs = 5 * 60 * 1000;
 
 const isOldBlob = async (blobId: string): Promise<boolean> => {
   const now = Date.now();
-  const stat = await fs.stat(getBlobPath(envs.blobsPath, blobId));
+  const blobPath = getBlobPath(blobId);
+  const stat = await fs.stat(blobPath);
   const ageMs = now - stat.mtimeMs;
   return ageMs >= minAgeMs;
 };

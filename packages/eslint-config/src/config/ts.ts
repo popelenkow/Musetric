@@ -9,6 +9,7 @@ export const tsConfig: ConfigWithExtends = {
     ...jsConfig.languageOptions,
     parserOptions: {
       project: ['./tsconfig.json'],
+      tsconfigRootDir: process.cwd(),
     },
   },
   settings: {

@@ -1,7 +1,6 @@
 import { randomUUID } from 'crypto';
 import fs from 'fs/promises';
 import path from 'path';
-import { envs } from '../envs';
 import {
   getBlobPath,
   getDirectoryShardPaths,
@@ -21,11 +20,11 @@ export type BlobStorage = {
   exists: (blobId: string) => Promise<boolean>;
   getAllBlobIds: () => Promise<string[]>;
 };
-export const createBlobStorage = (rootPath: string): BlobStorage => {
+export const createBlobStorage = (): BlobStorage => {
   const ref: BlobStorage = {
     add: async (buffer) => {
       const blobId = randomUUID();
-      const blobPath = getBlobPath(rootPath, blobId);
+      const blobPath = getBlobPath(blobId);
       const shardPath = path.dirname(blobPath);
 
       await fs.mkdir(shardPath, { recursive: true });
@@ -44,22 +43,22 @@ export const createBlobStorage = (rootPath: string): BlobStorage => {
       };
     },
     get: async (blobId) => {
-      const blobPath = getBlobPath(rootPath, blobId);
+      const blobPath = getBlobPath(blobId);
       return fs.readFile(blobPath).catch(() => undefined);
     },
     remove: async (blobId) => {
-      const blobPath = getBlobPath(rootPath, blobId);
+      const blobPath = getBlobPath(blobId);
       await fs.unlink(blobPath);
     },
     exists: async (blobId) => {
-      const blobPath = getBlobPath(rootPath, blobId);
+      const blobPath = getBlobPath(blobId);
       return fs.access(blobPath).then(
         () => true,
         () => false,
       );
     },
     getAllBlobIds: async () => {
-      const shardPaths = await getDirectoryShardPaths(rootPath);
+      const shardPaths = await getDirectoryShardPaths();
       const blobIds = await getDirectoriesBlobIds(shardPaths);
       return blobIds;
     },
@@ -68,4 +67,4 @@ export const createBlobStorage = (rootPath: string): BlobStorage => {
   return ref;
 };
 
-export const blobStorage = createBlobStorage(envs.blobsPath);
+export const blobStorage = createBlobStorage();
