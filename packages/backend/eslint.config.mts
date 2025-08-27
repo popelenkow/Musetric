@@ -1,7 +1,7 @@
-import { config } from '@musetric/eslint-config/node';
+import { config } from '@musetric/eslint-config';
 export default [
+  ...config('node'),
   {
     ignores: ['**/public/**'],
   },
-  ...config,
 ];

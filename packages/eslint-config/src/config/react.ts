@@ -1,29 +1,27 @@
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactRefreshPlugin from 'eslint-plugin-react-refresh';
-import globals from 'globals';
-import tsEslint from 'typescript-eslint';
-import { baseConfig } from './base';
+import { ConfigWithExtends } from 'typescript-eslint';
+import { tsConfig } from './ts';
 
-export const config = tsEslint.config({
-  ...baseConfig,
+export const reactConfig: ConfigWithExtends = {
+  ...tsConfig,
   files: ['**/*.{ts,tsx}'],
   languageOptions: {
-    ...baseConfig.languageOptions,
-    globals: globals.browser,
+    ...tsConfig.languageOptions,
   },
   plugins: {
-    ...baseConfig.plugins,
+    ...tsConfig.plugins,
     react: reactPlugin,
     'react-hooks': reactHooksPlugin,
     'react-refresh': reactRefreshPlugin,
   },
   settings: {
-    ...baseConfig.settings,
+    ...tsConfig.settings,
     react: { version: 'detect' },
   },
   rules: {
-    ...baseConfig.rules,
+    ...tsConfig.rules,
     ...reactPlugin.configs.recommended.rules,
     ...reactPlugin.configs['jsx-runtime'].rules,
     ...reactHooksPlugin.configs.recommended.rules,
@@ -33,4 +31,4 @@ export const config = tsEslint.config({
       { allowConstantExport: true },
     ],
   },
-});
+};
