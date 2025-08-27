@@ -1262,12 +1262,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@musetric/python-backend@workspace:packages/python-backend":
-  version: 0.0.0-use.local
-  resolution: "@musetric/python-backend@workspace:packages/python-backend"
-  languageName: unknown
-  linkType: soft
-
 "@musetric/resource-utils@workspace:*, @musetric/resource-utils@workspace:packages/resource-utils":
   version: 0.0.0-use.local
   resolution: "@musetric/resource-utils@workspace:packages/resource-utils"
