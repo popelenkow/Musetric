@@ -1,2 +1,2 @@
-import { config } from './src/browser';
-export default config;
+import { config } from './src';
+export default config('node');

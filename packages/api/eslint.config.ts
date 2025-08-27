@@ -1,2 +1,2 @@
-import { config } from '@musetric/eslint-config/browser';
-export default config;
+import { config } from '@musetric/eslint-config';
+export default config('browser');

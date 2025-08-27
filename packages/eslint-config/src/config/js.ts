@@ -1,52 +1,25 @@
 import eslint from '@eslint/js';
 import importPlugin from 'eslint-plugin-import-x';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
-import tsEslint, { ConfigWithExtends } from 'typescript-eslint';
+import { ConfigWithExtends } from 'typescript-eslint';
 
-export const baseConfig: ConfigWithExtends = {
-  extends: [eslint.configs.recommended, ...tsEslint.configs.recommended],
-  files: ['**/*.ts'],
-  ignores: ['**/*.config.ts'],
+export const jsConfig: ConfigWithExtends = {
+  extends: [eslint.configs.recommended],
+  files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
+  ignores: ['**/*.config.js'],
   languageOptions: {
     ecmaVersion: 2024,
     sourceType: 'module',
-    parserOptions: {
-      project: true,
-      tsconfigRootDir: process.cwd(),
-    },
   },
   plugins: {
     'import-x': importPlugin,
     'simple-import-sort': simpleImportSort,
   },
   settings: {
-    'import-x/resolver': { typescript: true },
+    'import-x/resolver': { node: true },
   },
   rules: {
     ...importPlugin.configs.recommended.rules,
-    '@typescript-eslint/consistent-type-assertions': [
-      'error',
-      { assertionStyle: 'never' },
-    ],
-    '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
-    '@typescript-eslint/init-declarations': ['error', 'always'],
-    '@typescript-eslint/no-empty-function': ['error'],
-    '@typescript-eslint/no-floating-promises': 'error',
-    '@typescript-eslint/no-namespace': 'off',
-    '@typescript-eslint/no-non-null-assertion': ['error'],
-    '@typescript-eslint/no-shadow': ['error'],
-    '@typescript-eslint/no-unused-vars': ['error'],
-    '@typescript-eslint/no-use-before-define': ['error'],
-    '@typescript-eslint/no-useless-constructor': ['error'],
-    '@typescript-eslint/naming-convention': [
-      'error',
-      {
-        selector: 'variable',
-        format: ['camelCase', 'PascalCase'],
-      },
-    ],
-    '@typescript-eslint/promise-function-async': 'error',
-    '@typescript-eslint/require-await': 'error',
     'func-names': ['error'],
     'func-style': ['error'],
     'import-x/order': [
