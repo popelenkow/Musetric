@@ -1,4 +1,3 @@
-import path from 'node:path';
 import { fastifyMultipart } from '@fastify/multipart';
 import { fastifyStatic } from '@fastify/static';
 import { fastify, FastifyInstance } from 'fastify';
@@ -7,10 +6,10 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod';
 import { createBlobGarbageCollector } from './common/blobGarbageCollector';
-import { envs } from './common/envs';
 import { logger } from './common/logger';
 import { getHttps } from './common/pems';
 import { registerSwagger } from './common/swagger';
+import { envs } from './envs';
 import { registerRouters } from './routers';
 
 // https://github.com/fastify/fastify-multipart/issues/574
@@ -53,7 +52,7 @@ export const startServer = async (): Promise<void> => {
     },
   });
   app.register(fastifyStatic, {
-    root: path.join(__dirname, '../public'),
+    root: envs.publicPath,
     prefix: '/',
     index: ['index.html'],
   });
