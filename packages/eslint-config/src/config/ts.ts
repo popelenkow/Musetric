@@ -5,12 +5,10 @@ export const tsConfig: ConfigWithExtends = {
   ...jsConfig,
   extends: [...(jsConfig.extends ?? []), ...tsEslint.configs.recommended],
   files: ['**/*.ts'],
-  ignores: ['**/*.config.ts'],
   languageOptions: {
     ...jsConfig.languageOptions,
     parserOptions: {
-      project: true,
-      tsconfigRootDir: process.cwd(),
+      project: ['./tsconfig.json'],
     },
   },
   settings: {

@@ -1142,6 +1142,7 @@ __metadata:
     "@webgpu/types": "npm:0.1.64"
     eslint: "npm:9.33.0"
     playwright: "npm:1.54.2"
+    tsx: "npm:4.20.5"
     typescript: "npm:5.9.2"
     vitest: "npm:3.2.4"
   languageName: unknown
@@ -1168,7 +1169,7 @@ __metadata:
     pino-pretty: "npm:13.1.1"
     prisma: "npm:6.13.0"
     selfsigned: "npm:3.0.1"
-    tsx: "npm:4.20.3"
+    tsx: "npm:4.20.5"
     typescript: "npm:5.9.2"
     zod: "npm:4.0.16"
   languageName: unknown
@@ -7784,9 +7785,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsx@npm:4.20.3":
-  version: 4.20.3
-  resolution: "tsx@npm:4.20.3"
+"tsx@npm:4.20.5":
+  version: 4.20.5
+  resolution: "tsx@npm:4.20.5"
   dependencies:
     esbuild: "npm:~0.25.0"
     fsevents: "npm:~2.3.3"
@@ -7796,7 +7797,7 @@ __metadata:
       optional: true
   bin:
     tsx: dist/cli.mjs
-  checksum: 10c0/6ff0d91ed046ec743fac7ed60a07f3c025e5b71a5aaf58f3d2a6b45e4db114c83e59ebbb078c8e079e48d3730b944a02bc0de87695088aef4ec8bbc705dc791b
+  checksum: 10c0/70f9bf746be69281312a369c712902dbf9bcbdd9db9184a4859eb4859c36ef0c5a6d79b935c1ec429158ee73fd6584089400ae8790345dae34c5b0222bdb94f3
   languageName: node
   linkType: hard
 

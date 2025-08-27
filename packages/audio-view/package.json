@@ -5,7 +5,7 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "postinstall": "node ./scripts/install.js",
+    "postinstall": "tsx ./scripts/install.ts",
     "build": "tsc",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache",
@@ -19,6 +19,7 @@
     "@webgpu/types": "0.1.64",
     "eslint": "9.33.0",
     "playwright": "1.54.2",
+    "tsx": "4.20.5",
     "typescript": "5.9.2",
     "vitest": "3.2.4"
   }

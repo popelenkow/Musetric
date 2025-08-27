@@ -1,9 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "module": "es2022",
-    "moduleResolution": "bundler",
     "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
-  "include": ["src"]
+  "include": ["."]
 }

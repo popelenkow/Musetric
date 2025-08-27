@@ -1,4 +1,6 @@
-export default {
+import type { UserConfig } from 'i18next-parser';
+
+const config: UserConfig = {
   input: ['src/**/*.{ts,tsx}'],
   locales: ['en'],
   output: 'src/translations/$LOCALE.json',
@@ -7,3 +9,5 @@ export default {
   createOldCatalogs: false,
   keySeparator: false,
 };
+
+export default config;

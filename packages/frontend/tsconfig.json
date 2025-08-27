@@ -1,13 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "module": "ES2022",
     "lib": ["ES2024", "DOM"],
     "jsx": "react-jsx",
-    "moduleResolution": "bundler",
     "outDir": "dist",
     "types": ["@webgpu/types"],
     "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
-  "include": ["src", "src/**/*.json"]
+  "include": [".", "src/**/*.json"]
 }
