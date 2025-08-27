@@ -11,12 +11,18 @@ export const config = (type: ConfigType) => {
     jsConfig,
     type === 'react' ? reactConfig : tsConfig,
     {
+      files: ['./*.config.{js,ts}'],
+      rules: {
+        'import-x/no-default-export': 'off',
+      },
+    },
+    {
       languageOptions: {
         globals: type === 'node' ? globals.node : globals.browser,
       },
     },
     {
-      files: ['scripts/**/*'],
+      files: ['scripts/**/*', './*.config.{js,ts}'],
       languageOptions: {
         globals: globals.node,
       },
