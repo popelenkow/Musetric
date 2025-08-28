@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "postinstall": "node ./scripts/install.ts",
-    "dev": "node --import tsx --watch src/index.ts",
+    "dev": "node --import tsx --watch src/index.ts -- musetric-backend",
+    "dev:stop": "kill-process musetric-backend",
     "build:docker": "docker build --progress=plain --file Dockerfile -t musetric ../..",
     "start:docker": "docker compose up -d",
     "check:ts": "tsc --noEmit",
@@ -19,6 +20,7 @@
     "@fastify/swagger-ui": "5.2.3",
     "@musetric/api": "workspace:*",
     "@musetric/eslint-config": "workspace:*",
+    "@musetric/kill-process": "workspace:*",
     "@musetric/resource-utils": "workspace:*",
     "@prisma/client": "6.13.0",
     "@types/node": "24.2.1",

@@ -4,7 +4,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite -- musetric-performance",
+    "dev:stop": "kill-process musetric-performance",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache",
     "check:lint:fix": "eslint . --fix --cache"
@@ -15,6 +16,7 @@
     "@mui/material": "7.3.1",
     "@musetric/audio-view": "workspace:*",
     "@musetric/eslint-config": "workspace:*",
+    "@musetric/kill-process": "workspace:*",
     "@types/react": "19.1.9",
     "eslint": "9.33.0",
     "react": "19.1.1",

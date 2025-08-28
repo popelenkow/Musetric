@@ -1,0 +1,18 @@
+{
+  "name": "@musetric/kill-process",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "bin": "./src/index.ts",
+  "scripts": {
+    "check:ts": "tsc --noEmit",
+    "check:lint": "eslint . --cache",
+    "check:lint:fix": "eslint . --fix --cache"
+  },
+  "devDependencies": {
+    "@musetric/eslint-config": "workspace:*",
+    "@types/node": "24.2.1",
+    "eslint": "9.33.0",
+    "typescript": "5.9.2"
+  }
+}

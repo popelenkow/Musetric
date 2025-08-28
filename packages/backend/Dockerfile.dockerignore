@@ -6,13 +6,14 @@
 
 !packages/
 packages/**
-
-!packages/backend/
-!packages/backend/**
 !packages/api/
 !packages/api/**
+!packages/backend/
+!packages/backend/**
 !packages/eslint-config/
 !packages/eslint-config/**
+!packages/kill-process/
+!packages/kill-process/**
 !packages/resource-utils/
 !packages/resource-utils/**
 
