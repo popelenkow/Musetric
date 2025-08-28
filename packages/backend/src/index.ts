@@ -6,6 +6,7 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod';
 import { createBlobGarbageCollector } from './common/blobGarbageCollector';
+import { killDevHost } from './common/dev';
 import { logger } from './common/logger';
 import { getHttps } from './common/pems';
 import { registerSwagger } from './common/swagger';
@@ -78,6 +79,7 @@ export const startServer = async (): Promise<void> => {
   } catch (error) {
     if (error instanceof Error && error.message.includes('EADDRINUSE')) {
       console.error(`Port ${envs.port} is already in use`);
+      killDevHost();
       process.exit(1);
     }
     throw error;
