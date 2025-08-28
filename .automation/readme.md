@@ -10,4 +10,4 @@ You MUST read ALL these files IMMEDIATELY before starting any work, answering qu
 - [architecture.md](./architecture.md)
 - [code-style.md](./code-style.md)
 - [code-check.md](./code-check.md)
-- [playwright-testing.md](./playwright-testing.md)
+- [playwright-mcp.md](./playwright-mcp.md)
