@@ -1142,7 +1142,6 @@ __metadata:
     "@webgpu/types": "npm:0.1.64"
     eslint: "npm:9.33.0"
     playwright: "npm:1.54.2"
-    tsx: "npm:4.20.5"
     typescript: "npm:5.9.2"
     vitest: "npm:3.2.4"
   languageName: unknown
