@@ -4,8 +4,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "postinstall": "tsx ./scripts/install.ts",
-    "dev": "tsx watch src/index.ts",
+    "postinstall": "node ./scripts/install.ts",
+    "dev": "node --import tsx --watch src/index.ts",
     "build:docker": "docker build --progress=plain --file Dockerfile -t musetric ../..",
     "start:docker": "docker compose up -d",
     "check:ts": "tsc --noEmit",
