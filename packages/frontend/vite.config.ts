@@ -1,21 +1,11 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import mkcert from 'vite-plugin-mkcert';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
   base: '/',
   mode: 'production',
-  plugins: [
-    react(),
-    viteStaticCopy({
-      targets: [
-        { src: './package.json', dest: '' },
-        { src: './readme.md', dest: '' },
-      ],
-    }),
-    mkcert(),
-  ],
+  plugins: [react(), mkcert()],
   build: {
     target: 'es2022',
     assetsDir: '',
