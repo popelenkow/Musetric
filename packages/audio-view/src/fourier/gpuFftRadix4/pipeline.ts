@@ -1,3 +1,6 @@
+// GPU shaders based on CPU implementation from ../cpuFftRadix4/utils.ts
+// See transform.wgsl and reverse.wgsl for algorithm attribution
+
 import reverseShader from './reverse.wgsl?raw';
 import transformShader from './transform.wgsl?raw';
 
