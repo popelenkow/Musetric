@@ -14,6 +14,10 @@ jobs:
           node-version: 24.7.0
       - run: corepack enable
       - run: corepack prepare yarn@4.9.3 --activate
+      - uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('yarn.lock') }}
       - run: yarn
       - run: yarn build:frontend
       - run: yarn build:docker
