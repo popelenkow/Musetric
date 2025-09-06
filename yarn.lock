@@ -1147,6 +1147,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@musetric/backend-workers@workspace:packages/backend-workers":
+  version: 0.0.0-use.local
+  resolution: "@musetric/backend-workers@workspace:packages/backend-workers"
+  dependencies:
+    "@musetric/eslint-config": "workspace:*"
+    "@types/node": "npm:24.2.1"
+    axios: "npm:1.11.0"
+    eslint: "npm:9.33.0"
+    tsx: "npm:4.20.5"
+    typescript: "npm:5.9.2"
+  languageName: unknown
+  linkType: soft
+
 "@musetric/backend@workspace:packages/backend":
   version: 0.0.0-use.local
   resolution: "@musetric/backend@workspace:packages/backend"

@@ -14,6 +14,9 @@ jobs:
           node-version: 24.7.0
       - run: corepack enable
       - run: corepack prepare yarn@4.9.3 --activate
-      - run: yarn
+      - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+      - run: yarn --immutable
       - run: yarn build:frontend
       - run: yarn build:docker
