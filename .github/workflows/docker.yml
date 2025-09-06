@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: 24.7.0
       - run: corepack enable
-      - run: corepack prepare yarn@4.9.1 --activate
+      - run: corepack prepare yarn@4.9.3 --activate
       - run: yarn
       - run: yarn build:frontend
       - run: yarn build:docker
