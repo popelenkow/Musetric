@@ -1,19 +1,27 @@
 import { createCallLatest } from '@musetric/resource-utils/callLatest';
-import { createScheduler } from '../scheduler';
-import { collectGarbage, gcTimeoutMs } from './common';
+import { BlobStorage } from '../blobStorage';
+import { createScheduler, Scheduler } from '../scheduler';
+import { collectGarbage } from './common';
 
-export type BlobGarbageCollector = {
-  start: () => void;
-  stop: () => void;
+export type CreateBlobGarbageCollectorOptions = {
+  blobStorage: BlobStorage;
+  gcIntervalMs: number;
+  blobRetentionMs: number;
+  getReferencedBlobIds: () => Promise<string[]>;
 };
+export const createBlobGarbageCollector = (
+  options: CreateBlobGarbageCollectorOptions,
+): Scheduler => {
+  const { blobStorage, gcIntervalMs, blobRetentionMs, getReferencedBlobIds } =
+    options;
 
-export const createBlobGarbageCollector = (): BlobGarbageCollector => {
-  const scheduler = createScheduler(
-    createCallLatest(collectGarbage),
-    gcTimeoutMs,
+  const ref = createScheduler(
+    createCallLatest(async () => {
+      const referencedBlobIds = await getReferencedBlobIds();
+      await collectGarbage(blobStorage, blobRetentionMs, referencedBlobIds);
+    }),
+    gcIntervalMs,
   );
-
-  const ref: BlobGarbageCollector = scheduler;
 
   return ref;
 };

@@ -1,6 +1,5 @@
 import { ServerOptions } from 'node:https';
 import { generate } from 'selfsigned';
-import { envs } from './envs';
 
 const pems = generate([{ name: 'commonName', value: 'localhost' }], {
   keySize: 2048,
@@ -8,13 +7,7 @@ const pems = generate([{ name: 'commonName', value: 'localhost' }], {
   extensions: [{ name: 'basicConstraints', cA: true }],
 });
 
-export const getHttps = (): ServerOptions | null => {
-  if (envs.protocol !== 'https') {
-    // eslint-disable-next-line no-restricted-syntax
-    return null;
-  }
-  return {
-    key: pems.private,
-    cert: pems.cert,
-  };
-};
+export const getHttps = (): ServerOptions => ({
+  key: pems.private,
+  cert: pems.cert,
+});

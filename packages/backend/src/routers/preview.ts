@@ -1,7 +1,6 @@
 import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound';
-import { blobStorage } from '../common/blobStorage';
 import { handleCachedFile } from '../common/cachedFile';
 import { prisma } from '../common/prisma';
 
@@ -19,7 +18,7 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
       });
       assertFound(preview, `Preview with id ${previewId} not found`);
 
-      const data = await blobStorage.get(preview.blobId);
+      const data = await app.blobStorage.get(preview.blobId);
       assertFound(data, `Preview blob for id ${previewId} not found`);
 
       const isNotModified = handleCachedFile(request, reply, {

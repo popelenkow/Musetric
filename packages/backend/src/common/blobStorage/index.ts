@@ -13,6 +13,7 @@ export type BlobFile = {
   contentType: string;
 };
 export type BlobStorage = {
+  getPath: (blobId: string) => string;
   add: (buffer: Buffer) => Promise<string>;
   addFile: (file: File) => Promise<BlobFile>;
   get: (blobId: string) => Promise<Buffer | undefined>;
@@ -20,11 +21,12 @@ export type BlobStorage = {
   exists: (blobId: string) => Promise<boolean>;
   getAllBlobIds: () => Promise<string[]>;
 };
-export const createBlobStorage = (): BlobStorage => {
+export const createBlobStorage = (rootPath: string): BlobStorage => {
   const ref: BlobStorage = {
+    getPath: (blobId) => getBlobPath(rootPath, blobId),
     add: async (buffer) => {
       const blobId = randomUUID();
-      const blobPath = getBlobPath(blobId);
+      const blobPath = ref.getPath(blobId);
       const shardPath = path.dirname(blobPath);
 
       await fs.mkdir(shardPath, { recursive: true });
@@ -43,22 +45,22 @@ export const createBlobStorage = (): BlobStorage => {
       };
     },
     get: async (blobId) => {
-      const blobPath = getBlobPath(blobId);
+      const blobPath = ref.getPath(blobId);
       return fs.readFile(blobPath).catch(() => undefined);
     },
     remove: async (blobId) => {
-      const blobPath = getBlobPath(blobId);
+      const blobPath = ref.getPath(blobId);
       await fs.unlink(blobPath);
     },
     exists: async (blobId) => {
-      const blobPath = getBlobPath(blobId);
+      const blobPath = ref.getPath(blobId);
       return fs.access(blobPath).then(
         () => true,
         () => false,
       );
     },
     getAllBlobIds: async () => {
-      const shardPaths = await getDirectoryShardPaths();
+      const shardPaths = await getDirectoryShardPaths(rootPath);
       const blobIds = await getDirectoriesBlobIds(shardPaths);
       return blobIds;
     },
@@ -66,5 +68,3 @@ export const createBlobStorage = (): BlobStorage => {
 
   return ref;
 };
-
-export const blobStorage = createBlobStorage();

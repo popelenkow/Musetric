@@ -1,7 +1,6 @@
 import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound';
-import { blobStorage } from '../common/blobStorage';
 import { handleCachedFile } from '../common/cachedFile';
 import { prisma } from '../common/prisma';
 
@@ -22,7 +21,7 @@ export const soundRouter: FastifyPluginAsyncZod = async (app) => {
         `Sound for project ${projectId} and type ${type} not found`,
       );
 
-      const data = await blobStorage.get(sound.blobId);
+      const data = await app.blobStorage.get(sound.blobId);
       assertFound(data, `Sound blob for id ${sound.blobId} not found`);
 
       const isNotModified = handleCachedFile(request, reply, {
