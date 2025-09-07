@@ -1,41 +1,26 @@
 import fs from 'fs/promises';
-import { blobStorage } from '../blobStorage';
-import { getBlobPath } from '../blobStorage/common';
-import { prisma } from '../prisma';
+import { BlobStorage } from '../blobStorage';
 
-export const gcTimeoutMs = 5 * 60 * 1000;
-const minAgeMs = 5 * 60 * 1000;
-
-const isOldBlob = async (blobId: string): Promise<boolean> => {
-  const now = Date.now();
-  const blobPath = getBlobPath(blobId);
-  const stat = await fs.stat(blobPath);
-  const ageMs = now - stat.mtimeMs;
-  return ageMs >= minAgeMs;
-};
-
-const getReferencedBlobIds = async (): Promise<Set<string>> => {
-  const [sounds, previews] = await Promise.all([
-    prisma.sound.findMany({ select: { blobId: true } }),
-    prisma.preview.findMany({ select: { blobId: true } }),
-  ]);
-
-  return new Set([
-    ...sounds.map((sound) => sound.blobId),
-    ...previews.map((preview) => preview.blobId),
-  ]);
-};
-
-export const collectGarbage = async (): Promise<void> => {
-  const referencedBlobs = await getReferencedBlobIds();
+export const collectGarbage = async (
+  blobStorage: BlobStorage,
+  blobRetentionMs: number,
+  referencedBlobIds: string[],
+): Promise<void> => {
+  const hasExceededRetention = async (blobId: string): Promise<boolean> => {
+    const now = Date.now();
+    const blobPath = blobStorage.getPath(blobId);
+    const stat = await fs.stat(blobPath);
+    const elapsedMs = now - stat.mtimeMs;
+    return elapsedMs >= blobRetentionMs;
+  };
 
   const existingBlobIds = await blobStorage.getAllBlobIds();
-  const unreferencedBlobs = existingBlobIds.filter(
-    (blobId) => !referencedBlobs.has(blobId),
+  const unreferencedBlobIds = existingBlobIds.filter(
+    (blobId) => !referencedBlobIds.includes(blobId),
   );
 
-  for (const blobId of unreferencedBlobs) {
-    if (await isOldBlob(blobId)) {
+  for (const blobId of unreferencedBlobIds) {
+    if (await hasExceededRetention(blobId)) {
       try {
         await blobStorage.remove(blobId);
       } catch (error) {

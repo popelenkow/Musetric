@@ -1,7 +1,6 @@
 import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound';
-import { blobStorage } from '../common/blobStorage';
 import { prisma } from '../common/prisma';
 
 export const projectRouter: FastifyPluginAsyncZod = async (app) => {
@@ -47,9 +46,9 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     handler: async (request) => {
       const { song, name, preview } = request.body;
 
-      const blobSong = await blobStorage.addFile(song);
+      const blobSong = await app.blobStorage.addFile(song);
       const blobPreview = preview
-        ? await blobStorage.addFile(preview)
+        ? await app.blobStorage.addFile(preview)
         : undefined;
 
       return await prisma.$transaction(
@@ -96,7 +95,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
       const { name, preview, withoutPreview } = request.body;
 
       const blobPreview = preview
-        ? await blobStorage.addFile(preview)
+        ? await app.blobStorage.addFile(preview)
         : undefined;
 
       return await prisma.$transaction(

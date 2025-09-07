@@ -6,10 +6,12 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod';
 import { createBlobGarbageCollector } from './common/blobGarbageCollector';
+import { BlobStorage, createBlobStorage } from './common/blobStorage';
 import { killDevHost } from './common/dev';
 import { envs } from './common/envs';
 import { logger } from './common/logger';
 import { getHttps } from './common/pems';
+import { prisma } from './common/prisma';
 import { registerSwagger } from './common/swagger';
 import { registerRouters } from './routers';
 
@@ -20,14 +22,39 @@ declare module '@fastify/multipart' {
     value: File;
   }
 }
+declare module 'fastify' {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface FastifyInstance {
+    blobStorage: BlobStorage;
+  }
+}
 
 export const startServer = async (): Promise<void> => {
   const app: FastifyInstance = fastify({
     logger,
-    https: getHttps(),
+    // eslint-disable-next-line no-restricted-syntax
+    https: envs.protocol === 'https' ? getHttps() : null,
   });
 
-  const blobGC = createBlobGarbageCollector();
+  const blobStorage = createBlobStorage(envs.blobsPath);
+
+  const blobGC = createBlobGarbageCollector({
+    blobStorage,
+    gcIntervalMs: envs.gcIntervalMs,
+    blobRetentionMs: envs.blobRetentionMs,
+    getReferencedBlobIds: async (): Promise<string[]> => {
+      const [sounds, previews] = await Promise.all([
+        prisma.sound.findMany({ select: { blobId: true } }),
+        prisma.preview.findMany({ select: { blobId: true } }),
+      ]);
+
+      return [
+        ...sounds.map((sound) => sound.blobId),
+        ...previews.map((preview) => preview.blobId),
+      ];
+    },
+  });
+  app.decorate('blobStorage', blobStorage);
 
   app.addHook('onReady', () => {
     blobGC.start();
@@ -63,7 +90,7 @@ export const startServer = async (): Promise<void> => {
     }
     return reply.callNotFound();
   });
-  await registerSwagger(app);
+  await registerSwagger(app, envs.version);
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
   registerRouters(app);
