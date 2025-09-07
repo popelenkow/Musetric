@@ -5,18 +5,10 @@ const getFileNameFromUrl = (url: string): string => {
   return basename(new URL(url).pathname);
 };
 
-const rootPath = join(
-  dirname(fileURLToPath(import.meta.url)),
-  '..',
-  '..',
-  '..',
-);
+const rootPath = join(dirname(fileURLToPath(import.meta.url)), '../../../');
 const separateScriptPath = join(
   rootPath,
-  'src',
-  'musetricBackendWorkers',
-  'separateAudio',
-  'index.py',
+  'src/musetricBackendWorkers/separateAudio/index.py',
 );
 const venvDir = join(rootPath, '.venv');
 const pythonPath =

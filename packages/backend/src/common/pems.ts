@@ -1,6 +1,6 @@
 import { ServerOptions } from 'node:https';
 import { generate } from 'selfsigned';
-import { envs } from '../envs';
+import { envs } from './envs';
 
 const pems = generate([{ name: 'commonName', value: 'localhost' }], {
   keySize: 2048,

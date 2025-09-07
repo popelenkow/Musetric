@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import fs from 'fs/promises';
 import path from 'path';
-import { envs } from '../../envs';
+import { envs } from '../envs';
 
 export const getBlobPath = (blobId: string) => {
   const hash = crypto.createHash('sha256').update(blobId).digest('hex');
