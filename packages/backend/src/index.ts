@@ -1,12 +1,15 @@
 import { fastifyMultipart } from '@fastify/multipart';
 import { fastifyStatic } from '@fastify/static';
+import { createBlobGarbageCollector } from '@musetric/resource-utils/blobGarbageCollector';
+import {
+  BlobStorage,
+  createBlobStorage,
+} from '@musetric/resource-utils/blobStorage';
 import { fastify, FastifyInstance } from 'fastify';
 import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
-import { createBlobGarbageCollector } from './common/blobGarbageCollector';
-import { BlobStorage, createBlobStorage } from './common/blobStorage';
 import { killDevHost } from './common/dev';
 import { envs } from './common/envs';
 import { logger } from './common/logger';

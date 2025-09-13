@@ -1,5 +1,5 @@
-import { createCallLatest } from '@musetric/resource-utils/callLatest';
 import { BlobStorage } from '../blobStorage';
+import { createCallLatest } from '../callLatest';
 import { createScheduler, Scheduler } from '../scheduler';
 import { collectGarbage } from './common';
 
