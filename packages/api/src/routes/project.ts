@@ -6,7 +6,7 @@ import { preview } from '.';
 export const itemSchema = z.object({
   id: z.number(),
   name: z.string().min(3),
-  stage: z.enum(['init', 'pending', 'progress', 'done']),
+  stage: z.enum(['pending', 'progress', 'done']),
   previewUrl: z.string().optional(),
 });
 export type Item = z.infer<typeof itemSchema>;

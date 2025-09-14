@@ -8,14 +8,12 @@ generator client {
 }
 
 enum ProjectStage {
-  init
   pending
-  progress
   done
 }
 
 model Project {
-  id      Int       @id @default(autoincrement())
+  id      Int          @id @default(autoincrement())
   name    String
   stage   ProjectStage
   sounds  Sound[]
@@ -40,10 +38,10 @@ model Sound {
 }
 
 model Preview {
-  id          Int       @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId   Int       @unique
-  blobId      String    @unique
+  projectId   Int     @unique
+  blobId      String  @unique
   filename    String
   contentType String
 }

@@ -5,6 +5,7 @@ import { getHttps } from './common/pems';
 import { registerRouters } from './routers';
 import { registerBlobGarbageCollector } from './services/blobGarbageCollector';
 import { registerBlobStorage } from './services/blobStorage';
+import { registerDb } from './services/db';
 import { registerFrontend } from './services/frontend';
 import { registerMultipart } from './services/multipart';
 import { registerSchemaCompiler } from './services/schemaCompiler';
@@ -16,6 +17,7 @@ export const createServerApp = (): FastifyInstance => {
     // eslint-disable-next-line no-restricted-syntax
     https: envs.protocol === 'https' ? getHttps() : null,
   });
+  registerDb(app);
   registerBlobStorage(app);
   registerBlobGarbageCollector(app);
   registerMultipart(app);

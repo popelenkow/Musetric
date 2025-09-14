@@ -14,6 +14,7 @@ export type BlobFile = {
 };
 export type BlobStorage = {
   getPath: (blobId: string) => string;
+  createPath: () => { blobId: string; blobPath: string };
   add: (buffer: Buffer) => Promise<string>;
   addFile: (file: File) => Promise<BlobFile>;
   get: (blobId: string) => Promise<Buffer | undefined>;
@@ -24,14 +25,16 @@ export type BlobStorage = {
 export const createBlobStorage = (rootPath: string): BlobStorage => {
   const ref: BlobStorage = {
     getPath: (blobId) => getBlobPath(rootPath, blobId),
-    add: async (buffer) => {
+    createPath: () => {
       const blobId = randomUUID();
       const blobPath = ref.getPath(blobId);
-      const shardPath = path.dirname(blobPath);
-
-      await fs.mkdir(shardPath, { recursive: true });
+      return { blobId, blobPath };
+    },
+    add: async (buffer) => {
+      const { blobId, blobPath } = ref.createPath();
+      const dirPath = path.dirname(blobPath);
+      await fs.mkdir(dirPath, { recursive: true });
       await fs.writeFile(blobPath, buffer);
-
       return blobId;
     },
     addFile: async (file) => {

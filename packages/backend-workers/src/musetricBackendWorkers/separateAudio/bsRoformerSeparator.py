@@ -68,13 +68,13 @@ class BSRoformerSeparator:
         return self.audioProcessor.demix(mix, self.model)
 
     def separateAudio(
-        self, inputPath: str, vocalOutput: str, instrumentalOutput: str
+        self, sourcePath: str, vocalPath: str, instrumentalPath: str
     ) -> Dict[str, Dict[str, str]]:
         with tempfile.TemporaryDirectory():
             self._loadModel()
 
             mixture = utils.normalize(
-                readAudioFile(inputPath, self.sampleRate, 2),
+                readAudioFile(sourcePath, self.sampleRate, 2),
                 maxPeak=0.9,
                 minPeak=0.0,
             )
@@ -85,7 +85,7 @@ class BSRoformerSeparator:
                 normalizedSource = utils.normalize(
                     sourceAudio, maxPeak=0.9, minPeak=0.0
                 ).T
-                outputPath = vocalOutput if "Vocal" in stemName else instrumentalOutput
+                outputPath = vocalPath if "Vocal" in stemName else instrumentalPath
                 if outputPath and ("Vocal" in stemName or "Instrumental" in stemName):
                     writeAudioFile(
                         outputPath,
@@ -96,11 +96,11 @@ class BSRoformerSeparator:
 
         metadata = {
             "vocal": {
-                "filename": os.path.basename(vocalOutput),
+                "filename": os.path.basename(vocalPath),
                 "contentType": self.contentType,
             },
             "instrumental": {
-                "filename": os.path.basename(instrumentalOutput),
+                "filename": os.path.basename(instrumentalPath),
                 "contentType": self.contentType,
             },
         }
