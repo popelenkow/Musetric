@@ -11,13 +11,13 @@
     "check:lint:fix": "eslint . --fix --cache"
   },
   "peerDependencies": {
-    "zod": "4.0.16"
+    "zod": "4.1.9"
   },
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
-    "axios": "1.11.0",
+    "axios": "1.12.2",
     "eslint": "9.33.0",
     "typescript": "5.9.2",
-    "zod": "4.0.16"
+    "zod": "4.1.9"
   }
 }

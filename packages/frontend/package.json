@@ -29,7 +29,7 @@
     "@types/react": "19.1.9",
     "@types/react-dom": "19.1.7",
     "@vitejs/plugin-react": "5.0.0",
-    "axios": "1.11.0",
+    "axios": "1.12.2",
     "date-fns": "4.1.0",
     "eslint": "9.33.0",
     "framer-motion": "12.23.12",
@@ -43,7 +43,7 @@
     "typescript": "5.9.2",
     "vite": "7.1.1",
     "vite-plugin-mkcert": "1.17.8",
-    "zod": "4.0.16",
+    "zod": "4.1.9",
     "zustand": "5.0.7"
   }
 }
