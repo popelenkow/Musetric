@@ -1,12 +1,11 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { isLogLevel, LogLevel } from '@musetric/backend-workers';
 
 const rootPath = join(dirname(fileURLToPath(import.meta.url)), '../../');
 
-const getLogLevel = (): LogLevel => {
+const getLogLevel = () => {
   const envLogLevel = process.env.LOG_LEVEL;
-  if (envLogLevel && isLogLevel(envLogLevel)) {
+  if (envLogLevel) {
     return envLogLevel;
   }
   return 'info';
