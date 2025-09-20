@@ -7,17 +7,7 @@ export const registerBlobGarbageCollector = (app: FastifyInstance) => {
     blobStorage: app.blobStorage,
     gcIntervalMs: envs.gcIntervalMs,
     blobRetentionMs: envs.blobRetentionMs,
-    getReferencedBlobIds: async (): Promise<string[]> => {
-      const [sounds, previews] = await Promise.all([
-        app.db.sound.findMany({ select: { blobId: true } }),
-        app.db.preview.findMany({ select: { blobId: true } }),
-      ]);
-
-      return [
-        ...sounds.map((sound) => sound.blobId),
-        ...previews.map((preview) => preview.blobId),
-      ];
-    },
+    getReferencedBlobIds: app.db.blob.list,
   });
 
   app.addHook('onReady', () => {
