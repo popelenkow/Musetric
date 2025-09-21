@@ -10,6 +10,8 @@ packages/**
 !packages/api/**
 !packages/backend/
 !packages/backend/**
+!packages/backend-db/
+!packages/backend-db/**
 !packages/eslint-config/
 !packages/eslint-config/**
 !packages/kill-process/
