@@ -39,6 +39,7 @@ export const tsConfig: ConfigWithExtends = {
         format: ['camelCase', 'PascalCase'],
       },
     ],
+    '@typescript-eslint/await-thenable': 'error',
     '@typescript-eslint/promise-function-async': 'error',
     '@typescript-eslint/require-await': 'error',
   },
