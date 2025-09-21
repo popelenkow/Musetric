@@ -12,9 +12,7 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.preview.get.route,
     handler: async (request, reply) => {
       const { previewId } = request.params;
-      const preview = await app.db.preview.findUnique({
-        where: { id: previewId },
-      });
+      const preview = await app.db.preview.get(previewId);
       assertFound(preview, `Preview with id ${previewId} not found`);
 
       const data = await app.blobStorage.get(preview.blobId);

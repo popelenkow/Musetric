@@ -12,10 +12,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   app.route({
     ...api.project.list.route,
     handler: async () => {
-      const all = await app.db.project.findMany({
-        orderBy: { id: 'desc' },
-        include: { preview: true },
-      });
+      const all = await app.db.project.list();
       return all.map((project): api.project.list.Response[number] => ({
         ...project,
         previewUrl: api.preview.get.url(project.preview?.id),
@@ -27,10 +24,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.project.get.route,
     handler: async (request) => {
       const { projectId } = request.params;
-      const found = await app.db.project.findUnique({
-        where: { id: projectId },
-        include: { preview: true },
-      });
+      const found = await app.db.project.get(projectId);
       assertFound(found, `Project with id ${projectId} not found`);
       const result: api.project.get.Response = {
         ...found,
@@ -50,40 +44,18 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         ? await app.blobStorage.addFile(preview)
         : undefined;
 
-      return await app.db.$transaction(
-        async (tx): Promise<api.project.create.Response> => {
-          const created = await tx.project.create({
-            data: { name, stage: 'pending' },
-          });
-          const projectId = created.id;
+      const created = await app.db.project.create({
+        name,
+        song: blobSong,
+        preview: blobPreview,
+      });
 
-          await tx.sound.create({
-            data: {
-              projectId,
-              blobId: blobSong.blobId,
-              filename: blobSong.filename,
-              contentType: blobSong.contentType,
-              type: 'original',
-            },
-          });
+      const result: api.project.create.Response = {
+        ...created.project,
+        previewUrl: api.preview.get.url(created.preview?.id),
+      };
 
-          const createdPreview = blobPreview
-            ? await tx.preview.create({
-                data: {
-                  projectId,
-                  blobId: blobPreview.blobId,
-                  filename: blobPreview.filename,
-                  contentType: blobPreview.contentType,
-                },
-              })
-            : undefined;
-
-          return {
-            ...created,
-            previewUrl: api.preview.get.url(createdPreview?.id),
-          };
-        },
-      );
+      return result;
     },
   });
 
@@ -97,45 +69,21 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         ? await app.blobStorage.addFile(preview)
         : undefined;
 
-      return await app.db.$transaction(
-        async (tx): Promise<api.project.edit.Response> => {
-          const existing = await tx.project.findUnique({
-            where: { id: projectId },
-            include: { preview: true },
-          });
-          assertFound(existing, `Project with id ${projectId} not found`);
+      const updated = await app.db.project.update({
+        projectId,
+        name,
+        preview: blobPreview,
+        withoutPreview,
+      });
 
-          const updated = name
-            ? await tx.project.update({
-                where: { id: projectId },
-                data: { name },
-              })
-            : existing;
+      assertFound(updated, `Project with id ${projectId} not found`);
 
-          if (existing.preview && (blobPreview || withoutPreview)) {
-            await tx.preview.delete({
-              where: { projectId },
-            });
-          }
+      const result: api.project.edit.Response = {
+        ...updated.project,
+        previewUrl: api.preview.get.url(updated.preview?.id),
+      };
 
-          const oldPreview = withoutPreview ? undefined : existing.preview;
-          const updatedPreview = blobPreview
-            ? await tx.preview.create({
-                data: {
-                  projectId,
-                  blobId: blobPreview.blobId,
-                  filename: blobPreview.filename,
-                  contentType: blobPreview.contentType,
-                },
-              })
-            : oldPreview;
-
-          return {
-            ...updated,
-            previewUrl: api.preview.get.url(updatedPreview?.id),
-          };
-        },
-      );
+      return result;
     },
   });
 
@@ -143,10 +91,11 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.project.remove.route,
     handler: async (request) => {
       const { projectId } = request.params;
-      const { count } = await app.db.project.deleteMany({
-        where: { id: projectId },
-      });
-      assertFound(count || undefined, `Project with id ${projectId} not found`);
+      const deletedCount = await app.db.project.remove(projectId);
+      assertFound(
+        deletedCount || undefined,
+        `Project with id ${projectId} not found`,
+      );
     },
   });
 
