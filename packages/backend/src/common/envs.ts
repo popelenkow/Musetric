@@ -19,6 +19,7 @@ export const envs = {
   protocol: process.env.PROTOCOL === 'http' ? 'http' : 'https',
   blobsPath: join(rootPath, 'tmp/blobs'),
   publicPath: join(rootPath, 'public'),
+  databasePath: join(rootPath, 'tmp/app.db'),
   gcIntervalMs: 5 * 60 * 1000,
   blobRetentionMs: 5 * 60 * 1000,
 };

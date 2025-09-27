@@ -12,7 +12,7 @@ export const soundRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.sound.get.route,
     handler: async (request, reply) => {
       const { projectId, type } = request.params;
-      const sound = await app.db.sound.get(projectId, type);
+      const sound = app.db.sound.get(projectId, type);
       assertFound(
         sound,
         `Sound for project ${projectId} and type ${type} not found`,

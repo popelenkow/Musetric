@@ -1,5 +1,6 @@
+import { DB } from '@musetric/backend-db';
 import { FastifyInstance } from 'fastify';
-import { DB } from '../common/db';
+import { envs } from '../common/envs';
 
 declare module 'fastify' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -9,9 +10,9 @@ declare module 'fastify' {
 }
 
 export const registerDb = (app: FastifyInstance) => {
-  const db = DB.create();
-  app.addHook('onClose', async () => {
-    await db.disconnect();
+  const db = DB.createInstance(envs.databasePath);
+  app.addHook('onClose', () => {
+    db.disconnect();
   });
   app.decorate('db', db);
 };

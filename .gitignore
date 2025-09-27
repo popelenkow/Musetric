@@ -10,7 +10,6 @@ tsconfig.tsbuildinfo
 __pycache__/
 *.db
 *.db-journal
-prisma/migrations/
 *.tsbuildinfo
 .vite/
 __snapshots__/
