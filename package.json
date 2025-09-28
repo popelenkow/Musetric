@@ -17,14 +17,14 @@
     "start:docker": "yarn workspace @musetric/backend start:docker",
     "check:deps": "yarn constraints && yarn dedupe --check",
     "check:deps:fix": "yarn constraints --fix && yarn && yarn dedupe",
-    "check:ts": "yarn workspaces foreach --all --topological run check:ts",
-    "check:lint": "yarn workspaces foreach --all --topological run check:lint",
-    "check:lint:fix": "yarn workspaces foreach --all --topological run check:lint:fix",
-    "check:translations": "yarn workspaces foreach --all --topological run check:translations",
-    "check:translations:fix": "yarn workspaces foreach --all --topological run check:translations:fix",
+    "check:ts": "yarn workspaces foreach --all --parallel run check:ts",
+    "check:lint": "yarn workspaces foreach --all --parallel run check:lint",
+    "check:lint:fix": "yarn workspaces foreach --all --parallel run check:lint:fix",
+    "check:translations": "yarn workspaces foreach --all --parallel run check:translations",
+    "check:translations:fix": "yarn workspaces foreach --all --parallel run check:translations:fix",
     "check:format": "prettier --check .",
     "check:format:fix": "prettier . --write",
-    "test": "yarn workspaces foreach --all --topological run test"
+    "test": "yarn workspaces foreach --all --parallel run test"
   },
   "devDependencies": {
     "grep-cli": "0.2.1",
