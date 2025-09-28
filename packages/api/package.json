@@ -16,7 +16,7 @@
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
     "axios": "1.12.2",
-    "eslint": "9.33.0",
+    "eslint": "9.36.0",
     "typescript": "5.9.2",
     "zod": "4.1.9"
   }
