@@ -1,0 +1,20 @@
+{
+  "name": "@musetric/backend-db",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./schema/table.ts"
+  },
+  "scripts": {
+    "check:ts": "tsc --noEmit",
+    "check:lint": "eslint . --cache",
+    "check:lint:fix": "eslint . --fix --cache"
+  },
+  "devDependencies": {
+    "@musetric/eslint-config": "workspace:*",
+    "eslint": "9.33.0",
+    "typescript": "5.9.2"
+  }
+}

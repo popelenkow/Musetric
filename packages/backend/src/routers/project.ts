@@ -11,8 +11,8 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.list.route,
-    handler: async () => {
-      const all = await app.db.project.list();
+    handler: () => {
+      const all = app.db.project.list();
       return all.map((project): api.project.list.Response[number] => ({
         ...project,
         previewUrl: api.preview.get.url(project.preview?.id),
@@ -22,9 +22,9 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.get.route,
-    handler: async (request) => {
+    handler: (request) => {
       const { projectId } = request.params;
-      const found = await app.db.project.get(projectId);
+      const found = app.db.project.get(projectId);
       assertFound(found, `Project with id ${projectId} not found`);
       const result: api.project.get.Response = {
         ...found,
@@ -44,7 +44,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         ? await app.blobStorage.addFile(preview)
         : undefined;
 
-      const created = await app.db.project.create({
+      const created = app.db.project.create({
         name,
         song: blobSong,
         preview: blobPreview,
@@ -69,7 +69,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         ? await app.blobStorage.addFile(preview)
         : undefined;
 
-      const updated = await app.db.project.update({
+      const updated = app.db.project.update({
         projectId,
         name,
         preview: blobPreview,
@@ -89,11 +89,11 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.remove.route,
-    handler: async (request) => {
+    handler: (request) => {
       const { projectId } = request.params;
-      const deletedCount = await app.db.project.remove(projectId);
+      const isRemoved = app.db.project.remove(projectId);
       assertFound(
-        deletedCount || undefined,
+        isRemoved || undefined,
         `Project with id ${projectId} not found`,
       );
     },
