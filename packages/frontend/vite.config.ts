@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig, defaultClientConditions } from 'vite';
 import mkcertRaw from 'vite-plugin-mkcert';
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
@@ -9,6 +9,9 @@ export default defineConfig({
   base: '/',
   mode: 'production',
   plugins: [react(), mkcert()],
+  resolve: {
+    conditions: defaultClientConditions.concat('monorepo'),
+  },
   build: {
     target: 'es2022',
     assetsDir: '',

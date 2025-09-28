@@ -1,5 +1,5 @@
 import { DB } from '@musetric/backend-db';
-import { createTables } from '@musetric/backend-db/schema';
+import { createTables } from '@musetric/backend-db/migrations';
 import { envs } from '../src/common/envs.js';
 
 const isCheckMode = process.env.workspace_mode === 'check';
