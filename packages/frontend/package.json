@@ -42,7 +42,6 @@
     "react-i18next": "15.6.1",
     "typescript": "5.9.2",
     "vite": "7.1.1",
-    "vite-plugin-mkcert": "1.17.8",
     "zod": "4.1.9",
     "zustand": "5.0.7"
   }

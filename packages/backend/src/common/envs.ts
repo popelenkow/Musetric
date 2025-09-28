@@ -16,7 +16,6 @@ export const envs = {
   host: process.env.HOST ?? '0.0.0.0',
   port: process.env.PORT ? Number(process.env.PORT) : 3000,
   logLevel: getLogLevel(),
-  protocol: process.env.PROTOCOL === 'http' ? 'http' : 'https',
   blobsPath: join(rootPath, 'tmp/blobs'),
   publicPath: join(rootPath, 'public'),
   databasePath: join(rootPath, 'tmp/app.db'),

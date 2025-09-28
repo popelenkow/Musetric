@@ -5,7 +5,6 @@ import { registerBlobGarbageCollector } from './services/blobGarbageCollector';
 import { registerBlobStorage } from './services/blobStorage';
 import { registerDb } from './services/db';
 import { registerFrontend } from './services/frontend';
-import { https } from './services/https';
 import { logger } from './services/logger';
 import { registerMultipart } from './services/multipart';
 import { registerSchemaCompiler } from './services/schemaCompiler';
@@ -15,7 +14,6 @@ export const createServerApp = (): FastifyInstance => {
   const app: FastifyInstance = fastify({
     logger,
     disableRequestLogging,
-    https,
   });
   registerApiLogger(app);
   registerDb(app);

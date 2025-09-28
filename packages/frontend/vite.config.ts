@@ -1,11 +1,10 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
-import mkcert from 'vite-plugin-mkcert';
 
 export default defineConfig({
   base: '/',
   mode: 'production',
-  plugins: [react(), mkcert()],
+  plugins: [react()],
   build: {
     target: 'es2022',
     assetsDir: '',
@@ -22,7 +21,7 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       '/api': {
-        target: 'https://localhost:3000/',
+        target: 'http://localhost:3000/',
         changeOrigin: true,
         secure: false,
       },
