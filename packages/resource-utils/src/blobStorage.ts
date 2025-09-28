@@ -1,1 +1,1 @@
-export * from './blobStorage/index';
+export * from './blobStorage/index.js';

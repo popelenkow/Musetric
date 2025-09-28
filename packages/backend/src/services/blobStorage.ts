@@ -3,7 +3,7 @@ import {
   createBlobStorage,
 } from '@musetric/resource-utils/blobStorage';
 import { FastifyInstance } from 'fastify';
-import { envs } from '../common/envs';
+import { envs } from '../common/envs.js';
 
 declare module 'fastify' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions

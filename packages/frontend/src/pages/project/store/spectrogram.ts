@@ -7,10 +7,10 @@ import {
 } from '@musetric/audio-view';
 import { createCallLatest } from '@musetric/resource-utils/callLatest';
 import { create } from 'zustand';
-import { envs } from '../../../common/envs';
-import { getGpuDevice } from '../../../common/gpu';
-import { usePlayerStore } from './player';
-import { useSettingsStore } from './settings';
+import { envs } from '../../../common/envs.js';
+import { getGpuDevice } from '../../../common/gpu.js';
+import { usePlayerStore } from './player.js';
+import { useSettingsStore } from './settings.js';
 
 export type SpectrogramState = {
   pipeline?: spectrogram.Pipeline;

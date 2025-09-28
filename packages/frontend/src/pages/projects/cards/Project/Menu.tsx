@@ -11,7 +11,7 @@ import {
 import { api } from '@musetric/api';
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { routes } from '../../../../app/router/routes';
+import { routes } from '../../../../app/router/routes.js';
 
 export type ProjectCardMenuProps = {
   projectInfo: api.project.Item;

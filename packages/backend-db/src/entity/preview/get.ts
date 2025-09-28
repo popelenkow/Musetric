@@ -1,5 +1,5 @@
 import type { DatabaseSync } from 'node:sqlite';
-import { table } from '../../schema';
+import { table } from '../../schema/index.js';
 
 export type GetItem = table.preview.Item;
 

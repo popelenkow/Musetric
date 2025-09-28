@@ -1,4 +1,4 @@
-import { Config } from '.';
+import { Config } from './index.js';
 
 export type StateProgress = {
   buffer: GPUBuffer;

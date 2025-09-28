@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { AxiosInstance } from 'axios';
 import z from 'zod';
-import { ApiRoute, RequestMethod } from './apiRoute';
-import { isUint8ArraySchema } from './uint8ArraySchema';
+import { ApiRoute, RequestMethod } from './apiRoute.js';
+import { isUint8ArraySchema } from './uint8ArraySchema.js';
 
 type AxiosParams<ParamsSchema> = ParamsSchema extends z.ZodVoid
   ? {}

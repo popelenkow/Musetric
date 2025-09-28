@@ -1,7 +1,7 @@
-import { BlobStorage } from '../blobStorage';
-import { createCallLatest } from '../callLatest';
-import { createScheduler, Scheduler } from '../scheduler';
-import { collectGarbage } from './common';
+import { BlobStorage } from '../blobStorage.js';
+import { createCallLatest } from '../callLatest.js';
+import { createScheduler, Scheduler } from '../scheduler.js';
+import { collectGarbage } from './common.js';
 
 export type CreateBlobGarbageCollectorOptions = {
   blobStorage: BlobStorage;

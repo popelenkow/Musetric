@@ -9,10 +9,10 @@ import {
 } from '@mui/material';
 import { allFourierModes, type FourierMode } from '@musetric/audio-view';
 import { useState, FC, useMemo } from 'react';
-import { windowSizes } from '../constants';
-import type { BenchmarkData } from '../runBenchmarks';
-import { BenchmarkRunner } from './BenchmarkRunner';
-import { MetricsTable } from './MetricsTable';
+import { windowSizes } from '../constants.js';
+import type { BenchmarkData } from '../runBenchmarks.js';
+import { BenchmarkRunner } from './BenchmarkRunner.js';
+import { MetricsTable } from './MetricsTable.js';
 
 type Task = {
   fourierMode: FourierMode;

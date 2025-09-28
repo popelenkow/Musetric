@@ -1,5 +1,5 @@
 import { ComponentType } from 'react';
-import { useMemoLocation } from '../common/locationEvent';
+import { useMemoLocation } from '../common/locationEvent.js';
 
 export type MatchProps<Params> = {
   component: ComponentType<Params>;

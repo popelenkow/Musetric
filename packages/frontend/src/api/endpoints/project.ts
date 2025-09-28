@@ -1,7 +1,7 @@
 import { api } from '@musetric/api';
 import { QueryClient, queryOptions } from '@tanstack/react-query';
 import axios from 'axios';
-import { mutationOptions } from '../queryClient';
+import { mutationOptions } from '../queryClient.js';
 
 export const getProjectsApi = () =>
   queryOptions({

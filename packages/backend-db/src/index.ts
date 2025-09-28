@@ -1,1 +1,1 @@
-export * as DB from './indexJoin';
+export * as DB from './indexJoin.js';

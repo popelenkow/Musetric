@@ -1,14 +1,14 @@
 import { createCallLatest } from '@musetric/resource-utils/callLatest';
-import { GpuFourierMode, gpuFouriers } from '../../fourier';
-import { Pipeline } from '../pipeline';
-import { createDecibelify } from './decibelify';
-import { createDraw } from './draw';
-import { createMagnitudify } from './magnitudify';
-import { createPipelineState } from './pipelineState';
-import { createPipelineTimer, PipelineMetrics } from './pipelineTimer';
-import { createRemap } from './remap';
-import { createSliceWave } from './sliceWave';
-import { createWindowing } from './windowing';
+import { GpuFourierMode, gpuFouriers } from '../../fourier/index.js';
+import { Pipeline } from '../pipeline.js';
+import { createDecibelify } from './decibelify/index.js';
+import { createDraw } from './draw/index.js';
+import { createMagnitudify } from './magnitudify/index.js';
+import { createPipelineState } from './pipelineState/index.js';
+import { createPipelineTimer, PipelineMetrics } from './pipelineTimer.js';
+import { createRemap } from './remap/index.js';
+import { createSliceWave } from './sliceWave/index.js';
+import { createWindowing } from './windowing/index.js';
 
 export type CreatePipelineOptions = {
   device: GPUDevice;

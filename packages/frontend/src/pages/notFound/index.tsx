@@ -1,7 +1,7 @@
 import { Button, Stack, Typography } from '@mui/material';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { routes } from '../../app/router/routes';
+import { routes } from '../../app/router/routes.js';
 
 export const NotFoundPage: FC = () => {
   const { t } = useTranslation();

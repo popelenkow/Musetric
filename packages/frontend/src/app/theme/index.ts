@@ -1,9 +1,9 @@
 import { createTheme } from '@mui/material';
-import { noNumberInputSpin } from './noNumberInputSpin';
-import { defaultPalette } from './palettes/default';
-import { neutralButton, neutralPalette } from './palettes/neutral';
-import { themeScrollbar } from './scrollbar';
-import { themeTypography } from './typography';
+import { noNumberInputSpin } from './noNumberInputSpin.js';
+import { defaultPalette } from './palettes/default.js';
+import { neutralButton, neutralPalette } from './palettes/neutral.js';
+import { themeScrollbar } from './scrollbar.js';
+import { themeTypography } from './typography.js';
 
 export const appTheme = createTheme({
   spacing: 4,

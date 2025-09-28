@@ -1,6 +1,6 @@
-import { CpuMarker } from '../../common';
-import { ExtPipelineConfig } from '../pipeline';
-import { windowFunctions } from '../windowFunction';
+import { CpuMarker } from '../../common/index.js';
+import { ExtPipelineConfig } from '../pipeline.js';
+import { windowFunctions } from '../windowFunction.js';
 
 type Config = Pick<
   ExtPipelineConfig,

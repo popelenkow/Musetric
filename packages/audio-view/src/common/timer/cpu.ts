@@ -1,4 +1,4 @@
-import { roundDuration } from './roundDuration';
+import { roundDuration } from './roundDuration.js';
 
 type TimeRange = {
   start?: number;

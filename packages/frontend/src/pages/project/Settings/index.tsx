@@ -3,16 +3,16 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Drawer, IconButton, Stack, Typography } from '@mui/material';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSettingsStore } from '../store/settings';
-import { FourierModeField } from './FourierModeField';
-import { MaxFrequencyField } from './MaxFrequencyField';
-import { MinDecibelField } from './MinDecibelField';
-import { MinFrequencyField } from './MinFrequencyField';
-import { VisibleTimeAfterField } from './VisibleTimeAfterField';
-import { VisibleTimeBeforeField } from './VisibleTimeBeforeField';
-import { WindowNameField } from './WindowNameField';
-import { WindowSizeField } from './WindowSizeField';
-import { ZeroPaddingFactorField } from './ZeroPaddingFactorField';
+import { useSettingsStore } from '../store/settings.js';
+import { FourierModeField } from './FourierModeField.js';
+import { MaxFrequencyField } from './MaxFrequencyField.js';
+import { MinDecibelField } from './MinDecibelField.js';
+import { MinFrequencyField } from './MinFrequencyField.js';
+import { VisibleTimeAfterField } from './VisibleTimeAfterField.js';
+import { VisibleTimeBeforeField } from './VisibleTimeBeforeField.js';
+import { WindowNameField } from './WindowNameField.js';
+import { WindowSizeField } from './WindowSizeField.js';
+import { ZeroPaddingFactorField } from './ZeroPaddingFactorField.js';
 
 export const Settings: FC = () => {
   const { t } = useTranslation();

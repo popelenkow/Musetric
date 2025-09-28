@@ -1,5 +1,5 @@
-import { windowFunctions } from '../../windowFunction';
-import { Config } from './state';
+import { windowFunctions } from '../../windowFunction.js';
+import { Config } from './state.js';
 
 export type StateWindowFunction = {
   buffer: GPUBuffer;

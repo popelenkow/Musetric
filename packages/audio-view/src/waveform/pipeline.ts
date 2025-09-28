@@ -1,6 +1,6 @@
-import { ViewColors } from '../common';
-import { createDraw } from './draw';
-import { generateSegments } from './generateSegments';
+import { ViewColors } from '../common/index.js';
+import { createDraw } from './draw.js';
+import { generateSegments } from './generateSegments.js';
 
 export type Pipeline = {
   render: (buffer: Float32Array<ArrayBuffer>, progress: number) => void;

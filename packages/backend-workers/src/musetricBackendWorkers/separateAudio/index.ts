@@ -1,6 +1,10 @@
-import { envs } from '../common/envs';
-import { Logger, LogLevel, wrapLoggerWithProcessName } from '../common/logger';
-import { spawnPython } from '../common/spawnPython';
+import { envs } from '../common/envs.js';
+import {
+  Logger,
+  LogLevel,
+  wrapLoggerWithProcessName,
+} from '../common/logger.js';
+import { spawnPython } from '../common/spawnPython/index.js';
 
 export type SeparateAudioResultFile = {
   filename: string;

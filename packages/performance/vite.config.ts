@@ -1,5 +1,8 @@
 import { defineConfig } from 'vite';
-import mkcert from 'vite-plugin-mkcert';
+import mkcertRaw from 'vite-plugin-mkcert';
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+const mkcert = mkcertRaw as unknown as typeof mkcertRaw.default;
 
 export default defineConfig({
   base: './',

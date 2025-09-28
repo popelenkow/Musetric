@@ -1,5 +1,5 @@
-import { ComplexArray, CpuMarker } from '../../common';
-import { ExtPipelineConfig } from '../pipeline';
+import { ComplexArray, CpuMarker } from '../../common/index.js';
+import { ExtPipelineConfig } from '../pipeline.js';
 
 type Config = Pick<
   ExtPipelineConfig,

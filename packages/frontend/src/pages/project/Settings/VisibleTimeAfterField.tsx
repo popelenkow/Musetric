@@ -1,7 +1,7 @@
 import { TextField } from '@mui/material';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSettingsStore } from '../store/settings';
+import { useSettingsStore } from '../store/settings.js';
 
 export const VisibleTimeAfterField: FC = () => {
   const { t } = useTranslation();

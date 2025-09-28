@@ -1,4 +1,4 @@
-export * from './common';
-export * as preview from './preview';
-export * as project from './project';
-export * as sound from './sound';
+export * from './common/index.js';
+export * as preview from './preview.js';
+export * as project from './project.js';
+export * as sound from './sound.js';

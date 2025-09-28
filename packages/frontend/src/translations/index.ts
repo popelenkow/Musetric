@@ -1,5 +1,5 @@
 import i18next, { Resource } from 'i18next';
-import en from './en.json';
+import en from './en.json' with { type: 'json' };
 
 export const resources: Resource = {
   en: { translation: en },

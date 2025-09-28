@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createControlledPromise } from '../controlledPromise';
+import { createControlledPromise } from '../controlledPromise.js';
 
 const marker = 'marker';
 

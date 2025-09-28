@@ -14,13 +14,16 @@ import { FC, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import { getProjectApi, editProjectApi } from '../../../api/endpoints/project';
-import { routes } from '../../../app/router/routes';
-import { QueryError } from '../../../common/QueryView/QueryError';
-import { NameField } from '../fields/Name';
-import { nameValueSchema } from '../fields/Name/schema';
-import { PreviewField } from '../fields/Preview';
-import { previewValueSchema } from '../fields/Preview/schema';
+import {
+  getProjectApi,
+  editProjectApi,
+} from '../../../api/endpoints/project.js';
+import { routes } from '../../../app/router/routes.js';
+import { QueryError } from '../../../common/QueryView/QueryError.js';
+import { NameField } from '../fields/Name/index.js';
+import { nameValueSchema } from '../fields/Name/schema.js';
+import { PreviewField } from '../fields/Preview/index.js';
+import { previewValueSchema } from '../fields/Preview/schema.js';
 
 const schema = (t: TFunction) =>
   z.object({

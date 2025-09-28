@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { numericIdSchema } from './common';
+import { numericIdSchema } from './common.js';
 
 export namespace project {
   export const stageSchema = z.enum(['pending', 'done']);

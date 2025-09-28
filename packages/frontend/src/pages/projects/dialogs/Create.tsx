@@ -14,16 +14,16 @@ import { FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import { createProjectApi } from '../../../api/endpoints/project';
-import { routes } from '../../../app/router/routes';
-import { stripExt } from '../../../common/stripExt';
-import { SongPlayer } from '../common/SongPlayer';
-import { NameField } from '../fields/Name';
-import { nameValueSchema } from '../fields/Name/schema';
-import { PreviewField } from '../fields/Preview';
-import { previewValueSchema } from '../fields/Preview/schema';
-import { SongField } from '../fields/Song';
-import { songValueSchema } from '../fields/Song/schema';
+import { createProjectApi } from '../../../api/endpoints/project.js';
+import { routes } from '../../../app/router/routes.js';
+import { stripExt } from '../../../common/stripExt.js';
+import { SongPlayer } from '../common/SongPlayer.js';
+import { NameField } from '../fields/Name/index.js';
+import { nameValueSchema } from '../fields/Name/schema.js';
+import { PreviewField } from '../fields/Preview/index.js';
+import { previewValueSchema } from '../fields/Preview/schema.js';
+import { SongField } from '../fields/Song/index.js';
+import { songValueSchema } from '../fields/Song/schema.js';
 
 const schema = (t: TFunction) =>
   z.object({

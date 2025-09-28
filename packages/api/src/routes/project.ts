@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { fastifyRoute, createApiRoute } from './common';
-import { axiosRequest } from './common/axiosRequest';
-import { preview } from '.';
+import { axiosRequest } from './common/axiosRequest.js';
+import { fastifyRoute, createApiRoute } from './common/index.js';
+import { preview } from './index.js';
 
 export const itemSchema = z.object({
   id: z.number(),

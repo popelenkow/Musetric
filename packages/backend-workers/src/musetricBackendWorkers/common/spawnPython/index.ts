@@ -1,11 +1,11 @@
 import { spawn } from 'child_process';
-import { envs } from '../envs';
-import { Logger, LogLevel } from '../logger';
+import { envs } from '../envs.js';
+import { Logger, LogLevel } from '../logger.js';
 import {
   createTextProcessor,
   getErrorMessage,
   tryParseMessage,
-} from './common';
+} from './common.js';
 
 export type LogMessage = {
   level: LogLevel;

@@ -1,6 +1,6 @@
 import { FastifyLoggerOptions } from 'fastify';
-import { PinoLoggerOptions } from 'fastify/types/logger';
-import { envs } from '../common/envs';
+import type { LoggerOptions as PinoLoggerOptions } from 'pino';
+import { envs } from '../common/envs.js';
 
 export const logger: FastifyLoggerOptions & PinoLoggerOptions = {
   transport: {

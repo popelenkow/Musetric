@@ -1,2 +1,2 @@
-export * from './instance';
-export * from './list';
+export * from './instance.js';
+export * from './list.js';

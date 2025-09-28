@@ -1,5 +1,5 @@
-import { ComplexGpuBuffer } from '../common';
-import { FourierConfig } from './config';
+import { ComplexGpuBuffer } from '../common/index.js';
+import { FourierConfig } from './config.js';
 
 export type GpuFourier = {
   forward: (encoder: GPUCommandEncoder) => void;

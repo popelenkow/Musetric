@@ -1,7 +1,7 @@
-import { ExtPipelineConfig } from '../../pipeline';
-import { createColors } from './colors';
-import { createPipeline } from './pipeline';
-import { createStateProgress } from './progress';
+import { ExtPipelineConfig } from '../../pipeline.js';
+import { createColors } from './colors.js';
+import { createPipeline } from './pipeline.js';
+import { createStateProgress } from './progress.js';
 
 export type Config = Pick<
   ExtPipelineConfig,

@@ -2,7 +2,7 @@
 // Source: https://github.com/indutny/fft.js
 // Adapted for TypeScript and Musetric project
 
-import { ComplexArray } from '../../common';
+import { ComplexArray } from '../../common/index.js';
 
 type SingleTransform2Options = {
   signal: ComplexArray;

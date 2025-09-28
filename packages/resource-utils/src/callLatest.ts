@@ -1,7 +1,7 @@
 import {
   ControlledPromise,
   createControlledPromise,
-} from './controlledPromise';
+} from './controlledPromise.js';
 
 type AsyncFunction<Args extends unknown[], Result> = (
   ...args: Args

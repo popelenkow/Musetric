@@ -4,8 +4,8 @@ import {
   FourierMode,
   ViewSize,
 } from '@musetric/audio-view';
-import { progress, runs, skipRuns, wave } from './constants';
-import { waitNextFrame } from './waitNextFrame';
+import { progress, runs, skipRuns, wave } from './constants.js';
+import { waitNextFrame } from './waitNextFrame.js';
 
 export const runPipeline = async (
   fourierMode: FourierMode,

@@ -3,16 +3,16 @@ import { Box, CardMedia, IconButton, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getSoundApi } from '../../api/endpoints/sound';
-import { routes } from '../../app/router/routes';
-import { QueryPending } from '../../common/QueryView/QueryPending';
+import { getSoundApi } from '../../api/endpoints/sound.js';
+import { routes } from '../../app/router/routes.js';
+import { QueryPending } from '../../common/QueryView/QueryPending.js';
 import favicon from '../../favicon.ico';
-import { Player } from './Player';
-import { Settings } from './Settings';
-import { Spectrogram } from './Spectrogram';
-import { usePlayerStore } from './store/player';
-import { ThemeViewColors } from './ThemeViewColors';
-import { Waveform } from './Waveform';
+import { Player } from './Player.js';
+import { Settings } from './Settings/index.js';
+import { Spectrogram } from './Spectrogram.js';
+import { usePlayerStore } from './store/player.js';
+import { ThemeViewColors } from './ThemeViewColors.js';
+import { Waveform } from './Waveform.js';
 
 export const ProjectPage: FC = () => {
   const { t } = useTranslation();

@@ -2,10 +2,10 @@ import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence } from 'framer-motion';
 import { FC } from 'react';
-import { getProjectsApi } from '../../api/endpoints/project';
-import { QueryError } from '../../common/QueryView/QueryError';
-import { PlaceholderCard } from './cards/Placeholder';
-import { ProjectCard } from './cards/Project';
+import { getProjectsApi } from '../../api/endpoints/project.js';
+import { QueryError } from '../../common/QueryView/QueryError.js';
+import { PlaceholderCard } from './cards/Placeholder.js';
+import { ProjectCard } from './cards/Project/index.js';
 
 export const ProjectsContent: FC = () => {
   const projectList = useQuery(getProjectsApi());

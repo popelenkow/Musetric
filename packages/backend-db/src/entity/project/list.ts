@@ -1,7 +1,7 @@
 import type { DatabaseSync } from 'node:sqlite';
 import { z } from 'zod';
-import { bucketizeRow, hasValue } from '../../common';
-import { table } from '../../schema';
+import { bucketizeRow, hasValue } from '../../common/index.js';
+import { table } from '../../schema/index.js';
 
 const listItemSchema = table.project.itemSchema.extend({
   preview: table.preview.itemSchema.optional(),

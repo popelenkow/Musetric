@@ -2,7 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Button, CardMedia, Stack, Typography } from '@mui/material';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { routes } from '../../app/router/routes';
+import { routes } from '../../app/router/routes.js';
 import favicon from '../../favicon.ico';
 
 export const ProjectsTitle: FC = () => {

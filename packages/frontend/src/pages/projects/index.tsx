@@ -1,11 +1,11 @@
 import { Stack } from '@mui/material';
 import { FC } from 'react';
-import { routes } from '../../app/router/routes';
-import { ProjectsContent } from './Content';
-import { CreateDialog } from './dialogs/Create';
-import { DeleteDialog } from './dialogs/Delete';
-import { EditDialog } from './dialogs/Edit';
-import { ProjectsTitle } from './Title';
+import { routes } from '../../app/router/routes.js';
+import { ProjectsContent } from './Content.js';
+import { CreateDialog } from './dialogs/Create.js';
+import { DeleteDialog } from './dialogs/Delete.js';
+import { EditDialog } from './dialogs/Edit.js';
+import { ProjectsTitle } from './Title.js';
 
 export const ProjectsPage: FC = () => {
   return (

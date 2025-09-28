@@ -5,8 +5,8 @@ import {
   extractPathParams,
   getLocationHash,
   makePath,
-} from '../common/common';
-import { Route, createRoute } from './route';
+} from '../common/common.js';
+import { Route, createRoute } from './route.js';
 
 export type HashRouteOptions<
   Pattern extends string | undefined,

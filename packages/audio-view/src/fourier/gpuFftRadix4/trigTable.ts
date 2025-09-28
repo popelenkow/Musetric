@@ -1,4 +1,4 @@
-import { utilsRadix4 } from '../utilsRadix4';
+import { utilsRadix4 } from '../utilsRadix4.js';
 
 export type StateTrigTable = {
   buffer: GPUBuffer;

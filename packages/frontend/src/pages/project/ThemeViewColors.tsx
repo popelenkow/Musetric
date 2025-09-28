@@ -1,7 +1,7 @@
 import { useTheme } from '@mui/material';
 import { ViewColors } from '@musetric/audio-view';
 import { FC, useEffect } from 'react';
-import { useSettingsStore } from './store/settings';
+import { useSettingsStore } from './store/settings.js';
 
 export const ThemeViewColors: FC = () => {
   const theme = useTheme();

@@ -1,8 +1,8 @@
 import { waveform, subscribeResizeObserver } from '@musetric/audio-view';
 import { createCallLatest } from '@musetric/resource-utils/callLatest';
 import { create } from 'zustand';
-import { usePlayerStore } from './player';
-import { useSettingsStore } from './settings';
+import { usePlayerStore } from './player.js';
+import { useSettingsStore } from './settings.js';
 
 export type WaveformState = {
   pipeline?: waveform.Pipeline;

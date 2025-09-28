@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { fastifyRoute, createApiRoute } from './common';
-import { axiosRequest } from './common/axiosRequest';
+import { axiosRequest } from './common/axiosRequest.js';
+import { fastifyRoute, createApiRoute } from './common/index.js';
 
 export const itemSchema = z.file({});
 export type Item = z.infer<typeof itemSchema>;

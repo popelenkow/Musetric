@@ -1,4 +1,4 @@
-import { ComplexGpuBuffer } from '../complexArray';
+import { ComplexGpuBuffer } from '../complexArray.js';
 
 export const createGpuBuffer = (device: GPUDevice, size: number): GPUBuffer => {
   return device.createBuffer({

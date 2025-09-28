@@ -1,4 +1,4 @@
-import { ViewSize } from './viewSize';
+import { ViewSize } from './viewSize.js';
 
 export const resizeCanvas = (canvas: HTMLCanvasElement): ViewSize => {
   const viewSize = {

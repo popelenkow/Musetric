@@ -1,8 +1,8 @@
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { App } from './components/App';
-import { appTheme } from './theme';
+import { App } from './components/App.js';
+import { appTheme } from './theme.js';
 
 const run = () => {
   const rootElement = document.getElementById('root');

@@ -1,4 +1,4 @@
-import { FourierConfig } from '../config';
+import { FourierConfig } from '../config.js';
 
 type FourierParams = {
   windowSize: number;

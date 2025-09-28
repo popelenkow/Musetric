@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { PaletteColor, PaletteColorOptions } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import { black, white } from '../colors';
+import { black, white } from '../colors.js';
 
 declare module '@mui/material/styles' {
   interface Palette {
