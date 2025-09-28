@@ -13,7 +13,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 24.7.0
+          node-version: "24.7.0"
+      - uses: actions/setup-python@v5
+        id: setup-python
+        with:
+          python-version: "3.13.2"
+      - name: Export UV_PYTHON
+        run: echo "UV_PYTHON=${{ steps.setup-python.outputs.python-path }}" >> $GITHUB_ENV
       - run: corepack enable
       - run: corepack prepare yarn@4.9.3 --activate
       - uses: astral-sh/setup-uv@v4
