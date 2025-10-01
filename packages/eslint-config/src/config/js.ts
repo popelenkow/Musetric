@@ -6,7 +6,7 @@ import { ConfigWithExtends } from 'typescript-eslint';
 export const jsConfig: ConfigWithExtends = {
   extends: [eslint.configs.recommended],
   files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
-  ignores: ['.venv/**/*', 'dist/**/*'],
+  ignores: ['**/.venv/**/*', '**/dist/**/*'],
   languageOptions: {
     ecmaVersion: 2024,
     sourceType: 'module',
