@@ -1,7 +1,11 @@
-import { ComplexArray, CpuMarker, subComplexArray } from '../../common';
-import { CpuFourier, CreateCpuFourier } from '../cpuFourier';
-import { createState } from './state';
-import { transform4 } from './utils';
+import {
+  ComplexArray,
+  CpuMarker,
+  subComplexArray,
+} from '../../common/index.js';
+import { CpuFourier, CreateCpuFourier } from '../cpuFourier.js';
+import { createState } from './state.js';
+import { transform4 } from './utils.js';
 
 export const createCpuFftRadix4: CreateCpuFourier = (marker?: CpuMarker) => {
   const state = createState();

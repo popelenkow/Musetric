@@ -1,2 +1,2 @@
-export * from './common';
-export * as table from './table';
+export * from './common.js';
+export * as table from './table.js';

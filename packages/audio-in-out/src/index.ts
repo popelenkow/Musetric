@@ -1,1 +1,1 @@
-export * from './audioPlayer';
+export * from './audioPlayer/index.js';

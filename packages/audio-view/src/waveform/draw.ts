@@ -1,5 +1,5 @@
-import { ViewColors } from '../common';
-import { WaveSegment } from './generateSegments';
+import { ViewColors } from '../common/index.js';
+import { WaveSegment } from './generateSegments.js';
 
 export type Draw = {
   run: (segments: WaveSegment[], progress: number, colors: ViewColors) => void;

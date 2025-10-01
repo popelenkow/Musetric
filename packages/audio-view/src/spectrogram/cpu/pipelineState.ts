@@ -1,5 +1,9 @@
-import { ComplexArray, CpuMarker, createComplexArray } from '../../common';
-import { ExtPipelineConfig } from '../pipeline';
+import {
+  ComplexArray,
+  CpuMarker,
+  createComplexArray,
+} from '../../common/index.js';
+import { ExtPipelineConfig } from '../pipeline.js';
 
 export type PipelineArrays = {
   config: ExtPipelineConfig;

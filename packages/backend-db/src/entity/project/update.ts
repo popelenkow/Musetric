@@ -1,9 +1,9 @@
 import type { DatabaseSync } from 'node:sqlite';
 import type { BlobFile } from '@musetric/resource-utils/blobStorage';
 import { z } from 'zod';
-import { transaction } from '../../common';
-import { numericIdSchema, table } from '../../schema';
-import { get } from './get';
+import { transaction } from '../../common/index.js';
+import { numericIdSchema, table } from '../../schema/index.js';
+import { get } from './get.js';
 
 const updateItemSchema = z.object({
   project: table.project.itemSchema,

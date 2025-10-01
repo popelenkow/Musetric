@@ -4,8 +4,8 @@ import {
   parseHexColor,
   ViewColors,
   ViewGradients,
-} from '../../common';
-import { ExtPipelineConfig } from '../pipeline';
+} from '../../common/index.js';
+import { ExtPipelineConfig } from '../pipeline.js';
 
 type Config = Pick<
   ExtPipelineConfig,

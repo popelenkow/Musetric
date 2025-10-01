@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "ES2024",
     "lib": ["ES2024"],
-    "module": "es2022",
-    "moduleResolution": "bundler",
+    "module": "node20",
+    "moduleResolution": "node16",
     "declaration": true,
     "declarationMap": true,
     "strict": true,

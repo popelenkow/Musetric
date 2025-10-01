@@ -4,15 +4,15 @@ import {
   complexArrayFrom,
   createComplexGpuBufferReader,
   createGpuContext,
-} from '../../../common';
+} from '../../../common/index.js';
 import {
   allCpuFourierModes,
   allGpuFourierModes,
   cpuFouriers,
   gpuFouriers,
-} from '../../fouriers';
-import { assertArrayClose, createGpuBuffers, windowCount } from './common';
-import { fourierFixtures } from './fixture';
+} from '../../fouriers.js';
+import { assertArrayClose, createGpuBuffers, windowCount } from './common.js';
+import { fourierFixtures } from './fixture.js';
 
 describe('fourier', async () => {
   const { device } = await createGpuContext();

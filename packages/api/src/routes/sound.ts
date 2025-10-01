@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { fastifyRoute, createApiRoute } from './common';
-import { axiosRequest } from './common/axiosRequest';
+import { axiosRequest } from './common/axiosRequest.js';
+import { fastifyRoute, createApiRoute } from './common/index.js';
 
 export const typeSchema = z.enum(['original', 'vocal', 'instrumental']);
 export type Type = z.infer<typeof typeSchema>;

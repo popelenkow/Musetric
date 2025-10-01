@@ -1,4 +1,4 @@
-import { ChannelBuffers } from './buffer';
+import { ChannelBuffers } from './buffer.js';
 
 export type ToWorkletEvent =
   | { type: 'play'; buffers: ChannelBuffers; offset: number }

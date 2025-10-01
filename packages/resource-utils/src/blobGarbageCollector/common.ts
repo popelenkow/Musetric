@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { BlobStorage } from '../blobStorage';
+import { BlobStorage } from '../blobStorage.js';
 
 export const collectGarbage = async (
   blobStorage: BlobStorage,

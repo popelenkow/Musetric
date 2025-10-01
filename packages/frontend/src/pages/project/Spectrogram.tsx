@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
-import { usePlayerStore } from './store/player';
-import { useSettingsStore } from './store/settings';
-import { useSpectrogramStore } from './store/spectrogram';
+import { usePlayerStore } from './store/player.js';
+import { useSettingsStore } from './store/settings.js';
+import { useSpectrogramStore } from './store/spectrogram.js';
 
 export const Spectrogram: FC = () => {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();

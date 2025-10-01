@@ -1,5 +1,5 @@
-import { CreateGpuFourier, GpuFourier } from '../gpuFourier';
-import { createState } from './state';
+import { CreateGpuFourier, GpuFourier } from '../gpuFourier.js';
+import { createState } from './state.js';
 
 export const createGpuFftRadix2: CreateGpuFourier = (device, markers) => {
   const state = createState(device);

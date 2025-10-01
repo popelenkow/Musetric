@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import z from 'zod';
-import { ApiRoute, RequestMethod } from './apiRoute';
-import { coerceSchema } from './coerceSchema';
-import { error } from './error';
+import { ApiRoute, RequestMethod } from './apiRoute.js';
+import { coerceSchema } from './coerceSchema.js';
+import { error } from './error.js';
 
 export const fastifyRoute = <
   Method extends RequestMethod,

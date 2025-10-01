@@ -1,6 +1,6 @@
 import fs from 'fs';
-import { envs } from '../src/musetricBackendWorkers/common/envs';
-import { downloadFile } from './downloadFile';
+import { envs } from '../src/musetricBackendWorkers/common/envs.js';
+import { downloadFile } from './downloadFile.js';
 
 export const downloadModel = async (): Promise<void> => {
   if (!fs.existsSync(envs.modelsDir)) {

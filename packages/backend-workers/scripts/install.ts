@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 import { platform } from 'os';
-import { downloadModel } from './downloadModel';
+import { downloadModel } from './downloadModel.js';
 
 const isCheck = process.env.workspace_mode === 'check';
 const isMacOS = platform() === 'darwin';

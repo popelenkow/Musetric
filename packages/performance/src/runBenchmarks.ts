@@ -1,6 +1,6 @@
 import { createGpuContext, type FourierMode } from '@musetric/audio-view';
-import { runPipeline } from './runPipeline';
-import { waitNextFrame } from './waitNextFrame';
+import { runPipeline } from './runPipeline.js';
+import { waitNextFrame } from './waitNextFrame.js';
 
 export type MetricsData = {
   first: Record<string, number>;

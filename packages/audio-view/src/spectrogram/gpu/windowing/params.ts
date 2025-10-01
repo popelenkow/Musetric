@@ -1,4 +1,4 @@
-import { Config } from './state';
+import { Config } from './state.js';
 
 export type WindowingParams = {
   windowSize: number;

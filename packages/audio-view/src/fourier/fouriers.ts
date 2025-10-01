@@ -1,6 +1,6 @@
-import { createCpuFftRadix4 } from './cpuFftRadix4';
-import { createGpuFftRadix2 } from './gpuFftRadix2';
-import { createGpuFftRadix4 } from './gpuFftRadix4';
+import { createCpuFftRadix4 } from './cpuFftRadix4/index.js';
+import { createGpuFftRadix2 } from './gpuFftRadix2/index.js';
+import { createGpuFftRadix4 } from './gpuFftRadix4/index.js';
 
 export const cpuFouriers = {
   cpuFftRadix4: createCpuFftRadix4,

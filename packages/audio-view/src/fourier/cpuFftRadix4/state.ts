@@ -1,6 +1,6 @@
-import { FourierConfig } from '../config';
-import { assertWindowSizePowerOfTwo } from '../isPowerOfTwo';
-import { utilsRadix4 } from '../utilsRadix4';
+import { FourierConfig } from '../config.js';
+import { assertWindowSizePowerOfTwo } from '../isPowerOfTwo.js';
+import { utilsRadix4 } from '../utilsRadix4.js';
 
 export type State = {
   config: FourierConfig;

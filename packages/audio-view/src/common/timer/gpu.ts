@@ -1,4 +1,4 @@
-import { roundDuration } from './roundDuration';
+import { roundDuration } from './roundDuration.js';
 
 export type GpuMarkers<Label extends string> = Record<
   Label,

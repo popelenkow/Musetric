@@ -1,15 +1,18 @@
 import { fastify, FastifyInstance } from 'fastify';
-import { registerRouters } from './routers';
-import { disableRequestLogging, registerApiLogger } from './services/apiLogger';
-import { registerBlobGarbageCollector } from './services/blobGarbageCollector';
-import { registerBlobStorage } from './services/blobStorage';
-import { registerDb } from './services/db';
-import { registerFrontend } from './services/frontend';
-import { https } from './services/https';
-import { logger } from './services/logger';
-import { registerMultipart } from './services/multipart';
-import { registerSchemaCompiler } from './services/schemaCompiler';
-import { registerSwagger } from './services/swagger';
+import { registerRouters } from './routers/index.js';
+import {
+  disableRequestLogging,
+  registerApiLogger,
+} from './services/apiLogger.js';
+import { registerBlobGarbageCollector } from './services/blobGarbageCollector.js';
+import { registerBlobStorage } from './services/blobStorage.js';
+import { registerDb } from './services/db.js';
+import { registerFrontend } from './services/frontend.js';
+import { https } from './services/https.js';
+import { logger } from './services/logger.js';
+import { registerMultipart } from './services/multipart.js';
+import { registerSchemaCompiler } from './services/schemaCompiler.js';
+import { registerSwagger } from './services/swagger.js';
 
 export const createServerApp = (): FastifyInstance => {
   const app: FastifyInstance = fastify({

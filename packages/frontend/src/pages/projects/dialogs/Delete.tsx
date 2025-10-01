@@ -14,9 +14,9 @@ import { useTranslation } from 'react-i18next';
 import {
   deleteProjectApi,
   getProjectApi,
-} from '../../../api/endpoints/project';
-import { routes } from '../../../app/router/routes';
-import { ProjectPreview } from '../cards/Preview';
+} from '../../../api/endpoints/project.js';
+import { routes } from '../../../app/router/routes.js';
+import { ProjectPreview } from '../cards/Preview.js';
 
 export type DeleteDialogProps = {
   projectId: number;

@@ -1,6 +1,6 @@
 import { Box, Card, CardActions, CircularProgress } from '@mui/material';
 import { FC } from 'react';
-import { ProjectPreview } from './Preview';
+import { ProjectPreview } from './Preview.js';
 
 export const PlaceholderCard: FC = () => {
   return (

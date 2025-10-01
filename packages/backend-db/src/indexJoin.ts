@@ -1,2 +1,2 @@
-export * from './entity';
-export * from './instance';
+export * from './entity/index.js';
+export * from './instance.js';

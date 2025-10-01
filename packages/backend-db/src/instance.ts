@@ -1,7 +1,7 @@
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
-import { blob, preview, project, sound } from './entity';
+import { blob, preview, project, sound } from './entity/index.js';
 
 export const createDatabase = (databasePath: string): DatabaseSync => {
   mkdirSync(dirname(databasePath), { recursive: true });

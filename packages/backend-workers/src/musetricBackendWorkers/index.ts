@@ -1,2 +1,2 @@
-export * from './common/logger';
-export * from './separateAudio';
+export * from './common/logger.js';
+export * from './separateAudio/index.js';

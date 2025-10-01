@@ -1,6 +1,6 @@
 import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
-import { assertFound } from '../common/assertFound';
+import { assertFound } from '../common/assertFound.js';
 
 export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   app.addHook('onRoute', (routeOptions) => {

@@ -1,5 +1,5 @@
-import { ComplexArray, CpuMarker } from '../common';
-import { FourierConfig } from './config';
+import { ComplexArray, CpuMarker } from '../common/index.js';
+import { FourierConfig } from './config.js';
 
 export type CpuFourier = {
   forward: (signal: ComplexArray) => void;

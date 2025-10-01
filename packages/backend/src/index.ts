@@ -1,6 +1,6 @@
-import { createServerApp } from './app';
-import { killDevHost } from './common/dev';
-import { envs } from './common/envs';
+import { createServerApp } from './app.js';
+import { killDevHost } from './common/dev.js';
+import { envs } from './common/envs.js';
 
 const startServer = async () => {
   const app = createServerApp();

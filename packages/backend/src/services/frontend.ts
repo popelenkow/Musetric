@@ -1,6 +1,6 @@
 import { fastifyStatic } from '@fastify/static';
 import { FastifyInstance, FastifyRequest } from 'fastify';
-import { envs } from '../common/envs';
+import { envs } from '../common/envs.js';
 
 const isApiPath = (path: string) =>
   path.startsWith('/api') ||

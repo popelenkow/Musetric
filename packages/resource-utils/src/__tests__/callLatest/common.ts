@@ -1,4 +1,4 @@
-import { createControlledPromise } from '../../controlledPromise';
+import { createControlledPromise } from '../../controlledPromise.js';
 
 export const getExpectedResults = (
   callCount: number,

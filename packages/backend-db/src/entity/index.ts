@@ -1,4 +1,4 @@
-export * as blob from './blob';
-export * as preview from './preview';
-export * as project from './project';
-export * as sound from './sound';
+export * as blob from './blob/index.js';
+export * as preview from './preview/index.js';
+export * as project from './project/index.js';
+export * as sound from './sound/index.js';

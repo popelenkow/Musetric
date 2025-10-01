@@ -1,4 +1,4 @@
-export * from './common';
-export * from './fourier';
-export * as spectrogram from './spectrogram';
-export * as waveform from './waveform';
+export * from './common/index.js';
+export * from './fourier/index.js';
+export * as spectrogram from './spectrogram/index.js';
+export * as waveform from './waveform/index.js';

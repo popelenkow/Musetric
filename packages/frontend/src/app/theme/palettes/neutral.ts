@@ -5,7 +5,7 @@ import {
   PaletteColorOptions,
   Theme,
 } from '@mui/material';
-import { black, neutral, white } from '../colors';
+import { black, neutral, white } from '../colors.js';
 
 declare module '@mui/material/styles' {
   interface Palette {

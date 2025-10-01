@@ -1,1 +1,1 @@
-export * as api from './routes';
+export * as api from './routes/index.js';

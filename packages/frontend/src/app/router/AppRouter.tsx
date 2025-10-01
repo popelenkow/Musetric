@@ -1,9 +1,9 @@
 import { useSyncHistoryLocation, FirstMatch } from '@musetric/spa-router';
 import { FC } from 'react';
-import { NotFoundPage } from '../../pages/notFound';
-import { ProjectPage } from '../../pages/project';
-import { ProjectsPage } from '../../pages/projects';
-import { routes } from './routes';
+import { NotFoundPage } from '../../pages/notFound/index.js';
+import { ProjectPage } from '../../pages/project/index.js';
+import { ProjectsPage } from '../../pages/projects/index.js';
+import { routes } from './routes.js';
 
 export const AppRouter: FC = () => {
   useSyncHistoryLocation();

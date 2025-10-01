@@ -1,1 +1,1 @@
-export * from './blobGarbageCollector/index';
+export * from './blobGarbageCollector/index.js';

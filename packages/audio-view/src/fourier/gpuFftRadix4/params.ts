@@ -1,5 +1,5 @@
-import { FourierConfig } from '../config';
-import { utilsRadix4 } from '../utilsRadix4';
+import { FourierConfig } from '../config.js';
+import { utilsRadix4 } from '../utilsRadix4.js';
 
 export type GpuFftRadix4Params = {
   windowSize: number;

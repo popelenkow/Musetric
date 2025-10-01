@@ -1,6 +1,6 @@
 import { createBlobGarbageCollector } from '@musetric/resource-utils/blobGarbageCollector';
 import { FastifyInstance } from 'fastify';
-import { envs } from '../common/envs';
+import { envs } from '../common/envs.js';
 
 export const registerBlobGarbageCollector = (app: FastifyInstance) => {
   const blobGarbageCollector = createBlobGarbageCollector({

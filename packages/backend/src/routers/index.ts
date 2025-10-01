@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
-import { previewRouter } from './preview';
-import { projectRouter } from './project';
-import { soundRouter } from './sound';
+import { previewRouter } from './preview.js';
+import { projectRouter } from './project.js';
+import { soundRouter } from './sound.js';
 
 export const registerRouters = (app: FastifyInstance) => {
   app.register(previewRouter);

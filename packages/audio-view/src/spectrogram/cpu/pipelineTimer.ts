@@ -1,4 +1,4 @@
-import { createCpuTimer, roundDuration } from '../../common';
+import { createCpuTimer, roundDuration } from '../../common/index.js';
 
 export const timerLabels = [
   'configure',

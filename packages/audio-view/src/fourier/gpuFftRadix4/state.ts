@@ -1,10 +1,10 @@
-import { ComplexGpuBuffer } from '../../common';
-import { FourierConfig } from '../config';
-import { assertWindowSizePowerOfTwo } from '../isPowerOfTwo';
-import { createParams, StateParams } from './params';
-import { createReversePipeline, createTransformPipeline } from './pipeline';
-import { createReverseTable } from './reverseTable';
-import { createTrigTable } from './trigTable';
+import { ComplexGpuBuffer } from '../../common/index.js';
+import { FourierConfig } from '../config.js';
+import { assertWindowSizePowerOfTwo } from '../isPowerOfTwo.js';
+import { createParams, StateParams } from './params.js';
+import { createReversePipeline, createTransformPipeline } from './pipeline.js';
+import { createReverseTable } from './reverseTable.js';
+import { createTrigTable } from './trigTable.js';
 
 type Pipelines = {
   reverse: GPUComputePipeline;

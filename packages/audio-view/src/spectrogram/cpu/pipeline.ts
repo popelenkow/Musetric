@@ -1,15 +1,15 @@
 import { createCallLatest } from '@musetric/resource-utils/callLatest';
-import type { CpuFourierMode } from '../../fourier';
-import { cpuFouriers } from '../../fourier';
-import { Pipeline } from '../pipeline';
-import { createDecibelify } from './decibelify';
-import { createDraw } from './draw';
-import { createMagnitudify } from './magnitudify';
-import { createPipelineState } from './pipelineState';
-import { createPipelineTimer, PipelineMetrics } from './pipelineTimer';
-import { createRemap } from './remap';
-import { createSliceWave } from './sliceWave';
-import { createWindowing } from './windowing';
+import type { CpuFourierMode } from '../../fourier/index.js';
+import { cpuFouriers } from '../../fourier/index.js';
+import { Pipeline } from '../pipeline.js';
+import { createDecibelify } from './decibelify.js';
+import { createDraw } from './draw.js';
+import { createMagnitudify } from './magnitudify.js';
+import { createPipelineState } from './pipelineState.js';
+import { createPipelineTimer, PipelineMetrics } from './pipelineTimer.js';
+import { createRemap } from './remap.js';
+import { createSliceWave } from './sliceWave.js';
+import { createWindowing } from './windowing.js';
 
 export type CreatePipelineOptions = {
   canvas: HTMLCanvasElement;

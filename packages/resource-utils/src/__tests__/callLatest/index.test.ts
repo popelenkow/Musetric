@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { createCallLatest } from '../../callLatest';
-import { createPromiseController, getExpectedResults } from './common';
-import { callLatestFixtures } from './fixture';
+import { createCallLatest } from '../../callLatest.js';
+import { createPromiseController, getExpectedResults } from './common.js';
+import { callLatestFixtures } from './fixture.js';
 
 describe('callLatest', () => {
   callLatestFixtures.forEach((fixture) => {

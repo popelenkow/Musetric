@@ -1,4 +1,4 @@
-import playerWorkletUrl from './worklet.ts?worker&url';
+import playerWorkletUrl from './worklet.js?worker&url';
 
 export const createPlayerNode = async (
   context: AudioContext,
