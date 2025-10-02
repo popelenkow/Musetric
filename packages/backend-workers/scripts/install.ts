@@ -19,8 +19,8 @@ const hasCudaSupport = (): boolean => {
 
 try {
   const isCuda = hasCudaSupport();
-  const extraGpu = isCuda ? ' --extra cuda' : '';
-  const command = 'uv sync --group check' + extraGpu;
+  const extra = isCuda ? '--extra cuda' : '--extra cpu';
+  const command = `uv sync --group check ${extra}`;
   console.log(`Running command: ${command}`);
   execSync(command, {
     stdio: 'inherit',
