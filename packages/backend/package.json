@@ -4,9 +4,11 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "postinstall": "node --import tsx ./scripts/install.ts",
-    "dev": "node --import tsx --watch src/index.ts -- musetric-backend",
+    "postinstall": "node --import tsx --conditions=monorepo ./scripts/install.ts",
+    "dev": "node --import tsx --conditions=monorepo --watch src/index.ts -- musetric-backend",
     "dev:stop": "kill-process musetric-backend",
+    "build": "tsc --project tsconfig.build.json",
+    "start": "node dist/index.js",
     "build:docker": "docker build --progress=plain --file Dockerfile -t musetric ../..",
     "start:docker": "docker compose up -d",
     "check:ts": "tsc --noEmit",

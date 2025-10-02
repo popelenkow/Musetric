@@ -3,12 +3,18 @@
   "version": "0.1.0",
   "license": "MIT",
   "type": "module",
-  "main": "src/index.ts",
   "exports": {
-    ".": "./src/index.ts"
+    "./package.json": "./package.json",
+    ".": {
+      "monorepo": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
   },
   "scripts": {
-    "postinstall": "node --import tsx scripts/install.ts",
+    "postinstall": "node --import tsx --conditions=monorepo scripts/install.ts",
+    "build": "tsc --project tsconfig.build.json",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache && uv run python scripts/check.py",
     "check:lint:fix": "eslint . --fix --cache && uv run python scripts/check.py --fix"

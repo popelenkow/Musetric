@@ -24,7 +24,8 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "composite": true,
-    "incremental": true
+    "incremental": true,
+    "customConditions": ["monorepo"]
   },
   "exclude": ["node_modules", "**/dist", ".venv", "**/public"]
 }

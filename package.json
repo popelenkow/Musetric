@@ -12,6 +12,7 @@
   "scripts": {
     "dev": "yarn workspaces foreach --all --parallel --interlaced run dev",
     "dev:stop": "yarn workspaces foreach --all --parallel --interlaced run dev:stop",
+    "build": "yarn workspaces foreach --all --parallel run build",
     "build:frontend": "yarn workspace @musetric/frontend build && yarn ncp packages/frontend/dist packages/backend/public",
     "build:docker": "yarn workspace @musetric/backend build:docker",
     "start:docker": "yarn workspace @musetric/backend start:docker",
