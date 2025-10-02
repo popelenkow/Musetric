@@ -5,37 +5,52 @@ description = "Musetric Backend Workers"
 authors = [{ name = "Vladlen Popelenkov", email = "popelenkow@gmail.com" }]
 requires-python = "==3.13.2"
 dependencies = [
-    "torch==2.8.0",
-    "torchaudio==2.8.0",
     "rotary-embedding-torch==0.8.9",
     "einops==0.8.1",
-    "numpy==2.2.6",
-    "numba==0.61.2",
-    "PyYAML==6.0.2",
+    "numpy==2.3.3",
+    "numba==0.62.1",
+    "PyYAML==6.0.3",
 ]
 
 [project.optional-dependencies]
+cpu = [
+    "torch==2.8.0",
+    "torchaudio==2.8.0",
+]
 cuda = [
     "torch==2.8.0",
-    "torchaudio==2.8.0"
+    "torchaudio==2.8.0",
 ]
 
 [dependency-groups]
 check = [
-    "black==25.1.0",
-    "isort==6.0.1",
-    "ruff==0.12.11"
+    "black==25.9.0",
+    "isort==6.1.0",
+    "ruff==0.13.2"
 ]
 
 [tool.uv]
+conflicts = [
+  [
+    { extra = "cpu" },
+    { extra = "cuda" },
+  ],
+]
 
 [tool.uv.sources]
 torch = [
+  { index = "cpu-index", extra = "cpu" },
   { index = "cuda-index", extra = "cuda" },
 ]
 torchaudio = [
+  { index = "cpu-index", extra = "cpu" },
   { index = "cuda-index", extra = "cuda" },
 ]
+
+[[tool.uv.index]]
+name = "cpu-index"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
 
 [[tool.uv.index]]
 name = "cuda-index"
