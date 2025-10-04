@@ -17,8 +17,6 @@ jobs:
       - run: corepack enable
       - run: corepack prepare yarn@4.9.3 --activate
       - uses: astral-sh/setup-uv@v4
-        with:
-          enable-cache: true
       - run: yarn --immutable
       - run: yarn check:deps
       - run: yarn check:ts

@@ -2,6 +2,7 @@ node_modules/
 dist/
 build/
 tmp/
+**/backend/storage/
 .eslintrc.local.json
 yarn-error.log
 tsconfig.tsbuildinfo

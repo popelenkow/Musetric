@@ -4,7 +4,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
+    "project:build": "tsc --project tsconfig.build.json",
     "dev": "vite -- musetric-performance",
     "dev:stop": "kill-process musetric-performance",
     "check:ts": "tsc --noEmit",

@@ -13,6 +13,7 @@ yarn dev
 
 ```bash
 yarn
+yarn check:deps
 yarn check:ts
 yarn check:lint
 yarn check:format
@@ -22,9 +23,9 @@ yarn test
 ## Docker
 
 ```bash
-yarn build:frontend
-yarn build:docker
-yarn start:docker
+yarn
+yarn docker:build
+yarn docker:start
 ```
 
 ## Third-party Components
