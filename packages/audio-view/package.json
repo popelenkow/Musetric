@@ -14,7 +14,7 @@
   },
   "scripts": {
     "postinstall": "node --conditions=monorepo ./scripts/install.ts",
-    "build": "tsc --project tsconfig.build.json",
+    "project:build": "tsc --project tsconfig.build.json",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache",
     "check:lint:fix": "eslint . --fix --cache",

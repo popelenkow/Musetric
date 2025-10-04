@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite -- musetric-frontend",
     "dev:stop": "kill-process musetric-frontend",
-    "build": "vite build",
+    "project:build": "vite build && cpx \"dist/**/*\" ../backend/public --clean",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache",
     "check:lint:fix": "eslint . --fix --cache",
@@ -30,6 +30,7 @@
     "@types/react-dom": "19.1.7",
     "@vitejs/plugin-react": "5.0.0",
     "axios": "1.12.2",
+    "cpx2": "8.0.0",
     "date-fns": "4.1.0",
     "eslint": "9.36.0",
     "framer-motion": "12.23.12",
