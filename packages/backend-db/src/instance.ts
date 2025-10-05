@@ -1,7 +1,7 @@
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
-import { blob, preview, project, sound } from './entity/index.js';
+import { blob, separation, preview, project, sound } from './entity/index.js';
 
 export const createDatabase = (databasePath: string): DatabaseSync => {
   mkdirSync(dirname(databasePath), { recursive: true });
@@ -21,6 +21,7 @@ export const createInstance = (databasePath: string) => {
     project: project.createInstance(database),
     preview: preview.createInstance(database),
     sound: sound.createInstance(database),
+    separation: separation.createInstance(database),
     blob: blob.createInstance(database),
     disconnect: () => {
       if (database.isOpen) {
