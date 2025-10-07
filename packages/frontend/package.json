@@ -4,7 +4,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "vite -- musetric-frontend",
+    "dev:start": "vite -- musetric-frontend",
     "dev:stop": "kill-process musetric-frontend",
     "project:build": "vite build && cpx \"dist/**/*\" ../backend/public --clean",
     "check:ts": "tsc --noEmit",

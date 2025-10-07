@@ -4,10 +4,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "init:db": "node --import tsx --conditions=monorepo ./scripts/initDB.ts",
-    "dev": "yarn init:db && node --import tsx --conditions=monorepo --watch src/index.ts -- musetric-backend",
+    "dev:start": "yarn project:init && node --import tsx --conditions=monorepo --watch src/index.ts -- musetric-backend",
     "dev:stop": "kill-process musetric-backend",
     "project:build": "tsc --project tsconfig.build.json",
+    "project:init": "node --import tsx --conditions=monorepo ./scripts/init.js",
     "project:start": "node dist/index.js",
     "docker:build": "docker build --progress=plain --file Dockerfile -t musetric ../..",
     "docker:start": "docker compose up -d",

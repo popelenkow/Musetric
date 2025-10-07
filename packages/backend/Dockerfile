@@ -15,7 +15,7 @@ WORKDIR /app
 COPY . .
 RUN yarn install --immutable
 RUN yarn project:build
-RUN yarn init:db
+RUN yarn project:init
 RUN rm -rf node_modules
 RUN yarn workspaces focus @musetric/backend --production
 
@@ -25,14 +25,18 @@ ENV PROTOCOL=http
 ENV PORT=80
 
 COPY --from=builder /app/node_modules ./node_modules
+
 COPY --from=builder /app/packages/backend/package.json ./packages/backend/package.json
 COPY --from=builder /app/packages/backend/dist ./packages/backend/dist
 COPY --from=builder /app/packages/backend/storage ./packages/backend/storage
 COPY --from=builder /app/packages/backend/public ./packages/backend/public
+
 COPY --from=builder /app/packages/backend-db/package.json ./packages/backend-db/package.json
 COPY --from=builder /app/packages/backend-db/dist ./packages/backend-db/dist
+
 COPY --from=builder /app/packages/api/package.json ./packages/api/package.json
 COPY --from=builder /app/packages/api/dist ./packages/api/dist
+
 COPY --from=builder /app/packages/resource-utils/package.json ./packages/resource-utils/package.json
 COPY --from=builder /app/packages/resource-utils/dist ./packages/resource-utils/dist
 

@@ -10,10 +10,10 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "yarn workspaces foreach --all --parallel --interlaced run dev",
+    "dev:start": "yarn workspaces foreach --all --parallel --interlaced run dev:start",
     "dev:stop": "yarn workspaces foreach --all --parallel --interlaced run dev:stop",
-    "init:db": "yarn workspaces foreach --all --parallel --interlaced run init:db",
     "project:build": "yarn workspaces foreach --all --parallel --interlaced run project:build",
+    "project:init": "yarn workspaces foreach --all --parallel --interlaced run project:init",
     "project:start": "yarn workspaces foreach --all --parallel --interlaced run project:start",
     "docker:build": "yarn workspaces foreach --all --parallel --interlaced run docker:build",
     "docker:start": "yarn workspaces foreach --all --parallel --interlaced run docker:start",
