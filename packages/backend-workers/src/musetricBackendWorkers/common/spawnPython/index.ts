@@ -1,6 +1,6 @@
 import { spawn } from 'child_process';
-import { envs } from '../envs.js';
 import { Logger, LogLevel } from '../logger.js';
+import { pythonPath, rootPath } from '../pythonPath.js';
 import {
   createTextProcessor,
   getErrorMessage,
@@ -33,9 +33,9 @@ export const spawnPython = async <Result, Message extends { type: string }>(
 
     const pythonArgs = [scriptPath, ...Object.entries(args).flat()];
 
-    const process = spawn(envs.pythonPath, pythonArgs, {
+    const process = spawn(pythonPath, pythonArgs, {
       stdio: ['pipe', 'pipe', 'pipe'],
-      cwd: envs.rootPath,
+      cwd: rootPath,
     });
 
     const getHandler = (message: Message) => {

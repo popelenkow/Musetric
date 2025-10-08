@@ -1,4 +1,5 @@
-import { envs } from '../common/envs.js';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   Logger,
   LogLevel,
@@ -6,19 +7,19 @@ import {
 } from '../common/logger.js';
 import { spawnPython } from '../common/spawnPython/index.js';
 
-export type SeparateAudioResultFile = {
-  filename: string;
-  contentType: string;
-};
 export type SeparateAudioResult = {
-  vocal: SeparateAudioResultFile;
-  instrumental: SeparateAudioResultFile;
+  vocal: string;
+  instrumental: string;
 };
 
 export type SeparateAudioOptions = {
   sourcePath: string;
   vocalPath: string;
   instrumentalPath: string;
+  modelPath: string;
+  modelConfigPath: string;
+  sampleRate: number;
+  outputFormat: string;
   onProgress: (progress: number) => void;
   logger: Logger;
   logLevel: LogLevel;
@@ -29,45 +30,47 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
     sourcePath,
     vocalPath,
     instrumentalPath,
+    modelPath,
+    modelConfigPath,
+    sampleRate,
+    outputFormat,
     onProgress,
     logger,
     logLevel,
   } = options;
-  let metadata: SeparateAudioResult | undefined = undefined;
+  let result: SeparateAudioResult | undefined = undefined;
 
   type ProgressMessage = {
     type: 'progress';
     progress: number;
   };
 
-  type MetadataMessage = {
-    type: 'metadata';
-    vocal: {
-      filename: string;
-      contentType: string;
-    };
-    instrumental: {
-      filename: string;
-      contentType: string;
-    };
+  type ResultMessage = {
+    type: 'result';
+    vocal: string;
+    instrumental: string;
   };
 
-  type WorkerMessage = ProgressMessage | MetadataMessage;
+  type WorkerMessage = ProgressMessage | ResultMessage;
 
   return spawnPython<SeparateAudioResult, WorkerMessage>({
-    scriptPath: envs.separateScriptPath,
+    scriptPath: join(dirname(fileURLToPath(import.meta.url)), 'index.py'),
     args: {
       '--source-path': sourcePath,
       '--vocal-path': vocalPath,
       '--instrumental-path': instrumentalPath,
+      '--model-path': modelPath,
+      '--config-path': modelConfigPath,
+      '--sample-rate': sampleRate.toString(),
+      '--output-format': outputFormat,
       '--log-level': logLevel,
     },
     handlers: {
       progress: (message) => {
         onProgress(message.progress);
       },
-      metadata: (message) => {
-        metadata = {
+      result: (message) => {
+        result = {
           vocal: message.vocal,
           instrumental: message.instrumental,
         };
@@ -78,11 +81,11 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
         throw new Error(`Python script failed with code ${code}`);
       }
 
-      if (metadata === undefined) {
-        throw new Error(`No metadata received from Python script`);
+      if (result === undefined) {
+        throw new Error(`No result message received from Python script`);
       }
 
-      return metadata;
+      return result;
     },
     logger: wrapLoggerWithProcessName(logger, 'separateAudio'),
   });

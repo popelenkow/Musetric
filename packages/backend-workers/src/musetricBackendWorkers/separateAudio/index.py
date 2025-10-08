@@ -2,7 +2,6 @@ import argparse
 import logging
 import sys
 
-from musetricBackendWorkers.common.envs import envs
 from musetricBackendWorkers.common.logger import setupLogging
 from musetricBackendWorkers.separateAudio.bsRoformerSeparator import BSRoformerSeparator
 from musetricBackendWorkers.separateAudio.systemInfo import (
@@ -23,7 +22,30 @@ def parseArguments():
         "--vocal-path", required=True, help="Path for vocal output file"
     )
     parser.add_argument(
-        "--instrumental-path", required=True, help="Path for instrumental output file"
+        "--instrumental-path",
+        required=True,
+        help="Path for instrumental output file",
+    )
+    parser.add_argument(
+        "--model-path",
+        required=True,
+        help="Path to the model checkpoint file",
+    )
+    parser.add_argument(
+        "--config-path",
+        required=True,
+        help="Path to the model configuration file",
+    )
+    parser.add_argument(
+        "--sample-rate",
+        required=True,
+        type=int,
+        help="Sample rate for separation",
+    )
+    parser.add_argument(
+        "--output-format",
+        required=True,
+        help="Audio format for separated stems",
     )
     parser.add_argument(
         "--log-level",
@@ -46,11 +68,10 @@ def main() -> None:
         setupTorchOptimization()
 
         separator = BSRoformerSeparator(
-            modelsDir=envs.modelsDir,
-            modelName=envs.model,
-            sampleRate=envs.sampleRate,
-            outputFormat=envs.outputFormat,
-            contentType=envs.contentType,
+            modelPath=args.model_path,
+            modelConfigPath=args.config_path,
+            sampleRate=args.sample_rate,
+            outputFormat=args.output_format,
         )
         separator.separateAudio(
             sourcePath=args.source_path,
