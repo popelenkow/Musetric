@@ -31,6 +31,12 @@ export const jsConfig: ConfigWithExtends = {
     'func-names': ['error'],
     'func-style': ['error'],
     'import-x/no-default-export': 'error',
+    'import-x/no-unresolved': [
+      'error',
+      {
+        ignore: ['\\.wgsl\\?raw$'],
+      },
+    ],
     'import-x/order': [
       'error',
       {
