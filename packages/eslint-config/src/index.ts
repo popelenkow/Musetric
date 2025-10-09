@@ -8,6 +8,9 @@ export type ConfigType = 'browser' | 'node' | 'react';
 
 export const config = (type: ConfigType) => {
   const configs: ConfigWithExtends[] = [
+    {
+      ignores: jsConfig.ignores,
+    },
     jsConfig,
     type === 'react' ? reactConfig : tsConfig,
     {
