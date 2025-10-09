@@ -25,8 +25,12 @@
     "check:lint": "eslint . --cache && uv run python scripts/check.py",
     "check:lint:fix": "eslint . --fix --cache && uv run python scripts/check.py --fix"
   },
+  "peerDependencies": {
+    "@musetric/resource-utils": "workspace:*"
+  },
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
+    "@musetric/resource-utils": "workspace:*",
     "@types/node": "24.2.1",
     "axios": "1.12.2",
     "cpx2": "8.0.0",

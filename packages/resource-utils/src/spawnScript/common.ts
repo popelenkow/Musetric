@@ -1,11 +1,4 @@
-import { Logger } from '../logger.js';
-
-export const getErrorMessage = (error: unknown): string => {
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return String(error);
-};
+import type { Logger } from '../logger.js';
 
 export const tryParseMessage = <Message>(line: string): Message | undefined => {
   try {
@@ -17,6 +10,7 @@ export const tryParseMessage = <Message>(line: string): Message | undefined => {
 
 export const createTextProcessor = (
   logger: Logger,
+  processName: string,
   onLine: (line: string) => void,
 ) => {
   let text = '';
@@ -34,7 +28,7 @@ export const createTextProcessor = (
         try {
           onLine(processedChunk);
         } catch (error) {
-          logger.error(getErrorMessage(error));
+          logger.error({ processName, error }, 'Text processor handler error');
         }
       }
     }

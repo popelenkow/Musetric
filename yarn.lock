@@ -1162,12 +1162,15 @@ __metadata:
   resolution: "@musetric/backend-workers@workspace:packages/backend-workers"
   dependencies:
     "@musetric/eslint-config": "workspace:*"
+    "@musetric/resource-utils": "workspace:*"
     "@types/node": "npm:24.2.1"
     axios: "npm:1.12.2"
     cpx2: "npm:8.0.0"
     eslint: "npm:9.36.0"
     tsx: "npm:4.20.5"
     typescript: "npm:5.9.2"
+  peerDependencies:
+    "@musetric/resource-utils": "workspace:*"
   languageName: unknown
   linkType: soft
 
