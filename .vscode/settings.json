@@ -28,15 +28,28 @@
   "files.exclude": {
     "**/__pycache__": true,
     "**/*.egg-info": true,
-    "**/.venv": true,
-    "**/node_modules": true,
     "**/.yarn": true
   },
   "files.watcherExclude": {
-    "**/dist/**": true
+    "**/.venv/**": true,
+    "**/node_modules/**": true,
+    "**/.yarn/**": true,
+    "**/.eslintcache": true,
+    "**/*.tsbuildinfo": true,
+    "**/dist/**": true,
+    "**/tmp/**": true,
+    "**/backend/storage/**": true,
+    "**/.cache/**": true
   },
   "search.exclude": {
-    "**/yarn.lock": true,
-    "**/dist": true
+    "**/.venv/**": true,
+    "**/node_modules/**": true,
+    "**/.yarn/**": true,
+    "**/.eslintcache": true,
+    "**/*.tsbuildinfo": true,
+    "**/dist/**": true,
+    "**/tmp/**": true,
+    "**/backend/storage/**": true,
+    "**/.cache/**": true
   }
 }
