@@ -14,7 +14,7 @@
   },
   "scripts": {
     "postinstall": "node --conditions=monorepo ./scripts/install.ts",
-    "project:build": "tsc --project tsconfig.build.json",
+    "project:build": "cpx \"src/**/*.wgsl\" dist --clean && tsc --project tsconfig.build.json",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache",
     "check:lint:fix": "eslint . --fix --cache",
@@ -25,6 +25,7 @@
     "@musetric/resource-utils": "workspace:*",
     "@vitest/browser": "3.2.4",
     "@webgpu/types": "0.1.64",
+    "cpx2": "8.0.0",
     "eslint": "9.36.0",
     "playwright": "1.54.2",
     "typescript": "5.9.2",

@@ -10,7 +10,7 @@
   "python.analysis.autoImportCompletions": true,
   "python.analysis.extraPaths": [
     "./packages/backend-workers/.venv/Lib/site-packages",
-    "./packages/backend-workers/src"
+    "./packages/backend-workers/musetricBackendWorkers"
   ],
   "[javascript]": {
     "editor.tabSize": 2

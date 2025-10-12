@@ -1140,6 +1140,7 @@ __metadata:
     "@musetric/resource-utils": "workspace:*"
     "@vitest/browser": "npm:3.2.4"
     "@webgpu/types": "npm:0.1.64"
+    cpx2: "npm:8.0.0"
     eslint: "npm:9.36.0"
     playwright: "npm:1.54.2"
     typescript: "npm:5.9.2"
