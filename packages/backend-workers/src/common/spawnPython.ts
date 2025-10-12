@@ -3,7 +3,7 @@ import {
   spawnScript,
   SpawnScriptHandlers,
 } from '@musetric/resource-utils/spawnScript/index';
-import { pythonPath, rootPath } from './pythonPath.js';
+import { rootPath } from './rootPath.js';
 
 export type SpawnPythonOptions<Message extends { type: string }> = {
   scriptPath: string;
@@ -12,12 +12,18 @@ export type SpawnPythonOptions<Message extends { type: string }> = {
   logger: Logger;
   processName: string;
 };
+
 export const spawnPython = async <Message extends { type: string }>(
   options: SpawnPythonOptions<Message>,
 ) =>
   spawnScript<Message>({
-    command: pythonPath,
-    args: [options.scriptPath, ...Object.entries(options.args).flat()],
+    command: 'uv',
+    args: [
+      'run',
+      'python',
+      options.scriptPath,
+      ...Object.entries(options.args).flat(),
+    ],
     cwd: rootPath,
     handlers: options.handlers,
     logger: options.logger,

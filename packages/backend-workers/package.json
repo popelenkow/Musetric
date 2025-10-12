@@ -19,8 +19,8 @@
     }
   },
   "scripts": {
-    "postinstall": "node --import tsx --conditions=monorepo scripts/install.ts",
-    "project:build": "cpx \"src/**/*.py\" dist --clean && tsc --project tsconfig.build.json",
+    "postinstall": "node --conditions=monorepo scripts/install.ts",
+    "project:build": "tsc --project tsconfig.build.json",
     "check:ts": "tsc --noEmit",
     "check:lint": "eslint . --cache && uv run python scripts/check.py",
     "check:lint:fix": "eslint . --fix --cache && uv run python scripts/check.py --fix"
@@ -33,9 +33,7 @@
     "@musetric/resource-utils": "workspace:*",
     "@types/node": "24.2.1",
     "axios": "1.12.2",
-    "cpx2": "8.0.0",
     "eslint": "9.36.0",
-    "tsx": "4.20.5",
     "typescript": "5.9.2"
   }
 }
