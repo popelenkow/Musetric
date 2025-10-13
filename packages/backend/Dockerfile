@@ -1,17 +1,6 @@
-FROM node:24.7.0-slim AS prod-runtime
-WORKDIR /app
-ENV NODE_ENV=production
-
-FROM ghcr.io/astral-sh/uv:latest AS uv-runtime
-
-FROM prod-runtime AS dev-runtime
-COPY --from=uv-runtime /uv /usr/local/bin/uv
-COPY --from=uv-runtime /uvx /usr/local/bin/uvx
-RUN corepack enable \
-  && corepack prepare yarn@4.9.3 --activate
-
-FROM dev-runtime AS builder
-WORKDIR /app
+FROM musetric-runtime:latest AS builder
+RUN corepack enable
+RUN corepack prepare yarn@4.9.3 --activate
 COPY . .
 RUN yarn install --immutable
 RUN yarn project:build
@@ -19,8 +8,7 @@ RUN yarn project:init
 RUN rm -rf node_modules
 RUN yarn workspaces focus @musetric/backend --production
 
-FROM prod-runtime AS runner
-WORKDIR /app
+FROM musetric-runtime:latest AS runner
 ENV PROTOCOL=http
 ENV PORT=80
 
