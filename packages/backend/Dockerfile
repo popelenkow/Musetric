@@ -17,7 +17,6 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages/backend/package.json ./packages/backend/package.json
 COPY --from=builder /app/packages/backend/dist ./packages/backend/dist
 COPY --from=builder /app/packages/backend/storage ./packages/backend/storage
-COPY --from=builder /app/packages/backend/public ./packages/backend/public
 
 COPY --from=builder /app/packages/backend-db/package.json ./packages/backend-db/package.json
 COPY --from=builder /app/packages/backend-db/dist ./packages/backend-db/dist
