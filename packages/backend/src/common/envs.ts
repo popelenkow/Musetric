@@ -19,8 +19,8 @@ export const envs = {
   logLevel: getLogLevel(),
   protocol: process.env.PROTOCOL === 'http' ? 'http' : 'https',
   blobsPath: join(rootPath, 'storage/blobs'),
-  publicPath: join(rootPath, 'public'),
-  databasePath: join(rootPath, 'storage/app.db'),
+  publicPath: join(rootPath, 'storage/public'),
+  databasePath: join(rootPath, 'storage/db/app.db'),
   gcIntervalMs: 5 * 60 * 1000,
   blobRetentionMs: 5 * 60 * 1000,
 };
