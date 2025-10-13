@@ -2,7 +2,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_SPECTROGRAM_PROFILING: string;
+  readonly frontendSpectrogramProfiling: string;
 }
 
 interface ImportMeta {
