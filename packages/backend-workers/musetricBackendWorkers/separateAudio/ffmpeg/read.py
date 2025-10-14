@@ -1,6 +1,6 @@
-import subprocess
-
 import numpy as np
+
+from musetricBackendWorkers.separateAudio.ffmpeg.runner import runFfmpeg
 
 
 def readAudioFile(audioFilePath: str, sampleRate: int, channels: int) -> np.ndarray:
@@ -19,19 +19,11 @@ def readAudioFile(audioFilePath: str, sampleRate: int, channels: int) -> np.ndar
         "-",
     ]
 
-    try:
-        result = subprocess.run(
-            ffmpegCommand,
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-    except subprocess.CalledProcessError as error:
-        stderrOutput = (error.stderr or b"").decode("utf-8", errors="ignore").strip()
-        detail = f": {stderrOutput}" if stderrOutput else ""
-        raise RuntimeError(f"ffmpeg failed to read audio{detail}") from error
-
-    rawBytes = result.stdout
+    rawBytes = runFfmpeg(
+        ffmpegCommand,
+        captureStdout=True,
+        context="ffmpeg failed to read audio",
+    )
     if not rawBytes:
         raise RuntimeError("ffmpeg produced no audio data")
 

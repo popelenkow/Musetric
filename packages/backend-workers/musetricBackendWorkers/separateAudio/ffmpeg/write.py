@@ -1,7 +1,8 @@
 import os
-import subprocess
 
 import numpy as np
+
+from musetricBackendWorkers.separateAudio.ffmpeg.runner import runFfmpeg
 
 
 def writeAudioFile(
@@ -33,15 +34,9 @@ def writeAudioFile(
 
     os.makedirs(os.path.dirname(outputPath), exist_ok=True)
 
-    try:
-        subprocess.run(
-            ffmpegCommand,
-            input=pcmInterleavedBytes,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=True,
-        )
-    except subprocess.CalledProcessError as error:
-        stderrOutput = (error.stderr or b"").decode("utf-8", errors="ignore").strip()
-        detail = f": {stderrOutput}" if stderrOutput else ""
-        raise RuntimeError(f"ffmpeg failed to write audio{detail}") from error
+    runFfmpeg(
+        ffmpegCommand,
+        inputBytes=pcmInterleavedBytes,
+        captureStdout=False,
+        context="ffmpeg failed to write audio",
+    )
