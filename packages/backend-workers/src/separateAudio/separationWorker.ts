@@ -15,8 +15,8 @@ export type SeparationResult = {
   instrumentalBlobId: string;
 };
 
-export type GetNextTask = () => Promise<SeparationTask | undefined>;
-export type SaveResult = (result: SeparationResult) => Promise<void>;
+export type GetNextTask = () => SeparationTask | undefined;
+export type SaveResult = (result: SeparationResult) => void;
 
 export type CreateSeparationWorkerOptions = {
   separationIntervalMs: number;
@@ -85,7 +85,7 @@ export const createSeparationWorker = (
   let state: SeparationState | undefined = undefined;
 
   const run = async () => {
-    const task = await getNextTask();
+    const task = getNextTask();
     if (!task) {
       return;
     }
@@ -107,7 +107,7 @@ export const createSeparationWorker = (
         currentState.progress = progress;
       });
 
-      await saveResult({
+      saveResult({
         projectId,
         vocalBlobId: result.vocalBlobId,
         instrumentalBlobId: result.instrumentalBlobId,

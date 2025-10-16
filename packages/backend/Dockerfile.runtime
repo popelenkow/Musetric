@@ -7,7 +7,7 @@ RUN apt-get update \
   && echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_24.x nodistro main" \
     > /etc/apt/sources.list.d/nodesource.list \
   && apt-get update \
-  && apt-get install -y --no-install-recommends nodejs=24.7.0-1nodesource1 \
+  && apt-get install -y --no-install-recommends nodejs=24.7.0-1nodesource1 ffmpeg \
   && apt-get purge -y --auto-remove curl gnupg \
   && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nodesource.list /usr/share/keyrings/nodesource.gpg
 

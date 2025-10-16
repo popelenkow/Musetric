@@ -1158,7 +1158,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@musetric/backend-workers@workspace:packages/backend-workers":
+"@musetric/backend-workers@workspace:*, @musetric/backend-workers@workspace:packages/backend-workers":
   version: 0.0.0-use.local
   resolution: "@musetric/backend-workers@workspace:packages/backend-workers"
   dependencies:
@@ -1183,6 +1183,7 @@ __metadata:
     "@fastify/swagger-ui": "npm:5.2.3"
     "@musetric/api": "workspace:*"
     "@musetric/backend-db": "workspace:*"
+    "@musetric/backend-workers": "workspace:*"
     "@musetric/eslint-config": "workspace:*"
     "@musetric/kill-process": "workspace:*"
     "@musetric/resource-utils": "workspace:*"

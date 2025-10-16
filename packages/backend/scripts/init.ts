@@ -1,5 +1,6 @@
 import { DB } from '@musetric/backend-db';
 import { createTables } from '@musetric/backend-db/migrations';
+import { downloadModel } from '@musetric/backend-workers/scripts';
 import { envs } from '../src/common/envs.js';
 
 const initDB = () => {
@@ -14,4 +15,13 @@ const initDB = () => {
   }
 };
 
-initDB();
+const init = async () => {
+  initDB();
+
+  await downloadModel({
+    modelPath: envs.modelPath,
+    modelConfigPath: envs.modelConfigPath,
+  });
+};
+
+await init();
