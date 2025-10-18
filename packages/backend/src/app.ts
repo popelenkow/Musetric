@@ -1,4 +1,5 @@
 import { fastify, FastifyInstance } from 'fastify';
+import { FastifySSEPlugin } from 'fastify-sse-v2';
 import { registerRouters } from './routers/index.js';
 import {
   disableRequestLogging,
@@ -27,6 +28,7 @@ export const createServerApp = (): FastifyInstance => {
   registerBlobGarbageCollector(app);
   registerSeparationWorker(app);
   registerMultipart(app);
+  app.register(FastifySSEPlugin);
   registerSchemaCompiler(app);
   registerSwagger(app);
   registerFrontend(app);
