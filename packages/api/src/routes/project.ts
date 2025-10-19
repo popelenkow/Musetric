@@ -4,13 +4,15 @@ import { axiosRequest } from './common/axiosRequest.js';
 import { fastifyRoute, createApiRoute } from './common/index.js';
 import { preview } from './index.js';
 
+export const stageSchema = z.enum(['pending', 'progress', 'done']);
 export const itemSchema = z.object({
   id: z.number(),
   name: z.string().min(3),
-  stage: z.enum(['pending', 'progress', 'done']),
+  stage: stageSchema,
   previewUrl: z.string().optional(),
   separationProgress: z.number().optional(),
 });
+export type Stage = z.infer<typeof stageSchema>;
 export type Item = z.infer<typeof itemSchema>;
 
 export namespace list {

@@ -1,5 +1,7 @@
 import { Stack } from '@mui/material';
-import { FC } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { FC, useEffect } from 'react';
+import { subscribeToProjectStatus } from '../../api/endpoints/project.js';
 import { routes } from '../../app/router/routes.js';
 import { ProjectsContent } from './Content.js';
 import { CreateDialog } from './dialogs/Create.js';
@@ -8,6 +10,9 @@ import { EditDialog } from './dialogs/Edit.js';
 import { ProjectsTitle } from './Title.js';
 
 export const ProjectsPage: FC = () => {
+  const queryClient = useQueryClient();
+  useEffect(() => subscribeToProjectStatus(queryClient), [queryClient]);
+
   return (
     <Stack
       direction='column'
