@@ -38,7 +38,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.project.status.route,
     handler: (request, reply) => {
       const unsubscribe = app.separationWorker.emitter.subscribe((event) => {
-        reply.sse({ data: api.project.status.stringifyEvent(event) });
+        reply.sse({ data: api.project.status.event.stringify(event) });
       });
       const heartbeat = setInterval(() => {
         reply.sse({ event: 'ping' });

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { createApiEvent } from './common/apiEvent.js';
 import { axiosRequest } from './common/axiosRequest.js';
 import { fastifyRoute, createApiRoute } from './common/index.js';
 import { preview } from './index.js';
@@ -8,6 +9,7 @@ export const itemSchema = z.object({
   name: z.string().min(3),
   stage: z.enum(['pending', 'progress', 'done']),
   previewUrl: z.string().optional(),
+  separationProgress: z.number().optional(),
 });
 export type Item = z.infer<typeof itemSchema>;
 
@@ -58,26 +60,25 @@ export namespace status {
   export type Request = z.infer<typeof base.requestSchema>;
   export type Response = z.infer<typeof base.responseSchema>;
 
-  export const eventSchema = z.union([
-    z.object({
-      projectId: z.number(),
-      stage: z.literal('progress'),
-      progress: z.number(),
-    }),
-    z.object({
-      projectId: z.number(),
-      stage: z.literal('pending'),
-    }),
-    z.object({
-      projectId: z.number(),
-      stage: z.literal('done'),
-    }),
-  ]);
-  export type Event = z.infer<typeof eventSchema>;
-  export const stringifyEvent = (event: Event): string => {
-    const parsed = eventSchema.parse(event);
-    return JSON.stringify(parsed);
-  };
+  export const event = createApiEvent({
+    path: '/api/project/status/stream',
+    schema: z.union([
+      z.object({
+        projectId: z.number(),
+        stage: z.literal('progress'),
+        progress: z.number(),
+      }),
+      z.object({
+        projectId: z.number(),
+        stage: z.literal('pending'),
+      }),
+      z.object({
+        projectId: z.number(),
+        stage: z.literal('done'),
+      }),
+    ]),
+  });
+  export type Event = z.infer<typeof event.schema>;
 }
 
 export namespace create {
