@@ -21,7 +21,7 @@ fn main(@builtin(workgroup_id) workgroupId: vec3<u32>, @builtin(local_invocation
   let chunkStart = chunkSize * workerId;
   let chunkEnd = min(chunkStart + chunkSize, halfSize);
   
-  var maxMagnitude: f32 = 0.0;
+  var maxMagnitude: f32 = sqrt(f32(halfSize));
   for (var i: u32 = chunkStart; i < chunkEnd; i += 1u) {
     let value = signal[windowOffset + i];
     if (value > maxMagnitude) {
@@ -34,7 +34,7 @@ fn main(@builtin(workgroup_id) workgroupId: vec3<u32>, @builtin(local_invocation
   workgroupBarrier();
   
   if (workerId == 0u) {
-      var globalMax: f32 = 0.0;
+      var globalMax: f32 = sqrt(f32(halfSize));
       for (var i: u32 = 0u; i < 64u; i += 1u) {
         if (localMaxValues[i] > globalMax) {
           globalMax = localMaxValues[i];
