@@ -20,21 +20,31 @@ export const getProjectApi = (projectId: number) =>
 
 export const subscribeToProjectStatus = (queryClient: QueryClient) =>
   api.project.status.event.subscribe((event) => {
+    const applyEvent = (project: api.project.Item) => ({
+      ...project,
+      stage: event.stage,
+      separationProgress:
+        event.stage === 'progress' ? event.progress : undefined,
+    });
+
     queryClient.setQueryData(getProjectsApi().queryKey, (projects) => {
       if (!projects) {
         return projects;
       }
       return projects.map((project) =>
-        project.id === event.projectId
-          ? {
-              ...project,
-              stage: event.stage,
-              separationProgress:
-                event.stage === 'progress' ? event.progress : undefined,
-            }
-          : project,
+        project.id === event.projectId ? applyEvent(project) : project,
       );
     });
+
+    queryClient.setQueryData(
+      getProjectApi(event.projectId).queryKey,
+      (project) => {
+        if (!project) {
+          return project;
+        }
+        return applyEvent(project);
+      },
+    );
   });
 
 export const createProjectApi = (queryClient: QueryClient) =>

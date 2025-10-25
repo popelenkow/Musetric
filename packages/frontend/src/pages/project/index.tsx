@@ -1,12 +1,17 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Box, CardMedia, IconButton, Stack, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  getProjectApi,
+  subscribeToProjectStatus,
+} from '../../api/endpoints/project.js';
 import { getSoundApi } from '../../api/endpoints/sound.js';
 import { routes } from '../../app/router/routes.js';
 import { QueryPending } from '../../common/QueryView/QueryPending.js';
 import favicon from '../../favicon.ico';
+import { StageChip } from '../projects/cards/Project/StageChip.js';
 import { Player } from './Player.js';
 import { Settings } from './Settings/index.js';
 import { Spectrogram } from './Spectrogram.js';
@@ -16,13 +21,18 @@ import { Waveform } from './Waveform.js';
 
 export const ProjectPage: FC = () => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
   const { projectId } = routes.project.useAssertMatch();
-  const { data } = useQuery(getSoundApi(projectId, 'original'));
+  const project = useQuery(getProjectApi(projectId));
+  const soundType = project.data?.stage === 'done' ? 'vocal' : 'original';
+  const sound = useQuery(getSoundApi(projectId, soundType));
 
   const init = usePlayerStore((s) => s.mount);
   const load = usePlayerStore((s) => s.load);
   const initialized = usePlayerStore((s) => s.initialized);
+
+  useEffect(() => subscribeToProjectStatus(queryClient), [queryClient]);
 
   useEffect(() => {
     const unmount = init();
@@ -30,11 +40,11 @@ export const ProjectPage: FC = () => {
   }, [init]);
 
   useEffect(() => {
-    if (!initialized || !data) return;
-    void load(data);
-  }, [data, load, initialized]);
+    if (!initialized || !sound.data) return;
+    void load(sound.data);
+  }, [sound, load, initialized]);
 
-  if (!initialized || !data) {
+  if (!initialized || !project.data || !sound.data) {
     return <QueryPending />;
   }
 
@@ -63,6 +73,7 @@ export const ProjectPage: FC = () => {
           }}
         />
         <Typography variant='h4'>{t('pages.project.title')}</Typography>
+        <StageChip projectInfo={project.data} />
         <Box flexGrow={1} />
         <Settings />
       </Stack>
