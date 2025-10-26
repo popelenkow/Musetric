@@ -1,3 +1,4 @@
+import path from 'node:path';
 import {
   createSeparationWorker,
   SeparationWorker,
@@ -18,24 +19,26 @@ export const registerSeparationWorker = (app: FastifyInstance) => {
     separationIntervalMs: envs.separationIntervalMs,
     modelPath: envs.modelPath,
     modelConfigPath: envs.modelConfigPath,
-    sampleRate: envs.separationSampleRate,
-    outputFormat: envs.separationOutputFormat,
+    sampleRate: envs.audioSampleRate,
+    outputFormat: envs.audioFormat,
     blobStorage: app.blobStorage,
     getNextTask: () => app.db.separation.pendingOriginal(),
-    saveResult: (result) =>
-      app.db.separation.applyResult({
+    saveResult: (result) => {
+      const name = path.parse(result.filename).name;
+      return app.db.separation.applyResult({
         projectId: result.projectId,
         vocal: {
           blobId: result.vocalBlobId,
-          filename: result.vocalBlobId,
-          contentType: envs.separationContentType,
+          filename: `${name}_vocal.${envs.audioFormat}`,
+          contentType: envs.audioContentType,
         },
         instrumental: {
           blobId: result.instrumentalBlobId,
-          filename: result.instrumentalBlobId,
-          contentType: envs.separationContentType,
+          filename: `${name}_instrumental.${envs.audioFormat}`,
+          contentType: envs.audioContentType,
         },
-      }),
+      });
+    },
     logLevel: envs.logLevel,
     logger: bindLogger(app.log),
   });

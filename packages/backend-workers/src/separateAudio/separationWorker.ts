@@ -11,10 +11,12 @@ import { separateAudio, separationProcessName } from './separateAudio.js';
 export type SeparationTask = {
   projectId: number;
   blobId: string;
+  filename: string;
 };
 
 export type SeparationResult = {
   projectId: number;
+  filename: string;
   vocalBlobId: string;
   instrumentalBlobId: string;
 };
@@ -97,7 +99,7 @@ export const createSeparationWorker = (
     if (!task) {
       return;
     }
-    const { projectId, blobId } = task;
+    const { projectId, blobId, filename } = task;
 
     try {
       logger.info(
@@ -113,6 +115,7 @@ export const createSeparationWorker = (
 
       saveResult({
         projectId,
+        filename,
         vocalBlobId: result.vocalBlobId,
         instrumentalBlobId: result.instrumentalBlobId,
       });

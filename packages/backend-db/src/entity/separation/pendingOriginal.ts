@@ -5,12 +5,13 @@ import { table } from '../../schema/index.js';
 const pendingOriginalItemSchema = z.object({
   projectId: table.sound.itemSchema.shape.projectId,
   blobId: table.sound.itemSchema.shape.blobId,
+  filename: table.sound.itemSchema.shape.filename,
 });
 export type PendingOriginalItem = z.infer<typeof pendingOriginalItemSchema>;
 
 export const pendingOriginal = (database: DatabaseSync) => {
   const statement = database.prepare(
-    `SELECT Sound.projectId AS projectId, Sound.blobId AS blobId
+    `SELECT Sound.projectId AS projectId, Sound.blobId AS blobId, Sound.filename AS filename
      FROM Sound
      INNER JOIN Project ON Project.id = Sound.projectId
      WHERE Sound.type = 'original' AND Project.stage = 'pending'
