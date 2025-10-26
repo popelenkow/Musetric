@@ -5,11 +5,8 @@ import { isLogLevel, LogLevel } from '@musetric/resource-utils/logger';
 const rootPath = join(dirname(fileURLToPath(import.meta.url)), '../../');
 
 const getLogLevel = (): LogLevel => {
-  const envLogLevel = process.env.LOG_LEVEL;
-  if (envLogLevel && isLogLevel(envLogLevel)) {
-    return envLogLevel;
-  }
-  return 'info';
+  const level = process.env.LOG_LEVEL;
+  return isLogLevel(level) ? level : 'info';
 };
 
 export const envs = {
@@ -26,7 +23,7 @@ export const envs = {
   separationIntervalMs: 10 * 1000,
   modelPath: join(rootPath, 'storage/models/model.ckpt'),
   modelConfigPath: join(rootPath, 'storage/models/model.yaml'),
-  separationSampleRate: 44100,
-  separationOutputFormat: 'flac',
-  separationContentType: 'audio/flac',
+  audioSampleRate: 44100,
+  audioFormat: 'flac',
+  audioContentType: 'audio/flac',
 };
