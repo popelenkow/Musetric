@@ -24,7 +24,7 @@ yarn test
 
 ```bash
 yarn
-yarn docker:build
+yarn docker:build:cpu # or yarn docker:build:cuda
 yarn docker:start
 ```
 
@@ -35,15 +35,10 @@ yarn docker:start
 - **Source:** https://github.com/indutny/fft.js by Fedor Indutny (MIT)
 - **Usage:** Fast Fourier Transform - CPU implementation adapted, GPU version ported
 
-### BSRoformer Neural Network
+### Musetric Toolkit
 
-- **Source:** https://github.com/lucidrains/BS-RoFormer by Phil Wang (MIT)
-- **Usage:** Audio source separation model (adapted)
-
-### Research & Development Support
-
-- **Thanks to:** https://github.com/nomadkaraoke/python-audio-separator (MIT)
-- **Usage:** Research tool that helped validate BSRoformer approach and integration patterns
+- **Repository:** https://github.com/popelenkow/musetric-toolkit
+- **Usage:** Companion CLI for running audio separation workflows and worker scripts
 
 ## License
 

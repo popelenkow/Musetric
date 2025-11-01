@@ -21,7 +21,7 @@ export type SpawnScriptHandlers<Message extends { type: string }> = {
 
 export type SpawnScriptOptions<Message extends { type: string }> = {
   command: string;
-  args: string[];
+  args: Record<string, string>;
   cwd: string;
   handlers: SpawnScriptHandlers<Message>;
   logger: Logger;
@@ -44,7 +44,7 @@ export const spawnScript = async <Message extends { type: string }>(
       },
     };
 
-    const childProcess = spawn(command, args, {
+    const childProcess = spawn(command, Object.entries(args).flat(), {
       stdio: ['pipe', 'pipe', 'pipe'],
       cwd,
     });

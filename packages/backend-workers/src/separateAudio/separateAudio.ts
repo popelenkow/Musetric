@@ -1,7 +1,5 @@
-import { join } from 'node:path';
 import { Logger, LogLevel } from '@musetric/resource-utils/logger';
-import { rootPath } from '../common/rootPath.js';
-import { spawnPython } from '../common/spawnPython.js';
+import { spawnScript } from '@musetric/resource-utils/spawnScript/index';
 
 export const separationProcessName = 'separateAudio';
 
@@ -35,8 +33,8 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
     type: 'progress';
     progress: number;
   };
-  await spawnPython<ProgressMessage>({
-    scriptPath: join(rootPath, 'musetricBackendWorkers/separateAudio/index.py'),
+  await spawnScript<ProgressMessage>({
+    command: 'musetric-separate',
     args: {
       '--source-path': sourcePath,
       '--vocal-path': vocalPath,
@@ -47,6 +45,7 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
       '--output-format': outputFormat,
       '--log-level': logLevel,
     },
+    cwd: process.cwd(),
     handlers: {
       progress: (message) => {
         onProgress(message.progress);

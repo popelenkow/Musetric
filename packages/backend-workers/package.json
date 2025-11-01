@@ -19,11 +19,10 @@
     }
   },
   "scripts": {
-    "postinstall": "node --conditions=monorepo scripts/install.ts",
     "project:build": "tsc --project tsconfig.build.json",
     "check:ts": "tsc --noEmit",
-    "check:lint": "eslint . --cache && uv run python scripts/check.py",
-    "check:lint:fix": "eslint . --fix --cache && uv run python scripts/check.py --fix"
+    "check:lint": "eslint . --cache",
+    "check:lint:fix": "eslint . --fix --cache"
   },
   "peerDependencies": {
     "@musetric/resource-utils": "workspace:*"

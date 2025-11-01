@@ -7,8 +7,6 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
-    env:
-      workspace_mode: check
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -16,7 +14,6 @@ jobs:
           node-version: 24.7.0
       - run: corepack enable
       - run: corepack prepare yarn@4.9.3 --activate
-      - uses: astral-sh/setup-uv@v4
       - run: yarn --immutable
       - run: yarn check:deps
       - run: yarn check:ts
