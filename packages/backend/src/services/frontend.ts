@@ -24,7 +24,7 @@ export const registerFrontend = (app: FastifyInstance) => {
   });
   app.setNotFoundHandler((request, reply) => {
     if (isFrontendRequest(request)) {
-      reply.sendFile('index.html');
+      return reply.sendFile('index.html');
     }
     return reply.callNotFound();
   });
