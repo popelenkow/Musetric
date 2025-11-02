@@ -7,8 +7,6 @@ export type SeparateAudioOptions = {
   sourcePath: string;
   vocalPath: string;
   instrumentalPath: string;
-  modelPath: string;
-  modelConfigPath: string;
   sampleRate: number;
   outputFormat: string;
   onProgress: (progress: number) => void;
@@ -20,8 +18,6 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
     sourcePath,
     vocalPath,
     instrumentalPath,
-    modelPath,
-    modelConfigPath,
     sampleRate,
     outputFormat,
     onProgress,
@@ -39,8 +35,6 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
       '--source-path': sourcePath,
       '--vocal-path': vocalPath,
       '--instrumental-path': instrumentalPath,
-      '--model-path': modelPath,
-      '--config-path': modelConfigPath,
       '--sample-rate': sampleRate.toString(),
       '--output-format': outputFormat,
       '--log-level': logLevel,

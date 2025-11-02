@@ -21,8 +21,6 @@ export const envs = {
   gcIntervalMs: 5 * 60 * 1000,
   blobRetentionMs: 5 * 60 * 1000,
   separationIntervalMs: 10 * 1000,
-  modelPath: join(rootPath, 'storage/models/model.ckpt'),
-  modelConfigPath: join(rootPath, 'storage/models/model.yaml'),
   audioSampleRate: 44100,
   audioFormat: 'flac',
   audioContentType: 'audio/flac',
