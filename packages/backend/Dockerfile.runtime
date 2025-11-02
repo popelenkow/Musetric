@@ -11,5 +11,9 @@ RUN apt-get update \
   && apt-get purge -y --auto-remove curl gnupg \
   && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nodesource.list /usr/share/keyrings/nodesource.gpg
 
+ENV PATH="/root/.local/bin:${PATH}"
+ARG variant
+RUN uv tool install --python 3.13.2 "https://github.com/popelenkow/musetric-toolkit/releases/download/v0.0.1/musetric_toolkit-0.0.1-1${variant}-py3-none-any.whl"
+
 WORKDIR /app
 ENV NODE_ENV=production
