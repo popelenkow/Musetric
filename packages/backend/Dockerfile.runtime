@@ -13,7 +13,8 @@ RUN apt-get update \
 
 ENV PATH="/root/.local/bin:${PATH}"
 ARG variant
-RUN uv tool install --python 3.13.2 "https://github.com/popelenkow/musetric-toolkit/releases/download/v0.0.1/musetric_toolkit-0.0.1-1${variant}-py3-none-any.whl"
+RUN uv tool install --python 3.13.2 "https://github.com/popelenkow/musetric-toolkit/releases/download/v0.0.2/musetric_toolkit-0.0.2-1${variant}-py3-none-any.whl"
+RUN musetric-download-models
 
 WORKDIR /app
 ENV NODE_ENV=production

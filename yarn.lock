@@ -1165,7 +1165,6 @@ __metadata:
     "@musetric/eslint-config": "workspace:*"
     "@musetric/resource-utils": "workspace:*"
     "@types/node": "npm:24.2.1"
-    axios: "npm:1.12.2"
     eslint: "npm:9.36.0"
     typescript: "npm:5.9.2"
   peerDependencies:

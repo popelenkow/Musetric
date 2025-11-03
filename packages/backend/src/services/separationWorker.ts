@@ -17,8 +17,6 @@ declare module 'fastify' {
 export const registerSeparationWorker = (app: FastifyInstance) => {
   const separationWorker = createSeparationWorker({
     separationIntervalMs: envs.separationIntervalMs,
-    modelPath: envs.modelPath,
-    modelConfigPath: envs.modelConfigPath,
     sampleRate: envs.audioSampleRate,
     outputFormat: envs.audioFormat,
     blobStorage: app.blobStorage,

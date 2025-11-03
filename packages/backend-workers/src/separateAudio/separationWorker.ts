@@ -34,8 +34,6 @@ export type SeparationWorkerStatusUpdates =
 
 export type CreateSeparationWorkerOptions = {
   separationIntervalMs: number;
-  modelPath: string;
-  modelConfigPath: string;
   sampleRate: number;
   outputFormat: string;
   blobStorage: BlobStorage;
@@ -54,8 +52,6 @@ export const createSeparationWorker = (
 ): SeparationWorker => {
   const {
     separationIntervalMs,
-    modelPath,
-    modelConfigPath,
     sampleRate,
     outputFormat,
     blobStorage,
@@ -79,8 +75,6 @@ export const createSeparationWorker = (
       sourcePath,
       vocalPath: vocal.blobPath,
       instrumentalPath: instrumental.blobPath,
-      modelPath,
-      modelConfigPath,
       sampleRate,
       outputFormat,
       onProgress,

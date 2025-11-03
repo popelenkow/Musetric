@@ -10,12 +10,6 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
-    },
-    "./scripts": {
-      "monorepo": "./src/scripts/index.ts",
-      "types": "./dist/scripts/index.d.ts",
-      "import": "./dist/scripts/index.js",
-      "default": "./dist/scripts/index.js"
     }
   },
   "scripts": {
@@ -31,7 +25,6 @@
     "@musetric/eslint-config": "workspace:*",
     "@musetric/resource-utils": "workspace:*",
     "@types/node": "24.2.1",
-    "axios": "1.12.2",
     "eslint": "9.36.0",
     "typescript": "5.9.2"
   }
