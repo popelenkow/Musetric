@@ -12,8 +12,21 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* /etc/apt/sources.list.d/nodesource.list /usr/share/keyrings/nodesource.gpg
 
 ENV PATH="/root/.local/bin:${PATH}"
-ARG variant
-RUN uv tool install --python 3.13.2 "https://github.com/popelenkow/musetric-toolkit/releases/download/v0.0.2/musetric_toolkit-0.0.2-1${variant}-py3-none-any.whl"
+ARG variant=cpu
+RUN if [ "$variant" = "cpu" ]; then \
+      uv tool install --python 3.13.2 \
+        --default-index https://pypi.org/simple \
+        --index https://download.pytorch.org/whl/cpu \
+        --index-strategy unsafe-best-match \
+        https://github.com/popelenkow/musetric-toolkit/releases/download/v0.0.3/musetric_toolkit-0.0.3-py3-none-any.whl; \
+    fi
+RUN if [ "$variant" = "cuda" ]; then \
+      uv tool install --python 3.13.2 \
+        --default-index https://pypi.org/simple \
+        --index https://download.pytorch.org/whl/cu129 \
+        --index-strategy unsafe-best-match \
+        https://github.com/popelenkow/musetric-toolkit/releases/download/v0.0.3/musetric_toolkit-0.0.3-py3-none-any.whl; \
+    fi
 RUN musetric-download-models
 
 WORKDIR /app
