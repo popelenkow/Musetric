@@ -44,6 +44,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
       if (separationProgress !== undefined) {
         const result: api.project.get.Response = {
           ...found,
+          stage: 'progress',
           separationProgress,
           previewUrl: api.preview.get.url(found.preview?.id),
         };
