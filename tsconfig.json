@@ -9,11 +9,11 @@
     { "path": "packages/audio-view" },
     { "path": "packages/backend" },
     { "path": "packages/backend-db" },
-    { "path": "packages/backend-workers" },
     { "path": "packages/eslint-config" },
     { "path": "packages/frontend" },
     { "path": "packages/spa-router" },
     { "path": "packages/resource-utils" },
-    { "path": "packages/performance" }
+    { "path": "packages/performance" },
+    { "path": "packages/toolkit" }
   ]
 }

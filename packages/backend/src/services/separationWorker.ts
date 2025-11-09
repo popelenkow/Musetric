@@ -1,9 +1,6 @@
 import path from 'node:path';
-import {
-  createSeparationWorker,
-  SeparationWorker,
-} from '@musetric/backend-workers';
 import { bindLogger } from '@musetric/resource-utils/logger';
+import { createSeparationWorker, SeparationWorker } from '@musetric/toolkit';
 import { FastifyInstance } from 'fastify';
 import { envs } from '../common/envs.js';
 
