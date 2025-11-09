@@ -68,7 +68,7 @@ export namespace status {
       z.object({
         projectId: z.number(),
         stage: z.literal('progress'),
-        progress: z.number(),
+        separationProgress: z.number(),
       }),
       z.object({
         projectId: z.number(),

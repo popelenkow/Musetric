@@ -24,7 +24,7 @@ export const subscribeToProjectStatus = (queryClient: QueryClient) =>
       ...project,
       stage: event.stage,
       separationProgress:
-        event.stage === 'progress' ? event.progress : undefined,
+        event.stage === 'progress' ? event.separationProgress : undefined,
     });
 
     queryClient.setQueryData(getProjectsApi().queryKey, (projects) => {
