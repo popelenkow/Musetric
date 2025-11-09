@@ -7,11 +7,6 @@
   "typescript.preferences.importModuleSpecifier": "relative",
   "javascript.preferences.importModuleSpecifierEnding": "minimal",
   "typescript.preferences.importModuleSpecifierEnding": "minimal",
-  "python.analysis.autoImportCompletions": true,
-  "python.analysis.extraPaths": [
-    "./packages/backend-workers/.venv/Lib/site-packages",
-    "./packages/backend-workers/musetricBackendWorkers"
-  ],
   "[javascript]": {
     "editor.tabSize": 2
   },
@@ -26,30 +21,24 @@
   },
   "files.eol": "\n",
   "files.exclude": {
-    "**/__pycache__": true,
-    "**/*.egg-info": true,
     "**/.yarn": true
   },
   "files.watcherExclude": {
-    "**/.venv/**": true,
     "**/node_modules/**": true,
     "**/.yarn/**": true,
     "**/.eslintcache": true,
     "**/*.tsbuildinfo": true,
     "**/dist/**": true,
     "**/tmp/**": true,
-    "**/backend/storage/**": true,
-    "**/.cache/**": true
+    "**/backend/storage/**": true
   },
   "search.exclude": {
-    "**/.venv/**": true,
     "**/node_modules/**": true,
     "**/.yarn/**": true,
     "**/.eslintcache": true,
     "**/*.tsbuildinfo": true,
     "**/dist/**": true,
     "**/tmp/**": true,
-    "**/backend/storage/**": true,
-    "**/.cache/**": true
+    "**/backend/storage/**": true
   }
 }
