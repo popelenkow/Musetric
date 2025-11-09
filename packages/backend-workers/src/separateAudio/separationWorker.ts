@@ -25,7 +25,7 @@ export type GetNextTask = () => SeparationTask | undefined;
 export type SaveResult = (result: SeparationResult) => void;
 
 export type SeparationWorkerStatus =
-  | { stage: 'progress'; projectId: number; progress: number }
+  | { stage: 'progress'; projectId: number; separationProgress: number }
   | { stage: 'done'; projectId: number }
   | { stage: 'pending'; projectId: number };
 
@@ -45,6 +45,7 @@ export type CreateSeparationWorkerOptions = {
 
 export type SeparationWorker = Scheduler & {
   emitter: SeparationWorkerStatusUpdates;
+  getSeparationProcess: (projectId: number) => number | undefined;
 };
 
 export const createSeparationWorker = (
@@ -62,10 +63,25 @@ export const createSeparationWorker = (
   } = options;
 
   const emitter = createEventEmitter<SeparationWorkerStatus>();
+  type SeparationState = {
+    projectId: number;
+    separationProgress: number;
+  };
+  let separationState: SeparationState | undefined = undefined;
+
+  emitter.subscribe((event) => {
+    separationState =
+      event.stage === 'progress'
+        ? {
+            projectId: event.projectId,
+            separationProgress: event.separationProgress,
+          }
+        : undefined;
+  });
 
   const processAudio = async (
     blobId: string,
-    onProgress: (progress: number) => void,
+    onProgress: (separationProgress: number) => void,
   ) => {
     const sourcePath = blobStorage.getPath(blobId);
     const vocal = blobStorage.createPath();
@@ -101,10 +117,10 @@ export const createSeparationWorker = (
         'Starting separation',
       );
 
-      emitter.emit({ stage: 'progress', projectId, progress: 0 });
+      emitter.emit({ stage: 'progress', projectId, separationProgress: 0 });
 
-      const result = await processAudio(blobId, (progress) => {
-        emitter.emit({ stage: 'progress', projectId, progress });
+      const result = await processAudio(blobId, (separationProgress) => {
+        emitter.emit({ stage: 'progress', projectId, separationProgress });
       });
 
       saveResult({
@@ -136,6 +152,11 @@ export const createSeparationWorker = (
   const ref: SeparationWorker = {
     ...scheduler,
     emitter,
+    getSeparationProcess: (projectId) => {
+      return separationState?.projectId === projectId
+        ? separationState.separationProgress
+        : undefined;
+    },
   };
 
   return ref;

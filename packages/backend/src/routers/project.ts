@@ -13,10 +13,23 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.project.list.route,
     handler: () => {
       const all = app.db.project.list();
-      return all.map((project): api.project.list.Response[number] => ({
-        ...project,
-        previewUrl: api.preview.get.url(project.preview?.id),
-      }));
+      return all.map((project): api.project.list.Response[number] => {
+        const separationProgress = app.separationWorker.getSeparationProcess(
+          project.id,
+        );
+        if (separationProgress !== undefined) {
+          return {
+            ...project,
+            stage: 'progress',
+            separationProgress,
+            previewUrl: api.preview.get.url(project.preview?.id),
+          };
+        }
+        return {
+          ...project,
+          previewUrl: api.preview.get.url(project.preview?.id),
+        };
+      });
     },
   });
 
@@ -26,6 +39,17 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
       const { projectId } = request.params;
       const found = app.db.project.get(projectId);
       assertFound(found, `Project with id ${projectId} not found`);
+      const separationProgress =
+        app.separationWorker.getSeparationProcess(projectId);
+      if (separationProgress !== undefined) {
+        const result: api.project.get.Response = {
+          ...found,
+          stage: 'progress',
+          separationProgress,
+          previewUrl: api.preview.get.url(found.preview?.id),
+        };
+        return result;
+      }
       const result: api.project.get.Response = {
         ...found,
         previewUrl: api.preview.get.url(found.preview?.id),

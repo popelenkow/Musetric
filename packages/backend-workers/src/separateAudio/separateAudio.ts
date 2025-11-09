@@ -9,7 +9,7 @@ export type SeparateAudioOptions = {
   instrumentalPath: string;
   sampleRate: number;
   outputFormat: string;
-  onProgress: (progress: number) => void;
+  onProgress: (separationProgress: number) => void;
   logger: Logger;
   logLevel: LogLevel;
 };

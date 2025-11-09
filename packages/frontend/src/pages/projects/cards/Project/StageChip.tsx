@@ -13,9 +13,10 @@ export const StageChip: FC<StageChipProps> = (props) => {
 
   if (projectInfo.stage === 'progress') {
     const { separationProgress } = projectInfo;
-    const progress = separationProgress
-      ? (separationProgress * 100).toFixed(2)
-      : '--';
+    const progress =
+      separationProgress === undefined
+        ? '--'
+        : (separationProgress * 100).toFixed(2);
     return <Chip size='small' color='info' label={`${progress}%`} />;
   }
 
