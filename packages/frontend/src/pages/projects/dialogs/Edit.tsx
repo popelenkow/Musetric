@@ -83,25 +83,31 @@ export const EditDialog: FC<EditDialogProps> = (props) => {
         <Controller
           name='preview'
           control={control}
-          render={({ field }) => (
-            <PreviewField
-              value={field.value}
-              setValue={field.onChange}
-              loading={project.isPending}
-            />
-          )}
+          render={(controlProps) => {
+            const { field } = controlProps;
+            return (
+              <PreviewField
+                value={field.value}
+                setValue={field.onChange}
+                loading={project.isPending}
+              />
+            );
+          }}
         />
         <Controller
           name='name'
           control={control}
-          render={({ field }) => (
-            <NameField
-              value={field.value}
-              setValue={field.onChange}
-              error={errors.name?.message}
-              disabled={project.isPending || edit.isPending}
-            />
-          )}
+          render={(controlProps) => {
+            const { field } = controlProps;
+            return (
+              <NameField
+                value={field.value}
+                setValue={field.onChange}
+                error={errors.name?.message}
+                disabled={project.isPending || edit.isPending}
+              />
+            );
+          }}
         />
       </Stack>
     );

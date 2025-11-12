@@ -81,25 +81,31 @@ export const CreateDialog: FC = () => {
               <Controller
                 name='preview'
                 control={control}
-                render={({ field }) => (
-                  <PreviewField
-                    value={field.value}
-                    setValue={field.onChange}
-                    loading={create.isPending}
-                  />
-                )}
+                render={(controlProps) => {
+                  const { field } = controlProps;
+                  return (
+                    <PreviewField
+                      value={field.value}
+                      setValue={field.onChange}
+                      loading={create.isPending}
+                    />
+                  );
+                }}
               />
               <Controller
                 name='name'
                 control={control}
-                render={({ field }) => (
-                  <NameField
-                    value={field.value}
-                    setValue={field.onChange}
-                    error={errors.name?.message}
-                    disabled={create.isPending}
-                  />
-                )}
+                render={(controlProps) => {
+                  const { field } = controlProps;
+                  return (
+                    <NameField
+                      value={field.value}
+                      setValue={field.onChange}
+                      error={errors.name?.message}
+                      disabled={create.isPending}
+                    />
+                  );
+                }}
               />
               <SongPlayer url={song.url} />
             </>
@@ -108,16 +114,19 @@ export const CreateDialog: FC = () => {
             <Controller
               name='song'
               control={control}
-              render={({ field }) => (
-                <SongField
-                  value={field.value}
-                  setValue={(newSong) => {
-                    field.onChange(newSong);
-                    setValue('name', stripExt(newSong.file.name));
-                  }}
-                  disabled={create.isPending}
-                />
-              )}
+              render={(controlProps) => {
+                const { field } = controlProps;
+                return (
+                  <SongField
+                    value={field.value}
+                    setValue={(newSong) => {
+                      field.onChange(newSong);
+                      setValue('name', stripExt(newSong.file.name));
+                    }}
+                    disabled={create.isPending}
+                  />
+                );
+              }}
             />
           )}
         </Stack>

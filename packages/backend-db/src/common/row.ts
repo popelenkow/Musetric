@@ -5,7 +5,8 @@ export type Buckets = Record<string, Row>;
 export const bucketizeRow = (row: Row): Buckets => {
   const buckets: Buckets = {};
 
-  Object.entries(row).forEach(([key, value]) => {
+  Object.entries(row).forEach((entry) => {
+    const [key, value] = entry;
     const [entity, property] = key.split('_');
     buckets[entity] = buckets[entity] ?? {};
     buckets[entity][property] = value;

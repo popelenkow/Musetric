@@ -29,16 +29,25 @@ export const appTheme = createTheme({
         color: 'default',
       },
       styleOverrides: {
-        root: ({ theme }) => ({
-          ...theme.typography.body1,
-          textTransform: 'none',
-        }),
-        startIcon: ({ theme }) => ({
-          marginRight: theme.spacing(1),
-        }),
-        endIcon: ({ theme }) => ({
-          marginLeft: theme.spacing(1),
-        }),
+        root: (state) => {
+          const { theme } = state;
+          return {
+            ...theme.typography.body1,
+            textTransform: 'none',
+          };
+        },
+        startIcon: (state) => {
+          const { theme } = state;
+          return {
+            marginRight: theme.spacing(1),
+          };
+        },
+        endIcon: (state) => {
+          const { theme } = state;
+          return {
+            marginLeft: theme.spacing(1),
+          };
+        },
       },
     },
     MuiIconButton: {
