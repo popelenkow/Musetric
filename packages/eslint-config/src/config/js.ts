@@ -93,6 +93,12 @@ export const jsConfig: ConfigWithExtends = {
         message: 'Do not use switch statements',
       },
       {
+        selector:
+          ':matches(FunctionDeclaration, FunctionExpression, ArrowFunctionExpression, TSDeclareFunction) > :matches(ObjectPattern, ArrayPattern)',
+        message:
+          'Do not destructure function parameters inline; destructure inside the function body instead',
+      },
+      {
         selector: 'ExportNamedDeclaration[specifiers.length>0]:not([source])',
         message:
           'Inline export values and types at their declaration instead of exporting separately.',

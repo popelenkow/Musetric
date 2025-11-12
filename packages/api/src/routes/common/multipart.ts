@@ -1,7 +1,8 @@
 export namespace multipart {
   export const data = <T extends object>(object: T) => {
     const formData = new FormData();
-    Object.entries(object).forEach(([key, rawValue]) => {
+    Object.entries(object).forEach((entry) => {
+      const [key, rawValue] = entry;
       const getValue = () => {
         if (rawValue instanceof File || rawValue instanceof Blob) {
           return rawValue;

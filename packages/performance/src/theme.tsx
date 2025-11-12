@@ -5,25 +5,34 @@ export const appTheme = createTheme({
   components: {
     MuiButton: {
       styleOverrides: {
-        root: ({ theme }) => ({
-          ...theme.typography.body1,
-          textTransform: 'none',
-        }),
+        root: (state) => {
+          const { theme } = state;
+          return {
+            ...theme.typography.body1,
+            textTransform: 'none',
+          };
+        },
       },
     },
     MuiToggleButton: {
       styleOverrides: {
-        root: ({ theme }) => ({
-          ...theme.typography.body1,
-          textTransform: 'none',
-        }),
+        root: (state) => {
+          const { theme } = state;
+          return {
+            ...theme.typography.body1,
+            textTransform: 'none',
+          };
+        },
       },
     },
     MuiTableCell: {
       styleOverrides: {
-        root: ({ theme }) => ({
-          padding: theme.spacing(0.5, 0.5),
-        }),
+        root: (state) => {
+          const { theme } = state;
+          return {
+            padding: theme.spacing(0.5, 0.5),
+          };
+        },
       },
     },
   },

@@ -65,7 +65,8 @@ export const coerceSchema = <T>(schema: T): T => {
       return object;
     }
     const init: Record<string, unknown> = {};
-    return Object.entries(object).reduce((coerced, [key, value]) => {
+    return Object.entries(object).reduce((coerced, entry) => {
+      const [key, value] = entry;
       coerced[key] = coerceValue(value, shape[key]);
       return coerced;
     }, init);
