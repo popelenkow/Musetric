@@ -6,6 +6,7 @@ import {
 } from '../../api/endpoints/project.js';
 import { routes } from '../../app/router/routes.js';
 import { ProjectPageError } from './components/ProjectPageError.js';
+import { ProjectPageLoading } from './components/ProjectPageLoading.js';
 import { ProjectPageProgress } from './ProjectPageProgress.js';
 import { ProjectView } from './View/ProjectView.js';
 
@@ -21,7 +22,11 @@ export const ProjectPage: FC = () => {
     return <ProjectPageError projectQuery={project} />;
   }
 
-  if (project.data?.stage !== 'done') {
+  if (project.isPending) {
+    return <ProjectPageLoading />;
+  }
+
+  if (project.data.stage !== 'done') {
     return <ProjectPageProgress project={project} />;
   }
 
