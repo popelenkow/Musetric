@@ -19,7 +19,7 @@ import {
   editProjectApi,
 } from '../../../api/endpoints/project.js';
 import { routes } from '../../../app/router/routes.js';
-import { QueryError } from '../../../common/QueryView/QueryError.js';
+import { QueryError } from '../../../components/QueryView/QueryError.js';
 import { NameField } from '../fields/Name/index.js';
 import { nameValueSchema } from '../fields/Name/schema.js';
 import { PreviewField } from '../fields/Preview/index.js';

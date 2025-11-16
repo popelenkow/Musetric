@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence } from 'framer-motion';
 import { FC } from 'react';
 import { getProjectsApi } from '../../api/endpoints/project.js';
-import { QueryError } from '../../common/QueryView/QueryError.js';
+import { QueryError } from '../../components/QueryView/QueryError.js';
 import { PlaceholderCard } from './cards/Placeholder.js';
 import { ProjectCard } from './cards/Project/index.js';
 
