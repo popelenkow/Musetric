@@ -99,6 +99,12 @@ export const jsConfig: ConfigWithExtends = {
           'Do not destructure function parameters inline; destructure inside the function body instead',
       },
       {
+        selector:
+          ':matches(CallExpression[callee.type="FunctionExpression"], CallExpression[callee.type="ArrowFunctionExpression"])',
+        message:
+          'Do not invoke inline functions immediately; define the function separately instead',
+      },
+      {
         selector: 'ExportNamedDeclaration[specifiers.length>0]:not([source])',
         message:
           'Inline export values and types at their declaration instead of exporting separately.',
@@ -131,5 +137,6 @@ export const jsConfig: ConfigWithExtends = {
     ],
     'object-shorthand': ['error', 'always'],
     'simple-import-sort/exports': 'error',
+    'no-nested-ternary': 'error',
   },
 };
