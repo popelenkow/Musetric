@@ -5,8 +5,8 @@ import {
   subscribeToProjectStatus,
 } from '../../api/endpoints/project.js';
 import { routes } from '../../app/router/routes.js';
-import { ProjectPageContent } from './ProjectPageContent.js';
 import { ProjectPageProgress } from './ProjectPageProgress.js';
+import { ProjectView } from './View/ProjectView.js';
 
 export const ProjectPage: FC = () => {
   const queryClient = useQueryClient();
@@ -20,5 +20,5 @@ export const ProjectPage: FC = () => {
     return <ProjectPageProgress project={project} />;
   }
 
-  return <ProjectPageContent project={project.data} />;
+  return <ProjectView project={project.data} />;
 };
