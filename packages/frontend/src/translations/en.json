@@ -3,6 +3,7 @@
   "common.queryView.notFound": "Not found",
   "pages.notFound.goHome": "Back to home",
   "pages.notFound.title": "Page Not Found",
+  "pages.project.progress.backHome": "Back to home",
   "pages.project.progress.loading": "Loading project...",
   "pages.project.progress.pending": "Pending...",
   "pages.project.progress.separating": "Separating audio...",
@@ -39,5 +40,5 @@
   "pages.projects.fields.preview.label": "Preview",
   "pages.projects.fields.preview.select": "Select",
   "pages.projects.stages.pending": "Queued",
-  "pages.projects.title": "Projects"
+  "pages.projects.title": "Musetric"
 }
