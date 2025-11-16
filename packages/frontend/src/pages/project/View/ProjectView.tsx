@@ -4,22 +4,22 @@ import { api } from '@musetric/api';
 import { useQuery } from '@tanstack/react-query';
 import { FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getSoundApi } from '../../api/endpoints/sound.js';
-import { routes } from '../../app/router/routes.js';
-import { QueryPending } from '../../components/QueryView/QueryPending.js';
-import favicon from '../../favicon.ico';
-import { StageChip } from '../projects/cards/Project/StageChip.js';
+import { getSoundApi } from '../../../api/endpoints/sound.js';
+import { routes } from '../../../app/router/routes.js';
+import { QueryPending } from '../../../components/QueryView/QueryPending.js';
+import favicon from '../../../favicon.ico';
+import { StageChip } from '../../projects/cards/Project/StageChip.js';
+import { ProjectSettings } from '../Settings/ProjectSettings.js';
+import { usePlayerStore } from '../store/player.js';
+import { ThemeViewColors } from '../ThemeViewColors.js';
 import { Player } from './Player.js';
-import { Settings } from './Settings/index.js';
 import { Spectrogram } from './Spectrogram.js';
-import { usePlayerStore } from './store/player.js';
-import { ThemeViewColors } from './ThemeViewColors.js';
 import { Waveform } from './Waveform.js';
 
-export type ProjectPageContentProps = {
+export type ProjectViewProps = {
   project: api.project.Item;
 };
-export const ProjectPageContent: FC<ProjectPageContentProps> = (props) => {
+export const ProjectView: FC<ProjectViewProps> = (props) => {
   const { project } = props;
 
   const { t } = useTranslation();
@@ -67,7 +67,7 @@ export const ProjectPageContent: FC<ProjectPageContentProps> = (props) => {
         <Typography variant='h4'>{t('pages.project.title')}</Typography>
         <StageChip projectInfo={project} />
         <Box flexGrow={1} />
-        <Settings />
+        <ProjectSettings />
       </Stack>
       <Stack gap={1} width='100%' sx={{ mt: 'auto' }} alignItems='center'>
         <Box height='512px' width='100%'>

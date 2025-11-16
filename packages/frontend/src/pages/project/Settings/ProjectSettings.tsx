@@ -14,7 +14,7 @@ import { WindowNameField } from './WindowNameField.js';
 import { WindowSizeField } from './WindowSizeField.js';
 import { ZeroPaddingFactorField } from './ZeroPaddingFactorField.js';
 
-export const Settings: FC = () => {
+export const ProjectSettings: FC = () => {
   const { t } = useTranslation();
   const open = useSettingsStore((s) => s.open);
   const setOpen = useSettingsStore((s) => s.setOpen);

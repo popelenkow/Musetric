@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
-import { usePlayerStore } from './store/player.js';
-import { useWaveformStore } from './store/waveform.js';
+import { usePlayerStore } from '../store/player.js';
+import { useWaveformStore } from '../store/waveform.js';
 
 export const Waveform: FC = () => {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();

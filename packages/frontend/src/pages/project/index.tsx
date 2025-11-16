@@ -5,8 +5,9 @@ import {
   subscribeToProjectStatus,
 } from '../../api/endpoints/project.js';
 import { routes } from '../../app/router/routes.js';
-import { ProjectPageContent } from './ProjectPageContent.js';
-import { ProjectPageProgress } from './ProjectPageProgress.js';
+import { ProjectFlow } from './Flow/ProjectFlow.js';
+import { ProjectPageQueryState } from './ProjectPageQueryState.js';
+import { ProjectView } from './View/ProjectView.js';
 
 export const ProjectPage: FC = () => {
   const queryClient = useQueryClient();
@@ -16,9 +17,19 @@ export const ProjectPage: FC = () => {
 
   useEffect(() => subscribeToProjectStatus(queryClient), [queryClient]);
 
-  if (project.data?.stage !== 'done') {
-    return <ProjectPageProgress project={project} />;
+  if (
+    project.isError ||
+    project.isPending ||
+    project.isLoading ||
+    !project.data
+  ) {
+    return <ProjectPageQueryState projectQuery={project} />;
   }
 
-  return <ProjectPageContent project={project.data} />;
+  const projectData = project.data;
+  return (
+    <ProjectFlow project={projectData}>
+      <ProjectView project={projectData} />
+    </ProjectFlow>
+  );
 };
