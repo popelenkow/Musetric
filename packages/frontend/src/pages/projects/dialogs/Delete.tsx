@@ -38,10 +38,11 @@ export const DeleteDialog: FC<DeleteDialogProps> = (props) => {
     <Dialog
       open
       component='form'
-      onKeyDown={(event) => {
+      onKeyDown={async (event) => {
         if (event.key === 'Enter') {
           event.preventDefault();
-          deleteProject.mutate();
+          await deleteProject.mutateAsync();
+          close();
         }
       }}
       onSubmit={async (event) => {
