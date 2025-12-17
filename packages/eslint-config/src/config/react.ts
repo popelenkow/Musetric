@@ -30,5 +30,6 @@ export const reactConfig: ConfigWithExtends = {
       'warn',
       { allowConstantExport: true },
     ],
+    'react/forbid-component-props': ['error', { forbid: ['spacing'] }],
   },
 };
