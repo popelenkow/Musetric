@@ -7,7 +7,7 @@ import {
 import { routes } from '../../app/router/routes.js';
 import { ProjectPageError } from './components/ProjectPageError.js';
 import { ProjectPageLoading } from './components/ProjectPageLoading.js';
-import { ProjectPageProgress } from './ProjectPageProgress.js';
+import { ProjectFlow } from './Flow/ProjectFlow.js';
 import { ProjectView } from './View/ProjectView.js';
 
 export const ProjectPage: FC = () => {
@@ -27,7 +27,7 @@ export const ProjectPage: FC = () => {
   }
 
   if (project.data.stage !== 'done') {
-    return <ProjectPageProgress project={project} />;
+    return <ProjectFlow project={project.data} />;
   }
 
   return <ProjectView project={project.data} />;
