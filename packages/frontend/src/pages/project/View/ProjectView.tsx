@@ -2,7 +2,7 @@ import { Box, Stack } from '@mui/material';
 import { api } from '@musetric/api';
 import { useQuery } from '@tanstack/react-query';
 import { FC, useEffect } from 'react';
-import { getSoundApi } from '../../../api/endpoints/sound.js';
+import { endpoints } from '../../../api/index.js';
 import { QueryPending } from '../../../components/QueryView/QueryPending.js';
 import { ProjectBackButton } from '../components/ProjectBackButton.js';
 import { ProjectLayout } from '../components/ProjectPageLayout.js';
@@ -19,7 +19,7 @@ export type ProjectViewProps = {
 export const ProjectView: FC<ProjectViewProps> = (props) => {
   const { project } = props;
 
-  const sound = useQuery(getSoundApi(project.id, 'vocal'));
+  const sound = useQuery(endpoints.getSound(project.id, 'vocal'));
 
   const mount = usePlayerStore((s) => s.mount);
   const load = usePlayerStore((s) => s.load);

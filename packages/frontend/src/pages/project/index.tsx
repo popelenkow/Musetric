@@ -1,9 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FC, useEffect } from 'react';
-import {
-  getProjectApi,
-  subscribeToProjectStatus,
-} from '../../api/endpoints/project.js';
+import { endpoints } from '../../api/index.js';
 import { routes } from '../../app/router/routes.js';
 import { ProjectPageError } from './components/ProjectPageError.js';
 import { ProjectPageLoading } from './components/ProjectPageLoading.js';
@@ -14,9 +11,12 @@ export const ProjectPage: FC = () => {
   const queryClient = useQueryClient();
 
   const { projectId } = routes.project.useAssertMatch();
-  const project = useQuery(getProjectApi(projectId));
+  const project = useQuery(endpoints.getProject(projectId));
 
-  useEffect(() => subscribeToProjectStatus(queryClient), [queryClient]);
+  useEffect(
+    () => endpoints.subscribeToProjectStatus(queryClient),
+    [queryClient],
+  );
 
   if (project.status === 'error') {
     return <ProjectPageError projectQuery={project} />;

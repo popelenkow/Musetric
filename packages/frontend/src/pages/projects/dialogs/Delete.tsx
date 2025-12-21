@@ -11,10 +11,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  deleteProjectApi,
-  getProjectApi,
-} from '../../../api/endpoints/project.js';
+import { endpoints } from '../../../api/index.js';
 import { routes } from '../../../app/router/routes.js';
 import { ProjectPreview } from '../cards/Preview.js';
 
@@ -26,13 +23,15 @@ export const DeleteDialog: FC<DeleteDialogProps> = (props) => {
 
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const projectInfo = useQuery(getProjectApi(projectId));
+  const projectInfo = useQuery(endpoints.getProject(projectId));
 
   const close = () => {
     routes.projects.navigate();
   };
 
-  const deleteProject = useMutation(deleteProjectApi(queryClient, projectId));
+  const deleteProject = useMutation(
+    endpoints.deleteProject(queryClient, projectId),
+  );
 
   return (
     <Dialog

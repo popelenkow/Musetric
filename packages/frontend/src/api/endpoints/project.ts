@@ -3,15 +3,15 @@ import { QueryClient, queryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 import { mutationOptions } from '../queryClient.js';
 
-export const getProjectsApi = () =>
+export const getProjects = () =>
   queryOptions({
-    queryKey: ['getProjectsApi'],
+    queryKey: ['getProjects'],
     queryFn: async () => api.project.list.request(axios, {}),
   });
 
-export const getProjectApi = (projectId: number) =>
+export const getProject = (projectId: number) =>
   queryOptions({
-    queryKey: ['getProjectApi', projectId],
+    queryKey: ['getProject', projectId],
     queryFn: async () =>
       api.project.get.request(axios, {
         params: { projectId },
@@ -27,7 +27,7 @@ export const subscribeToProjectStatus = (queryClient: QueryClient) =>
         event.stage === 'progress' ? event.separationProgress : undefined,
     });
 
-    queryClient.setQueryData(getProjectsApi().queryKey, (projects) => {
+    queryClient.setQueryData(getProjects().queryKey, (projects) => {
       if (!projects) {
         return projects;
       }
@@ -37,7 +37,7 @@ export const subscribeToProjectStatus = (queryClient: QueryClient) =>
     });
 
     queryClient.setQueryData(
-      getProjectApi(event.projectId).queryKey,
+      getProject(event.projectId).queryKey,
       (project) => {
         if (!project) {
           return project;
@@ -47,45 +47,45 @@ export const subscribeToProjectStatus = (queryClient: QueryClient) =>
     );
   });
 
-export const createProjectApi = (queryClient: QueryClient) =>
+export const createProject = (queryClient: QueryClient) =>
   mutationOptions({
-    mutationKey: ['createProjectApi'],
+    mutationKey: ['createProject'],
     mutationFn: async (data: api.project.create.Request) =>
       api.project.create.request(axios, {
         data,
       }),
     onSuccess: (newProject) => {
-      queryClient.setQueryData(getProjectsApi().queryKey, (projects = []) => [
+      queryClient.setQueryData(getProjects().queryKey, (projects = []) => [
         newProject,
         ...projects,
       ]);
     },
   });
 
-export const editProjectApi = (queryClient: QueryClient, projectId: number) =>
+export const editProject = (queryClient: QueryClient, projectId: number) =>
   mutationOptions({
-    mutationKey: ['editProjectApi', projectId],
+    mutationKey: ['editProject', projectId],
     mutationFn: async (data: api.project.edit.Request) =>
       api.project.edit.request(axios, {
         params: { projectId },
         data,
       }),
     onSuccess: (newProject) => {
-      queryClient.setQueryData(getProjectsApi().queryKey, (projects) =>
+      queryClient.setQueryData(getProjects().queryKey, (projects) =>
         projects?.map((x) => (x.id === newProject.id ? newProject : x)),
       );
     },
   });
 
-export const deleteProjectApi = (queryClient: QueryClient, projectId: number) =>
+export const deleteProject = (queryClient: QueryClient, projectId: number) =>
   mutationOptions({
-    mutationKey: ['deleteProjectApi', projectId],
+    mutationKey: ['deleteProject', projectId],
     mutationFn: async () =>
       api.project.remove.request(axios, {
         params: { projectId },
       }),
     onSuccess: () => {
-      queryClient.setQueryData(getProjectsApi().queryKey, (projects) =>
+      queryClient.setQueryData(getProjects().queryKey, (projects) =>
         projects?.filter((x) => x.id !== projectId),
       );
     },
