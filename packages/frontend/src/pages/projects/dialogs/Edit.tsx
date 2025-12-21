@@ -14,10 +14,7 @@ import { FC, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import {
-  getProjectApi,
-  editProjectApi,
-} from '../../../api/endpoints/project.js';
+import { endpoints } from '../../../api/index.js';
 import { routes } from '../../../app/router/routes.js';
 import { QueryError } from '../../../components/QueryView/QueryError.js';
 import { NameField } from '../fields/Name/index.js';
@@ -41,8 +38,8 @@ export const EditDialog: FC<EditDialogProps> = (props) => {
 
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const project = useQuery(getProjectApi(projectId));
-  const edit = useMutation(editProjectApi(queryClient, projectId));
+  const project = useQuery(endpoints.getProject(projectId));
+  const edit = useMutation(endpoints.editProject(queryClient, projectId));
 
   const {
     reset,

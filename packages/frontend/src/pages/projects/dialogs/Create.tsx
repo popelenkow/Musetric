@@ -14,7 +14,7 @@ import { FC } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
-import { createProjectApi } from '../../../api/endpoints/project.js';
+import { endpoints } from '../../../api/index.js';
 import { routes } from '../../../app/router/routes.js';
 import { stripExt } from '../../../common/stripExt.js';
 import { SongPlayer } from '../common/SongPlayer.js';
@@ -36,7 +36,7 @@ type FormValue = z.infer<ReturnType<typeof schema>>;
 export const CreateDialog: FC = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const create = useMutation(createProjectApi(queryClient));
+  const create = useMutation(endpoints.createProject(queryClient));
 
   const {
     watch,
