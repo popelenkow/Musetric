@@ -4,7 +4,7 @@ import { endpoints } from '../../api/index.js';
 import { routes } from '../../app/router/routes.js';
 import { ProjectPageError } from './components/ProjectPageError.js';
 import { ProjectPageLoading } from './components/ProjectPageLoading.js';
-import { ProjectFlow } from './Flow/ProjectFlow.js';
+import { ProjectProgressFlow } from './Flow/ProjectProgressFlow.js';
 import { ProjectView } from './View/ProjectView.js';
 
 export const ProjectPage: FC = () => {
@@ -27,7 +27,7 @@ export const ProjectPage: FC = () => {
   }
 
   if (project.data.stage !== 'done') {
-    return <ProjectFlow project={project.data} />;
+    return <ProjectProgressFlow project={project.data} />;
   }
 
   return <ProjectView project={project.data} />;

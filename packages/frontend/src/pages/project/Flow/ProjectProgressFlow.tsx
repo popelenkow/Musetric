@@ -2,12 +2,16 @@ import { Box, Stack } from '@mui/material';
 import { api } from '@musetric/api';
 import { FC } from 'react';
 import { ProjectLayout } from '../components/ProjectPageLayout.js';
+import { ProjectProgressHeader } from './header/ProjectProgressHeader.js';
+import { StageStatusGrid } from './stage/StageStatusGrid.js';
 
-export type ProjectFlowProps = {
+export type ProjectProgressFlowProps = {
   project: api.project.Item;
 };
 
-export const ProjectFlow: FC<ProjectFlowProps> = () => {
+export const ProjectProgressFlow: FC<ProjectProgressFlowProps> = (props) => {
+  const { project } = props;
+
   return (
     <ProjectLayout isHeadingAbsolute>
       <Box
@@ -20,7 +24,10 @@ export const ProjectFlow: FC<ProjectFlowProps> = () => {
         padding={4}
         flex={1}
       >
-        <Stack width='100%' position='relative' gap={3}></Stack>
+        <Stack width='100%' position='relative' gap={3}>
+          <ProjectProgressHeader project={project} />
+          <StageStatusGrid project={project} />
+        </Stack>
       </Box>
     </ProjectLayout>
   );
