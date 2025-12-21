@@ -109,6 +109,11 @@ export const jsConfig: ConfigWithExtends = {
         message:
           'Inline export values and types at their declaration instead of exporting separately.',
       },
+      {
+        selector:
+          "CallExpression[callee.name='t']:not([arguments.0.type='Literal'][arguments.0.value=/^[\\s\\S]*$/])",
+        message: 'Call t with a single string literal key',
+      },
     ],
     'no-restricted-globals': [
       'error',
