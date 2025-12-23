@@ -19,7 +19,7 @@ export const decibelify = (
 
   for (let windowIndex = 0; windowIndex < windowCount; windowIndex++) {
     const windowOffset = windowIndex * halfSize;
-    let maxMagnitude = 0;
+    let maxMagnitude = Math.sqrt(halfSize);
     for (let i = 0; i < halfSize; i++) {
       const amplitude = signal[windowOffset + i];
       if (amplitude > maxMagnitude) maxMagnitude = amplitude;
