@@ -29,7 +29,7 @@ export const createGpuFftRadix4: CreateGpuFourier = (device, markers) => {
     pass.end();
   };
 
-  const fourier: GpuFourier = {
+  const ref: GpuFourier = {
     forward: (encoder) => {
       reverse(encoder);
       transform(encoder);
@@ -37,5 +37,5 @@ export const createGpuFftRadix4: CreateGpuFourier = (device, markers) => {
     configure: state.configure,
     destroy: state.destroy,
   };
-  return fourier;
+  return ref;
 };
