@@ -14,9 +14,8 @@ import { useSettingsStore } from './settings.js';
 export type SpectrogramState = {
   pipeline?: spectrogram.Pipeline;
   viewSize?: ViewSize;
+  isConfigured?: boolean;
 };
-
-export const initialState: SpectrogramState = {};
 
 type Unmount = () => void;
 export type SpectrogramActions = {
@@ -37,12 +36,13 @@ export const useSpectrogramStore = create<State>((set, get) => {
       sampleRate,
     };
     pipeline.configure(config);
+    set({ isConfigured: true });
   };
 
   const render = async () => {
-    const { pipeline } = get();
+    const { pipeline, isConfigured } = get();
     const { buffer, progress } = usePlayerStore.getState();
-    if (!pipeline || !buffer) return;
+    if (!pipeline || !buffer || !isConfigured) return;
     const data = buffer.getChannelData(0);
     await pipeline.render(data, progress);
   };
@@ -50,13 +50,13 @@ export const useSpectrogramStore = create<State>((set, get) => {
   const singletonManager = createSingletonManager(
     async (canvas: HTMLCanvasElement, fourierMode: FourierMode) => {
       const pipeline = await createSpectrogramPipeline(canvas, fourierMode);
-      set({ pipeline });
+      set({ pipeline, viewSize: resizeCanvas(canvas) });
       configure();
       await render();
       return pipeline;
     },
     async (pipeline) => {
-      set({ pipeline: undefined, viewSize: undefined });
+      set({ pipeline: undefined, viewSize: undefined, isConfigured: false });
       pipeline.destroy();
       return Promise.resolve();
     },
@@ -92,10 +92,9 @@ export const useSpectrogramStore = create<State>((set, get) => {
   );
 
   const ref: State = {
-    ...initialState,
     mount: (canvas) => {
       const { fourierMode } = useSettingsStore.getState();
-      set({ viewSize: resizeCanvas(canvas) });
+
       void singletonManager.create(canvas, fourierMode);
       const unsubscribeResizeObserver = subscribeResizeObserver(
         canvas,
