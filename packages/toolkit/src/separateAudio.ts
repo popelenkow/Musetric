@@ -1,8 +1,6 @@
 import { Logger, LogLevel } from '@musetric/resource-utils/logger';
 import { spawnScript } from '@musetric/resource-utils/spawnScript/index';
 
-export const separationProcessName = 'separateAudio';
-
 export type SeparateAudioOptions = {
   sourcePath: string;
   vocalPath: string;
@@ -13,6 +11,7 @@ export type SeparateAudioOptions = {
   logger: Logger;
   logLevel: LogLevel;
 };
+
 export const separateAudio = async (options: SeparateAudioOptions) => {
   const {
     sourcePath,
@@ -29,6 +28,7 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
     type: 'progress';
     progress: number;
   };
+
   await spawnScript<ProgressMessage>({
     command: 'musetric-separate',
     args: {
@@ -46,6 +46,6 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
       },
     },
     logger,
-    processName: separationProcessName,
+    processName: 'separateAudio',
   });
 };

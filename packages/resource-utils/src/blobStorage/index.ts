@@ -12,9 +12,13 @@ export type BlobFile = {
   filename: string;
   contentType: string;
 };
+export type BlobPathRef = {
+  blobId: string;
+  blobPath: string;
+};
 export type BlobStorage = {
   getPath: (blobId: string) => string;
-  createPath: () => { blobId: string; blobPath: string };
+  createPath: () => BlobPathRef;
   add: (buffer: Buffer) => Promise<string>;
   addFile: (file: File) => Promise<BlobFile>;
   get: (blobId: string) => Promise<Buffer | undefined>;
