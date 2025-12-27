@@ -1,28 +1,24 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { usePlayerStore } from '../store/player.js';
 import { useSettingsStore } from '../store/settings.js';
 import { useSpectrogramStore } from '../store/spectrogram.js';
 
 export const Spectrogram: FC = () => {
-  const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const seek = usePlayerStore((s) => s.seek);
   const fourierMode = useSettingsStore((s) => s.fourierMode);
   const mount = useSpectrogramStore((s) => s.mount);
-  const unmount = useSpectrogramStore((s) => s.unmount);
 
   useEffect(() => {
+    const canvas = canvasRef.current;
     if (!canvas) return;
-    mount(canvas);
-  }, [mount, canvas]);
-
-  useEffect(() => {
-    return unmount;
-  }, [unmount]);
+    return mount(canvas);
+  }, [mount]);
 
   return (
     <canvas
       key={fourierMode}
-      ref={setCanvas}
+      ref={canvasRef}
       style={{ width: '100%', height: '100%', display: 'block' }}
       onClick={async (event) => {
         const { visibleTimeBefore, visibleTimeAfter } =
