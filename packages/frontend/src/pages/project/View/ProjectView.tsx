@@ -47,28 +47,23 @@ export const ProjectView: FC<ProjectViewProps> = (props) => {
       }
     >
       <Stack
-        direction='column'
         padding={4}
         gap={4}
         width='100%'
         flexGrow={1}
-        overflow='auto'
-        position='relative'
         sx={{
           scrollbarGutter: 'stable',
         }}
       >
-        <Stack gap={1} width='100%' sx={{ mt: 'auto' }} alignItems='center'>
-          <Box height='512px' width='100%'>
-            <Spectrogram />
-          </Box>
-          <Box height='80px' width='100%'>
-            <Waveform />
-          </Box>
-          <Player />
-        </Stack>
-        <ThemeViewColors />
+        <Box width='100%' flexGrow={1} flexBasis={0} minHeight={0}>
+          <Spectrogram />
+        </Box>
+        <Box height='80px' width='100%'>
+          <Waveform />
+        </Box>
+        <Player />
       </Stack>
+      <ThemeViewColors />
     </ProjectLayout>
   );
 };
