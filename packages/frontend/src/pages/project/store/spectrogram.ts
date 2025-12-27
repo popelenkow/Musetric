@@ -1,14 +1,13 @@
 import {
-  isGpuFourierMode,
+  FourierMode,
   resizeCanvas,
   spectrogram,
   subscribeResizeObserver,
   ViewSize,
 } from '@musetric/audio-view';
-import { createCallLatest } from '@musetric/resource-utils/callLatest';
+import { createSingletonManager } from '@musetric/resource-utils/singletonManager';
 import { create } from 'zustand';
-import { envs } from '../../../common/envs.js';
-import { getGpuDevice } from '../../../common/gpu.js';
+import { createSpectrogramPipeline } from '../common/spectrogramPipeline.js';
 import { usePlayerStore } from './player.js';
 import { useSettingsStore } from './settings.js';
 
@@ -19,60 +18,13 @@ export type SpectrogramState = {
 
 export const initialState: SpectrogramState = {};
 
+type Unmount = () => void;
 export type SpectrogramActions = {
-  mount: (canvas: HTMLCanvasElement) => void;
-  unmount: () => void;
+  mount: (canvas: HTMLCanvasElement) => Unmount;
 };
 
 type State = SpectrogramState & SpectrogramActions;
 export const useSpectrogramStore = create<State>((set, get) => {
-  const profiling = envs.spectrogramProfiling;
-
-  let canvas: HTMLCanvasElement | undefined = undefined;
-  let unsubscribeResizeObserver: (() => void) | undefined = undefined;
-
-  const createPipeline = async () => {
-    const prevPipeline = get().pipeline;
-    unsubscribeResizeObserver?.();
-    unsubscribeResizeObserver = undefined;
-    set({ pipeline: undefined });
-    prevPipeline?.destroy();
-
-    if (!canvas) return undefined;
-
-    set({ viewSize: resizeCanvas(canvas) });
-    const { fourierMode } = useSettingsStore.getState();
-
-    if (isGpuFourierMode(fourierMode)) {
-      const device = await getGpuDevice(profiling);
-      return spectrogram.gpu.createPipeline({
-        device,
-        fourierMode,
-        canvas,
-        onMetrics: profiling
-          ? (metrics) => {
-              console.table(metrics);
-            }
-          : undefined,
-      });
-    }
-
-    return spectrogram.cpu.createPipeline({
-      fourierMode,
-      canvas,
-      onMetrics: profiling
-        ? (metrics) => {
-            console.table(metrics);
-          }
-        : undefined,
-    });
-  };
-
-  const mount = createCallLatest(async () => {
-    const pipeline = await createPipeline();
-    set({ pipeline });
-  });
-
   const configure = () => {
     const { pipeline, viewSize } = get();
     const { sampleRate } = usePlayerStore.getState();
@@ -94,6 +46,21 @@ export const useSpectrogramStore = create<State>((set, get) => {
     const data = buffer.getChannelData(0);
     await pipeline.render(data, progress);
   };
+
+  const singletonManager = createSingletonManager(
+    async (canvas: HTMLCanvasElement, fourierMode: FourierMode) => {
+      const pipeline = await createSpectrogramPipeline(canvas, fourierMode);
+      set({ pipeline });
+      configure();
+      await render();
+      return pipeline;
+    },
+    async (pipeline) => {
+      set({ pipeline: undefined, viewSize: undefined });
+      pipeline.destroy();
+      return Promise.resolve();
+    },
+  );
 
   useSettingsStore.subscribe(
     (state) => state,
@@ -126,23 +93,22 @@ export const useSpectrogramStore = create<State>((set, get) => {
 
   const ref: State = {
     ...initialState,
-    mount: async (newCanvas) => {
-      canvas = newCanvas;
-      await mount();
-      unsubscribeResizeObserver = subscribeResizeObserver(
-        newCanvas,
+    mount: (canvas) => {
+      const { fourierMode } = useSettingsStore.getState();
+      set({ viewSize: resizeCanvas(canvas) });
+      void singletonManager.create(canvas, fourierMode);
+      const unsubscribeResizeObserver = subscribeResizeObserver(
+        canvas,
         async () => {
-          set({ viewSize: resizeCanvas(newCanvas) });
+          set({ viewSize: resizeCanvas(canvas) });
           configure();
           await render();
         },
       );
-      configure();
-      await render();
-    },
-    unmount: async () => {
-      canvas = undefined;
-      await mount();
+      return () => {
+        unsubscribeResizeObserver();
+        void singletonManager.destroy();
+      };
     },
   };
   return ref;
