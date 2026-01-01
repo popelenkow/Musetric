@@ -38,3 +38,12 @@ export namespace preview {
   });
   export type Item = z.infer<typeof itemSchema>;
 }
+
+export namespace subtitle {
+  export const itemSchema = z.object({
+    id: numericIdSchema,
+    projectId: numericIdSchema,
+    blobId: z.string(),
+  });
+  export type Item = z.infer<typeof itemSchema>;
+}

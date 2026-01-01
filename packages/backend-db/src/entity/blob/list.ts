@@ -7,7 +7,7 @@ const blobRowSchema = z.object({
 
 export const list = (database: DatabaseSync) => {
   const statement = database.prepare(
-    'SELECT blobId FROM Sound UNION ALL SELECT blobId FROM Preview',
+    'SELECT blobId FROM Sound UNION ALL SELECT blobId FROM Preview UNION ALL SELECT blobId FROM Subtitle',
   );
 
   return (): string[] => {
