@@ -20,7 +20,7 @@ export const envs = {
   databasePath: join(rootPath, 'storage/db/app.db'),
   gcIntervalMs: 5 * 60 * 1000,
   blobRetentionMs: 5 * 60 * 1000,
-  separationIntervalMs: 10 * 1000,
+  processingIntervalMs: 10 * 1000,
   audioSampleRate: 44100,
   audioFormat: 'flac',
   audioContentType: 'audio/flac',

@@ -14,14 +14,19 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     handler: () => {
       const all = app.db.project.list();
       return all.map((project): api.project.list.Response[number] => {
-        const separationProgress = app.separationWorker.getSeparationProcess(
+        const processingState = app.processingWorker.getProcessingState(
           project.id,
         );
-        if (separationProgress !== undefined) {
+        if (processingState) {
+          const processingStage =
+            processingState.stage === 'separationProgress'
+              ? 'separation'
+              : 'transcription';
           return {
             ...project,
             stage: 'progress',
-            separationProgress,
+            processingStage,
+            progress: processingState.progress,
             previewUrl: api.preview.get.url(project.preview?.id),
           };
         }
@@ -39,13 +44,18 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
       const { projectId } = request.params;
       const found = app.db.project.get(projectId);
       assertFound(found, `Project with id ${projectId} not found`);
-      const separationProgress =
-        app.separationWorker.getSeparationProcess(projectId);
-      if (separationProgress !== undefined) {
+      const processingState =
+        app.processingWorker.getProcessingState(projectId);
+      if (processingState) {
+        const processingStage =
+          processingState.stage === 'separationProgress'
+            ? 'separation'
+            : 'transcription';
         const result: api.project.get.Response = {
           ...found,
           stage: 'progress',
-          separationProgress,
+          processingStage,
+          progress: processingState.progress,
           previewUrl: api.preview.get.url(found.preview?.id),
         };
         return result;
@@ -61,7 +71,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   app.route({
     ...api.project.status.route,
     handler: (request, reply) => {
-      const unsubscribe = app.separationWorker.emitter.subscribe((event) => {
+      const unsubscribe = app.processingWorker.emitter.subscribe((event) => {
         reply.sse({ data: api.project.status.event.stringify(event) });
       });
       const heartbeat = setInterval(() => {
