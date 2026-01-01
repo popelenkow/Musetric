@@ -27,7 +27,7 @@ export type GetNextProcessingTask = () => ProcessingTask | undefined;
 export type SaveProcessingResult = (result: ProcessingResult) => void;
 
 export type ProcessingState = {
-  stage: 'separationProgress' | 'transcriptionProgress';
+  stage: 'separation' | 'transcription';
   projectId: number;
   progress: number;
 };
@@ -87,7 +87,7 @@ export const createProcessingWorker = (
       const transcription = blobStorage.createPath();
 
       emitter.emit({
-        stage: 'separationProgress',
+        stage: 'separation',
         projectId,
         progress: 0,
       });
@@ -100,7 +100,7 @@ export const createProcessingWorker = (
         outputFormat,
         onProgress: (separationProgress: number) => {
           emitter.emit({
-            stage: 'separationProgress',
+            stage: 'separation',
             projectId,
             progress: separationProgress,
           });
@@ -110,7 +110,7 @@ export const createProcessingWorker = (
       });
 
       emitter.emit({
-        stage: 'transcriptionProgress',
+        stage: 'transcription',
         projectId,
         progress: 0,
       });
@@ -120,7 +120,7 @@ export const createProcessingWorker = (
         resultPath: transcription.blobPath,
         onProgress: (transcriptionProgress: number) => {
           emitter.emit({
-            stage: 'transcriptionProgress',
+            stage: 'transcription',
             projectId,
             progress: transcriptionProgress,
           });
@@ -130,7 +130,7 @@ export const createProcessingWorker = (
       });
 
       emitter.emit({
-        stage: 'transcriptionProgress',
+        stage: 'transcription',
         projectId,
         progress: 1,
       });

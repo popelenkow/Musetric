@@ -70,8 +70,8 @@ export namespace status {
       z.object({
         projectId: z.number(),
         stage: z.union([
-          z.literal('separationProgress'),
-          z.literal('transcriptionProgress'),
+          z.literal('separation'),
+          z.literal('transcription'),
         ]),
         progress: z.number(),
       }),
