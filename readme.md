@@ -25,7 +25,7 @@ yarn test
 ```bash
 yarn
 yarn docker:build:cpu # yarn docker:build:cuda
-yarn docker:start
+yarn docker:start:cpu # yarn docker:start:cuda
 ```
 
 ## Third-party Components
