@@ -1117,6 +1117,7 @@ __metadata:
     typescript: "npm:5.9.2"
     zod: "npm:4.1.9"
   peerDependencies:
+    axios: 1.12.2
     zod: 4.1.9
   languageName: unknown
   linkType: soft
@@ -1173,6 +1174,7 @@ __metadata:
     "@musetric/resource-utils": "workspace:*"
     "@musetric/toolkit": "workspace:*"
     "@types/node": "npm:24.2.1"
+    axios: "npm:1.12.2"
     eslint: "npm:9.36.0"
     fastify: "npm:5.4.0"
     fastify-sse-v2: "npm:4.2.1"
