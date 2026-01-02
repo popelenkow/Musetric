@@ -1,4 +1,5 @@
-FROM musetric-runtime:latest AS builder
+ARG RUNTIME_IMAGE=musetric-runtime
+FROM ${RUNTIME_IMAGE} AS builder
 RUN corepack enable
 RUN corepack prepare yarn@4.9.3 --activate
 COPY . .
@@ -8,7 +9,7 @@ RUN yarn project:init
 RUN rm -rf node_modules
 RUN yarn workspaces focus @musetric/backend --production
 
-FROM musetric-runtime:latest AS runner
+FROM ${RUNTIME_IMAGE} AS runner
 ENV PROTOCOL=http
 ENV PORT=80
 

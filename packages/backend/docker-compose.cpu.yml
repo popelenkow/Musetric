@@ -1,7 +1,7 @@
 services:
   musetric:
     container_name: musetric-container
-    image: musetric
+    image: musetric-cpu
     ports:
       - '80:80'
     restart: unless-stopped
