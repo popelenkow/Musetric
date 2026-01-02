@@ -11,6 +11,7 @@ import { ProjectSettings } from '../Settings/ProjectSettings.js';
 import { usePlayerStore } from '../store/player.js';
 import { Player } from './Player.js';
 import { Spectrogram } from './Spectrogram.js';
+import { Subtitle } from './Subtitle.js';
 import { Waveform } from './Waveform.js';
 
 export type ProjectViewProps = {
@@ -20,6 +21,7 @@ export const ProjectView: FC<ProjectViewProps> = (props) => {
   const { project } = props;
 
   const sound = useQuery(endpoints.getSound(project.id, 'vocal'));
+  const subtitle = useQuery(endpoints.getSubtitle(project.id));
 
   const mount = usePlayerStore((s) => s.mount);
   const load = usePlayerStore((s) => s.load);
@@ -30,9 +32,9 @@ export const ProjectView: FC<ProjectViewProps> = (props) => {
   useEffect(() => {
     if (!initialized || !sound.data) return;
     void load(sound.data);
-  }, [sound, load, initialized]);
+  }, [sound.data, load, initialized]);
 
-  if (!initialized || !sound.data) {
+  if (!initialized || !sound.data || !subtitle.data) {
     return <QueryPending />;
   }
 
@@ -58,6 +60,7 @@ export const ProjectView: FC<ProjectViewProps> = (props) => {
         <Box width='100%' flexGrow={1} flexBasis={0} minHeight={0}>
           <Spectrogram />
         </Box>
+        <Subtitle subtitle={subtitle.data} />
         <Box height='80px' width='100%'>
           <Waveform />
         </Box>

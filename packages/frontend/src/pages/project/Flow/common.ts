@@ -1,8 +1,8 @@
 import { alpha, lighten, Theme } from '@mui/material/styles';
 import { api } from '@musetric/api';
 
-export type StageKey = 'queue' | 'warmup' | 'processing' | 'delivery';
-export type StageStatus = 'waiting' | 'active' | 'done';
+export type StageKey = 'queue' | 'separation' | 'transcription' | 'delivery';
+export type StageStatus = 'pending' | 'active' | 'done';
 export type StageItem = {
   key: StageKey;
   title: string;
@@ -26,37 +26,44 @@ export const stageProgressByKey: Record<StageKey, StageProgressResolver> = {
   queue: (project) => ({
     status: project.stage === 'pending' ? 'active' : 'done',
   }),
-  warmup: (project) => {
+  separation: (project) => {
     const getStatus = (): StageStatus => {
-      if (project.stage === 'pending') {
-        return 'waiting';
-      }
-      if (project.stage === 'progress' && project.separationProgress === 0) {
+      if (project.stage === 'separation') {
         return 'active';
       }
-      return 'done';
+      if (project.stage === 'transcription') {
+        return 'done';
+      }
+      if (project.stage === 'done') {
+        return 'done';
+      }
+      return 'pending';
+    };
+    const getPercent = (): number | undefined => {
+      if (project.stage !== 'separation') return undefined;
+      if (typeof project.progress !== 'number') return undefined;
+      return project.progress * 100;
     };
 
     const status = getStatus();
+    const percent = getPercent();
 
-    return { status };
+    return { status, percent };
   },
-  processing: (project) => {
+  transcription: (project) => {
     const getStatus = (): StageStatus => {
-      if (project.stage === 'progress' && project.separationProgress) {
+      if (project.stage === 'transcription') {
         return 'active';
       }
       if (project.stage === 'done') {
         return 'done';
       }
-      return 'waiting';
+      return 'pending';
     };
-
     const getPercent = (): number | undefined => {
-      if (project.stage === 'done') return 100;
-      if (project.stage !== 'progress') return undefined;
-      if (typeof project.separationProgress !== 'number') return undefined;
-      return project.separationProgress * 100;
+      if (project.stage !== 'transcription') return undefined;
+      if (typeof project.progress !== 'number') return undefined;
+      return project.progress * 100;
     };
 
     const status = getStatus();
@@ -65,7 +72,7 @@ export const stageProgressByKey: Record<StageKey, StageProgressResolver> = {
     return { status, percent };
   },
   delivery: (project) => ({
-    status: project.stage === 'done' ? 'done' : 'waiting',
+    status: project.stage === 'done' ? 'done' : 'pending',
   }),
 };
 
