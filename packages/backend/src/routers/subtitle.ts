@@ -20,7 +20,9 @@ export const subtitleRouter: FastifyPluginAsyncZod = async (app) => {
       assertFound(data, `Subtitle blob for project ${projectId} not found`);
 
       const raw = JSON.parse(data.toString('utf-8'));
-      const result = z.object({ segments: z.array(api.subtitle.segmentSchema) }).parse(raw);
+      const result = z
+        .object({ segments: z.array(api.subtitle.segmentSchema) })
+        .parse(raw);
 
       return result.segments;
     },
