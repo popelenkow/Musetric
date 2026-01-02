@@ -35,11 +35,21 @@ const createPreview = `
   );
 `;
 
+const createSubtitle = `
+  CREATE TABLE IF NOT EXISTS Subtitle (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    projectId INTEGER NOT NULL UNIQUE,
+    blobId TEXT NOT NULL UNIQUE,
+    FOREIGN KEY (projectId) REFERENCES Project(id) ON DELETE CASCADE
+  );
+`;
+
 const creationStatements = [
   createProject,
   createSound,
   createSoundIndex,
   createPreview,
+  createSubtitle,
 ] as const;
 
 export const createTables = (database: DatabaseSync) => {

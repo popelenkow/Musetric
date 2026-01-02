@@ -20,15 +20,15 @@ type StageStatusBubbleContentProps = {
 };
 
 const statusTranslations: Record<StageStatus, (t: TFunction) => string> = {
+  pending: (t) => t('pages.project.progress.status.pending'),
   active: (t) => t('pages.project.progress.status.live'),
   done: (t) => t('pages.project.progress.status.done'),
-  waiting: (t) => t('pages.project.progress.status.waiting'),
 };
 
 const statusIcons: Record<StageStatus, (color: string) => JSX.Element> = {
+  pending: (color) => <RadioButtonCheckedIcon sx={{ color, fontSize: 26 }} />,
   active: (color) => <GraphicEqIcon sx={{ color, fontSize: 26 }} />,
   done: (color) => <CheckCircleRoundedIcon sx={{ color, fontSize: 26 }} />,
-  waiting: (color) => <RadioButtonCheckedIcon sx={{ color, fontSize: 26 }} />,
 };
 
 export const StageStatusBubbleContent: FC<StageStatusBubbleContentProps> = (

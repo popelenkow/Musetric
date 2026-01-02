@@ -13,7 +13,7 @@ export const registerMultipart = (app: FastifyInstance) => {
   app.register(fastifyMultipart, {
     attachFieldsToBody: 'keyValues',
     limits: {
-      fileSize: 20 * 1024 * 1024,
+      fileSize: 200 * 1024 * 1024,
     },
     onFile: async (part) => {
       const buff = await part.toBuffer();

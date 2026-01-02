@@ -4,13 +4,18 @@ import { axiosRequest } from './common/axiosRequest.js';
 import { fastifyRoute, createApiRoute } from './common/index.js';
 import { preview } from './index.js';
 
-export const stageSchema = z.enum(['pending', 'progress', 'done']);
+export const stageSchema = z.enum([
+  'pending',
+  'separation',
+  'transcription',
+  'done',
+]);
 export const itemSchema = z.object({
   id: z.number(),
   name: z.string().min(3),
   stage: stageSchema,
   previewUrl: z.string().optional(),
-  separationProgress: z.number().optional(),
+  progress: z.number().optional(),
 });
 export type Stage = z.infer<typeof stageSchema>;
 export type Item = z.infer<typeof itemSchema>;
@@ -67,12 +72,8 @@ export namespace status {
     schema: z.union([
       z.object({
         projectId: z.number(),
-        stage: z.literal('progress'),
-        separationProgress: z.number(),
-      }),
-      z.object({
-        projectId: z.number(),
-        stage: z.literal('pending'),
+        stage: z.union([z.literal('separation'), z.literal('transcription')]),
+        progress: z.number(),
       }),
       z.object({
         projectId: z.number(),

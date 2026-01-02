@@ -20,11 +20,10 @@ export const getProject = (projectId: number) =>
 
 export const subscribeToProjectStatus = (queryClient: QueryClient) =>
   api.project.status.event.subscribe((event) => {
-    const applyEvent = (project: api.project.Item) => ({
+    const applyEvent = (project: api.project.Item): api.project.Item => ({
       ...project,
       stage: event.stage,
-      separationProgress:
-        event.stage === 'progress' ? event.separationProgress : undefined,
+      progress: 'progress' in event ? event.progress : undefined,
     });
 
     queryClient.setQueryData(getProjects().queryKey, (projects) => {

@@ -43,15 +43,17 @@ export const StageStatusGrid: FC<StageStatusGridProps> = (props) => {
         />
         <StageStatusTile
           project={project}
-          stageKey='warmup'
-          title={t('pages.project.progress.steps.warmup.label')}
-          description={t('pages.project.progress.steps.warmup.description')}
+          stageKey='separation'
+          title={t('pages.project.progress.steps.separation.label')}
+          description={t('pages.project.progress.steps.separation.description')}
         />
         <StageStatusTile
           project={project}
-          stageKey='processing'
-          title={t('pages.project.progress.steps.processing.label')}
-          description={t('pages.project.progress.steps.processing.description')}
+          stageKey='transcription'
+          title={t('pages.project.progress.steps.transcription.label')}
+          description={t(
+            'pages.project.progress.steps.transcription.description',
+          )}
         />
         <StageStatusTile
           project={project}

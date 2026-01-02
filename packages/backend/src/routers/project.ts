@@ -14,21 +14,19 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     handler: () => {
       const all = app.db.project.list();
       return all.map((project): api.project.list.Response[number] => {
-        const separationProgress = app.separationWorker.getSeparationProcess(
-          project.id,
-        );
-        if (separationProgress !== undefined) {
-          return {
-            ...project,
-            stage: 'progress',
-            separationProgress,
-            previewUrl: api.preview.get.url(project.preview?.id),
-          };
-        }
-        return {
+        const processing = app.processingWorker.getProcessingState(project.id);
+        let result: api.project.list.Response[number] = {
           ...project,
           previewUrl: api.preview.get.url(project.preview?.id),
         };
+        if (processing) {
+          result = {
+            ...result,
+            stage: processing.stage,
+            progress: processing.progress,
+          };
+        }
+        return result;
       });
     },
   });
@@ -39,21 +37,19 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
       const { projectId } = request.params;
       const found = app.db.project.get(projectId);
       assertFound(found, `Project with id ${projectId} not found`);
-      const separationProgress =
-        app.separationWorker.getSeparationProcess(projectId);
-      if (separationProgress !== undefined) {
-        const result: api.project.get.Response = {
-          ...found,
-          stage: 'progress',
-          separationProgress,
-          previewUrl: api.preview.get.url(found.preview?.id),
-        };
-        return result;
-      }
-      const result: api.project.get.Response = {
+      const processing = app.processingWorker.getProcessingState(projectId);
+      let result: api.project.list.Response[number] = {
         ...found,
         previewUrl: api.preview.get.url(found.preview?.id),
       };
+      if (processing) {
+        result = {
+          ...result,
+          stage: processing.stage,
+          progress: processing.progress,
+        };
+        return result;
+      }
       return result;
     },
   });
@@ -61,7 +57,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   app.route({
     ...api.project.status.route,
     handler: (request, reply) => {
-      const unsubscribe = app.separationWorker.emitter.subscribe((event) => {
+      const unsubscribe = app.processingWorker.emitter.subscribe((event) => {
         reply.sse({ data: api.project.status.event.stringify(event) });
       });
       const heartbeat = setInterval(() => {

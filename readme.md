@@ -24,7 +24,7 @@ yarn test
 
 ```bash
 yarn
-yarn docker:build:cpu # or yarn docker:build:cuda
+yarn docker:build:cpu # yarn docker:build:cuda
 yarn docker:start
 ```
 
@@ -38,7 +38,7 @@ yarn docker:start
 ### Musetric Toolkit
 
 - **Repository:** https://github.com/popelenkow/musetric-toolkit
-- **Usage:** Companion CLI for running audio separation workflows and worker scripts
+- **Usage:** Companion CLI for running audio processing workflows and worker scripts
 
 ## License
 
