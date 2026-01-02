@@ -12,8 +12,9 @@ export const segmentSchema = z.object({
   text: z.string(),
   start: z.number(),
   end: z.number(),
-  words: z.array(wordSchema).optional(),
+  words: z.array(wordSchema),
 });
+export type Word = z.infer<typeof wordSchema>;
 export type Segment = z.infer<typeof segmentSchema>;
 
 export namespace get {

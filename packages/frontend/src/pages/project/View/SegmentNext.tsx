@@ -1,0 +1,18 @@
+import { Typography } from '@mui/material';
+import { api } from '@musetric/api';
+import { FC } from 'react';
+
+type SegmentNextProps = {
+  segment?: api.subtitle.Segment;
+};
+export const SegmentNext: FC<SegmentNextProps> = (props) => {
+  const { segment } = props;
+  if (!segment) {
+    return;
+  }
+  return (
+    <Typography variant='subtitle2' color='text.secondary' textAlign='center'>
+      {segment.text}
+    </Typography>
+  );
+};

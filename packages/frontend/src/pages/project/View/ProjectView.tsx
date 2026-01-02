@@ -60,10 +60,10 @@ export const ProjectView: FC<ProjectViewProps> = (props) => {
         <Box width='100%' flexGrow={1} flexBasis={0} minHeight={0}>
           <Spectrogram />
         </Box>
-        <Subtitle subtitle={subtitle.data} />
         <Box height='80px' width='100%'>
           <Waveform />
         </Box>
+        <Subtitle subtitle={subtitle.data} />
         <Player />
       </Stack>
       <ThemeViewColors />
