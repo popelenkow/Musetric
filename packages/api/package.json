@@ -19,6 +19,7 @@
     "check:lint:fix": "eslint . --fix --cache"
   },
   "peerDependencies": {
+    "axios": "1.12.2",
     "zod": "4.1.9"
   },
   "devDependencies": {
