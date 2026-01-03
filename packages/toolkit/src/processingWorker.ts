@@ -23,8 +23,8 @@ export type ProcessingResult = {
   transcriptionBlobId: string;
 };
 
-export type GetNextProcessingTask = () => ProcessingTask | undefined;
-export type SaveProcessingResult = (result: ProcessingResult) => void;
+export type GetNextProcessingTask = () => Promise<ProcessingTask | undefined>;
+export type SaveProcessingResult = (result: ProcessingResult) => Promise<void>;
 
 export type ProcessingState = {
   stage: 'separation' | 'transcription';
@@ -74,7 +74,7 @@ export const createProcessingWorker = (
   });
 
   const run = async () => {
-    const task = getNextTask();
+    const task = await getNextTask();
     if (!task) {
       return;
     }
@@ -135,7 +135,7 @@ export const createProcessingWorker = (
         progress: 1,
       });
 
-      saveResult({
+      await saveResult({
         projectId,
         filename,
         vocalBlobId: vocal.blobId,

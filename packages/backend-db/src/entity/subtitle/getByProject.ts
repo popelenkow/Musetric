@@ -8,8 +8,8 @@ export const getByProject = (database: DatabaseSync) => {
     `SELECT id, projectId, blobId FROM Subtitle WHERE projectId = ?`,
   );
 
-  return (projectId: number): GetItem | undefined => {
-    const row = statement.get(projectId);
+  return async (projectId: number): Promise<GetItem | undefined> => {
+    const row = await Promise.resolve(statement.get(projectId));
     if (!row) {
       return undefined;
     }

@@ -30,9 +30,9 @@ export const update = (database: DatabaseSync) => {
     `DELETE FROM Preview WHERE projectId = ?`,
   );
 
-  return (arg: UpdateArg): UpdateItem | undefined => {
-    return transaction(database, () => {
-      const current = getProject(arg.projectId);
+  return async (arg: UpdateArg): Promise<UpdateItem | undefined> => {
+    return await transaction(database, async () => {
+      const current = await getProject(arg.projectId);
       if (!current) {
         return undefined;
       }
@@ -45,7 +45,9 @@ export const update = (database: DatabaseSync) => {
 
       let updatedProject = baseProject;
       if (typeof arg.name === 'string') {
-        updateProjectNameStatement.run(arg.name, arg.projectId);
+        await Promise.resolve(
+          updateProjectNameStatement.run(arg.name, arg.projectId),
+        );
         updatedProject = table.project.itemSchema.parse({
           id: baseProject.id,
           name: arg.name,
@@ -58,7 +60,7 @@ export const update = (database: DatabaseSync) => {
         : undefined;
 
       if (existingPreview && (arg.preview || arg.withoutPreview)) {
-        deletePreviewStatement.run(arg.projectId);
+        await Promise.resolve(deletePreviewStatement.run(arg.projectId));
       }
 
       if (arg.withoutPreview) {
@@ -69,11 +71,13 @@ export const update = (database: DatabaseSync) => {
       }
 
       if (arg.preview) {
-        const previewResult = insertPreviewStatement.run(
-          arg.projectId,
-          arg.preview.blobId,
-          arg.preview.filename,
-          arg.preview.contentType,
+        const previewResult = await Promise.resolve(
+          insertPreviewStatement.run(
+            arg.projectId,
+            arg.preview.blobId,
+            arg.preview.filename,
+            arg.preview.contentType,
+          ),
         );
         const previewId = numericIdSchema.parse(previewResult.lastInsertRowid);
         const preview = table.preview.itemSchema.parse({

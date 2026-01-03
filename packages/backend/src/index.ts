@@ -3,7 +3,7 @@ import { killDevHost } from './common/dev.js';
 import { envs } from './common/envs.js';
 
 const startServer = async () => {
-  const app = createServerApp();
+  const app = await createServerApp();
   try {
     await app.listen({
       port: envs.port,

@@ -27,9 +27,11 @@ export const create = (database: DatabaseSync) => {
     `INSERT INTO Preview (projectId, blobId, filename, contentType) VALUES (?, ?, ?, ?)`,
   );
 
-  return (arg: CreateArg): CreateItem => {
-    return transaction(database, () => {
-      const projectResult = insertProjectStatement.run(arg.name, 'pending');
+  return async (arg: CreateArg): Promise<CreateItem> => {
+    return await transaction(database, async () => {
+      const projectResult = await Promise.resolve(
+        insertProjectStatement.run(arg.name, 'pending'),
+      );
       const projectId = numericIdSchema.parse(projectResult.lastInsertRowid);
       const project = table.project.itemSchema.parse({
         id: projectId,
@@ -37,23 +39,27 @@ export const create = (database: DatabaseSync) => {
         stage: 'pending',
       });
 
-      insertSoundStatement.run(
-        projectId,
-        'original',
-        arg.song.blobId,
-        arg.song.filename,
-        arg.song.contentType,
+      await Promise.resolve(
+        insertSoundStatement.run(
+          projectId,
+          'original',
+          arg.song.blobId,
+          arg.song.filename,
+          arg.song.contentType,
+        ),
       );
 
       if (!arg.preview) {
         return createItemSchema.parse({ project, preview: undefined });
       }
 
-      const previewResult = insertPreviewStatement.run(
-        projectId,
-        arg.preview.blobId,
-        arg.preview.filename,
-        arg.preview.contentType,
+      const previewResult = await Promise.resolve(
+        insertPreviewStatement.run(
+          projectId,
+          arg.preview.blobId,
+          arg.preview.filename,
+          arg.preview.contentType,
+        ),
       );
       const previewId = numericIdSchema.parse(previewResult.lastInsertRowid);
       const preview = table.preview.itemSchema.parse({

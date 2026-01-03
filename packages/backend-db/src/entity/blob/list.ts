@@ -10,9 +10,9 @@ export const list = (database: DatabaseSync) => {
     'SELECT blobId FROM Sound UNION ALL SELECT blobId FROM Preview UNION ALL SELECT blobId FROM Subtitle',
   );
 
-  return (): string[] => {
+  return async (): Promise<string[]> => {
     const blobIds: string[] = [];
-    const rows = statement.all();
+    const rows = await Promise.resolve(statement.all());
     rows.forEach((row) => {
       const parsed = blobRowSchema.parse(row);
       blobIds.push(parsed.blobId);

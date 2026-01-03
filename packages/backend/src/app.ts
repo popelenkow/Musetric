@@ -16,14 +16,14 @@ import { registerProcessingWorker } from './services/processingWorker.js';
 import { registerSchemaCompiler } from './services/schemaCompiler.js';
 import { registerSwagger } from './services/swagger.js';
 
-export const createServerApp = (): FastifyInstance => {
+export const createServerApp = async (): Promise<FastifyInstance> => {
   const app: FastifyInstance = fastify({
     logger,
     disableRequestLogging,
     https,
   });
   registerApiLogger(app);
-  registerDb(app);
+  await registerDb(app);
   registerBlobStorage(app);
   registerBlobGarbageCollector(app);
   registerProcessingWorker(app);

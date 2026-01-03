@@ -24,8 +24,8 @@ export const list = (database: DatabaseSync) => {
     ORDER BY Project.id DESC
   `);
 
-  return (): ListItem[] => {
-    const rows = statement.all();
+  return async (): Promise<ListItem[]> => {
+    const rows = await Promise.resolve(statement.all());
     return rows.map((row) => {
       const buckets = bucketizeRow(row);
       return listItemSchema.parse({

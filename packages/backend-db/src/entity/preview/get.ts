@@ -8,8 +8,8 @@ export const get = (database: DatabaseSync) => {
     `SELECT id, projectId, blobId, filename, contentType FROM Preview WHERE id = ?`,
   );
 
-  return (previewId: number): GetItem | undefined => {
-    const row = statement.get(previewId);
+  return async (previewId: number): Promise<GetItem | undefined> => {
+    const row = await Promise.resolve(statement.get(previewId));
     if (!row) {
       return undefined;
     }

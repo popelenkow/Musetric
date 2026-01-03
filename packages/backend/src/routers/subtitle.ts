@@ -13,7 +13,7 @@ export const subtitleRouter: FastifyPluginAsyncZod = async (app) => {
     handler: async (request) => {
       const { projectId } = request.params;
 
-      const subtitle = app.db.subtitle.getByProject(projectId);
+      const subtitle = await app.db.subtitle.getByProject(projectId);
       assertFound(subtitle, `Subtitle for project ${projectId} not found`);
 
       const data = await app.blobStorage.get(subtitle.blobId);

@@ -19,8 +19,8 @@ export const pendingOriginal = (database: DatabaseSync) => {
      LIMIT 1`,
   );
 
-  return (): PendingOriginalItem | undefined => {
-    const row = statement.get();
+  return async (): Promise<PendingOriginalItem | undefined> => {
+    const row = await Promise.resolve(statement.get());
     if (!row) {
       return undefined;
     }
