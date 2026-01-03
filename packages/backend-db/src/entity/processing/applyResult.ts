@@ -22,27 +22,35 @@ export const applyResult = (database: DatabaseSync) => {
     `UPDATE Project SET stage = ? WHERE id = ?`,
   );
 
-  return (arg: ApplyResultArg): void => {
-    transaction(database, () => {
-      insertSoundStatement.run(
-        arg.projectId,
-        'vocal',
-        arg.vocal.blobId,
-        arg.vocal.filename,
-        arg.vocal.contentType,
+  return async (arg: ApplyResultArg): Promise<void> => {
+    return await transaction(database, async () => {
+      await Promise.resolve(
+        insertSoundStatement.run(
+          arg.projectId,
+          'vocal',
+          arg.vocal.blobId,
+          arg.vocal.filename,
+          arg.vocal.contentType,
+        ),
       );
 
-      insertSoundStatement.run(
-        arg.projectId,
-        'instrumental',
-        arg.instrumental.blobId,
-        arg.instrumental.filename,
-        arg.instrumental.contentType,
+      await Promise.resolve(
+        insertSoundStatement.run(
+          arg.projectId,
+          'instrumental',
+          arg.instrumental.blobId,
+          arg.instrumental.filename,
+          arg.instrumental.contentType,
+        ),
       );
 
-      insertSubtitleStatement.run(arg.projectId, arg.transcriptionBlobId);
+      await Promise.resolve(
+        insertSubtitleStatement.run(arg.projectId, arg.transcriptionBlobId),
+      );
 
-      updateProjectStageStatement.run('done', arg.projectId);
+      await Promise.resolve(
+        updateProjectStageStatement.run('done', arg.projectId),
+      );
     });
   };
 };

@@ -11,8 +11,8 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.list.route,
-    handler: () => {
-      const all = app.db.project.list();
+    handler: async () => {
+      const all = await app.db.project.list();
       return all.map((project): api.project.list.Response[number] => {
         const processing = app.processingWorker.getProcessingState(project.id);
         let result: api.project.list.Response[number] = {
@@ -33,9 +33,9 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.get.route,
-    handler: (request) => {
+    handler: async (request) => {
       const { projectId } = request.params;
-      const found = app.db.project.get(projectId);
+      const found = await app.db.project.get(projectId);
       assertFound(found, `Project with id ${projectId} not found`);
       const processing = app.processingWorker.getProcessingState(projectId);
       let result: api.project.list.Response[number] = {
@@ -83,7 +83,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         ? await app.blobStorage.addFile(preview)
         : undefined;
 
-      const created = app.db.project.create({
+      const created = await app.db.project.create({
         name,
         song: blobSong,
         preview: blobPreview,
@@ -108,7 +108,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         ? await app.blobStorage.addFile(preview)
         : undefined;
 
-      const updated = app.db.project.update({
+      const updated = await app.db.project.update({
         projectId,
         name,
         preview: blobPreview,
@@ -128,9 +128,9 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
   app.route({
     ...api.project.remove.route,
-    handler: (request, reply) => {
+    handler: async (request, reply) => {
       const { projectId } = request.params;
-      const isRemoved = app.db.project.remove(projectId);
+      const isRemoved = await app.db.project.remove(projectId);
       assertFound(
         isRemoved || undefined,
         `Project with id ${projectId} not found`,

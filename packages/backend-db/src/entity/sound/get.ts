@@ -9,8 +9,11 @@ export const get = (database: DatabaseSync) => {
     `SELECT id, projectId, type, blobId, filename, contentType FROM Sound WHERE projectId = ? AND type = ?`,
   );
 
-  return (projectId: number, type: SoundType): GetItem | undefined => {
-    const row = statement.get(projectId, type);
+  return async (
+    projectId: number,
+    type: SoundType,
+  ): Promise<GetItem | undefined> => {
+    const row = await Promise.resolve(statement.get(projectId, type));
     if (!row) {
       return undefined;
     }

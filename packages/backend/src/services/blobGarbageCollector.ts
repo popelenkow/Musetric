@@ -7,7 +7,7 @@ export const registerBlobGarbageCollector = (app: FastifyInstance) => {
     blobStorage: app.blobStorage,
     gcIntervalMs: envs.gcIntervalMs,
     blobRetentionMs: envs.blobRetentionMs,
-    getReferencedBlobIds: async () => Promise.resolve(app.db.blob.list()),
+    getReferencedBlobIds: async () => await app.db.blob.list(),
   });
 
   app.addHook('onReady', () => {

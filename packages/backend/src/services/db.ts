@@ -9,10 +9,10 @@ declare module 'fastify' {
   }
 }
 
-export const registerDb = (app: FastifyInstance) => {
-  const db = DB.createInstance(envs.databasePath);
-  app.addHook('onClose', () => {
-    db.disconnect();
+export const registerDb = async (app: FastifyInstance) => {
+  const db = await DB.createInstance(envs.databasePath);
+  app.addHook('onClose', async () => {
+    await db.disconnect();
   });
   app.decorate('db', db);
 };

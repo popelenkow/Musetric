@@ -17,10 +17,10 @@ export const registerProcessingWorker = (app: FastifyInstance) => {
     sampleRate: envs.audioSampleRate,
     outputFormat: envs.audioFormat,
     blobStorage: app.blobStorage,
-    getNextTask: () => app.db.processing.pendingOriginal(),
-    saveResult: (result) => {
+    getNextTask: async () => await app.db.processing.pendingOriginal(),
+    saveResult: async (result) => {
       const name = path.parse(result.filename).name;
-      return app.db.processing.applyResult({
+      await app.db.processing.applyResult({
         projectId: result.projectId,
         vocal: {
           blobId: result.vocalBlobId,

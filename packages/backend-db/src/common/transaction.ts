@@ -1,19 +1,19 @@
 import type { DatabaseSync } from 'node:sqlite';
 
-export const transaction = <T>(
+export const transaction = async <T>(
   database: DatabaseSync,
-  operation: () => T,
-): T => {
+  operation: () => Promise<T> | T,
+): Promise<T> => {
   if (database.isTransaction) {
-    return operation();
+    return await operation();
   }
-  database.exec('BEGIN IMMEDIATE');
+  await Promise.resolve(database.exec('BEGIN IMMEDIATE'));
   try {
-    const result = operation();
-    database.exec('COMMIT');
+    const result = await operation();
+    await Promise.resolve(database.exec('COMMIT'));
     return result;
   } catch (error) {
-    database.exec('ROLLBACK');
+    await Promise.resolve(database.exec('ROLLBACK'));
     throw error;
   }
 };

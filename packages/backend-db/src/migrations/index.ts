@@ -52,8 +52,8 @@ const creationStatements = [
   createSubtitle,
 ] as const;
 
-export const createTables = (database: DatabaseSync) => {
-  creationStatements.forEach((statement) => {
-    database.exec(statement);
-  });
+export const createTables = async (database: DatabaseSync): Promise<void> => {
+  for (const statement of creationStatements) {
+    await Promise.resolve(database.exec(statement));
+  }
 };
