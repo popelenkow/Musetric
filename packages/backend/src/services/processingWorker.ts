@@ -35,8 +35,7 @@ export const registerProcessingWorker = (app: FastifyInstance) => {
         transcriptionBlobId: result.transcriptionBlobId,
       });
     },
-    logLevel: envs.logLevel,
-    logger: bindLogger(app.log),
+    logger: bindLogger(app.log, envs.logLevel),
   });
   app.addHook('onReady', () => {
     processingWorker.start();

@@ -1,4 +1,4 @@
-import { Logger, LogLevel } from '@musetric/resource-utils/logger';
+import { Logger } from '@musetric/resource-utils/logger';
 import { spawnScript } from '@musetric/resource-utils/spawnScript/index';
 
 export type TranscribeAudioOptions = {
@@ -6,13 +6,12 @@ export type TranscribeAudioOptions = {
   resultPath: string;
   onProgress?: (transcriptionProgress: number) => void;
   logger: Logger;
-  logLevel: LogLevel;
 };
 
 export const transcribeAudio = async (
   options: TranscribeAudioOptions,
 ): Promise<void> => {
-  const { sourcePath, resultPath, onProgress, logger, logLevel } = options;
+  const { sourcePath, resultPath, onProgress, logger } = options;
 
   type ProgressMessage = {
     type: 'progress';
@@ -24,7 +23,7 @@ export const transcribeAudio = async (
     args: {
       '--audio-path': sourcePath,
       '--result-path': resultPath,
-      '--log-level': logLevel,
+      '--log-level': logger.level ?? 'info',
     },
     cwd: process.cwd(),
     handlers: {
