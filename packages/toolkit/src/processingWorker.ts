@@ -23,6 +23,15 @@ export type ProcessingResult = {
   transcriptionBlobId: string;
 };
 
+export type DownloadStatus = 'active' | 'cached' | 'done';
+export type DownloadInfo = {
+  label: string;
+  file?: string;
+  downloaded: number;
+  total?: number;
+  status?: DownloadStatus;
+};
+
 export type GetNextProcessingTask = () => Promise<ProcessingTask | undefined>;
 export type SaveProcessingResult = (result: ProcessingResult) => Promise<void>;
 
@@ -30,6 +39,7 @@ export type ProcessingState = {
   stage: 'separation' | 'transcription';
   projectId: number;
   progress: number;
+  download?: DownloadInfo;
 };
 
 export type ProcessingEvent =
@@ -96,12 +106,23 @@ export const createProcessingWorker = (
         instrumentalPath: instrumental.blobPath,
         sampleRate,
         outputFormat,
-        onProgress: (separationProgress: number) => {
-          emitter.emit({
-            stage: 'separation',
-            projectId,
-            progress: separationProgress,
-          });
+        handlers: {
+          progress: (message) => {
+            emitter.emit({
+              stage: 'separation',
+              projectId,
+              progress: message.progress,
+              download: state?.download,
+            });
+          },
+          download: (message) => {
+            emitter.emit({
+              stage: 'separation',
+              projectId,
+              progress: 0,
+              download: message,
+            });
+          },
         },
         logger,
       });
@@ -115,12 +136,23 @@ export const createProcessingWorker = (
       await transcribeAudio({
         sourcePath: vocal.blobPath,
         resultPath: transcription.blobPath,
-        onProgress: (transcriptionProgress: number) => {
-          emitter.emit({
-            stage: 'transcription',
-            projectId,
-            progress: transcriptionProgress,
-          });
+        handlers: {
+          progress: (message) => {
+            emitter.emit({
+              stage: 'transcription',
+              projectId,
+              progress: message.progress,
+              download: state?.download,
+            });
+          },
+          download: (message) => {
+            emitter.emit({
+              stage: 'transcription',
+              projectId,
+              progress: 0,
+              download: message,
+            });
+          },
         },
         logger,
       });
@@ -129,6 +161,7 @@ export const createProcessingWorker = (
         stage: 'transcription',
         projectId,
         progress: 1,
+        download: state?.download,
       });
 
       await saveResult({

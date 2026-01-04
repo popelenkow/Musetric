@@ -10,12 +10,20 @@ export const stageSchema = z.enum([
   'transcription',
   'done',
 ]);
+export const downloadSchema = z.object({
+  label: z.string(),
+  file: z.string().optional(),
+  downloaded: z.number(),
+  total: z.number().optional(),
+  status: z.enum(['active', 'cached', 'done']).optional(),
+});
 export const itemSchema = z.object({
   id: z.number(),
   name: z.string().min(3),
   stage: stageSchema,
   previewUrl: z.string().optional(),
   progress: z.number().optional(),
+  download: downloadSchema.optional(),
 });
 export type Stage = z.infer<typeof stageSchema>;
 export type Item = z.infer<typeof itemSchema>;
@@ -74,6 +82,7 @@ export namespace status {
         projectId: z.number(),
         stage: z.union([z.literal('separation'), z.literal('transcription')]),
         progress: z.number(),
+        download: downloadSchema.optional(),
       }),
       z.object({
         projectId: z.number(),
