@@ -1,4 +1,4 @@
-import { Logger, LogLevel } from '@musetric/resource-utils/logger';
+import { Logger } from '@musetric/resource-utils/logger';
 import { spawnScript } from '@musetric/resource-utils/spawnScript/index';
 
 export type SeparateAudioOptions = {
@@ -9,7 +9,6 @@ export type SeparateAudioOptions = {
   outputFormat: string;
   onProgress: (separationProgress: number) => void;
   logger: Logger;
-  logLevel: LogLevel;
 };
 
 export const separateAudio = async (options: SeparateAudioOptions) => {
@@ -21,7 +20,6 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
     outputFormat,
     onProgress,
     logger,
-    logLevel,
   } = options;
 
   type ProgressMessage = {
@@ -37,7 +35,7 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
       '--instrumental-path': instrumentalPath,
       '--sample-rate': sampleRate.toString(),
       '--output-format': outputFormat,
-      '--log-level': logLevel,
+      '--log-level': logger.level ?? 'info',
     },
     cwd: process.cwd(),
     handlers: {

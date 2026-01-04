@@ -4,7 +4,7 @@ import {
   createEventEmitter,
   type EventEmitter,
 } from '@musetric/resource-utils/eventEmitter';
-import { Logger, LogLevel } from '@musetric/resource-utils/logger';
+import { Logger } from '@musetric/resource-utils/logger';
 import { createScheduler, Scheduler } from '@musetric/resource-utils/scheduler';
 import { separateAudio } from './separateAudio.js';
 import { transcribeAudio } from './transcribeAudio.js';
@@ -43,7 +43,6 @@ export type CreateProcessingWorkerOptions = {
   blobStorage: BlobStorage;
   getNextTask: GetNextProcessingTask;
   saveResult: SaveProcessingResult;
-  logLevel: LogLevel;
   logger: Logger;
 };
 
@@ -62,7 +61,6 @@ export const createProcessingWorker = (
     blobStorage,
     getNextTask,
     saveResult,
-    logLevel,
     logger,
   } = options;
 
@@ -106,7 +104,6 @@ export const createProcessingWorker = (
           });
         },
         logger,
-        logLevel,
       });
 
       emitter.emit({
@@ -126,7 +123,6 @@ export const createProcessingWorker = (
           });
         },
         logger,
-        logLevel,
       });
 
       emitter.emit({
