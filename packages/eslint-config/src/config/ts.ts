@@ -40,7 +40,17 @@ export const tsConfig: ConfigWithExtends = {
     '@typescript-eslint/no-non-null-assertion': ['error'],
     '@typescript-eslint/no-shadow': ['error'],
     '@typescript-eslint/no-unused-vars': ['error'],
-    '@typescript-eslint/no-use-before-define': ['error'],
+    '@typescript-eslint/no-use-before-define': [
+      'error',
+      {
+        functions: true,
+        classes: true,
+        variables: true,
+        enums: true,
+        typedefs: true,
+        ignoreTypeReferences: false,
+      },
+    ],
     '@typescript-eslint/no-useless-constructor': ['error'],
     '@typescript-eslint/naming-convention': [
       'error',
