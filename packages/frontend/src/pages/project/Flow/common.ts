@@ -1,19 +1,12 @@
 import { alpha, lighten, Theme } from '@mui/material/styles';
 import { api } from '@musetric/api';
 
-export type StageKey = 'queue' | 'separation' | 'transcription' | 'delivery';
-export type StageStatus = 'pending' | 'active' | 'done';
-export type StageItem = {
-  key: StageKey;
-  title: string;
-  description: string;
-  status: StageStatus;
-  percent?: number;
-};
+export type StageKey = 'separation' | 'transcription';
+export type StageStatus = 'pending' | 'processing' | 'done';
 
 export const getStatusColor = (status: StageStatus, theme: Theme) => {
   if (status === 'done') return lighten(theme.palette.success.main, 0.15);
-  if (status === 'active') return theme.palette.primary.main;
+  if (status === 'processing') return theme.palette.primary.main;
   return alpha(theme.palette.text.secondary, 0.6);
 };
 
@@ -23,13 +16,10 @@ export type StageProgressResolver = (
 ) => StageProgress;
 
 export const stageProgressByKey: Record<StageKey, StageProgressResolver> = {
-  queue: (project) => ({
-    status: project.stage === 'pending' ? 'active' : 'done',
-  }),
   separation: (project) => {
     const getStatus = (): StageStatus => {
       if (project.stage === 'separation') {
-        return 'active';
+        return 'processing';
       }
       if (project.stage === 'transcription') {
         return 'done';
@@ -53,7 +43,7 @@ export const stageProgressByKey: Record<StageKey, StageProgressResolver> = {
   transcription: (project) => {
     const getStatus = (): StageStatus => {
       if (project.stage === 'transcription') {
-        return 'active';
+        return 'processing';
       }
       if (project.stage === 'done') {
         return 'done';
@@ -71,23 +61,4 @@ export const stageProgressByKey: Record<StageKey, StageProgressResolver> = {
 
     return { status, percent };
   },
-  delivery: (project) => ({
-    status: project.stage === 'done' ? 'done' : 'pending',
-  }),
-};
-
-export const computeOverallPercent = (project: api.project.Item): number => {
-  const stages = Object.values(stageProgressByKey).map((resolver) =>
-    resolver(project),
-  );
-
-  const completedFraction = stages.reduce((acc, stage) => {
-    if (stage.status === 'done') return acc + 1;
-    if (stage.status === 'active' && typeof stage.percent === 'number') {
-      return acc + stage.percent / 100;
-    }
-    return acc;
-  }, 0);
-
-  return (completedFraction / stages.length) * 100;
 };
