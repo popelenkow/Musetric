@@ -1,24 +1,36 @@
 import { Logger } from '@musetric/resource-utils/logger';
-import { spawnScript } from '@musetric/resource-utils/spawnScript/index';
+import {
+  spawnScript,
+  type SpawnScriptHandlers,
+} from '@musetric/resource-utils/spawnScript/index';
+
+export type TranscribeAudioMessage =
+  | {
+      type: 'progress';
+      progress: number;
+    }
+  | {
+      type: 'download';
+      label: string;
+      file?: string;
+      downloaded: number;
+      total?: number;
+      status?: 'active' | 'cached' | 'done';
+    };
 
 export type TranscribeAudioOptions = {
   sourcePath: string;
   resultPath: string;
-  onProgress?: (transcriptionProgress: number) => void;
+  handlers: SpawnScriptHandlers<TranscribeAudioMessage>;
   logger: Logger;
 };
 
 export const transcribeAudio = async (
   options: TranscribeAudioOptions,
 ): Promise<void> => {
-  const { sourcePath, resultPath, onProgress, logger } = options;
+  const { sourcePath, resultPath, handlers, logger } = options;
 
-  type ProgressMessage = {
-    type: 'progress';
-    progress: number;
-  };
-
-  await spawnScript<ProgressMessage>({
+  await spawnScript<TranscribeAudioMessage>({
     command: 'musetric-transcribe',
     args: {
       '--audio-path': sourcePath,
@@ -26,11 +38,7 @@ export const transcribeAudio = async (
       '--log-level': logger.level ?? 'info',
     },
     cwd: process.cwd(),
-    handlers: {
-      progress: (message) => {
-        onProgress?.(message.progress);
-      },
-    },
+    handlers,
     logger,
     processName: 'transcribeAudio',
   });

@@ -4,20 +4,34 @@ import { axiosRequest } from './common/axiosRequest.js';
 import { fastifyRoute, createApiRoute } from './common/index.js';
 import { preview } from './index.js';
 
+export const downloadStatusSchema = z.enum(['active', 'cached', 'done']);
+export type DownloadStatus = z.infer<typeof downloadStatusSchema>;
+
+export const downloadSchema = z.object({
+  label: z.string(),
+  file: z.string().optional(),
+  downloaded: z.number(),
+  total: z.number().optional(),
+  status: downloadStatusSchema.optional(),
+});
+export type Download = z.infer<typeof downloadSchema>;
+
 export const stageSchema = z.enum([
   'pending',
   'separation',
   'transcription',
   'done',
 ]);
+export type Stage = z.infer<typeof stageSchema>;
+
 export const itemSchema = z.object({
   id: z.number(),
   name: z.string().min(3),
   stage: stageSchema,
   previewUrl: z.string().optional(),
   progress: z.number().optional(),
+  download: downloadSchema.optional(),
 });
-export type Stage = z.infer<typeof stageSchema>;
 export type Item = z.infer<typeof itemSchema>;
 
 export namespace list {
@@ -74,6 +88,7 @@ export namespace status {
         projectId: z.number(),
         stage: z.union([z.literal('separation'), z.literal('transcription')]),
         progress: z.number(),
+        download: downloadSchema.optional(),
       }),
       z.object({
         projectId: z.number(),

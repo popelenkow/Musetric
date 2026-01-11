@@ -25,7 +25,7 @@ export const SegmentLCurrent: FC<SegmentLCurrentProps> = (props) => {
   return (
     <Typography
       variant='subtitle1'
-      fontWeight={600}
+      fontWeight='bold'
       textAlign='center'
       component='div'
     >

@@ -24,6 +24,7 @@ export const subscribeToProjectStatus = (queryClient: QueryClient) =>
       ...project,
       stage: event.stage,
       progress: 'progress' in event ? event.progress : undefined,
+      download: 'download' in event ? event.download : undefined,
     });
 
     queryClient.setQueryData(getProjects().queryKey, (projects) => {

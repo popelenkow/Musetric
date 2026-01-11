@@ -1,5 +1,22 @@
 import { Logger } from '@musetric/resource-utils/logger';
-import { spawnScript } from '@musetric/resource-utils/spawnScript/index';
+import {
+  spawnScript,
+  type SpawnScriptHandlers,
+} from '@musetric/resource-utils/spawnScript/index';
+
+export type SeparateAudioMessage =
+  | {
+      type: 'progress';
+      progress: number;
+    }
+  | {
+      type: 'download';
+      label: string;
+      file?: string;
+      downloaded: number;
+      total?: number;
+      status?: 'active' | 'cached' | 'done';
+    };
 
 export type SeparateAudioOptions = {
   sourcePath: string;
@@ -7,7 +24,7 @@ export type SeparateAudioOptions = {
   instrumentalPath: string;
   sampleRate: number;
   outputFormat: string;
-  onProgress: (separationProgress: number) => void;
+  handlers: SpawnScriptHandlers<SeparateAudioMessage>;
   logger: Logger;
 };
 
@@ -18,16 +35,11 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
     instrumentalPath,
     sampleRate,
     outputFormat,
-    onProgress,
+    handlers,
     logger,
   } = options;
 
-  type ProgressMessage = {
-    type: 'progress';
-    progress: number;
-  };
-
-  await spawnScript<ProgressMessage>({
+  await spawnScript<SeparateAudioMessage>({
     command: 'musetric-separate',
     args: {
       '--source-path': sourcePath,
@@ -38,11 +50,7 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
       '--log-level': logger.level ?? 'info',
     },
     cwd: process.cwd(),
-    handlers: {
-      progress: (message) => {
-        onProgress(message.progress);
-      },
-    },
+    handlers,
     logger,
     processName: 'separateAudio',
   });

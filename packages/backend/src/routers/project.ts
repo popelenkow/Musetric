@@ -24,6 +24,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
             ...result,
             stage: processing.stage,
             progress: processing.progress,
+            download: processing.download,
           };
         }
         return result;
@@ -47,6 +48,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
           ...result,
           stage: processing.stage,
           progress: processing.progress,
+          download: processing.download,
         };
         return result;
       }
