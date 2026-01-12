@@ -23,7 +23,7 @@ export type ProcessingResult = {
   transcriptionBlobId: string;
 };
 
-export type DownloadStatus = 'active' | 'cached' | 'done';
+export type DownloadStatus = 'processing' | 'cached' | 'done';
 export type DownloadInfo = {
   label: string;
   file?: string;
