@@ -82,7 +82,9 @@ export const StageStatusStepDownload: FC<StageStatusStepDownloadProps> = (
         sx={{
           color,
           '& .MuiChip-label':
-            download.status === 'active' ? getShimmerTextSx(color) : undefined,
+            download.status === 'processing'
+              ? getShimmerTextSx(color)
+              : undefined,
         }}
         label={getDownloadStatusLabel(download, t)}
       />

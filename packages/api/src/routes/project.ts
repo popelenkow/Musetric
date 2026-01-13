@@ -4,7 +4,7 @@ import { axiosRequest } from './common/axiosRequest.js';
 import { fastifyRoute, createApiRoute } from './common/index.js';
 import { preview } from './index.js';
 
-export const downloadStatusSchema = z.enum(['active', 'cached', 'done']);
+export const downloadStatusSchema = z.enum(['processing', 'cached', 'done']);
 export type DownloadStatus = z.infer<typeof downloadStatusSchema>;
 
 export const downloadSchema = z.object({

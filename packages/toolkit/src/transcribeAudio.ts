@@ -15,7 +15,7 @@ export type TranscribeAudioMessage =
       file?: string;
       downloaded: number;
       total?: number;
-      status?: 'active' | 'cached' | 'done';
+      status?: 'processing' | 'cached' | 'done';
     };
 
 export type TranscribeAudioOptions = {
