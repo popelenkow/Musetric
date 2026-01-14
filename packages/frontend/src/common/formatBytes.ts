@@ -11,8 +11,15 @@ const unitLabels: Record<ByteUnit, (t: TFunction) => string> = {
   tb: (t) => t('common.units.bytes.tb'),
 };
 
-const getUnitIndexByValue = (value: number): number =>
-  Math.min(Math.floor(Math.log(value) / Math.log(1024)), byteUnits.length - 1);
+const getUnitIndexByValue = (value: number): number => {
+  if (value <= 0) {
+    return 0;
+  }
+  return Math.min(
+    Math.floor(Math.log(value) / Math.log(1024)),
+    byteUnits.length - 1,
+  );
+};
 
 const getDividerByIndex = (index: number): number => 1024 ** index;
 

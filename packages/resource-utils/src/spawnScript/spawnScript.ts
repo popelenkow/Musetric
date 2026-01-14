@@ -26,6 +26,7 @@ export type SpawnScriptOptions<Message extends { type: string }> = {
   handlers: SpawnScriptHandlers<Message>;
   logger: Logger;
   processName: string;
+  env?: NodeJS.ProcessEnv;
 };
 
 export const spawnScript = async <Message extends { type: string }>(
@@ -47,6 +48,7 @@ export const spawnScript = async <Message extends { type: string }>(
     const childProcess = spawn(command, Object.entries(args).flat(), {
       stdio: ['pipe', 'pipe', 'pipe'],
       cwd,
+      env: options.env,
     });
 
     type Handler = (message: Message) => void;

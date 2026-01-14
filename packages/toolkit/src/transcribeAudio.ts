@@ -23,12 +23,13 @@ export type TranscribeAudioOptions = {
   resultPath: string;
   handlers: SpawnScriptHandlers<TranscribeAudioMessage>;
   logger: Logger;
+  modelsPath?: string;
 };
 
 export const transcribeAudio = async (
   options: TranscribeAudioOptions,
 ): Promise<void> => {
-  const { sourcePath, resultPath, handlers, logger } = options;
+  const { sourcePath, resultPath, handlers, logger, modelsPath } = options;
 
   await spawnScript<TranscribeAudioMessage>({
     command: 'musetric-transcribe',
@@ -41,5 +42,15 @@ export const transcribeAudio = async (
     handlers,
     logger,
     processName: 'transcribeAudio',
+    env: modelsPath
+      ? {
+          // eslint-disable-next-line no-restricted-syntax
+          HF_HOME: modelsPath,
+          // eslint-disable-next-line no-restricted-syntax
+          HF_HUB_CACHE: modelsPath,
+          // eslint-disable-next-line no-restricted-syntax
+          HUGGINGFACE_HUB_CACHE: modelsPath,
+        }
+      : undefined,
   });
 };

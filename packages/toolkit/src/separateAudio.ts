@@ -26,6 +26,7 @@ export type SeparateAudioOptions = {
   outputFormat: string;
   handlers: SpawnScriptHandlers<SeparateAudioMessage>;
   logger: Logger;
+  modelsPath?: string;
 };
 
 export const separateAudio = async (options: SeparateAudioOptions) => {
@@ -37,6 +38,7 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
     outputFormat,
     handlers,
     logger,
+    modelsPath,
   } = options;
 
   await spawnScript<SeparateAudioMessage>({
@@ -53,5 +55,11 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
     handlers,
     logger,
     processName: 'separateAudio',
+    env: modelsPath
+      ? {
+          // eslint-disable-next-line no-restricted-syntax
+          HF_HUB_CACHE: modelsPath,
+        }
+      : undefined,
   });
 };

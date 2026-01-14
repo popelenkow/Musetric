@@ -50,6 +50,7 @@ export type CreateProcessingWorkerOptions = {
   processingIntervalMs: number;
   sampleRate: number;
   outputFormat: string;
+  modelsPath?: string;
   blobStorage: BlobStorage;
   getNextTask: GetNextProcessingTask;
   saveResult: SaveProcessingResult;
@@ -68,6 +69,7 @@ export const createProcessingWorker = (
     processingIntervalMs,
     sampleRate,
     outputFormat,
+    modelsPath,
     blobStorage,
     getNextTask,
     saveResult,
@@ -124,6 +126,7 @@ export const createProcessingWorker = (
             });
           },
         },
+        modelsPath,
         logger,
       });
 
@@ -154,6 +157,7 @@ export const createProcessingWorker = (
             });
           },
         },
+        modelsPath,
         logger,
       });
 

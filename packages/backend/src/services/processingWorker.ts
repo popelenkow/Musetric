@@ -16,6 +16,7 @@ export const registerProcessingWorker = (app: FastifyInstance) => {
     processingIntervalMs: envs.processingIntervalMs,
     sampleRate: envs.audioSampleRate,
     outputFormat: envs.audioFormat,
+    modelsPath: envs.modelsPath,
     blobStorage: app.blobStorage,
     getNextTask: async () => await app.db.processing.pendingOriginal(),
     saveResult: async (result) => {
