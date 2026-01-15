@@ -18,6 +18,7 @@ export const envs = {
   blobsPath: join(rootPath, 'storage/blobs'),
   publicPath: join(rootPath, 'storage/public'),
   databasePath: join(rootPath, 'storage/db/app.db'),
+  modelsPath: join(rootPath, 'storage/models'),
   gcIntervalMs: 5 * 60 * 1000,
   blobRetentionMs: 5 * 60 * 1000,
   processingIntervalMs: 10 * 1000,
