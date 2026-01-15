@@ -13,7 +13,6 @@ export const list = (database: DatabaseSync) => {
     SELECT
       Project.id AS project_id,
       Project.name AS project_name,
-      Project.stage AS project_stage,
       Preview.id AS preview_id,
       Preview.projectId AS preview_projectId,
       Preview.blobId AS preview_blobId,

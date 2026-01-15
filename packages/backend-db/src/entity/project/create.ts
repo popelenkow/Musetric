@@ -18,7 +18,7 @@ export type CreateArg = {
 
 export const create = (database: DatabaseSync) => {
   const insertProjectStatement = database.prepare(
-    `INSERT INTO Project (name, stage) VALUES (?, ?)`,
+    `INSERT INTO Project (name) VALUES (?)`,
   );
   const insertSoundStatement = database.prepare(
     `INSERT INTO Sound (projectId, type, blobId, filename, contentType) VALUES (?, ?, ?, ?, ?)`,
@@ -30,13 +30,12 @@ export const create = (database: DatabaseSync) => {
   return async (arg: CreateArg): Promise<CreateItem> => {
     return await transaction(database, async () => {
       const projectResult = await Promise.resolve(
-        insertProjectStatement.run(arg.name, 'pending'),
+        insertProjectStatement.run(arg.name),
       );
       const projectId = numericIdSchema.parse(projectResult.lastInsertRowid);
       const project = table.project.itemSchema.parse({
         id: projectId,
         name: arg.name,
-        stage: 'pending',
       });
 
       await Promise.resolve(

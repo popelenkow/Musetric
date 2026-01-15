@@ -16,21 +16,34 @@ export const downloadSchema = z.object({
 });
 export type Download = z.infer<typeof downloadSchema>;
 
-export const stageSchema = z.enum([
+export const processingStepStatusSchema = z.enum([
   'pending',
-  'separation',
-  'transcription',
+  'processing',
   'done',
 ]);
-export type Stage = z.infer<typeof stageSchema>;
+export type ProcessingStepStatus = z.infer<typeof processingStepStatusSchema>;
+
+export const processingStepSchema = z.object({
+  status: processingStepStatusSchema,
+  progress: z.number().optional(),
+  download: downloadSchema.optional(),
+});
+export type ProcessingStep = z.infer<typeof processingStepSchema>;
+
+export const processingSchema = z.object({
+  done: z.boolean().optional(),
+  steps: z.object({
+    separation: processingStepSchema,
+    transcription: processingStepSchema,
+  }),
+});
+export type Processing = z.infer<typeof processingSchema>;
 
 export const itemSchema = z.object({
   id: z.number(),
   name: z.string().min(3),
-  stage: stageSchema,
   previewUrl: z.string().optional(),
-  progress: z.number().optional(),
-  download: downloadSchema.optional(),
+  processing: processingSchema,
 });
 export type Item = z.infer<typeof itemSchema>;
 
@@ -83,18 +96,10 @@ export namespace status {
 
   export const event = createApiEvent({
     path: '/api/project/status/stream',
-    schema: z.union([
-      z.object({
-        projectId: z.number(),
-        stage: z.union([z.literal('separation'), z.literal('transcription')]),
-        progress: z.number(),
-        download: downloadSchema.optional(),
-      }),
-      z.object({
-        projectId: z.number(),
-        stage: z.literal('done'),
-      }),
-    ]),
+    schema: z.object({
+      projectId: z.number(),
+      processing: processingSchema,
+    }),
   });
   export type Event = z.infer<typeof event.schema>;
 }

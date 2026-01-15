@@ -40,7 +40,6 @@ export const update = (database: DatabaseSync) => {
       const baseProject = table.project.itemSchema.parse({
         id: current.id,
         name: current.name,
-        stage: current.stage,
       });
 
       let updatedProject = baseProject;
@@ -51,7 +50,6 @@ export const update = (database: DatabaseSync) => {
         updatedProject = table.project.itemSchema.parse({
           id: baseProject.id,
           name: arg.name,
-          stage: baseProject.stage,
         });
       }
 
