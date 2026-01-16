@@ -12,7 +12,7 @@ import { registerFrontend } from './services/frontend.js';
 import { https } from './services/https.js';
 import { logger } from './services/logger.js';
 import { registerMultipart } from './services/multipart.js';
-import { registerProcessingWorker } from './services/processingWorker.js';
+import { registerProcessingWorker } from './services/processingWorker/registerProcessingWorker.js';
 import { registerSchemaCompiler } from './services/schemaCompiler.js';
 import { registerSwagger } from './services/swagger.js';
 

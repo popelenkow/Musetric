@@ -5,10 +5,9 @@ import { ProjectBackButton } from './ProjectBackButton.js';
 export type ProjectLayoutProps = {
   children: ReactNode;
   heading?: ReactNode;
-  isHeadingAbsolute?: boolean;
 };
 export const ProjectLayout: FC<ProjectLayoutProps> = (props) => {
-  const { children, heading, isHeadingAbsolute } = props;
+  const { children, heading } = props;
   const headingContent = heading ?? <ProjectBackButton />;
 
   return (
@@ -18,7 +17,7 @@ export const ProjectLayout: FC<ProjectLayoutProps> = (props) => {
         padding={4}
         gap={2}
         alignItems='center'
-        position={isHeadingAbsolute ? 'absolute' : 'relative'}
+        position='relative'
       >
         {headingContent}
       </Stack>

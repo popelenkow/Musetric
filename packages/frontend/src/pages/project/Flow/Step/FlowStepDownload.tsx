@@ -7,7 +7,6 @@ import {
   formatBytesToUnit,
   formatBytesWithUnit,
 } from '../../../../common/formatBytes.js';
-import { StageKey, stageProgressByKey } from '../common.js';
 import { getShimmerTextSx } from './shimmerTextSx.js';
 
 const getDownloadName = (download: api.project.Download) => {
@@ -50,23 +49,19 @@ const getDownloadStatusLabel = (
   });
 };
 
-export type StageStatusStepDownloadProps = {
-  project: api.project.Item;
-  stageKey: StageKey;
+export type FlowStepDownloadProps = {
+  step: api.project.ProcessingStep;
 };
-export const StageStatusStepDownload: FC<StageStatusStepDownloadProps> = (
-  props,
-) => {
-  const { project, stageKey } = props;
+export const FlowStepDownload: FC<FlowStepDownloadProps> = (props) => {
+  const { step } = props;
   const theme = useTheme();
   const { t } = useTranslation();
-  const { status } = stageProgressByKey[stageKey](project);
 
-  if (status !== 'processing' || !project.download) {
+  if (step.status !== 'processing' || !step.download) {
     return;
   }
 
-  const { download } = project;
+  const { download } = step;
   const color = getDownloadColor(download, theme);
 
   return (

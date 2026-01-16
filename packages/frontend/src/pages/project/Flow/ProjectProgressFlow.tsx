@@ -3,7 +3,7 @@ import { api } from '@musetric/api';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ProjectLayout } from '../components/ProjectPageLayout.js';
-import { StageStatusStep } from './stage/StageStatusStep.js';
+import { FlowStep } from './Step/FlowStep.js';
 
 export type ProjectProgressFlowProps = {
   project: api.project.Item;
@@ -15,7 +15,7 @@ export const ProjectProgressFlow: FC<ProjectProgressFlowProps> = (props) => {
   const { t } = useTranslation();
 
   return (
-    <ProjectLayout isHeadingAbsolute>
+    <ProjectLayout>
       <Box
         sx={{
           width: '100%',
@@ -31,8 +31,14 @@ export const ProjectProgressFlow: FC<ProjectProgressFlowProps> = (props) => {
             {t('pages.project.progress.trackTitle')}
           </Typography>
           <Stack gap={2}>
-            <StageStatusStep project={project} stageKey='separation' />
-            <StageStatusStep project={project} stageKey='transcription' />
+            <FlowStep
+              title={t('pages.project.progress.steps.separation')}
+              step={project.processing.steps.separation}
+            />
+            <FlowStep
+              title={t('pages.project.progress.steps.transcription')}
+              step={project.processing.steps.transcription}
+            />
           </Stack>
         </Stack>
       </Box>

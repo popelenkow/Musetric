@@ -26,7 +26,7 @@ export const ProjectPage: FC = () => {
     return <ProjectPageLoading />;
   }
 
-  if (project.data.stage !== 'done') {
+  if (!project.data.processing.done) {
     return <ProjectProgressFlow project={project.data} />;
   }
 

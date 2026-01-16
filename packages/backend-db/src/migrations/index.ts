@@ -3,8 +3,7 @@ import type { DatabaseSync } from 'node:sqlite';
 const createProject = `
   CREATE TABLE IF NOT EXISTS Project (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    stage TEXT NOT NULL CHECK (stage IN ('pending', 'done'))
+    name TEXT NOT NULL
   );
 `;
 

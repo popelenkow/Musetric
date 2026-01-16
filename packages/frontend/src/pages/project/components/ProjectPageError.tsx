@@ -16,7 +16,7 @@ export const ProjectPageError: FC<ProjectPageErrorProps> = (props) => {
   const errorMessage = api.error.getMessage(projectQuery.error);
 
   return (
-    <ProjectLayout isHeadingAbsolute>
+    <ProjectLayout>
       <Stack alignItems='center' justifyContent='center' flex={1}>
         <ErrorOutlineIcon color='error' fontSize='large' />
         <Typography color='text.secondary'>

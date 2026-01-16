@@ -2,13 +2,9 @@ import { z } from 'zod';
 import { numericIdSchema } from './common.js';
 
 export namespace project {
-  export const stageSchema = z.enum(['pending', 'done']);
-  export type Stage = z.infer<typeof stageSchema>;
-
   export const itemSchema = z.object({
     id: numericIdSchema,
     name: z.string(),
-    stage: stageSchema,
   });
   export type Item = z.infer<typeof itemSchema>;
 }

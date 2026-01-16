@@ -7,7 +7,7 @@ export const ProjectPageLoading: FC = () => {
   const { t } = useTranslation();
 
   return (
-    <ProjectLayout isHeadingAbsolute>
+    <ProjectLayout>
       <Stack
         alignItems='center'
         justifyContent='center'

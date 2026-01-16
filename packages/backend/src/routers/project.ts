@@ -1,6 +1,10 @@
 import { api } from '@musetric/api';
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound.js';
+import {
+  resolveProcessing,
+  resolveProcessingEvent,
+} from '../services/processingWorker/processingSummary.js';
 
 export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   app.addHook('onRoute', (routeOptions) => {
@@ -13,22 +17,16 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.project.list.route,
     handler: async () => {
       const all = await app.db.project.list();
-      return all.map((project): api.project.list.Response[number] => {
-        const processing = app.processingWorker.getProcessingState(project.id);
-        let result: api.project.list.Response[number] = {
-          ...project,
-          previewUrl: api.preview.get.url(project.preview?.id),
-        };
-        if (processing) {
-          result = {
-            ...result,
-            stage: processing.stage,
-            progress: processing.progress,
-            download: processing.download,
+      return await Promise.all(
+        all.map(async (project): Promise<api.project.list.Response[number]> => {
+          const processing = await resolveProcessing(app, project.id);
+          return {
+            ...project,
+            previewUrl: api.preview.get.url(project.preview?.id),
+            processing,
           };
-        }
-        return result;
-      });
+        }),
+      );
     },
   });
 
@@ -38,20 +36,12 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
       const { projectId } = request.params;
       const found = await app.db.project.get(projectId);
       assertFound(found, `Project with id ${projectId} not found`);
-      const processing = app.processingWorker.getProcessingState(projectId);
-      let result: api.project.list.Response[number] = {
+      const processing = await resolveProcessing(app, projectId);
+      const result: api.project.get.Response = {
         ...found,
         previewUrl: api.preview.get.url(found.preview?.id),
+        processing,
       };
-      if (processing) {
-        result = {
-          ...result,
-          stage: processing.stage,
-          progress: processing.progress,
-          download: processing.download,
-        };
-        return result;
-      }
       return result;
     },
   });
@@ -60,7 +50,12 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
     ...api.project.status.route,
     handler: (request, reply) => {
       const unsubscribe = app.processingWorker.emitter.subscribe((event) => {
-        reply.sse({ data: api.project.status.event.stringify(event) });
+        reply.sse({
+          data: api.project.status.event.stringify({
+            projectId: event.projectId,
+            processing: resolveProcessingEvent(event),
+          }),
+        });
       });
       const heartbeat = setInterval(() => {
         reply.sse({ event: 'ping' });
@@ -91,9 +86,11 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
         preview: blobPreview,
       });
 
+      const processing = await resolveProcessing(app, created.project.id);
       const result: api.project.create.Response = {
         ...created.project,
         previewUrl: api.preview.get.url(created.preview?.id),
+        processing,
       };
 
       return result;
@@ -119,9 +116,11 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
 
       assertFound(updated, `Project with id ${projectId} not found`);
 
+      const processing = await resolveProcessing(app, projectId);
       const result: api.project.edit.Response = {
         ...updated.project,
         previewUrl: api.preview.get.url(updated.preview?.id),
+        processing,
       };
 
       return result;

@@ -1,8 +1,12 @@
 import type { DatabaseSync } from 'node:sqlite';
-import { applyResult } from './applyResult.js';
-import { pendingOriginal } from './pendingOriginal.js';
+import { applySeparationResult } from './applySeparationResult.js';
+import { applyTranscriptionResult } from './applyTranscriptionResult.js';
+import { pendingSeparation } from './pendingSeparation.js';
+import { pendingTranscription } from './pendingTranscription.js';
 
 export const createInstance = (database: DatabaseSync) => ({
-  pendingOriginal: pendingOriginal(database),
-  applyResult: applyResult(database),
+  pendingSeparation: pendingSeparation(database),
+  pendingTranscription: pendingTranscription(database),
+  applySeparationResult: applySeparationResult(database),
+  applyTranscriptionResult: applyTranscriptionResult(database),
 });
