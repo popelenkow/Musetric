@@ -111,9 +111,9 @@ export const resolveProcessing = async (
     return resolveProcessingEvent(active);
   }
 
-  const [subtitle, vocal] = await Promise.all([
+  const [subtitle, lead] = await Promise.all([
     app.db.subtitle.getByProject(projectId),
-    app.db.sound.get(projectId, 'vocal'),
+    app.db.sound.get(projectId, 'lead'),
   ]);
 
   if (subtitle) {
@@ -126,7 +126,7 @@ export const resolveProcessing = async (
     };
   }
 
-  if (vocal) {
+  if (lead) {
     return {
       done: false,
       steps: {

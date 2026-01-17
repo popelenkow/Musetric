@@ -6,7 +6,7 @@ export const pendingTranscription = (database: DatabaseSync) => {
     `SELECT Sound.*
      FROM Sound
      LEFT JOIN Subtitle ON Subtitle.projectId = Sound.projectId
-     WHERE Sound.type = 'vocal' AND Subtitle.id IS NULL
+     WHERE Sound.type = 'lead' AND Subtitle.id IS NULL
      `,
   );
 

@@ -11,7 +11,7 @@ const createSound = `
   CREATE TABLE IF NOT EXISTS Sound (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     projectId INTEGER NOT NULL,
-    type TEXT NOT NULL CHECK (type IN ('original', 'vocal', 'instrumental')),
+    type TEXT NOT NULL CHECK (type IN ('original', 'lead', 'backing', 'instrumental')),
     blobId TEXT NOT NULL UNIQUE,
     filename TEXT NOT NULL,
     contentType TEXT NOT NULL,

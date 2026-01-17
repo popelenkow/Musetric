@@ -10,7 +10,12 @@ export namespace project {
 }
 
 export namespace sound {
-  export const typeSchema = z.enum(['original', 'vocal', 'instrumental']);
+  export const typeSchema = z.enum([
+    'original',
+    'lead',
+    'backing',
+    'instrumental',
+  ]);
   export type Type = z.infer<typeof typeSchema>;
 
   export const itemSchema = z.object({

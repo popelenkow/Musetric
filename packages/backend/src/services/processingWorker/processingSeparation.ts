@@ -39,12 +39,14 @@ export const createSeparationWorker = (
         emitter.emit(state);
 
         const sourcePath = app.blobStorage.getPath(task.blobId);
-        const vocal = app.blobStorage.createPath();
+        const lead = app.blobStorage.createPath();
+        const backing = app.blobStorage.createPath();
         const instrumental = app.blobStorage.createPath();
 
         await separateAudio({
           sourcePath,
-          vocalPath: vocal.blobPath,
+          leadPath: lead.blobPath,
+          backingPath: backing.blobPath,
           instrumentalPath: instrumental.blobPath,
           sampleRate: envs.audioSampleRate,
           outputFormat: envs.audioFormat,
@@ -77,9 +79,14 @@ export const createSeparationWorker = (
         const name = path.parse(task.filename).name;
         await app.db.processing.applySeparationResult({
           projectId: task.projectId,
-          vocal: {
-            blobId: vocal.blobId,
-            filename: `${name}_vocal.${envs.audioFormat}`,
+          lead: {
+            blobId: lead.blobId,
+            filename: `${name}_lead.${envs.audioFormat}`,
+            contentType: envs.audioContentType,
+          },
+          backing: {
+            blobId: backing.blobId,
+            filename: `${name}_backing.${envs.audioFormat}`,
             contentType: envs.audioContentType,
           },
           instrumental: {
