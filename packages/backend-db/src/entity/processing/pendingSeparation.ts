@@ -7,8 +7,8 @@ export const pendingSeparation = (database: DatabaseSync) => {
      FROM Sound
      WHERE Sound.type = 'original'
        AND NOT EXISTS (
-         SELECT 1 FROM Sound AS Vocal
-         WHERE Vocal.projectId = Sound.projectId AND Vocal.type = 'vocal'
+         SELECT 1 FROM Sound AS Lead
+         WHERE Lead.projectId = Sound.projectId AND Lead.type = 'lead'
        )
      `,
   );

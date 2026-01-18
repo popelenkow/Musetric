@@ -20,7 +20,8 @@ export type SeparateAudioMessage =
 
 export type SeparateAudioOptions = {
   sourcePath: string;
-  vocalPath: string;
+  leadPath: string;
+  backingPath: string;
   instrumentalPath: string;
   sampleRate: number;
   outputFormat: string;
@@ -32,7 +33,8 @@ export type SeparateAudioOptions = {
 export const separateAudio = async (options: SeparateAudioOptions) => {
   const {
     sourcePath,
-    vocalPath,
+    leadPath,
+    backingPath,
     instrumentalPath,
     sampleRate,
     outputFormat,
@@ -45,7 +47,8 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
     command: 'musetric-separate',
     args: {
       '--source-path': sourcePath,
-      '--vocal-path': vocalPath,
+      '--lead-path': leadPath,
+      '--backing-path': backingPath,
       '--instrumental-path': instrumentalPath,
       '--sample-rate': sampleRate.toString(),
       '--output-format': outputFormat,

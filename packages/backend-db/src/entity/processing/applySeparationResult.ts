@@ -4,7 +4,8 @@ import { transaction } from '../../common/index.js';
 
 export type ApplySeparationResultArg = {
   projectId: number;
-  vocal: BlobFile;
+  lead: BlobFile;
+  backing: BlobFile;
   instrumental: BlobFile;
 };
 
@@ -18,10 +19,10 @@ export const applySeparationResult = (database: DatabaseSync) => {
       await Promise.resolve(
         insertSoundStatement.run(
           arg.projectId,
-          'vocal',
-          arg.vocal.blobId,
-          arg.vocal.filename,
-          arg.vocal.contentType,
+          'lead',
+          arg.lead.blobId,
+          arg.lead.filename,
+          arg.lead.contentType,
         ),
       );
 
@@ -32,6 +33,16 @@ export const applySeparationResult = (database: DatabaseSync) => {
           arg.instrumental.blobId,
           arg.instrumental.filename,
           arg.instrumental.contentType,
+        ),
+      );
+
+      await Promise.resolve(
+        insertSoundStatement.run(
+          arg.projectId,
+          'backing',
+          arg.backing.blobId,
+          arg.backing.filename,
+          arg.backing.contentType,
         ),
       );
     });

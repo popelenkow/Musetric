@@ -20,7 +20,7 @@ export type ProjectViewProps = {
 export const ProjectView: FC<ProjectViewProps> = (props) => {
   const { project } = props;
 
-  const sound = useQuery(endpoints.getSound(project.id, 'vocal'));
+  const sound = useQuery(endpoints.getSound(project.id, 'lead'));
   const subtitle = useQuery(endpoints.getSubtitle(project.id));
 
   const mount = usePlayerStore((s) => s.mount);
