@@ -23,8 +23,6 @@ export namespace sound {
     projectId: numericIdSchema,
     type: typeSchema,
     blobId: z.string(),
-    filename: z.string(),
-    contentType: z.string(),
   });
   export type Item = z.infer<typeof itemSchema>;
 }

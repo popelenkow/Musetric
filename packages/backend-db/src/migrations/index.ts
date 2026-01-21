@@ -13,8 +13,6 @@ const createSound = `
     projectId INTEGER NOT NULL,
     type TEXT NOT NULL CHECK (type IN ('original', 'lead', 'backing', 'instrumental')),
     blobId TEXT NOT NULL UNIQUE,
-    filename TEXT NOT NULL,
-    contentType TEXT NOT NULL,
     FOREIGN KEY (projectId) REFERENCES Project(id) ON DELETE CASCADE
   );
 `;

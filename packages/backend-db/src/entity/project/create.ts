@@ -21,7 +21,7 @@ export const create = (database: DatabaseSync) => {
     `INSERT INTO Project (name) VALUES (?)`,
   );
   const insertSoundStatement = database.prepare(
-    `INSERT INTO Sound (projectId, type, blobId, filename, contentType) VALUES (?, ?, ?, ?, ?)`,
+    `INSERT INTO Sound (projectId, type, blobId) VALUES (?, ?, ?)`,
   );
   const insertPreviewStatement = database.prepare(
     `INSERT INTO Preview (projectId, blobId, filename, contentType) VALUES (?, ?, ?, ?)`,
@@ -39,13 +39,7 @@ export const create = (database: DatabaseSync) => {
       });
 
       await Promise.resolve(
-        insertSoundStatement.run(
-          projectId,
-          'original',
-          arg.song.blobId,
-          arg.song.filename,
-          arg.song.contentType,
-        ),
+        insertSoundStatement.run(projectId, 'original', arg.song.blobId),
       );
 
       if (!arg.preview) {
