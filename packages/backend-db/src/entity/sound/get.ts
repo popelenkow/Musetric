@@ -6,7 +6,7 @@ export type GetItem = table.sound.Item;
 
 export const get = (database: DatabaseSync) => {
   const statement = database.prepare(
-    `SELECT id, projectId, type, blobId, filename, contentType FROM Sound WHERE projectId = ? AND type = ?`,
+    `SELECT id, projectId, type, blobId FROM Sound WHERE projectId = ? AND type = ?`,
   );
 
   return async (

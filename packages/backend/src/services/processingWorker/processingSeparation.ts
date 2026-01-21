@@ -1,4 +1,3 @@
-import path from 'node:path';
 import { EventEmitter } from '@musetric/resource-utils/eventEmitter';
 import { Logger } from '@musetric/resource-utils/logger';
 import { separateAudio } from '@musetric/toolkit';
@@ -12,7 +11,6 @@ import {
 export type SeparationTask = {
   projectId: number;
   blobId: string;
-  filename: string;
 };
 
 export type SeparationWorker = {
@@ -76,24 +74,11 @@ export const createSeparationWorker = (
           logger,
         });
 
-        const name = path.parse(task.filename).name;
         await app.db.processing.applySeparationResult({
           projectId: task.projectId,
-          lead: {
-            blobId: lead.blobId,
-            filename: `${name}_lead.${envs.audioFormat}`,
-            contentType: envs.audioContentType,
-          },
-          backing: {
-            blobId: backing.blobId,
-            filename: `${name}_backing.${envs.audioFormat}`,
-            contentType: envs.audioContentType,
-          },
-          instrumental: {
-            blobId: instrumental.blobId,
-            filename: `${name}_instrumental.${envs.audioFormat}`,
-            contentType: envs.audioContentType,
-          },
+          leadId: lead.blobId,
+          backingId: backing.blobId,
+          instrumentalId: instrumental.blobId,
         });
 
         state = undefined;
