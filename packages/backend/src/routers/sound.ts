@@ -25,7 +25,7 @@ export const soundRouter: FastifyPluginAsyncZod = async (app) => {
       const data = await app.blobStorage.get(sound.blobId);
       assertFound(data, `Sound blob for id ${sound.blobId} not found`);
 
-      const suffix = type === 'original' ? '' : `_${type}`;
+      const suffix = type === 'source' ? '' : `_${type}`;
       const isNotModified = handleCachedFile(request, reply, {
         data,
         filename: `${project.name}${suffix}.${envs.audioFormat}`,

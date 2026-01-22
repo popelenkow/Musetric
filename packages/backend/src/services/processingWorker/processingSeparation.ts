@@ -94,7 +94,7 @@ export const createSeparationWorker = (
           step: 'separation',
         });
         state = undefined;
-        logger.error({ projectId: task.projectId, error }, 'Processing failed');
+        logger.error({ projectId: task.projectId, error }, 'Separation failed');
       }
     },
     getState: (projectId) =>

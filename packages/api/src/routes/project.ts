@@ -33,6 +33,7 @@ export type ProcessingStep = z.infer<typeof processingStepSchema>;
 export const processingSchema = z.object({
   done: z.boolean().optional(),
   steps: z.object({
+    validation: processingStepSchema,
     separation: processingStepSchema,
     transcription: processingStepSchema,
   }),

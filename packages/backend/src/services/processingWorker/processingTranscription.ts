@@ -86,7 +86,10 @@ export const createTranscriptionWorker = (
           step: 'transcription',
         });
         state = undefined;
-        logger.error({ projectId: task.projectId, error }, 'Processing failed');
+        logger.error(
+          { projectId: task.projectId, error },
+          'Transcription failed',
+        );
       }
     },
     getState: (projectId) =>

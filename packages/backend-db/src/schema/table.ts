@@ -11,7 +11,8 @@ export namespace project {
 
 export namespace sound {
   export const typeSchema = z.enum([
-    'original',
+    'rawSource',
+    'source',
     'lead',
     'backing',
     'instrumental',
