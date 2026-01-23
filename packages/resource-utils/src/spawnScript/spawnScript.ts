@@ -21,7 +21,8 @@ export type SpawnScriptHandlers<Message extends { type: string }> = {
 
 export type SpawnScriptOptions<Message extends { type: string }> = {
   command: string;
-  args: Record<string, string>;
+  args?: Record<string, string>;
+  flatArgs?: string[];
   cwd: string;
   handlers: SpawnScriptHandlers<Message>;
   logger: Logger;
@@ -35,6 +36,10 @@ export const spawnScript = async <Message extends { type: string }>(
   type Result = Extract<Message, { type: 'result' }>;
   return new Promise<Result | undefined>((resolve, reject) => {
     const { command, args, cwd, logger, processName } = options;
+    const spawnArgs = [
+      ...Object.entries(args ?? {}).flat(),
+      ...(options.flatArgs ?? []),
+    ];
 
     let result: Result | undefined = undefined;
     let lastInfo: LogInfo | undefined = undefined;
@@ -45,10 +50,10 @@ export const spawnScript = async <Message extends { type: string }>(
       },
     };
 
-    const childProcess = spawn(command, Object.entries(args).flat(), {
+    const childProcess = spawn(command, spawnArgs, {
       stdio: ['pipe', 'pipe', 'pipe'],
       cwd,
-      env: options.env,
+      env: { ...process.env, ...options.env },
     });
 
     type Handler = (message: Message) => void;

@@ -2,12 +2,7 @@ import { z } from 'zod';
 import { axiosRequest } from './common/axiosRequest.js';
 import { fastifyRoute, createApiRoute } from './common/index.js';
 
-export const typeSchema = z.enum([
-  'original',
-  'lead',
-  'backing',
-  'instrumental',
-]);
+export const typeSchema = z.enum(['source', 'lead', 'backing', 'instrumental']);
 export type Type = z.infer<typeof typeSchema>;
 
 export namespace upload {

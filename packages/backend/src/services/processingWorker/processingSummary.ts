@@ -1,7 +1,7 @@
 import type { api } from '@musetric/api';
 import type { FastifyInstance } from 'fastify';
 
-export type ProcessingStepKind = 'separation' | 'transcription';
+export type ProcessingStepKind = 'validation' | 'separation' | 'transcription';
 export type ProcessingWorkerProgressEvent = {
   type: 'progress';
   projectId: number;
@@ -31,10 +31,33 @@ export const resolveProcessingEvent = (
   event: ProcessingWorkerEvent,
 ): api.project.Processing => {
   if (event.type === 'progress') {
+    if (event.step === 'validation') {
+      return {
+        done: false,
+        steps: {
+          validation: {
+            status: 'processing',
+            progress: event.progress,
+            download: event.download,
+          },
+          separation: {
+            status: 'pending',
+          },
+          transcription: {
+            status: 'pending',
+          },
+        },
+      };
+    }
+
     if (event.step === 'separation') {
       return {
         done: false,
         steps: {
+          validation: {
+            status: 'done',
+            progress: 1,
+          },
           separation: {
             status: 'processing',
             progress: event.progress,
@@ -50,6 +73,10 @@ export const resolveProcessingEvent = (
     return {
       done: false,
       steps: {
+        validation: {
+          status: 'done',
+          progress: 1,
+        },
         separation: {
           status: 'done',
           progress: 1,
@@ -64,10 +91,22 @@ export const resolveProcessingEvent = (
   }
 
   if (event.type === 'complete') {
+    if (event.step === 'validation') {
+      return {
+        done: false,
+        steps: {
+          validation: { status: 'done', progress: 1 },
+          separation: { status: 'pending' },
+          transcription: { status: 'pending' },
+        },
+      };
+    }
+
     if (event.step === 'separation') {
       return {
         done: false,
         steps: {
+          validation: { status: 'done', progress: 1 },
           separation: { status: 'done', progress: 1 },
           transcription: { status: 'pending' },
         },
@@ -77,8 +116,20 @@ export const resolveProcessingEvent = (
     return {
       done: true,
       steps: {
+        validation: { status: 'done', progress: 1 },
         separation: { status: 'done', progress: 1 },
         transcription: { status: 'done', progress: 1 },
+      },
+    };
+  }
+
+  if (event.step === 'validation') {
+    return {
+      done: false,
+      steps: {
+        validation: { status: 'pending' },
+        separation: { status: 'pending' },
+        transcription: { status: 'pending' },
       },
     };
   }
@@ -87,6 +138,7 @@ export const resolveProcessingEvent = (
     return {
       done: false,
       steps: {
+        validation: { status: 'done', progress: 1 },
         separation: { status: 'pending' },
         transcription: { status: 'pending' },
       },
@@ -96,6 +148,7 @@ export const resolveProcessingEvent = (
   return {
     done: false,
     steps: {
+      validation: { status: 'done', progress: 1 },
       separation: { status: 'done', progress: 1 },
       transcription: { status: 'pending' },
     },
@@ -111,15 +164,17 @@ export const resolveProcessing = async (
     return resolveProcessingEvent(active);
   }
 
-  const [subtitle, lead] = await Promise.all([
+  const [subtitle, lead, sourceSound] = await Promise.all([
     app.db.subtitle.getByProject(projectId),
     app.db.sound.get(projectId, 'lead'),
+    app.db.sound.get(projectId, 'source'),
   ]);
 
   if (subtitle) {
     return {
       done: true,
       steps: {
+        validation: { status: 'done', progress: 1 },
         separation: { status: 'done', progress: 1 },
         transcription: { status: 'done', progress: 1 },
       },
@@ -130,7 +185,19 @@ export const resolveProcessing = async (
     return {
       done: false,
       steps: {
+        validation: { status: 'done', progress: 1 },
         separation: { status: 'done', progress: 1 },
+        transcription: { status: 'pending' },
+      },
+    };
+  }
+
+  if (sourceSound) {
+    return {
+      done: false,
+      steps: {
+        validation: { status: 'done', progress: 1 },
+        separation: { status: 'pending' },
         transcription: { status: 'pending' },
       },
     };
@@ -139,6 +206,7 @@ export const resolveProcessing = async (
   return {
     done: false,
     steps: {
+      validation: { status: 'pending' },
       separation: { status: 'pending' },
       transcription: { status: 'pending' },
     },

@@ -1,16 +1,9 @@
 import type { DatabaseSync } from 'node:sqlite';
 import { table } from '../../schema/index.js';
 
-export const pendingSeparation = (database: DatabaseSync) => {
+export const pendingValidation = (database: DatabaseSync) => {
   const statement = database.prepare(
-    `SELECT Sound.*
-     FROM Sound
-     WHERE Sound.type = 'source'
-       AND NOT EXISTS (
-         SELECT 1 FROM Sound AS Lead
-         WHERE Lead.projectId = Sound.projectId AND Lead.type = 'lead'
-       )
-     `,
+    `SELECT * FROM Sound WHERE type = 'rawSource'`,
   );
 
   return async (): Promise<table.sound.Item | undefined> => {

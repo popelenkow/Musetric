@@ -39,7 +39,7 @@ export const create = (database: DatabaseSync) => {
       });
 
       await Promise.resolve(
-        insertSoundStatement.run(projectId, 'original', arg.song.blobId),
+        insertSoundStatement.run(projectId, 'rawSource', arg.song.blobId),
       );
 
       if (!arg.preview) {

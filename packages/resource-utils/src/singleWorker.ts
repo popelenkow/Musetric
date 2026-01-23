@@ -1,12 +1,9 @@
 import { createCallLatest } from './callLatest.js';
 import { createScheduler, Scheduler } from './scheduler.js';
 
-export type TaskRunner = () => Promise<void>;
-export type GetNextTask = () => Promise<TaskRunner | undefined>;
-
 export type CreateSingleWorkerOptions = {
   intervalMs: number;
-  getNextTask: GetNextTask;
+  runNext: () => Promise<void>;
 };
 
 export type SingleWorker = Scheduler;
@@ -14,15 +11,11 @@ export type SingleWorker = Scheduler;
 export const createSingleWorker = (
   options: CreateSingleWorkerOptions,
 ): SingleWorker => {
-  const { intervalMs, getNextTask } = options;
+  const { intervalMs, runNext } = options;
 
   const run = async () => {
     try {
-      const task = await getNextTask();
-      if (!task) {
-        return;
-      }
-      await task();
+      await runNext();
     } catch {
       return;
     }

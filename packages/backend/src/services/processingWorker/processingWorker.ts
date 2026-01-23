@@ -15,6 +15,7 @@ import {
   ProcessingWorkerProgressEvent,
 } from './processingSummary.js';
 import { createTranscriptionWorker } from './processingTranscription.js';
+import { createValidationWorker } from './processingValidation.js';
 
 export type ProcessingWorker = SingleWorker & {
   emitter: EventEmitter<ProcessingWorkerEvent>;
@@ -28,24 +29,27 @@ export const createProcessingWorker = (
 ): ProcessingWorker => {
   const emitter = createEventEmitter<ProcessingWorkerEvent>();
   const logger = bindLogger(app.log, envs.logLevel);
+  const validationWorker = createValidationWorker(app, emitter, logger);
   const separationWorker = createSeparationWorker(app, emitter, logger);
   const transcriptionWorker = createTranscriptionWorker(app, emitter, logger);
 
   const worker = createSingleWorker({
     intervalMs: envs.processingIntervalMs,
-    getNextTask: async () => {
-      const pendingTranscription =
-        await app.db.processing.pendingTranscription();
-      if (pendingTranscription) {
-        return async () => transcriptionWorker.run(pendingTranscription);
+    runNext: async () => {
+      const transcription = await app.db.processing.pendingTranscription();
+      if (transcription) {
+        await transcriptionWorker.run(transcription);
       }
 
-      const pendingSeparation = await app.db.processing.pendingSeparation();
-      if (pendingSeparation) {
-        return async () => separationWorker.run(pendingSeparation);
+      const separation = await app.db.processing.pendingSeparation();
+      if (separation) {
+        await separationWorker.run(separation);
       }
 
-      return undefined;
+      const validation = await app.db.processing.pendingValidation();
+      if (validation) {
+        await validationWorker.run(validation);
+      }
     },
   });
 
@@ -55,7 +59,8 @@ export const createProcessingWorker = (
     getProcessingState: (projectId) => {
       return (
         transcriptionWorker.getState(projectId) ??
-        separationWorker.getState(projectId)
+        separationWorker.getState(projectId) ??
+        validationWorker.getState(projectId)
       );
     },
   };
