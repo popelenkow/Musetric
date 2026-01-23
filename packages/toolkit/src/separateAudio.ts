@@ -24,7 +24,6 @@ export type SeparateAudioOptions = {
   backingPath: string;
   instrumentalPath: string;
   sampleRate: number;
-  outputFormat: string;
   handlers: SpawnScriptHandlers<SeparateAudioMessage>;
   logger: Logger;
   modelsPath?: string;
@@ -37,7 +36,6 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
     backingPath,
     instrumentalPath,
     sampleRate,
-    outputFormat,
     handlers,
     logger,
     modelsPath,
@@ -51,7 +49,6 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
       '--backing-path': backingPath,
       '--instrumental-path': instrumentalPath,
       '--sample-rate': sampleRate.toString(),
-      '--output-format': outputFormat,
       '--log-level': logger.level ?? 'info',
     },
     cwd: process.cwd(),

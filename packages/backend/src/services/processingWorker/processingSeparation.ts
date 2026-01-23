@@ -47,7 +47,6 @@ export const createSeparationWorker = (
           backingPath: backing.blobPath,
           instrumentalPath: instrumental.blobPath,
           sampleRate: envs.audioSampleRate,
-          outputFormat: envs.audioFormat,
           handlers: {
             progress: (message) => {
               if (!state) {
