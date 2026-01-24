@@ -1,11 +1,9 @@
-import crypto from 'crypto';
 import fs from 'fs/promises';
 import path from 'path';
 
 export const getBlobPath = (rootPath: string, blobId: string) => {
-  const hash = crypto.createHash('sha256').update(blobId).digest('hex');
-  const level1 = hash.substring(0, 2);
-  const level2 = hash.substring(2, 4);
+  const level1 = blobId.substring(0, 2);
+  const level2 = blobId.substring(2, 4);
   return path.join(rootPath, level1, level2, blobId);
 };
 
