@@ -8,20 +8,20 @@ export type ApplyValidationResultArg = {
 };
 
 export const applyValidationResult = (database: DatabaseSync) => {
-  const insertSoundStatement = database.prepare(
-    `INSERT INTO Sound (projectId, type, blobId) VALUES (?, 'source', ?)`,
+  const insertAudioStatement = database.prepare(
+    `INSERT INTO AudioMaster (projectId, type, blobId) VALUES (?, 'source', ?)`,
   );
-  const deleteSoundStatement = database.prepare(
-    `DELETE FROM Sound WHERE projectId = ? AND type = 'rawSource' AND blobId = ?`,
+  const deleteAudioStatement = database.prepare(
+    `DELETE FROM AudioMaster WHERE projectId = ? AND type = 'rawSource' AND blobId = ?`,
   );
 
   return async (arg: ApplyValidationResultArg): Promise<void> => {
     return await transaction(database, async () => {
       await Promise.resolve(
-        insertSoundStatement.run(arg.projectId, arg.sourceId),
+        insertAudioStatement.run(arg.projectId, arg.sourceId),
       );
       await Promise.resolve(
-        deleteSoundStatement.run(arg.projectId, arg.rawSourceId),
+        deleteAudioStatement.run(arg.projectId, arg.rawSourceId),
       );
     });
   };

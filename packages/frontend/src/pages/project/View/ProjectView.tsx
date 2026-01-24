@@ -20,8 +20,8 @@ export type ProjectViewProps = {
 export const ProjectView: FC<ProjectViewProps> = (props) => {
   const { project } = props;
 
-  const sound = useQuery(endpoints.getSound(project.id, 'lead'));
-  const subtitle = useQuery(endpoints.getSubtitle(project.id));
+  const audio = useQuery(endpoints.audioMaster.get(project.id, 'lead'));
+  const subtitle = useQuery(endpoints.subtitle.get(project.id));
 
   const mount = usePlayerStore((s) => s.mount);
   const load = usePlayerStore((s) => s.load);
@@ -30,11 +30,11 @@ export const ProjectView: FC<ProjectViewProps> = (props) => {
   useEffect(() => mount(), [mount]);
 
   useEffect(() => {
-    if (!initialized || !sound.data) return;
-    void load(sound.data);
-  }, [sound.data, load, initialized]);
+    if (!initialized || !audio.data) return;
+    void load(audio.data);
+  }, [audio.data, load, initialized]);
 
-  if (!initialized || !sound.data || !subtitle.data) {
+  if (!initialized || !audio.data || !subtitle.data) {
     return <QueryPending />;
   }
 

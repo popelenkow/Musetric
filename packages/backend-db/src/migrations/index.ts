@@ -1,5 +1,8 @@
 import type { DatabaseSync } from 'node:sqlite';
 
+// Do not attempt to migrate or preserve old tables/data.
+// Project is still early in development.
+
 const createProject = `
   CREATE TABLE IF NOT EXISTS Project (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -7,8 +10,8 @@ const createProject = `
   );
 `;
 
-const createSound = `
-  CREATE TABLE IF NOT EXISTS Sound (
+const createAudioMaster = `
+  CREATE TABLE IF NOT EXISTS AudioMaster (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     projectId INTEGER NOT NULL,
     type TEXT NOT NULL CHECK (type IN ('rawSource', 'source', 'lead', 'backing', 'instrumental')),
@@ -17,8 +20,8 @@ const createSound = `
   );
 `;
 
-const createSoundIndex = `
-  CREATE INDEX IF NOT EXISTS Sound_projectId_type_index ON Sound (projectId, type);
+const createAudioMasterIndex = `
+  CREATE INDEX IF NOT EXISTS AudioMaster_projectId_type_index ON AudioMaster (projectId, type);
 `;
 
 const createPreview = `
@@ -43,8 +46,8 @@ const createSubtitle = `
 
 const creationStatements = [
   createProject,
-  createSound,
-  createSoundIndex,
+  createAudioMaster,
+  createAudioMasterIndex,
   createPreview,
   createSubtitle,
 ] as const;

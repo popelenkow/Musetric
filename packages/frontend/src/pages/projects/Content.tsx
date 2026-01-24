@@ -8,7 +8,7 @@ import { PlaceholderCard } from './cards/Placeholder.js';
 import { ProjectCard } from './cards/Project/index.js';
 
 export const ProjectsContent: FC = () => {
-  const projectList = useQuery(endpoints.getProjects());
+  const projectList = useQuery(endpoints.project.list());
 
   if (projectList.isError) {
     return <QueryError error={projectList.error} />;

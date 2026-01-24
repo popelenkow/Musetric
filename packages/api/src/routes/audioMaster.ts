@@ -5,29 +5,10 @@ import { fastifyRoute, createApiRoute } from './common/index.js';
 export const typeSchema = z.enum(['source', 'lead', 'backing', 'instrumental']);
 export type Type = z.infer<typeof typeSchema>;
 
-export namespace upload {
-  export const base = createApiRoute({
-    method: 'post',
-    path: '/api/sound/project/:projectId/upload',
-    paramsSchema: z.object({
-      projectId: z.number(),
-    }),
-    requestSchema: z.object({
-      file: z.file(),
-    }),
-    responseSchema: z.object({ id: z.number() }),
-  });
-  export const route = fastifyRoute(base);
-  export const request = axiosRequest(base);
-  export type Params = z.infer<typeof base.paramsSchema>;
-  export type Request = z.infer<typeof base.requestSchema>;
-  export type Response = z.infer<typeof base.responseSchema>;
-}
-
 export namespace get {
   export const base = createApiRoute({
     method: 'get',
-    path: '/api/sound/project/:projectId/:type',
+    path: '/api/audioMaster/project/:projectId/:type',
     paramsSchema: z.object({
       projectId: z.number(),
       type: typeSchema,

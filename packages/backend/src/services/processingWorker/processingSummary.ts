@@ -164,10 +164,10 @@ export const resolveProcessing = async (
     return resolveProcessingEvent(active);
   }
 
-  const [subtitle, lead, sourceSound] = await Promise.all([
+  const [subtitle, lead, source] = await Promise.all([
     app.db.subtitle.getByProject(projectId),
-    app.db.sound.get(projectId, 'lead'),
-    app.db.sound.get(projectId, 'source'),
+    app.db.audioMaster.get(projectId, 'lead'),
+    app.db.audioMaster.get(projectId, 'source'),
   ]);
 
   if (subtitle) {
@@ -192,7 +192,7 @@ export const resolveProcessing = async (
     };
   }
 
-  if (sourceSound) {
+  if (source) {
     return {
       done: false,
       steps: {

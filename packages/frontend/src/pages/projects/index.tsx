@@ -12,7 +12,7 @@ import { ProjectsTitle } from './Title.js';
 export const ProjectsPage: FC = () => {
   const queryClient = useQueryClient();
   useEffect(
-    () => endpoints.subscribeToProjectStatus(queryClient),
+    () => endpoints.project.subscribeToStatus(queryClient),
     [queryClient],
   );
 

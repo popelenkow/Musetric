@@ -38,8 +38,8 @@ export const EditDialog: FC<EditDialogProps> = (props) => {
 
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const project = useQuery(endpoints.getProject(projectId));
-  const edit = useMutation(endpoints.editProject(queryClient, projectId));
+  const project = useQuery(endpoints.project.get(projectId));
+  const edit = useMutation(endpoints.project.edit(queryClient, projectId));
 
   const {
     reset,
