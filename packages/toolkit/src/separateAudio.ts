@@ -26,7 +26,7 @@ export type SeparateAudioOptions = {
   sampleRate: number;
   handlers: SpawnScriptHandlers<SeparateAudioMessage>;
   logger: Logger;
-  modelsPath?: string;
+  modelsPath: string;
 };
 
 export const separateAudio = async (options: SeparateAudioOptions) => {
@@ -49,17 +49,12 @@ export const separateAudio = async (options: SeparateAudioOptions) => {
       '--backing-path': backingPath,
       '--instrumental-path': instrumentalPath,
       '--sample-rate': sampleRate.toString(),
+      '--models-path': modelsPath,
       '--log-level': logger.level ?? 'info',
     },
     cwd: process.cwd(),
     handlers,
     logger,
     processName: 'separateAudio',
-    env: modelsPath
-      ? {
-          // eslint-disable-next-line no-restricted-syntax
-          HF_HUB_CACHE: modelsPath,
-        }
-      : undefined,
   });
 };

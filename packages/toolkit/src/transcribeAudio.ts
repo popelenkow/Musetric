@@ -23,7 +23,7 @@ export type TranscribeAudioOptions = {
   resultPath: string;
   handlers: SpawnScriptHandlers<TranscribeAudioMessage>;
   logger: Logger;
-  modelsPath?: string;
+  modelsPath: string;
 };
 
 export const transcribeAudio = async (
@@ -36,21 +36,12 @@ export const transcribeAudio = async (
     args: {
       '--audio-path': sourcePath,
       '--result-path': resultPath,
+      '--models-path': modelsPath,
       '--log-level': logger.level ?? 'info',
     },
     cwd: process.cwd(),
     handlers,
     logger,
     processName: 'transcribeAudio',
-    env: modelsPath
-      ? {
-          // eslint-disable-next-line no-restricted-syntax
-          HF_HOME: modelsPath,
-          // eslint-disable-next-line no-restricted-syntax
-          HF_HUB_CACHE: modelsPath,
-          // eslint-disable-next-line no-restricted-syntax
-          HUGGINGFACE_HUB_CACHE: modelsPath,
-        }
-      : undefined,
   });
 };
