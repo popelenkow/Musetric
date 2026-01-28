@@ -3,18 +3,19 @@ import { table } from '../../schema/index.js';
 
 export const pendingTranscription = (database: DatabaseSync) => {
   const statement = database.prepare(
-    `SELECT Sound.*
-     FROM Sound
-     LEFT JOIN Subtitle ON Subtitle.projectId = Sound.projectId
-     WHERE Sound.type = 'lead' AND Subtitle.id IS NULL
+    `SELECT Lead.*
+     FROM AudioMaster AS Lead
+     LEFT JOIN Subtitle
+       ON Subtitle.projectId = Lead.projectId
+     WHERE Lead.type = 'lead' AND Subtitle.id IS NULL
      `,
   );
 
-  return async (): Promise<table.sound.Item | undefined> => {
+  return async (): Promise<table.audioMaster.Item | undefined> => {
     const row = await Promise.resolve(statement.get());
     if (!row) {
       return undefined;
     }
-    return table.sound.itemSchema.parse(row);
+    return table.audioMaster.itemSchema.parse(row);
   };
 };

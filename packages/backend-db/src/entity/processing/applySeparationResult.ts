@@ -9,18 +9,18 @@ export type ApplySeparationResultArg = {
 };
 
 export const applySeparationResult = (database: DatabaseSync) => {
-  const insertSoundStatement = database.prepare(
-    `INSERT INTO Sound (projectId, type, blobId) VALUES (?, ?, ?)`,
+  const insertAudioStatement = database.prepare(
+    `INSERT INTO AudioMaster (projectId, type, blobId) VALUES (?, ?, ?)`,
   );
 
   return async (arg: ApplySeparationResultArg): Promise<void> => {
     return await transaction(database, async () => {
       await Promise.resolve(
-        insertSoundStatement.run(arg.projectId, 'lead', arg.leadId),
+        insertAudioStatement.run(arg.projectId, 'lead', arg.leadId),
       );
 
       await Promise.resolve(
-        insertSoundStatement.run(
+        insertAudioStatement.run(
           arg.projectId,
           'instrumental',
           arg.instrumentalId,
@@ -28,7 +28,7 @@ export const applySeparationResult = (database: DatabaseSync) => {
       );
 
       await Promise.resolve(
-        insertSoundStatement.run(arg.projectId, 'backing', arg.backingId),
+        insertAudioStatement.run(arg.projectId, 'backing', arg.backingId),
       );
     });
   };

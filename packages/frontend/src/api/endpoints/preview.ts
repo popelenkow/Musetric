@@ -2,9 +2,9 @@ import { api } from '@musetric/api';
 import { queryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 
-export const getPreview = (previewId: number) =>
+export const get = (previewId: number) =>
   queryOptions({
-    queryKey: ['getPreview', previewId],
+    queryKey: ['preview', 'get', previewId],
     queryFn: async () =>
       api.preview.get.request(axios, {
         params: { previewId },

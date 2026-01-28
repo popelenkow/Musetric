@@ -36,7 +36,7 @@ type FormValue = z.infer<ReturnType<typeof schema>>;
 export const CreateDialog: FC = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const create = useMutation(endpoints.createProject(queryClient));
+  const create = useMutation(endpoints.project.create(queryClient));
 
   const {
     watch,

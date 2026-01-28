@@ -4,26 +4,26 @@ import { assertFound } from '../common/assertFound.js';
 import { handleCachedFile } from '../common/cachedFile.js';
 import { envs } from '../common/envs.js';
 
-export const soundRouter: FastifyPluginAsyncZod = async (app) => {
+export const audioMasterRouter: FastifyPluginAsyncZod = async (app) => {
   app.addHook('onRoute', (opts) => {
-    if (opts.schema) opts.schema.tags = ['sound'];
+    if (opts.schema) opts.schema.tags = ['audio'];
   });
 
   app.route({
-    ...api.sound.get.route,
+    ...api.audioMaster.get.route,
     handler: async (request, reply) => {
       const { projectId, type } = request.params;
-      const sound = await app.db.sound.get(projectId, type);
+      const audio = await app.db.audioMaster.get(projectId, type);
       assertFound(
-        sound,
-        `Sound for project ${projectId} and type ${type} not found`,
+        audio,
+        `Audio for project ${projectId} and type ${type} not found`,
       );
 
       const project = await app.db.project.get(projectId);
       assertFound(project, `Project with id ${projectId} not found`);
 
-      const data = await app.blobStorage.get(sound.blobId);
-      assertFound(data, `Sound blob for id ${sound.blobId} not found`);
+      const data = await app.blobStorage.get(audio.blobId);
+      assertFound(data, `Audio blob for id ${audio.blobId} not found`);
 
       const suffix = type === 'source' ? '' : `_${type}`;
       const isNotModified = handleCachedFile(request, reply, {

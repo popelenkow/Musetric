@@ -9,7 +9,7 @@ export namespace project {
   export type Item = z.infer<typeof itemSchema>;
 }
 
-export namespace sound {
+export namespace audioMaster {
   export const typeSchema = z.enum([
     'rawSource',
     'source',

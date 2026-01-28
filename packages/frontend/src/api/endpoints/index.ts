@@ -1,4 +1,4 @@
-export * from './preview.js';
-export * from './project.js';
-export * from './sound.js';
-export * from './subtitle.js';
+export * as audioMaster from './audioMaster.js';
+export * as preview from './preview.js';
+export * as project from './project.js';
+export * as subtitle from './subtitle.js';

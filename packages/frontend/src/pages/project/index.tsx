@@ -11,10 +11,10 @@ export const ProjectPage: FC = () => {
   const queryClient = useQueryClient();
 
   const { projectId } = routes.project.useAssertMatch();
-  const project = useQuery(endpoints.getProject(projectId));
+  const project = useQuery(endpoints.project.get(projectId));
 
   useEffect(
-    () => endpoints.subscribeToProjectStatus(queryClient),
+    () => endpoints.project.subscribeToStatus(queryClient),
     [queryClient],
   );
 
