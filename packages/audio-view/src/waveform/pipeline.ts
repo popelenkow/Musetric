@@ -3,7 +3,7 @@ import { createDraw } from './draw.js';
 import { generateSegments } from './generateSegments.js';
 
 export type Pipeline = {
-  render: (buffer: Float32Array<ArrayBuffer>, progress: number) => void;
+  render: (wave: Float32Array<ArrayBuffer>, progress: number) => void;
 };
 export const createPipeline = (
   canvas: HTMLCanvasElement,
@@ -14,12 +14,12 @@ export const createPipeline = (
   const barStep = 3;
 
   return {
-    render: (buffer, progress) => {
+    render: (wave, progress) => {
       const segmentCount = Math.max(
         1,
         Math.floor(canvas.clientWidth / barStep),
       );
-      const segments = generateSegments(buffer, segmentCount);
+      const segments = generateSegments(wave, segmentCount);
       draw.run(segments, progress, colors);
     },
   };
