@@ -39,8 +39,8 @@ export const transcribeAudio = async (
       '--models-path': modelsPath,
       '--log-level': logger.level ?? 'info',
     },
-    cwd: process.cwd(),
-    handlers,
+    stdout: { mode: 'json', handlers },
+    stderr: { mode: 'logJson' },
     logger,
     processName: 'transcribeAudio',
   });

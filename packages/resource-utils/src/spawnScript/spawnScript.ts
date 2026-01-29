@@ -1,7 +1,8 @@
 import { spawn } from 'node:child_process';
 import type { Logger, LogLevel } from '../logger.js';
-import { createTextProcessor, tryParseMessage } from './common.js';
 import { SpawnScriptError } from './error.js';
+import { attachStderr, StderrOptions } from './spawnStderr.js';
+import { attachStdout, StdoutOptions } from './spawnStdout.js';
 
 export type LogInfo = {
   level: LogLevel;
@@ -23,11 +24,12 @@ export type SpawnScriptOptions<Message extends { type: string }> = {
   command: string;
   args?: Record<string, string>;
   flatArgs?: string[];
-  cwd: string;
-  handlers: SpawnScriptHandlers<Message>;
+  env?: NodeJS.ProcessEnv;
+  stdout?: StdoutOptions<Message>;
+  stderr?: StderrOptions;
+  cwd?: string;
   logger: Logger;
   processName: string;
-  env?: NodeJS.ProcessEnv;
 };
 
 export const spawnScript = async <Message extends { type: string }>(
@@ -41,85 +43,36 @@ export const spawnScript = async <Message extends { type: string }>(
       ...(options.flatArgs ?? []),
     ];
 
-    let result: Result | undefined = undefined;
-    let lastInfo: LogInfo | undefined = undefined;
-    const handlers = {
-      ...options.handlers,
-      result: (message: Result) => {
-        result = message;
-      },
-    };
-
     const childProcess = spawn(command, spawnArgs, {
       stdio: ['pipe', 'pipe', 'pipe'],
       cwd,
       env: { ...process.env, ...options.env },
     });
 
-    type Handler = (message: Message) => void;
-    const getHandler = (message: Message): Handler => {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      const type = message.type as keyof typeof handlers;
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      const handler = handlers[type] as Handler;
-      return handler;
-    };
+    const { getResult } = attachStdout({
+      childProcess,
+      stdout: options.stdout,
+      logger,
+      processName,
+    });
 
-    childProcess.stdout.on(
-      'data',
-      createTextProcessor(logger, processName, (line) => {
-        const message = tryParseMessage<Message>(line);
-        if (message === undefined) {
-          logger.error(
-            { processName, line },
-            'Child script cannot parse message',
-          );
-          return;
-        }
-        const handler = getHandler(message);
-        if (!handler) {
-          logger.error(
-            { processName, line },
-            'Child script received unknown message',
-          );
-          return;
-        }
-
-        try {
-          handler(message);
-        } catch (error) {
-          logger.error({ processName, error }, 'Child script handler error');
-        }
-      }),
-    );
-
-    childProcess.stderr.on(
-      'data',
-      createTextProcessor(logger, processName, (line) => {
-        const info = tryParseMessage<LogInfo>(line);
-        if (info === undefined) {
-          logger.error(
-            { processName, line },
-            'Child script cannot parse log info',
-          );
-          return;
-        }
-        const log = logger[info.level] ?? logger.info;
-        log({ processName }, info.message);
-        if (info.level === 'error' || lastInfo?.level !== 'error') {
-          lastInfo = info;
-        }
-      }),
-    );
+    const { getLastInfo } = attachStderr({
+      childProcess,
+      stderr: options.stderr,
+      logger,
+      processName,
+    });
 
     childProcess.on('close', (code) => {
       try {
+        const lastInfo = getLastInfo();
         if (code !== 0) {
           throw new SpawnScriptError(
             lastInfo?.message ?? `Child script failed with code ${code}`,
             code ?? undefined,
           );
         }
+        const result = getResult();
         resolve(result);
       } catch (error) {
         reject(error);

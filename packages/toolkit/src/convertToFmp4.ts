@@ -21,7 +21,6 @@ export const convertToFmp4 = async (
 
   await spawnScript({
     command: 'ffmpeg',
-    args: {},
     flatArgs: [
       '-y',
       '-hide_banner',
@@ -52,8 +51,7 @@ export const convertToFmp4 = async (
       fragmentDurationMicros.toString(),
       toPath,
     ],
-    cwd: process.cwd(),
-    handlers: {},
+    stderr: { mode: 'logText' },
     logger,
     processName: 'convertToFmp4',
   });
