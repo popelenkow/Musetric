@@ -24,6 +24,20 @@ const createAudioMasterIndex = `
   CREATE INDEX IF NOT EXISTS AudioMaster_projectId_type_index ON AudioMaster (projectId, type);
 `;
 
+const createAudioDelivery = `
+  CREATE TABLE IF NOT EXISTS AudioDelivery (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    projectId INTEGER NOT NULL,
+    type TEXT NOT NULL CHECK (type IN ('lead', 'backing', 'instrumental')),
+    blobId TEXT NOT NULL UNIQUE,
+    FOREIGN KEY (projectId) REFERENCES Project(id) ON DELETE CASCADE
+  );
+`;
+
+const createAudioDeliveryIndex = `
+  CREATE INDEX IF NOT EXISTS AudioDelivery_projectId_type_index ON AudioDelivery (projectId, type);
+`;
+
 const createPreview = `
   CREATE TABLE IF NOT EXISTS Preview (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,6 +62,8 @@ const creationStatements = [
   createProject,
   createAudioMaster,
   createAudioMasterIndex,
+  createAudioDelivery,
+  createAudioDeliveryIndex,
   createPreview,
   createSubtitle,
 ] as const;

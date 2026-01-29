@@ -25,4 +25,6 @@ export const envs = {
   audioSampleRate: 44100,
   audioFormat: 'flac',
   audioContentType: 'audio/flac',
+  audioDeliveryFormat: 'mp4',
+  audioDeliveryContentType: 'audio/mp4',
 };

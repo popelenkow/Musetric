@@ -28,6 +28,19 @@ export namespace audioMaster {
   export type Item = z.infer<typeof itemSchema>;
 }
 
+export namespace audioDelivery {
+  export const typeSchema = z.enum(['lead', 'backing', 'instrumental']);
+  export type Type = z.infer<typeof typeSchema>;
+
+  export const itemSchema = z.object({
+    id: numericIdSchema,
+    projectId: numericIdSchema,
+    type: typeSchema,
+    blobId: z.string(),
+  });
+  export type Item = z.infer<typeof itemSchema>;
+}
+
 export namespace preview {
   export const itemSchema = z.object({
     id: numericIdSchema,

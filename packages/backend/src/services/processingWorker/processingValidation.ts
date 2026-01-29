@@ -1,5 +1,3 @@
-import { mkdir } from 'node:fs/promises';
-import { dirname } from 'node:path';
 import { EventEmitter } from '@musetric/resource-utils/eventEmitter';
 import { Logger } from '@musetric/resource-utils/logger';
 import { convertToFlac } from '@musetric/toolkit';
@@ -40,8 +38,6 @@ export const createValidationWorker = (
 
         const rawSourcePath = app.blobStorage.getPath(task.blobId);
         const source = app.blobStorage.createPath();
-        await mkdir(dirname(source.blobPath), { recursive: true });
-
         await convertToFlac({
           fromPath: rawSourcePath,
           toPath: source.blobPath,

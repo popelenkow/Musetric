@@ -1,6 +1,6 @@
 import { EventEmitter } from '@musetric/resource-utils/eventEmitter';
 import { Logger } from '@musetric/resource-utils/logger';
-import { separateAudio } from '@musetric/toolkit';
+import { convertToFmp4, separateAudio } from '@musetric/toolkit';
 import { FastifyInstance } from 'fastify';
 import { envs } from '../../common/envs.js';
 import {
@@ -36,16 +36,16 @@ export const createSeparationWorker = (
         };
         emitter.emit(state);
 
-        const sourcePath = app.blobStorage.getPath(task.blobId);
-        const lead = app.blobStorage.createPath();
-        const backing = app.blobStorage.createPath();
-        const instrumental = app.blobStorage.createPath();
+        const masterSourcePath = app.blobStorage.getPath(task.blobId);
+        const masterLead = app.blobStorage.createPath();
+        const masterBacking = app.blobStorage.createPath();
+        const masterInstrumental = app.blobStorage.createPath();
 
         await separateAudio({
-          sourcePath,
-          leadPath: lead.blobPath,
-          backingPath: backing.blobPath,
-          instrumentalPath: instrumental.blobPath,
+          sourcePath: masterSourcePath,
+          leadPath: masterLead.blobPath,
+          backingPath: masterBacking.blobPath,
+          instrumentalPath: masterInstrumental.blobPath,
           sampleRate: envs.audioSampleRate,
           handlers: {
             progress: (message) => {
@@ -73,11 +73,42 @@ export const createSeparationWorker = (
           logger,
         });
 
+        const deliveryLead = app.blobStorage.createPath();
+        const deliveryBacking = app.blobStorage.createPath();
+        const deliveryInstrumental = app.blobStorage.createPath();
+        await Promise.all([
+          convertToFmp4({
+            fromPath: masterLead.blobPath,
+            toPath: deliveryLead.blobPath,
+            sampleRate: envs.audioSampleRate,
+            logger,
+          }),
+          convertToFmp4({
+            fromPath: masterBacking.blobPath,
+            toPath: deliveryBacking.blobPath,
+            sampleRate: envs.audioSampleRate,
+            logger,
+          }),
+          convertToFmp4({
+            fromPath: masterInstrumental.blobPath,
+            toPath: deliveryInstrumental.blobPath,
+            sampleRate: envs.audioSampleRate,
+            logger,
+          }),
+        ]);
+
         await app.db.processing.applySeparationResult({
           projectId: task.projectId,
-          leadId: lead.blobId,
-          backingId: backing.blobId,
-          instrumentalId: instrumental.blobId,
+          master: {
+            leadId: masterLead.blobId,
+            backingId: masterBacking.blobId,
+            instrumentalId: masterInstrumental.blobId,
+          },
+          delivery: {
+            leadId: deliveryLead.blobId,
+            backingId: deliveryBacking.blobId,
+            instrumentalId: deliveryInstrumental.blobId,
+          },
         });
 
         state = undefined;
