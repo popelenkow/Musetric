@@ -5,29 +5,32 @@ import { usePlayerStore } from './player.js';
 import { useSettingsStore } from './settings.js';
 
 export type WaveformState = {
+  wave?: Float32Array<ArrayBuffer>;
   pipeline?: waveform.Pipeline;
 };
 
 type Unmount = () => void;
 export type WaveformActions = {
-  mount: (canvas: HTMLCanvasElement) => Unmount;
+  mount: (
+    canvas: HTMLCanvasElement,
+    wave: Float32Array<ArrayBuffer>,
+  ) => Unmount;
 };
 
 type State = WaveformState & WaveformActions;
 export const useWaveformStore = create<State>((set, get) => {
   const render = () => {
-    const { pipeline } = get();
-    const { buffer, progress } = usePlayerStore.getState();
-    if (!pipeline || !buffer) return;
-    const data = buffer.getChannelData(0);
-    pipeline.render(data, progress);
+    const { wave, pipeline } = get();
+    const { progress } = usePlayerStore.getState();
+    if (!pipeline || !wave) return;
+    pipeline.render(wave, progress);
   };
 
   const singletonManager = createSingletonManager(
-    async (canvas: HTMLCanvasElement) => {
+    async (canvas: HTMLCanvasElement, wave: Float32Array<ArrayBuffer>) => {
       const { colors } = useSettingsStore.getState();
       const pipeline = waveform.createPipeline(canvas, colors);
-      set({ pipeline });
+      set({ wave, pipeline });
       render();
       return Promise.resolve(pipeline);
     },
@@ -50,13 +53,13 @@ export const useWaveformStore = create<State>((set, get) => {
       void render();
     },
     {
-      equalityFn: (a, b) => a.buffer === b.buffer && a.progress === b.progress,
+      equalityFn: (a, b) => a.progress === b.progress,
     },
   );
 
   const ref: State = {
-    mount: (canvas) => {
-      void singletonManager.create(canvas);
+    mount: (canvas, wave) => {
+      void singletonManager.create(canvas, wave);
       const unsubscribeResizeObserver = subscribeResizeObserver(
         canvas,
         async () => {
