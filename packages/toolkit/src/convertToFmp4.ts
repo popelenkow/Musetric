@@ -3,17 +3,20 @@ import { dirname } from 'node:path';
 import { Logger } from '@musetric/resource-utils/logger';
 import { spawnScript } from '@musetric/resource-utils/spawnScript/index';
 
-export type ConvertToFlacOptions = {
+const fragmentDurationSeconds = 2;
+
+export type ConvertToFmp4Options = {
   fromPath: string;
   toPath: string;
   sampleRate: number;
   logger: Logger;
 };
 
-export const convertToFlac = async (
-  options: ConvertToFlacOptions,
+export const convertToFmp4 = async (
+  options: ConvertToFmp4Options,
 ): Promise<void> => {
   const { fromPath, toPath, sampleRate, logger } = options;
+  const fragmentDurationMicros = fragmentDurationSeconds * 1_000_000;
   await mkdir(dirname(toPath), { recursive: true });
 
   await spawnScript({
@@ -31,17 +34,27 @@ export const convertToFlac = async (
       '-sn',
       '-dn',
       '-vn',
-      '-acodec',
-      'flac',
-      '-f',
-      'flac',
       '-ar',
       sampleRate.toString(),
+      '-c:a',
+      'aac',
+      '-profile:a',
+      'aac_low',
+      '-b:a',
+      '256k',
+      '-f',
+      'mp4',
+      '-movflags',
+      '+frag_keyframe+empty_moov+default_base_moof',
+      '-frag_duration',
+      fragmentDurationMicros.toString(),
+      '-min_frag_duration',
+      fragmentDurationMicros.toString(),
       toPath,
     ],
     cwd: process.cwd(),
     handlers: {},
     logger,
-    processName: 'convertToFlac',
+    processName: 'convertToFmp4',
   });
 };
