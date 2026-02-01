@@ -18,7 +18,6 @@ export const convertToFlac = async (
 
   await spawnScript({
     command: 'ffmpeg',
-    args: {},
     flatArgs: [
       '-y',
       '-hide_banner',
@@ -39,8 +38,7 @@ export const convertToFlac = async (
       sampleRate.toString(),
       toPath,
     ],
-    cwd: process.cwd(),
-    handlers: {},
+    stderr: { mode: 'logText' },
     logger,
     processName: 'convertToFlac',
   });
