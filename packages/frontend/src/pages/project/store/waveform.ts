@@ -1,5 +1,5 @@
 import { waveform, subscribeResizeObserver } from '@musetric/audio-view';
-import { createCallLatest } from '@musetric/resource-utils/callLatest';
+import { createSingletonManager } from '@musetric/resource-utils/singletonManager';
 import { create } from 'zustand';
 import { usePlayerStore } from './player.js';
 import { useSettingsStore } from './settings.js';
@@ -8,33 +8,13 @@ export type WaveformState = {
   pipeline?: waveform.Pipeline;
 };
 
-export const initialState: WaveformState = {};
-
+type Unmount = () => void;
 export type WaveformActions = {
-  mount: (canvas: HTMLCanvasElement) => void;
-  unmount: () => void;
+  mount: (canvas: HTMLCanvasElement) => Unmount;
 };
 
 type State = WaveformState & WaveformActions;
 export const useWaveformStore = create<State>((set, get) => {
-  let canvas: HTMLCanvasElement | undefined = undefined;
-  let unsubscribeResizeObserver: (() => void) | undefined = undefined;
-
-  const createPipeline = () => {
-    unsubscribeResizeObserver?.();
-    unsubscribeResizeObserver = undefined;
-    set({ pipeline: undefined });
-    if (!canvas) return undefined;
-    const { colors } = useSettingsStore.getState();
-    return waveform.createPipeline(canvas, colors);
-  };
-
-  const mount = createCallLatest(async () => {
-    const pipeline = createPipeline();
-    set({ pipeline });
-    return Promise.resolve();
-  });
-
   const render = () => {
     const { pipeline } = get();
     const { buffer, progress } = usePlayerStore.getState();
@@ -43,10 +23,24 @@ export const useWaveformStore = create<State>((set, get) => {
     pipeline.render(data, progress);
   };
 
+  const singletonManager = createSingletonManager(
+    async (canvas: HTMLCanvasElement) => {
+      const { colors } = useSettingsStore.getState();
+      const pipeline = waveform.createPipeline(canvas, colors);
+      set({ pipeline });
+      render();
+      return Promise.resolve(pipeline);
+    },
+    async () => {
+      set({ pipeline: undefined });
+      return Promise.resolve();
+    },
+  );
+
   useSettingsStore.subscribe(
     (state) => state.colors,
     () => {
-      void render();
+      render();
     },
   );
 
@@ -61,22 +55,19 @@ export const useWaveformStore = create<State>((set, get) => {
   );
 
   const ref: State = {
-    ...initialState,
-    mount: async (newCanvas) => {
-      canvas = newCanvas;
-      await mount();
-      unsubscribeResizeObserver = subscribeResizeObserver(
-        newCanvas,
+    mount: (canvas) => {
+      void singletonManager.create(canvas);
+      const unsubscribeResizeObserver = subscribeResizeObserver(
+        canvas,
         async () => {
           render();
           return Promise.resolve();
         },
       );
-      render();
-    },
-    unmount: async () => {
-      canvas = undefined;
-      await mount();
+      return () => {
+        unsubscribeResizeObserver();
+        void singletonManager.destroy();
+      };
     },
   };
   return ref;

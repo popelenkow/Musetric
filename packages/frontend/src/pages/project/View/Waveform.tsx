@@ -6,16 +6,11 @@ export const Waveform: FC = () => {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
   const seek = usePlayerStore((s) => s.seek);
   const mount = useWaveformStore((s) => s.mount);
-  const unmount = useWaveformStore((s) => s.unmount);
 
   useEffect(() => {
     if (!canvas) return;
-    mount(canvas);
+    return mount(canvas);
   }, [mount, canvas]);
-
-  useEffect(() => {
-    return unmount;
-  }, [unmount]);
 
   return (
     <canvas
