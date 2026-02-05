@@ -1,4 +1,3 @@
-import fs from 'fs/promises';
 import { BlobStorage } from '../blobStorage.js';
 
 export const collectGarbage = async (
@@ -8,8 +7,12 @@ export const collectGarbage = async (
 ): Promise<void> => {
   const hasExceededRetention = async (blobId: string): Promise<boolean> => {
     const now = Date.now();
-    const blobPath = blobStorage.getPath(blobId);
-    const stat = await fs.stat(blobPath);
+    const stat = await blobStorage.getStat(blobId);
+    if (!stat) {
+      throw new Error(
+        `Blob stat not found for blobId ${blobId} in garbage collection`,
+      );
+    }
     const elapsedMs = now - stat.mtimeMs;
     return elapsedMs >= blobRetentionMs;
   };

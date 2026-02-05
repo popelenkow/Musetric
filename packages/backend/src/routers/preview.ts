@@ -15,20 +15,22 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
       const preview = await app.db.preview.get(previewId);
       assertFound(preview, `Preview with id ${previewId} not found`);
 
-      const data = await app.blobStorage.get(preview.blobId);
-      assertFound(data, `Preview blob for id ${previewId} not found`);
+      const stat = await app.blobStorage.getStat(preview.blobId);
+      assertFound(stat, `Preview blob for id ${previewId} not found`);
 
       const isNotModified = handleCachedFile(request, reply, {
-        data,
         filename: preview.filename,
         contentType: preview.contentType,
+        size: stat.size,
+        mtimeMs: stat.mtimeMs,
       });
 
       if (isNotModified) {
         return;
       }
 
-      return data;
+      const stream = app.blobStorage.getStream(preview.blobId);
+      return reply.send(stream);
     },
   });
 

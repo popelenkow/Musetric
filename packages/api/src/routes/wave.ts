@@ -14,7 +14,7 @@ export namespace get {
       type: typeSchema,
     }),
     requestSchema: z.void(),
-    responseSchema: z.instanceof(Uint8Array<ArrayBufferLike>),
+    responseSchema: z.instanceof(Uint8Array<ArrayBuffer>),
   });
   export const route = fastifyRoute(base);
   export const request = axiosRequest(base);

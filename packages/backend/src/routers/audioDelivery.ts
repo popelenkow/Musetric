@@ -22,21 +22,23 @@ export const audioDeliveryRouter: FastifyPluginAsyncZod = async (app) => {
       const project = await app.db.project.get(projectId);
       assertFound(project, `Project with id ${projectId} not found`);
 
-      const data = await app.blobStorage.get(audio.blobId);
-      assertFound(data, `Audio delivery blob for id ${audio.blobId} not found`);
+      const stat = await app.blobStorage.getStat(audio.blobId);
+      assertFound(stat, `Audio delivery blob for id ${audio.blobId} not found`);
 
       const suffix = `_${type}`;
       const isNotModified = handleCachedFile(request, reply, {
-        data,
         filename: `${project.name}${suffix}.${envs.audioDeliveryFormat}`,
         contentType: envs.audioDeliveryContentType,
+        size: stat.size,
+        mtimeMs: stat.mtimeMs,
       });
 
       if (isNotModified) {
         return;
       }
 
-      return data;
+      const stream = app.blobStorage.getStream(audio.blobId);
+      return reply.send(stream);
     },
   });
 
