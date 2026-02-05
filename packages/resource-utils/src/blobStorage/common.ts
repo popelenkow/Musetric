@@ -18,12 +18,8 @@ const getSubDirectoryPaths = async (
 };
 
 const isDirectoryExists = async (dirPath: string): Promise<boolean> => {
-  try {
-    const stat = await fs.stat(dirPath);
-    return stat.isDirectory();
-  } catch {
-    return false;
-  }
+  const stat = await fs.stat(dirPath).catch(() => undefined);
+  return stat?.isDirectory() ?? false;
 };
 
 const getDirectoryBlobIds = async (

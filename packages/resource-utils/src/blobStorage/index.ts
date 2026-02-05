@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import { createReadStream, ReadStream, Stats } from 'fs';
 import fs from 'fs/promises';
 import path from 'path';
 import {
@@ -22,6 +23,8 @@ export type BlobStorage = {
   add: (buffer: Buffer) => Promise<string>;
   addFile: (file: File) => Promise<BlobFile>;
   get: (blobId: string) => Promise<Buffer | undefined>;
+  getStat: (blobId: string) => Promise<Stats | undefined>;
+  getStream: (blobId: string) => ReadStream;
   remove: (blobId: string) => Promise<void>;
   exists: (blobId: string) => Promise<boolean>;
   getAllBlobIds: () => Promise<string[]>;
@@ -54,6 +57,14 @@ export const createBlobStorage = (rootPath: string): BlobStorage => {
     get: async (blobId) => {
       const blobPath = ref.getPath(blobId);
       return fs.readFile(blobPath).catch(() => undefined);
+    },
+    getStat: async (blobId) => {
+      const blobPath = ref.getPath(blobId);
+      return fs.stat(blobPath).catch(() => undefined);
+    },
+    getStream: (blobId) => {
+      const blobPath = ref.getPath(blobId);
+      return createReadStream(blobPath);
     },
     remove: async (blobId) => {
       const blobPath = ref.getPath(blobId);

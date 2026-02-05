@@ -11,7 +11,7 @@ export namespace get {
     path: '/api/preview/:previewId',
     paramsSchema: z.object({ previewId: z.number() }),
     requestSchema: z.void(),
-    responseSchema: z.instanceof(Uint8Array<ArrayBufferLike>),
+    responseSchema: z.instanceof(Uint8Array<ArrayBuffer>),
   });
   export const url = (previewId?: number) =>
     previewId !== undefined ? base.endpoint({ previewId }) : undefined;

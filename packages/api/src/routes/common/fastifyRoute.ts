@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
+import { Readable } from 'stream';
 import z from 'zod';
 import { ApiRoute, RequestMethod } from './apiRoute.js';
 import { coerceSchema } from './coerceSchema.js';
 import { error } from './error.js';
+
+const stream = {} as {
+  202: z.ZodCustom<Readable, Readable>;
+};
 
 export const fastifyRoute = <
   Method extends RequestMethod,
@@ -50,6 +55,7 @@ export const fastifyRoute = <
       consumes: isMultipart ? ['multipart/form-data'] : undefined,
       body: isMultipart ? coerceSchema(getBody()) : getBody(),
       response: {
+        ...stream,
         200: getResponse(),
         400: error.responseSchema,
         404: error.responseSchema,
