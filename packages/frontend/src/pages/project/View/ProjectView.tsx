@@ -61,7 +61,7 @@ export const ProjectView: FC<ProjectViewProps> = (props) => {
           <Spectrogram />
         </Box>
         <Box height='80px' width='100%'>
-          <Waveform />
+          <Waveform projectId={project.id} type='lead' />
         </Box>
         <Subtitle subtitle={subtitle.data} />
         <Player />

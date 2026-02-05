@@ -27,7 +27,7 @@ type Unmount = () => void;
 
 export type PlayerActions = {
   mount: () => Unmount;
-  load: (encodedBuffer: Uint8Array<ArrayBuffer>) => Promise<void>;
+  load: (rawBuffer: Uint8Array<ArrayBuffer>) => Promise<void>;
   play: () => Promise<void>;
   pause: () => void;
   seek: (fraction: number) => Promise<void>;
@@ -55,11 +55,13 @@ export const usePlayerStore = create<State>()(
         set(initialState);
       };
     },
-    load: async (encodedBuffer) => {
+    load: async (rawBuffer) => {
       const { player } = get();
       if (!player) return;
       player.pause();
-      const buffer = await player.context.decodeAudioData(encodedBuffer.buffer);
+      const buffer = await player.context.decodeAudioData(
+        rawBuffer.slice().buffer,
+      );
       set({
         buffer,
         sampleRate: buffer.sampleRate,

@@ -11,16 +11,21 @@ export type WaveformState = {
 type Unmount = () => void;
 export type WaveformActions = {
   mount: (canvas: HTMLCanvasElement) => Unmount;
+  render: (wave: Float32Array<ArrayBuffer>) => void;
 };
 
 type State = WaveformState & WaveformActions;
 export const useWaveformStore = create<State>((set, get) => {
-  const render = () => {
+  let waveData: Float32Array<ArrayBuffer> | undefined = undefined;
+
+  const render = (wave?: Float32Array<ArrayBuffer>) => {
+    if (wave) {
+      waveData = wave;
+    }
     const { pipeline } = get();
-    const { buffer, progress } = usePlayerStore.getState();
-    if (!pipeline || !buffer) return;
-    const data = buffer.getChannelData(0);
-    pipeline.render(data, progress);
+    if (!pipeline || !waveData) return;
+    const { progress } = usePlayerStore.getState();
+    pipeline.render(waveData, progress);
   };
 
   const singletonManager = createSingletonManager(
@@ -29,9 +34,10 @@ export const useWaveformStore = create<State>((set, get) => {
       const pipeline = waveform.createPipeline(canvas, colors);
       set({ pipeline });
       render();
-      return Promise.resolve(pipeline);
+      return pipeline;
     },
     async () => {
+      waveData = undefined;
       set({ pipeline: undefined });
       return Promise.resolve();
     },
@@ -40,17 +46,14 @@ export const useWaveformStore = create<State>((set, get) => {
   useSettingsStore.subscribe(
     (state) => state.colors,
     () => {
-      render();
+      void render();
     },
   );
 
   usePlayerStore.subscribe(
-    (state) => state,
+    (state) => state.progress,
     () => {
-      void render();
-    },
-    {
-      equalityFn: (a, b) => a.buffer === b.buffer && a.progress === b.progress,
+      render();
     },
   );
 
@@ -68,6 +71,9 @@ export const useWaveformStore = create<State>((set, get) => {
         unsubscribeResizeObserver();
         void singletonManager.destroy();
       };
+    },
+    render: (wave) => {
+      render(wave);
     },
   };
   return ref;
