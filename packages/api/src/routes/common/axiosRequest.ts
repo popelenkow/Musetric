@@ -3,7 +3,7 @@
 import { AxiosInstance } from 'axios';
 import z from 'zod';
 import { ApiRoute, RequestMethod } from './apiRoute.js';
-import { isUint8ArraySchema } from './uint8ArraySchema.js';
+import { getArrayBufferViewConstructor } from './arrayBufferView.js';
 
 type AxiosParams<ParamsSchema> = ParamsSchema extends z.ZodVoid
   ? {}
@@ -25,6 +25,8 @@ export const axiosRequest = <
 >(
   route: ApiRoute<Method, Path, ParamsSchema, RequestSchema, ResponseSchema>,
 ) => {
+  const arrayConstructor = getArrayBufferViewConstructor(route.responseSchema);
+
   return async (
     axios: AxiosInstance,
     options: AxiosRequestOptions<ParamsSchema, RequestSchema>,
@@ -32,17 +34,17 @@ export const axiosRequest = <
     const params = (options as { params: z.infer<ParamsSchema> }).params;
     const data = (options as { data: z.infer<RequestSchema> }).data;
 
-    const isUint8Array = isUint8ArraySchema(route.responseSchema);
     const response = await axios.request<z.infer<ResponseSchema>>({
       method: route.method,
       url: route.endpoint(params),
       data: route.request(data),
-      responseType: isUint8Array ? 'arraybuffer' : 'json',
+      responseType: arrayConstructor ? 'arraybuffer' : 'json',
     });
 
-    if (isUint8Array) {
-      const result = new Uint8Array(response.data as ArrayBuffer);
-      return result as z.infer<ResponseSchema>;
+    if (arrayConstructor) {
+      const arrayBuffer = response.data as ArrayBuffer;
+      const result = new arrayConstructor(arrayBuffer);
+      return result;
     }
     return response.data;
   };
