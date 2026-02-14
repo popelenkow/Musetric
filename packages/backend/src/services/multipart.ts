@@ -17,7 +17,9 @@ export const registerMultipart = (app: FastifyInstance) => {
     },
     onFile: async (part) => {
       const buff = await part.toBuffer();
-      const file = new File([buff], part.filename, {
+      const bytes = new Uint8Array(buff.length);
+      bytes.set(buff);
+      const file = new File([bytes], part.filename, {
         type: part.mimetype,
       });
       part.value = file;

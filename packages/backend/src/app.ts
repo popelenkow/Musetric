@@ -9,7 +9,7 @@ import { registerBlobGarbageCollector } from './services/blobGarbageCollector.js
 import { registerBlobStorage } from './services/blobStorage.js';
 import { registerDb } from './services/db.js';
 import { registerFrontend } from './services/frontend.js';
-import { https } from './services/https.js';
+import { getHttps } from './services/https.js';
 import { logger } from './services/logger.js';
 import { registerMultipart } from './services/multipart.js';
 import { registerProcessingWorker } from './services/processingWorker/registerProcessingWorker.js';
@@ -17,6 +17,7 @@ import { registerSchemaCompiler } from './services/schemaCompiler.js';
 import { registerSwagger } from './services/swagger.js';
 
 export const createServerApp = async (): Promise<FastifyInstance> => {
+  const https = await getHttps();
   const app: FastifyInstance = fastify({
     logger,
     disableRequestLogging,

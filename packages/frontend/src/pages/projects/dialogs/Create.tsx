@@ -11,7 +11,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TFunction } from 'i18next';
 import { FC } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { endpoints } from '../../../api/index.js';
@@ -39,7 +39,6 @@ export const CreateDialog: FC = () => {
   const create = useMutation(endpoints.project.create(queryClient));
 
   const {
-    watch,
     setValue,
     control,
     handleSubmit,
@@ -58,7 +57,10 @@ export const CreateDialog: FC = () => {
     close();
   };
 
-  const song = watch('song');
+  const song = useWatch({
+    control,
+    name: 'song',
+  });
 
   return (
     <Dialog

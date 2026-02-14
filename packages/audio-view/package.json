@@ -24,6 +24,7 @@
     "@musetric/eslint-config": "workspace:*",
     "@musetric/resource-utils": "workspace:*",
     "@vitest/browser": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
     "@webgpu/types": "catalog:",
     "cpx2": "catalog:",
     "eslint": "catalog:",
