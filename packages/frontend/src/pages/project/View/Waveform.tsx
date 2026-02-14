@@ -1,16 +1,27 @@
+import { api } from '@musetric/api';
+import { useQuery } from '@tanstack/react-query';
 import { FC, useEffect, useState } from 'react';
+import { endpoints } from '../../../api/index.js';
 import { usePlayerStore } from '../store/player.js';
 import { useWaveformStore } from '../store/waveform.js';
 
-export const Waveform: FC = () => {
+export type WaveformProps = {
+  projectId: number;
+  type: api.wave.Type;
+};
+
+export const Waveform: FC<WaveformProps> = (props) => {
+  const { projectId, type } = props;
+
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
   const seek = usePlayerStore((s) => s.seek);
   const mount = useWaveformStore((s) => s.mount);
+  const wave = useQuery(endpoints.wave.get(projectId, type));
 
   useEffect(() => {
-    if (!canvas) return;
-    return mount(canvas);
-  }, [mount, canvas]);
+    if (!canvas || !wave.data) return;
+    return mount(canvas, wave.data);
+  }, [mount, canvas, wave.data]);
 
   return (
     <canvas
