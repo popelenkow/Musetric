@@ -2,16 +2,14 @@ import { ServerOptions } from 'node:https';
 import { generate } from 'selfsigned';
 import { envs } from '../common/envs.js';
 
-const pems = generate([{ name: 'commonName', value: 'localhost' }], {
-  keySize: 2048,
-  days: 365,
-  extensions: [{ name: 'basicConstraints', cA: true }],
-});
-
-const getHttps = (): ServerOptions => ({
-  key: pems.private,
-  cert: pems.cert,
-});
-
-// eslint-disable-next-line no-restricted-syntax
-export const https = envs.protocol === 'https' ? getHttps() : null;
+export const getHttps = async (): Promise<ServerOptions | null> => {
+  if (envs.protocol !== 'https') {
+    // eslint-disable-next-line no-restricted-syntax
+    return null;
+  }
+  const pems = await generate([{ name: 'commonName', value: 'localhost' }], {
+    keySize: 2048,
+    extensions: [{ name: 'basicConstraints', cA: true }],
+  });
+  return pems;
+};
