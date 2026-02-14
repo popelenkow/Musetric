@@ -1,7 +1,7 @@
 ARG RUNTIME_IMAGE=musetric-runtime
 FROM ${RUNTIME_IMAGE} AS builder
 RUN corepack enable
-RUN corepack prepare yarn@4.9.3 --activate
+RUN corepack prepare yarn@4.12.0 --activate
 COPY . .
 RUN yarn install --immutable
 RUN yarn project:build

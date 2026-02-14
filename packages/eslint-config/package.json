@@ -17,19 +17,19 @@
     "typescript": "5.9.2"
   },
   "dependencies": {
-    "@eslint/js": "9.36.0",
-    "eslint-import-resolver-typescript": "4.4.4",
-    "eslint-plugin-import-x": "4.16.1",
-    "eslint-plugin-react": "7.37.5",
-    "eslint-plugin-react-hooks": "5.2.0",
-    "eslint-plugin-react-refresh": "0.4.22",
-    "eslint-plugin-simple-import-sort": "12.1.1",
-    "globals": "16.4.0",
-    "jiti": "2.6.0",
-    "typescript-eslint": "8.44.1"
+    "@eslint/js": "catalog:",
+    "eslint-import-resolver-typescript": "catalog:",
+    "eslint-plugin-import-x": "catalog:",
+    "eslint-plugin-react": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
+    "eslint-plugin-react-refresh": "catalog:",
+    "eslint-plugin-simple-import-sort": "catalog:",
+    "globals": "catalog:",
+    "jiti": "catalog:",
+    "typescript-eslint": "catalog:"
   },
   "devDependencies": {
-    "eslint": "9.36.0",
-    "typescript": "5.9.2"
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   }
 }

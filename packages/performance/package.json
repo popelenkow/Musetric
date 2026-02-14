@@ -12,18 +12,18 @@
     "check:lint:fix": "eslint . --fix --cache"
   },
   "devDependencies": {
-    "@emotion/react": "11.14.0",
-    "@emotion/styled": "11.14.1",
-    "@mui/material": "7.3.5",
+    "@emotion/react": "catalog:",
+    "@emotion/styled": "catalog:",
+    "@mui/material": "catalog:",
     "@musetric/audio-view": "workspace:*",
     "@musetric/eslint-config": "workspace:*",
     "@musetric/kill-process": "workspace:*",
-    "@types/react": "19.1.9",
-    "eslint": "9.36.0",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
-    "typescript": "5.9.2",
-    "vite": "7.1.1",
-    "vite-plugin-mkcert": "1.17.8"
+    "@types/react": "catalog:",
+    "eslint": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-mkcert": "catalog:"
   }
 }
