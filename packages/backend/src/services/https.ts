@@ -11,5 +11,8 @@ export const getHttps = async (): Promise<ServerOptions | null> => {
     keySize: 2048,
     extensions: [{ name: 'basicConstraints', cA: true }],
   });
-  return pems;
+  return {
+    key: pems.private,
+    cert: pems.cert,
+  };
 };
