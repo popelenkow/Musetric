@@ -20,8 +20,8 @@
   },
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
-    "@types/audioworklet": "0.0.82",
-    "eslint": "9.36.0",
-    "typescript": "5.9.2"
+    "@types/audioworklet": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
   }
 }
