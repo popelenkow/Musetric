@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react';
+import { type FC, useEffect, useRef } from 'react';
 import { usePlayerStore } from '../store/player.js';
 import { useSettingsStore } from '../store/settings.js';
 import { useSpectrogramStore } from '../store/spectrogram.js';

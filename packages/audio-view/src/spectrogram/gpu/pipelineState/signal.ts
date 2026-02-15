@@ -1,4 +1,4 @@
-import { ComplexGpuBuffer } from '../../../common/index.js';
+import { type ComplexGpuBuffer } from '../../../common/index.js';
 
 export const createSignalBuffer = (
   device: GPUDevice,

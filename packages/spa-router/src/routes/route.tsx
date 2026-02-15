@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { onChangeLocation, useMemoLocation } from '../common/locationEvent.js';
-import { createLink, LinkFC } from '../components/Link.js';
-import { createMatch, MatchFC } from '../components/Match.js';
+import { createLink, type LinkFC } from '../components/Link.js';
+import { createMatch, type MatchFC } from '../components/Match.js';
 
 export type RouteOptions<Params extends object, NativeParams> = {
   locationNativeParams?: () => NativeParams;

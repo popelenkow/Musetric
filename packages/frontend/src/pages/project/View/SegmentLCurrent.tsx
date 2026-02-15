@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { api } from '@musetric/api';
-import { FC } from 'react';
+import { type FC } from 'react';
 
 const getWordColor = (word: api.subtitle.Word, currentTime: number) => {
   if (currentTime >= word.start && currentTime < word.end) {

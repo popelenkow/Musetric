@@ -1,12 +1,12 @@
 import { createCallLatest } from '@musetric/resource-utils/callLatest';
 import type { CpuFourierMode } from '../../fourier/index.js';
 import { cpuFouriers } from '../../fourier/index.js';
-import { Pipeline } from '../pipeline.js';
+import { type Pipeline } from '../pipeline.js';
 import { createDecibelify } from './decibelify.js';
 import { createDraw } from './draw.js';
 import { createMagnitudify } from './magnitudify.js';
 import { createPipelineState } from './pipelineState.js';
-import { createPipelineTimer, PipelineMetrics } from './pipelineTimer.js';
+import { createPipelineTimer, type PipelineMetrics } from './pipelineTimer.js';
 import { createRemap } from './remap.js';
 import { createSliceWave } from './sliceWave.js';
 import { createWindowing } from './windowing.js';

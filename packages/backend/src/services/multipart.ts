@@ -1,5 +1,5 @@
 import { fastifyMultipart } from '@fastify/multipart';
-import { FastifyInstance } from 'fastify';
+import { type FastifyInstance } from 'fastify';
 
 // https://github.com/fastify/fastify-multipart/issues/574
 declare module '@fastify/multipart' {

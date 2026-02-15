@@ -1,5 +1,5 @@
-import { ViewColors, ViewSize } from '../common/index.js';
-import { WindowName } from './windowFunction.js';
+import { type ViewColors, type ViewSize } from '../common/index.js';
+import { type WindowName } from './windowFunction.js';
 
 export type ZeroPaddingFactor = 1 | 2 | 4;
 

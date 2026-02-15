@@ -1,5 +1,5 @@
 import { useSyncHistoryLocation, FirstMatch } from '@musetric/spa-router';
-import { FC } from 'react';
+import { type FC } from 'react';
 import { NotFoundPage } from '../../pages/notFound/index.js';
 import { ProjectPage } from '../../pages/project/index.js';
 import { ProjectsPage } from '../../pages/projects/index.js';

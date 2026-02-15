@@ -1,4 +1,4 @@
-import { ViewColors } from '../common/index.js';
+import { type ViewColors } from '../common/index.js';
 import { createDraw } from './draw.js';
 import { generateSegments } from './generateSegments.js';
 

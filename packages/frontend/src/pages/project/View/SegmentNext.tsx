@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import { api } from '@musetric/api';
-import { FC } from 'react';
+import { type FC } from 'react';
 
 type SegmentNextProps = {
   segment?: api.subtitle.Segment;

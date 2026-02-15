@@ -1,6 +1,6 @@
 import { api } from '@musetric/api';
 import { useQuery } from '@tanstack/react-query';
-import { FC, useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { endpoints } from '../../../api/index.js';
 import { usePlayerStore } from '../store/player.js';
 import { useWaveformStore } from '../store/waveform.js';

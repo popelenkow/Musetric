@@ -1,5 +1,5 @@
 import { fastifyStatic } from '@fastify/static';
-import { FastifyInstance, FastifyRequest } from 'fastify';
+import { type FastifyInstance, type FastifyRequest } from 'fastify';
 import { envs } from '../common/envs.js';
 
 const isApiPath = (path: string) =>

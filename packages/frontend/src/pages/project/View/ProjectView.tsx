@@ -1,7 +1,7 @@
 import { Box, Stack } from '@mui/material';
 import { api } from '@musetric/api';
 import { useQuery } from '@tanstack/react-query';
-import { FC, useEffect } from 'react';
+import { type FC, useEffect } from 'react';
 import { endpoints } from '../../../api/index.js';
 import { QueryPending } from '../../../components/QueryView/QueryPending.js';
 import { ProjectBackButton } from '../components/ProjectBackButton.js';

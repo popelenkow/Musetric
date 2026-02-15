@@ -1,4 +1,4 @@
-import { FourierConfig } from '../config.js';
+import { type FourierConfig } from '../config.js';
 import { utilsRadix4 } from '../utilsRadix4.js';
 
 export type GpuFftRadix4Params = {

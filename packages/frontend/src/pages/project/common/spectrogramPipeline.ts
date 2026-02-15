@@ -1,5 +1,5 @@
 import {
-  FourierMode,
+  type FourierMode,
   isGpuFourierMode,
   spectrogram,
 } from '@musetric/audio-view';

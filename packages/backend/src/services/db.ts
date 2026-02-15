@@ -1,5 +1,5 @@
 import { DB } from '@musetric/backend-db';
-import { FastifyInstance } from 'fastify';
+import { type FastifyInstance } from 'fastify';
 import { envs } from '../common/envs.js';
 
 declare module 'fastify' {

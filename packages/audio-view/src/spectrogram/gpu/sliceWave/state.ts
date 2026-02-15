@@ -1,7 +1,7 @@
-import { ExtPipelineConfig } from '../../pipeline.js';
-import { createParams, StateParams } from './params.js';
+import { type ExtPipelineConfig } from '../../pipeline.js';
+import { createParams, type StateParams } from './params.js';
 import { createPipeline } from './pipeline.js';
-import { createStateWave, StateWave } from './wave.js';
+import { createStateWave, type StateWave } from './wave.js';
 
 export type Config = Pick<
   ExtPipelineConfig,

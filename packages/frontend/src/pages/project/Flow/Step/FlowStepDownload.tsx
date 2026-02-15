@@ -1,7 +1,7 @@
-import { Chip, Stack, Theme, Typography, useTheme } from '@mui/material';
+import { Chip, Stack, type Theme, Typography, useTheme } from '@mui/material';
 import { api } from '@musetric/api';
 import type { TFunction } from 'i18next';
-import { FC } from 'react';
+import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   formatBytesToUnit,

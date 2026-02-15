@@ -1,4 +1,4 @@
-import tsEslint, { ConfigWithExtends } from 'typescript-eslint';
+import tsEslint, { type ConfigWithExtends } from 'typescript-eslint';
 import { jsConfig, importResolverConditionNames } from './js.js';
 
 export const tsConfig: ConfigWithExtends = {

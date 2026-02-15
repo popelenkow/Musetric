@@ -1,5 +1,9 @@
-import { CircularProgress, CircularProgressProps, Box } from '@mui/material';
-import { PropsWithChildren } from 'react';
+import {
+  CircularProgress,
+  type CircularProgressProps,
+  Box,
+} from '@mui/material';
+import { type PropsWithChildren } from 'react';
 
 export const CircularProgressWithLabel = (
   props: CircularProgressProps & PropsWithChildren,

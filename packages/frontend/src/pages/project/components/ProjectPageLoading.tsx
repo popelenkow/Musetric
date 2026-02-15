@@ -1,5 +1,5 @@
 import { CircularProgress, Stack, Typography } from '@mui/material';
-import { FC } from 'react';
+import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ProjectLayout } from './ProjectPageLayout.js';
 

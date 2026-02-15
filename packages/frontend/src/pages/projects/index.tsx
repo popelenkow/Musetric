@@ -1,6 +1,6 @@
 import { Stack } from '@mui/material';
 import { useQueryClient } from '@tanstack/react-query';
-import { FC, useEffect } from 'react';
+import { type FC, useEffect } from 'react';
 import { endpoints } from '../../api/index.js';
 import { routes } from '../../app/router/routes.js';
 import { ProjectsContent } from './Content.js';

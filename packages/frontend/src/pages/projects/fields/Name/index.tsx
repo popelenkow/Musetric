@@ -1,7 +1,7 @@
 import { TextField } from '@mui/material';
-import { FC } from 'react';
+import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { NameValue } from './schema.js';
+import { type NameValue } from './schema.js';
 
 export type NameFieldProps = {
   value?: NameValue;

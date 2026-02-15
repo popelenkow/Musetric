@@ -1,4 +1,8 @@
-import { AnchorHTMLAttributes, ComponentType, PropsWithChildren } from 'react';
+import {
+  type AnchorHTMLAttributes,
+  type ComponentType,
+  type PropsWithChildren,
+} from 'react';
 
 type LinkPrams<Params> = keyof Params extends never
   ? { params?: Params }

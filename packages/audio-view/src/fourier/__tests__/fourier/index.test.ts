@@ -1,6 +1,6 @@
 import { afterAll, describe, it } from 'vitest';
 import {
-  ComplexArray,
+  type ComplexArray,
   complexArrayFrom,
   createComplexGpuBufferReader,
   createGpuContext,

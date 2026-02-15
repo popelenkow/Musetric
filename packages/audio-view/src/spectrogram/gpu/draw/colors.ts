@@ -1,5 +1,5 @@
 import { parseHexColor } from '../../../common/index.js';
-import { Config } from './index.js';
+import { type Config } from './index.js';
 
 const toVec4 = (hex: string): [number, number, number, number] => {
   const { red, green, blue } = parseHexColor(hex);

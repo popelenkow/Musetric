@@ -1,5 +1,5 @@
 import { createCallLatest } from './callLatest.js';
-import { createScheduler, Scheduler } from './scheduler.js';
+import { createScheduler, type Scheduler } from './scheduler.js';
 
 export type CreateSingleWorkerOptions = {
   intervalMs: number;

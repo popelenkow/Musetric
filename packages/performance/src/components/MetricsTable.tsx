@@ -9,7 +9,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { type FourierMode } from '@musetric/audio-view';
-import { FC } from 'react';
+import { type FC } from 'react';
 import { getTimerLabels, windowSizes } from '../constants.js';
 import { getMetric } from '../getMetric.js';
 import type { MetricsData } from '../runBenchmarks.js';

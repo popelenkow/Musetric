@@ -1,4 +1,7 @@
-import { ComplexCpuBuffer, ComplexGpuBuffer } from '../complexArray.js';
+import {
+  type ComplexCpuBuffer,
+  type ComplexGpuBuffer,
+} from '../complexArray.js';
 
 export const readGpuBuffer = async (input: GPUBuffer): Promise<ArrayBuffer> => {
   await input.mapAsync(GPUMapMode.READ);

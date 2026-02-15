@@ -1,4 +1,4 @@
-import { BlobStorage } from '../blobStorage.js';
+import { type BlobStorage } from '../blobStorage.js';
 
 export const collectGarbage = async (
   blobStorage: BlobStorage,

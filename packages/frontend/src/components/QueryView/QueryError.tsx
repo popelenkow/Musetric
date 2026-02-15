@@ -1,6 +1,6 @@
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 import { Stack, Typography } from '@mui/material';
-import { FC } from 'react';
+import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export type QueryErrorProps = {

@@ -1,9 +1,9 @@
 import {
-  FourierMode,
+  type FourierMode,
   resizeCanvas,
   spectrogram,
   subscribeResizeObserver,
-  ViewSize,
+  type ViewSize,
 } from '@musetric/audio-view';
 import { createSingletonManager } from '@musetric/resource-utils/singletonManager';
 import { create } from 'zustand';

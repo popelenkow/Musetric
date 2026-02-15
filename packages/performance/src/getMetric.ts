@@ -1,4 +1,4 @@
-import { MetricsData } from './runBenchmarks.js';
+import { type MetricsData } from './runBenchmarks.js';
 
 export const toPercent = (value: number, total: number) =>
   (value / total) * 100;

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import {
-  ComponentsVariants,
-  PaletteColor,
-  PaletteColorOptions,
-  Theme,
+  type ComponentsVariants,
+  type PaletteColor,
+  type PaletteColorOptions,
+  type Theme,
 } from '@mui/material';
 import { black, neutral, white } from '../colors.js';
 

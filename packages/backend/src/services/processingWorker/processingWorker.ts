@@ -1,18 +1,18 @@
 import {
   createEventEmitter,
-  EventEmitter,
+  type EventEmitter,
 } from '@musetric/resource-utils/eventEmitter';
 import { bindLogger } from '@musetric/resource-utils/logger';
 import {
   createSingleWorker,
-  SingleWorker,
+  type SingleWorker,
 } from '@musetric/resource-utils/singleWorker';
-import { FastifyInstance } from 'fastify';
+import { type FastifyInstance } from 'fastify';
 import { envs } from '../../common/envs.js';
 import { createSeparationWorker } from './processingSeparation.js';
 import {
-  ProcessingWorkerEvent,
-  ProcessingWorkerProgressEvent,
+  type ProcessingWorkerEvent,
+  type ProcessingWorkerProgressEvent,
 } from './processingSummary.js';
 import { createTranscriptionWorker } from './processingTranscription.js';
 import { createValidationWorker } from './processingValidation.js';

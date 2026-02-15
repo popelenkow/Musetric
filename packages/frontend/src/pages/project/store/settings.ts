@@ -1,4 +1,8 @@
-import { spectrogram, FourierMode, ViewColors } from '@musetric/audio-view';
+import {
+  spectrogram,
+  type FourierMode,
+  type ViewColors,
+} from '@musetric/audio-view';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 

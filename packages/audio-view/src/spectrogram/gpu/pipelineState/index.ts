@@ -1,7 +1,7 @@
-import { ComplexGpuBuffer } from '../../../common/index.js';
-import { ExtPipelineConfig } from '../../pipeline.js';
+import { type ComplexGpuBuffer } from '../../../common/index.js';
+import { type ExtPipelineConfig } from '../../pipeline.js';
 import { createSignalBuffer } from './signal.js';
-import { createStateTexture, StateTexture } from './texture.js';
+import { createStateTexture, type StateTexture } from './texture.js';
 
 export type PipelineState = {
   config: ExtPipelineConfig;

@@ -1,4 +1,4 @@
-import { fastify, FastifyInstance } from 'fastify';
+import { fastify, type FastifyInstance } from 'fastify';
 import { FastifySSEPlugin } from 'fastify-sse-v2';
 import { registerRouters } from './routers/index.js';
 import {
