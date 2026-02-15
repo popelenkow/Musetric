@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { type FC } from 'react';
 
 export type ProjectCardNameProps = {

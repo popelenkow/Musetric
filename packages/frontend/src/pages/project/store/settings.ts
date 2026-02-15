@@ -1,6 +1,6 @@
 import {
-  spectrogram,
   type FourierMode,
+  spectrogram,
   type ViewColors,
 } from '@musetric/audio-view';
 import { create } from 'zustand';

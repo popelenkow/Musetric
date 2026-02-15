@@ -1,5 +1,5 @@
 import tsEslint, { type ConfigWithExtends } from 'typescript-eslint';
-import { jsConfig, importResolverConditionNames } from './js.js';
+import { importResolverConditionNames, jsConfig } from './js.js';
 
 export const tsConfig: ConfigWithExtends = {
   ...jsConfig,

@@ -1,7 +1,7 @@
 import {
+  Box,
   CircularProgress,
   type CircularProgressProps,
-  Box,
 } from '@mui/material';
 import { type PropsWithChildren } from 'react';
 

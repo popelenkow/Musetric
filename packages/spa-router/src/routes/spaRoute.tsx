@@ -10,7 +10,7 @@ import {
   type PathRoute,
   type PathRouteOptions,
 } from './pathRoute.js';
-import { type Route, createRoute } from './route.js';
+import { createRoute, type Route } from './route.js';
 import {
   createSearchRoute,
   type SearchRoute,

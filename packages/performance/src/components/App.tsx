@@ -2,13 +2,13 @@ import {
   Box,
   Checkbox,
   FormControlLabel,
+  LinearProgress,
   ToggleButton,
   ToggleButtonGroup,
-  LinearProgress,
   Typography,
 } from '@mui/material';
 import { allFourierModes, type FourierMode } from '@musetric/audio-view';
-import { useState, type FC, useMemo } from 'react';
+import { type FC, useMemo, useState } from 'react';
 import { windowSizes } from '../constants.js';
 import type { BenchmarkData } from '../runBenchmarks.js';
 import { BenchmarkRunner } from './BenchmarkRunner.js';

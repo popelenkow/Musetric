@@ -1,5 +1,5 @@
 import { type FastifyLoggerOptions } from 'fastify';
-import { stdSerializers, type LoggerOptions } from 'pino';
+import { type LoggerOptions, stdSerializers } from 'pino';
 import { envs } from '../common/envs.js';
 
 export const logger: FastifyLoggerOptions & LoggerOptions = {

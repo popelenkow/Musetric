@@ -2,9 +2,9 @@ import {
   type ComplexCpuBuffer,
   type ComplexGpuBuffer,
 } from '../complexArray.js';
-import { copyGpuBuffer, copyComplexGpuBuffer } from './copy.js';
-import { createGpuBuffer, createComplexGpuBuffer } from './create.js';
-import { readGpuBuffer, readComplexGpuBuffer } from './read.js';
+import { copyComplexGpuBuffer, copyGpuBuffer } from './copy.js';
+import { createComplexGpuBuffer, createGpuBuffer } from './create.js';
+import { readComplexGpuBuffer, readGpuBuffer } from './read.js';
 
 export type CreateGpuBufferReaderOptions = {
   device: GPUDevice;

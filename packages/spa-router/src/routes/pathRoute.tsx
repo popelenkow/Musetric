@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import {
-  type NativeParams,
   extractPathParams,
   makePath,
+  type NativeParams,
 } from '../common/common.js';
-import { type Route, createRoute } from './route.js';
+import { createRoute, type Route } from './route.js';
 
 export type PathRouteOptions<
   Pattern extends string | undefined,

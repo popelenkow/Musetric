@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { createApiEvent } from './common/apiEvent.js';
 import { axiosRequest } from './common/axiosRequest.js';
-import { fastifyRoute, createApiRoute } from './common/index.js';
+import { createApiRoute, fastifyRoute } from './common/index.js';
 import { preview } from './index.js';
 
 export const downloadStatusSchema = z.enum(['processing', 'cached', 'done']);

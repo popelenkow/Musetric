@@ -4,8 +4,8 @@ import fs from 'fs/promises';
 import path from 'path';
 import {
   getBlobPath,
-  getDirectoryShardPaths,
   getDirectoriesBlobIds,
+  getDirectoryShardPaths,
 } from './common.js';
 
 export type BlobFile = {
