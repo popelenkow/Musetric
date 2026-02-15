@@ -16,7 +16,7 @@ export const config = (type: ConfigType) => {
     {
       files: ['./*.config.{js,ts}'],
       rules: {
-        'import-x/no-default-export': 'off',
+        'no-restricted-exports': 'off',
       },
     },
     {

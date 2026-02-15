@@ -1,5 +1,5 @@
 import tsEslint, { type ConfigWithExtends } from 'typescript-eslint';
-import { importResolverConditionNames, jsConfig } from './js.js';
+import { jsConfig } from './js.js';
 
 export const tsConfig: ConfigWithExtends = {
   ...jsConfig,
@@ -10,20 +10,6 @@ export const tsConfig: ConfigWithExtends = {
     parserOptions: {
       project: ['./tsconfig.json'],
       tsconfigRootDir: process.cwd(),
-    },
-  },
-  settings: {
-    ...jsConfig.settings,
-    'import-x/resolver': {
-      node: {
-        conditionNames: importResolverConditionNames,
-      },
-      typescript: {
-        alwaysTryTypes: true,
-        conditionNames: importResolverConditionNames,
-        project: ['./tsconfig.json'],
-        tsconfigRootDir: process.cwd(),
-      },
     },
   },
   rules: {
