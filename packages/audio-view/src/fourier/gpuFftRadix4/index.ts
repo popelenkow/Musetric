@@ -1,4 +1,4 @@
-import { CreateGpuFourier, GpuFourier } from '../gpuFourier.js';
+import { type CreateGpuFourier, type GpuFourier } from '../gpuFourier.js';
 import { createState } from './state.js';
 
 export const createGpuFftRadix4: CreateGpuFourier = (device, markers) => {

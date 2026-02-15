@@ -1,10 +1,10 @@
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ScheduleIcon from '@mui/icons-material/Schedule';
-import { Chip, ChipProps } from '@mui/material';
+import { Chip, type ChipProps } from '@mui/material';
 import { api } from '@musetric/api';
-import { TFunction } from 'i18next';
-import { FC, JSX } from 'react';
+import { type TFunction } from 'i18next';
+import { type FC, type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const getStatusTranslations = (

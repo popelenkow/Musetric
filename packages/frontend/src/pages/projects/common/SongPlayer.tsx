@@ -1,7 +1,7 @@
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { Stack, Slider, IconButton } from '@mui/material';
-import { FC, useState, useRef, useEffect } from 'react';
+import { type FC, useState, useRef, useEffect } from 'react';
 
 export type SongPlayerProps = {
   url: string;

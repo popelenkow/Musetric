@@ -2,7 +2,7 @@ import eslint from '@eslint/js';
 import { defaultConditionNames } from 'eslint-import-resolver-typescript';
 import importPlugin from 'eslint-plugin-import-x';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
-import { ConfigWithExtends } from 'typescript-eslint';
+import { type ConfigWithExtends } from 'typescript-eslint';
 
 export const importResolverConditionNames =
   defaultConditionNames.concat('monorepo');

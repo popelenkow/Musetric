@@ -1,5 +1,5 @@
-import { SwaggerTransform } from '@fastify/swagger';
-import { FastifyInstance } from 'fastify';
+import { type SwaggerTransform } from '@fastify/swagger';
+import { type FastifyInstance } from 'fastify';
 import {
   jsonSchemaTransform,
   serializerCompiler,

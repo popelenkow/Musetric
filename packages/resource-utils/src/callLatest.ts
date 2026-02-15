@@ -1,5 +1,5 @@
 import {
-  ControlledPromise,
+  type ControlledPromise,
   createControlledPromise,
 } from './controlledPromise.js';
 

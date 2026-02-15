@@ -1,4 +1,7 @@
-import { ComplexCpuBuffer, ComplexGpuBuffer } from '../complexArray.js';
+import {
+  type ComplexCpuBuffer,
+  type ComplexGpuBuffer,
+} from '../complexArray.js';
 import { copyGpuBuffer, copyComplexGpuBuffer } from './copy.js';
 import { createGpuBuffer, createComplexGpuBuffer } from './create.js';
 import { readGpuBuffer, readComplexGpuBuffer } from './read.js';

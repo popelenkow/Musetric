@@ -1,4 +1,4 @@
-import { FastifyInstance } from 'fastify';
+import { type FastifyInstance } from 'fastify';
 import { audioDeliveryRouter } from './audioDelivery.js';
 import { audioMasterRouter } from './audioMaster.js';
 import { previewRouter } from './preview.js';

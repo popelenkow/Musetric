@@ -1,6 +1,6 @@
 import { createPort } from '../port.js';
 import { fromAudioBuffer } from './buffer.js';
-import { FromWorkletEvent, ToWorkletEvent } from './event.js';
+import { type FromWorkletEvent, type ToWorkletEvent } from './event.js';
 import { createPlayerNode } from './node.js';
 
 export type AudioPlayer = {

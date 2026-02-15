@@ -1,4 +1,4 @@
-import i18next, { Resource } from 'i18next';
+import i18next, { type Resource } from 'i18next';
 import en from './en.json' with { type: 'json' };
 
 export const resources: Resource = {

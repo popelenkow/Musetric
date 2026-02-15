@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence } from 'framer-motion';
-import { FC } from 'react';
+import { type FC } from 'react';
 import { endpoints } from '../../api/index.js';
 import { QueryError } from '../../components/QueryView/QueryError.js';
 import { PlaceholderCard } from './cards/Placeholder.js';

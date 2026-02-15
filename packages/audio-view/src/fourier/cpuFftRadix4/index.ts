@@ -1,9 +1,9 @@
 import {
-  ComplexArray,
-  CpuMarker,
+  type ComplexArray,
+  type CpuMarker,
   subComplexArray,
 } from '../../common/index.js';
-import { CpuFourier, CreateCpuFourier } from '../cpuFourier.js';
+import { type CpuFourier, type CreateCpuFourier } from '../cpuFourier.js';
 import { createState } from './state.js';
 import { transform4 } from './utils.js';
 

@@ -1,4 +1,4 @@
-import { createState, State } from './state.js';
+import { createState, type State } from './state.js';
 
 const workgroupSize = 16;
 

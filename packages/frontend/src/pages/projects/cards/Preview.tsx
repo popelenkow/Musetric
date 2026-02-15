@@ -1,6 +1,6 @@
 import AudiotrackIcon from '@mui/icons-material/Audiotrack';
 import { CardMedia, Stack } from '@mui/material';
-import { FC, PropsWithChildren } from 'react';
+import { type FC, type PropsWithChildren } from 'react';
 import { contentPlaceholderPattern } from '../common/cardBackgroundPattern.js';
 
 export type ProjectPreviewProps = {

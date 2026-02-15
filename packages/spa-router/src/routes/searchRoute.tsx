@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { NativeParams, getLocationSearchParams } from '../common/common.js';
-import { Route, createRoute } from './route.js';
+import {
+  type NativeParams,
+  getLocationSearchParams,
+} from '../common/common.js';
+import { type Route, createRoute } from './route.js';
 
 export type SearchRouteOptions<Params extends object> = {
   parseNativeParams?: (nativeParams: NativeParams) => Params;

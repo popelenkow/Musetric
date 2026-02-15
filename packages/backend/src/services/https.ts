@@ -1,4 +1,4 @@
-import { ServerOptions } from 'node:https';
+import { type ServerOptions } from 'node:https';
 import { generate } from 'selfsigned';
 import { envs } from '../common/envs.js';
 

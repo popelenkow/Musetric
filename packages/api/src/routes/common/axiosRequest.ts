@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
-import { AxiosInstance } from 'axios';
+import { type AxiosInstance } from 'axios';
 import z from 'zod';
-import { ApiRoute, RequestMethod } from './apiRoute.js';
+import { type ApiRoute, type RequestMethod } from './apiRoute.js';
 import { getArrayBufferViewConstructor } from './arrayBufferView.js';
 
 type AxiosParams<ParamsSchema> = ParamsSchema extends z.ZodVoid

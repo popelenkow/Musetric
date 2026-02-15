@@ -1,7 +1,7 @@
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactRefreshPlugin from 'eslint-plugin-react-refresh';
-import { ConfigWithExtends } from 'typescript-eslint';
+import { type ConfigWithExtends } from 'typescript-eslint';
 import { tsConfig } from './ts.js';
 
 export const reactConfig: ConfigWithExtends = {

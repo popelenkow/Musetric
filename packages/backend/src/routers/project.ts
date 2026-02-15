@@ -1,5 +1,5 @@
 import { api } from '@musetric/api';
-import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
+import { type FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound.js';
 import {
   resolveProcessing,

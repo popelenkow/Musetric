@@ -1,4 +1,4 @@
-import { createAudioPlayer, AudioPlayer } from '@musetric/audio-in-out';
+import { createAudioPlayer, type AudioPlayer } from '@musetric/audio-in-out';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 

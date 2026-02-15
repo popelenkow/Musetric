@@ -1,5 +1,5 @@
 import globals from 'globals';
-import tsEslint, { ConfigWithExtends } from 'typescript-eslint';
+import tsEslint, { type ConfigWithExtends } from 'typescript-eslint';
 import { jsConfig } from './config/js.js';
 import { reactConfig } from './config/react.js';
 import { tsConfig } from './config/ts.js';

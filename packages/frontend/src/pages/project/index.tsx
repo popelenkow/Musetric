@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { FC, useEffect } from 'react';
+import { type FC, useEffect } from 'react';
 import { endpoints } from '../../api/index.js';
 import { routes } from '../../app/router/routes.js';
 import { ProjectPageError } from './components/ProjectPageError.js';

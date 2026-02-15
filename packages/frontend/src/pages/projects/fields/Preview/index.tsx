@@ -8,10 +8,10 @@ import {
   Box,
   CircularProgress,
 } from '@mui/material';
-import { FC, useEffect, useRef } from 'react';
+import { type FC, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ProjectPreview } from '../../cards/Preview.js';
-import { PreviewValue } from './schema.js';
+import { type PreviewValue } from './schema.js';
 
 export type PreviewFieldProps = {
   value?: PreviewValue;

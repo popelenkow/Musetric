@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { api } from '@musetric/api';
-import { FC } from 'react';
+import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ProjectLayout } from '../components/ProjectPageLayout.js';
 import { FlowStep } from './Step/FlowStep.js';

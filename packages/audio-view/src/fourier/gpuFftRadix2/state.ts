@@ -1,7 +1,7 @@
-import { ComplexGpuBuffer } from '../../common/index.js';
-import { FourierConfig } from '../config.js';
+import { type ComplexGpuBuffer } from '../../common/index.js';
+import { type FourierConfig } from '../config.js';
 import { assertWindowSizePowerOfTwo } from '../isPowerOfTwo.js';
-import { createParams, StateParams } from './params.js';
+import { createParams, type StateParams } from './params.js';
 import { createReversePipeline, createTransformPipeline } from './pipeline.js';
 import { createReverseTable } from './reverseTable.js';
 import { createTrigTable } from './trigTable.js';

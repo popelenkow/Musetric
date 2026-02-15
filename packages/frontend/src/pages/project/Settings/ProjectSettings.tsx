@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Drawer, IconButton, Stack, Typography } from '@mui/material';
-import { FC } from 'react';
+import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSettingsStore } from '../store/settings.js';
 import { FourierModeField } from './FourierModeField.js';

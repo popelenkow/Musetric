@@ -1,17 +1,25 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { NativeParams } from '../common/common.js';
-import { createHashRoute, HashRoute, HashRouteOptions } from './hashRoute.js';
-import { createPathRoute, PathRoute, PathRouteOptions } from './pathRoute.js';
-import { Route, createRoute } from './route.js';
+import { type NativeParams } from '../common/common.js';
+import {
+  createHashRoute,
+  type HashRoute,
+  type HashRouteOptions,
+} from './hashRoute.js';
+import {
+  createPathRoute,
+  type PathRoute,
+  type PathRouteOptions,
+} from './pathRoute.js';
+import { type Route, createRoute } from './route.js';
 import {
   createSearchRoute,
-  SearchRoute,
-  SearchRouteOptions,
+  type SearchRoute,
+  type SearchRouteOptions,
 } from './searchRoute.js';
 import {
   createStateRoute,
-  StateRoute,
-  StateRouteOptions,
+  type StateRoute,
+  type StateRouteOptions,
 } from './stateRoute.js';
 
 export type SpaNativeParams = {

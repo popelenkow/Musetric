@@ -1,4 +1,4 @@
-import { Config } from './state.js';
+import { type Config } from './state.js';
 
 export type StateWave = {
   buffer: GPUBuffer;

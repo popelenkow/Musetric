@@ -1,4 +1,4 @@
-import { TFunction } from 'i18next';
+import { type TFunction } from 'i18next';
 import { z } from 'zod';
 
 export const nameValueSchema = (t: TFunction) =>

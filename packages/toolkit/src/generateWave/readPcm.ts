@@ -1,4 +1,4 @@
-import { Logger } from '@musetric/resource-utils/logger';
+import { type Logger } from '@musetric/resource-utils/logger';
 import { spawnScript } from '@musetric/resource-utils/spawnScript/index';
 
 export type ReadPcmOptions = {

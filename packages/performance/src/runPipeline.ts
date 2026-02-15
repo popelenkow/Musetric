@@ -1,8 +1,8 @@
 import {
   spectrogram,
   isGpuFourierMode,
-  FourierMode,
-  ViewSize,
+  type FourierMode,
+  type ViewSize,
 } from '@musetric/audio-view';
 import { progress, runs, skipRuns, wave } from './constants.js';
 import { waitNextFrame } from './waitNextFrame.js';

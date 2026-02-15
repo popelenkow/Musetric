@@ -1,11 +1,11 @@
-import { EventEmitter } from '@musetric/resource-utils/eventEmitter';
-import { Logger } from '@musetric/resource-utils/logger';
+import { type EventEmitter } from '@musetric/resource-utils/eventEmitter';
+import { type Logger } from '@musetric/resource-utils/logger';
 import { convertToFlac } from '@musetric/toolkit';
-import { FastifyInstance } from 'fastify';
+import { type FastifyInstance } from 'fastify';
 import { envs } from '../../common/envs.js';
 import {
-  ProcessingWorkerEvent,
-  ProcessingWorkerProgressEvent,
+  type ProcessingWorkerEvent,
+  type ProcessingWorkerProgressEvent,
 } from './processingSummary.js';
 
 export type ValidationTask = {

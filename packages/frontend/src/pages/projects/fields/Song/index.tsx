@@ -1,7 +1,7 @@
 import { Button, Typography, Stack } from '@mui/material';
-import { FC, useEffect, useRef, useState } from 'react';
+import { type FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SongValue } from './schema.js';
+import { type SongValue } from './schema.js';
 
 export type SongFieldProps = {
   value?: SongValue;

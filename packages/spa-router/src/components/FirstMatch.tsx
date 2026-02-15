@@ -1,11 +1,11 @@
 import {
   Children,
-  FC,
+  type FC,
   Fragment,
   isValidElement,
-  PropsWithChildren,
-  ReactElement,
-  ReactNode,
+  type PropsWithChildren,
+  type ReactElement,
+  type ReactNode,
 } from 'react';
 import { useMemoLocation } from '../common/locationEvent.js';
 import { isMatchComponent } from './Match.js';

@@ -9,8 +9,8 @@ import {
   Stack,
 } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { TFunction } from 'i18next';
-import { FC } from 'react';
+import { type TFunction } from 'i18next';
+import { type FC } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';

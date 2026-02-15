@@ -1,7 +1,7 @@
-import { FastifyInstance } from 'fastify';
+import { type FastifyInstance } from 'fastify';
 import {
   createProcessingWorker,
-  ProcessingWorker,
+  type ProcessingWorker,
 } from './processingWorker.js';
 
 declare module 'fastify' {

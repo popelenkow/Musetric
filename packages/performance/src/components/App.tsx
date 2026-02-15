@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { allFourierModes, type FourierMode } from '@musetric/audio-view';
-import { useState, FC, useMemo } from 'react';
+import { useState, type FC, useMemo } from 'react';
 import { windowSizes } from '../constants.js';
 import type { BenchmarkData } from '../runBenchmarks.js';
 import { BenchmarkRunner } from './BenchmarkRunner.js';
