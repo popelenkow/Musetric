@@ -1,5 +1,5 @@
 import { createPort } from '../port.js';
-import { toArrays, type ChannelArrays } from './buffer.js';
+import { type ChannelArrays, toArrays } from './buffer.js';
 import type { FromWorkletEvent, ToWorkletEvent } from './event.js';
 
 type Process = (output: Float32Array<ArrayBuffer>[]) => boolean;

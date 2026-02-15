@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { createCallLatest } from '../../callLatest.js';
 import { createPromiseController, getExpectedResults } from './common.js';
 import { callLatestFixtures } from './fixture.js';

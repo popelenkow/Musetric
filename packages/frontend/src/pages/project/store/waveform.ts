@@ -1,4 +1,4 @@
-import { waveform, subscribeResizeObserver } from '@musetric/audio-view';
+import { subscribeResizeObserver, waveform } from '@musetric/audio-view';
 import { createSingletonManager } from '@musetric/resource-utils/singletonManager';
 import { create } from 'zustand';
 import { usePlayerStore } from './player.js';

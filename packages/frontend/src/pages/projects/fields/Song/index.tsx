@@ -1,4 +1,4 @@
-import { Button, Typography, Stack } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import { type FC, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type SongValue } from './schema.js';

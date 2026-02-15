@@ -2,11 +2,11 @@ import HideImageIcon from '@mui/icons-material/HideImage';
 import ImageIcon from '@mui/icons-material/Image';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import {
-  Button,
-  Typography,
-  Stack,
   Box,
+  Button,
   CircularProgress,
+  Stack,
+  Typography,
 } from '@mui/material';
 import { type FC, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';

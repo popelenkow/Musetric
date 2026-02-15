@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { type Route, createRoute } from './route.js';
+import { createRoute, type Route } from './route.js';
 
 export type StateRouteOptions<Params extends object> = {
   parseNativeParams?: (nativeParams: unknown) => Params;

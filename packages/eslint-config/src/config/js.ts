@@ -37,11 +37,10 @@ export const jsConfig: ConfigWithExtends = {
         ignore: ['\\.wgsl\\?raw$'],
       },
     ],
-    'import-x/order': [
+    'simple-import-sort/imports': [
       'error',
       {
-        alphabetize: { order: 'asc', caseInsensitive: true },
-        'newlines-between': 'never',
+        groups: [['^\\u0000', '^node:', '^@?\\w', '^', '^\\.']],
       },
     ],
     'no-restricted-syntax': [

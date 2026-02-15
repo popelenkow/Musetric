@@ -1,4 +1,4 @@
-import { lighten, darken } from '@mui/material/styles';
+import { darken, lighten } from '@mui/material/styles';
 
 export const createColor = (main: string) => ({
   50: lighten(main, 0.9),

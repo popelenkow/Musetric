@@ -2,14 +2,14 @@ import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import {
-  blob,
-  processing,
-  preview,
-  project,
-  audioMaster,
   audioDelivery,
-  wave,
+  audioMaster,
+  blob,
+  preview,
+  processing,
+  project,
   subtitle,
+  wave,
 } from './entity/index.js';
 
 export const createDatabase = async (
