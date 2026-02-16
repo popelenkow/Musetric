@@ -1,76 +1,132 @@
-import { subscribeResizeObserver, waveform } from '@musetric/audio-view';
+import { type api } from '@musetric/api';
+import {
+  resizeCanvas,
+  subscribeResizeObserver,
+  waveform,
+} from '@musetric/audio-view';
+import {
+  createPortMessageHandler,
+  type TypedMessagePort,
+} from '@musetric/resource-utils/messagePort';
 import { createSingletonManager } from '@musetric/resource-utils/singletonManager';
 import { create } from 'zustand';
 import { usePlayerStore } from './player.js';
 import { useSettingsStore } from './settings.js';
 
 export type WaveformState = {
-  wave?: Float32Array<ArrayBuffer>;
-  pipeline?: waveform.Pipeline;
+  worker?: TypedMessagePort<
+    Worker,
+    waveform.FromWaveformMessage,
+    waveform.ToWaveformMessage
+  >;
+  status: 'pending' | 'error' | 'success';
 };
 
 type Unmount = () => void;
 export type WaveformActions = {
-  mount: (
-    canvas: HTMLCanvasElement,
-    wave: Float32Array<ArrayBuffer>,
-  ) => Unmount;
+  mount: (projectId: number, type: api.wave.Type) => Unmount;
+  attachCanvas: (canvas: HTMLCanvasElement) => void;
 };
 
 type State = WaveformState & WaveformActions;
 export const useWaveformStore = create<State>((set, get) => {
-  const render = () => {
-    const { wave, pipeline } = get();
-    const { progress } = usePlayerStore.getState();
-    if (!pipeline || !wave) return;
-    pipeline.render(wave, progress);
-  };
+  let unsubscribeResizeObserver: (() => void) | undefined = undefined;
 
   const singletonManager = createSingletonManager(
-    async (canvas: HTMLCanvasElement, wave: Float32Array<ArrayBuffer>) => {
+    async (projectId: number, type: api.wave.Type) => {
+      const port = waveform.createWaveformWorker();
+
+      port.onmessage = createPortMessageHandler<waveform.FromWaveformMessage>({
+        state: (message) => {
+          set({ status: message.status });
+        },
+      });
+      port.onerror = () => {
+        set({ status: 'error' });
+      };
+
       const { colors } = useSettingsStore.getState();
-      const pipeline = waveform.createPipeline(canvas, colors);
-      set({ wave, pipeline });
-      render();
-      return Promise.resolve(pipeline);
+      const { progress } = usePlayerStore.getState();
+      port.postMessage({
+        type: 'init',
+        projectId,
+        waveType: type,
+        colors,
+        progress,
+      });
+
+      set({ worker: port, status: 'pending' });
+      await Promise.resolve();
+      return port;
     },
-    async () => {
-      set({ pipeline: undefined });
+    async (port) => {
+      port.terminate();
+      set({ worker: undefined, status: 'pending' });
       return Promise.resolve();
     },
   );
 
-  useSettingsStore.subscribe(
-    (state) => state.colors,
-    () => {
-      render();
-    },
-  );
-
-  usePlayerStore.subscribe(
-    (state) => state,
-    () => {
-      void render();
-    },
-    {
-      equalityFn: (a, b) => a.progress === b.progress,
-    },
-  );
-
   const ref: State = {
-    mount: (canvas, wave) => {
-      void singletonManager.create(canvas, wave);
-      const unsubscribeResizeObserver = subscribeResizeObserver(
-        canvas,
-        async () => {
-          render();
-          return Promise.resolve();
+    worker: undefined,
+    status: 'pending',
+    mount: (projectId, type) => {
+      void singletonManager.create(projectId, type);
+
+      const unsubscribeProgress = usePlayerStore.subscribe(
+        (state) => state.progress,
+        (progress) => {
+          const worker = get().worker;
+          if (!worker) return;
+          worker.postMessage({
+            type: 'progress',
+            progress,
+          });
         },
       );
+
+      const unsubscribeColors = useSettingsStore.subscribe(
+        (state) => state.colors,
+        (colors) => {
+          const worker = get().worker;
+          if (!worker) return;
+          worker.postMessage({
+            type: 'colors',
+            colors,
+          });
+        },
+      );
+
       return () => {
-        unsubscribeResizeObserver();
+        unsubscribeProgress();
+        unsubscribeColors();
+        unsubscribeResizeObserver?.();
+        unsubscribeResizeObserver = undefined;
         void singletonManager.destroy();
       };
+    },
+    attachCanvas: (canvas) => {
+      const worker = get().worker;
+      if (!worker || unsubscribeResizeObserver) return;
+
+      resizeCanvas(canvas);
+      const offscreenCanvas = canvas.transferControlToOffscreen();
+
+      worker.postMessage(
+        {
+          type: 'attachCanvas',
+          canvas: offscreenCanvas,
+        },
+        [offscreenCanvas],
+      );
+
+      unsubscribeResizeObserver = subscribeResizeObserver(canvas, async () => {
+        const viewSize = resizeCanvas(canvas);
+        worker.postMessage({
+          type: 'resize',
+          viewSize,
+        });
+        return Promise.resolve();
+      });
     },
   };
   return ref;

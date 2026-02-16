@@ -4,7 +4,7 @@ import { type WaveSegment } from './generateSegments.js';
 export type Draw = {
   run: (segments: WaveSegment[], progress: number, colors: ViewColors) => void;
 };
-export const createDraw = (canvas: HTMLCanvasElement): Draw => {
+export const createDraw = (canvas: OffscreenCanvas): Draw => {
   const context = canvas.getContext('2d');
   if (!context) {
     throw new Error('Context 2D not available on the canvas');
@@ -12,10 +12,8 @@ export const createDraw = (canvas: HTMLCanvasElement): Draw => {
 
   const ref: Draw = {
     run: (segments, progress, colors) => {
-      const width = canvas.clientWidth;
+      const width = canvas.width;
       const height = canvas.height;
-      canvas.width = width;
-      canvas.height = height;
 
       context.clearRect(0, 0, width, height);
 

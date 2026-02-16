@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "lib": ["ES2024", "DOM"],
-    "types": ["@webgpu/types"],
+    "types": ["node", "@webgpu/types"],
     "jsx": "react-jsx"
   },
   "include": ["."]
