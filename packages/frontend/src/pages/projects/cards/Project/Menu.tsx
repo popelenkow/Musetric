@@ -8,7 +8,7 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
-import { api } from '@musetric/api';
+import { type api } from '@musetric/api';
 import { type FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { routes } from '../../../../app/router/routes.js';

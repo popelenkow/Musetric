@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { api } from '@musetric/api';
+import { type api } from '@musetric/api';
 import { type FC } from 'react';
 
 const getWordColor = (word: api.subtitle.Word, currentTime: number) => {

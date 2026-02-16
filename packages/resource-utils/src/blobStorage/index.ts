@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { createReadStream, ReadStream, Stats } from 'fs';
+import { createReadStream, type ReadStream, type Stats } from 'fs';
 import fs from 'fs/promises';
 import path from 'path';
 import {

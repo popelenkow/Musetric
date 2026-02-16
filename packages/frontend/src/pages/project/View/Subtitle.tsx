@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material';
-import { api } from '@musetric/api';
+import { type api } from '@musetric/api';
 import { type FC } from 'react';
 import { usePlayerStore } from '../store/player.js';
 import { SegmentLCurrent } from './SegmentLCurrent.js';

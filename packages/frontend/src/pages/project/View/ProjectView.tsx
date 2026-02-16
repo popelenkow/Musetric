@@ -1,5 +1,5 @@
 import { Box, Stack } from '@mui/material';
-import { api } from '@musetric/api';
+import { type api } from '@musetric/api';
 import { useQuery } from '@tanstack/react-query';
 import { type FC, useEffect } from 'react';
 import { endpoints } from '../../../api/index.js';
