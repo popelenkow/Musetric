@@ -1,7 +1,7 @@
 import {
   type FourierMode,
   resizeCanvas,
-  spectrogram,
+  type spectrogram,
   subscribeResizeObserver,
   type ViewSize,
 } from '@musetric/audio-view';

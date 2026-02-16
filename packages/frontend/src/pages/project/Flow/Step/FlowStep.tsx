@@ -1,6 +1,6 @@
 import { alpha, Card, LinearProgress, Stack, Typography } from '@mui/material';
 import { type Theme, useTheme } from '@mui/material/styles';
-import { api } from '@musetric/api';
+import { type api } from '@musetric/api';
 import { type FC } from 'react';
 import { FlowStepDownload } from './FlowStepDownload.js';
 import { FlowStepStatus } from './FlowStepStatus.js';
