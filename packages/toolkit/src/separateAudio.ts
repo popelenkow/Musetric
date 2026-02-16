@@ -1,8 +1,6 @@
 import { type Logger } from '@musetric/resource-utils/logger';
-import {
-  spawnScript,
-  type SpawnScriptHandlers,
-} from '@musetric/resource-utils/spawnScript/index';
+import type { MessageHandlers } from '@musetric/resource-utils/messageHandler';
+import { spawnScript } from '@musetric/resource-utils/spawnScript/index';
 
 export type SeparateAudioMessage =
   | {
@@ -24,7 +22,7 @@ export type SeparateAudioOptions = {
   backingPath: string;
   instrumentalPath: string;
   sampleRate: number;
-  handlers: SpawnScriptHandlers<SeparateAudioMessage>;
+  handlers: MessageHandlers<SeparateAudioMessage>;
   logger: Logger;
   modelsPath: string;
 };

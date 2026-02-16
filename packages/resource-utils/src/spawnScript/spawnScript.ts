@@ -9,17 +9,6 @@ export type LogInfo = {
   message: string;
 };
 
-export type SpawnScriptHandler<Message, Type> = (
-  message: Extract<Message, { type: Type }>,
-) => void;
-
-export type SpawnScriptHandlers<Message extends { type: string }> = {
-  [Type in Exclude<Message['type'], 'result'>]: SpawnScriptHandler<
-    Message,
-    Type
-  >;
-};
-
 export type SpawnScriptOptions<Message extends { type: string }> = {
   command: string;
   args?: Record<string, string>;

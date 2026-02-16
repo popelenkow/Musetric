@@ -1265,6 +1265,7 @@ __metadata:
   resolution: "@musetric/audio-in-out@workspace:packages/audio-in-out"
   dependencies:
     "@musetric/eslint-config": "workspace:*"
+    "@musetric/resource-utils": "workspace:*"
     "@types/audioworklet": "catalog:"
     eslint: "catalog:"
     typescript: "catalog:"

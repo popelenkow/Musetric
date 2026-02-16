@@ -1,4 +1,7 @@
-import { createPort } from '../port.js';
+import {
+  createPortMessageHandler,
+  wrapMessagePort,
+} from '@musetric/resource-utils/messagePort';
 import { type ChannelArrays, toArrays } from './buffer.js';
 import type { FromWorkletEvent, ToWorkletEvent } from './event.js';
 
@@ -7,12 +10,17 @@ type Process = (output: Float32Array<ArrayBuffer>[]) => boolean;
 type Processor = {
   process: Process;
 };
-const createProcessor = (rawPort: MessagePort): Processor => {
+const createProcessor = (messagePort: MessagePort): Processor => {
   let buffers: ChannelArrays | undefined = undefined;
   let offset = 0;
   let playing = false;
 
-  const port = createPort<ToWorkletEvent, FromWorkletEvent>(rawPort, {
+  const port = wrapMessagePort(messagePort).typed<
+    ToWorkletEvent,
+    FromWorkletEvent
+  >();
+
+  port.onmessage = createPortMessageHandler({
     play: (message) => {
       buffers = toArrays(message.buffers);
       offset = message.offset;
@@ -45,7 +53,7 @@ const createProcessor = (rawPort: MessagePort): Processor => {
       offset += output[0].length;
       if (offset >= length) {
         playing = false;
-        port.send({ type: 'ended' });
+        port.postMessage({ type: 'ended' });
       }
 
       return true;
