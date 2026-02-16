@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
-import { Readable } from 'stream';
+import type { Readable } from 'stream';
 import z from 'zod';
 import { type ApiRoute, type RequestMethod } from './apiRoute.js';
 import { coerceSchema } from './coerceSchema.js';
