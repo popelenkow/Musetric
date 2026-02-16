@@ -1,4 +1,7 @@
-import { createPort } from '../port.js';
+import {
+  createPortMessageHandler,
+  wrapMessagePort,
+} from '@musetric/resource-utils/messagePort';
 import { fromAudioBuffer } from './buffer.js';
 import { type FromWorkletEvent, type ToWorkletEvent } from './event.js';
 import { createPlayerNode } from './node.js';
@@ -19,7 +22,12 @@ export const createAudioPlayer = async (
 ): Promise<AudioPlayer> => {
   const context = new AudioContext();
   const node = await createPlayerNode(context);
-  const port = createPort<FromWorkletEvent, ToWorkletEvent>(node.port, {
+  const port = wrapMessagePort(node.port).typed<
+    FromWorkletEvent,
+    ToWorkletEvent
+  >();
+
+  port.onmessage = createPortMessageHandler({
     ended: () => options.end?.(),
   });
 
@@ -47,7 +55,7 @@ export const createAudioPlayer = async (
         await context.resume();
       }
       const buffers = fromAudioBuffer(buffer);
-      port.send(
+      port.postMessage(
         { type: 'play', buffers, offset: startOffset },
         { transfer: buffers },
       );
@@ -56,7 +64,7 @@ export const createAudioPlayer = async (
       raf = requestAnimationFrame(tick);
     },
     pause: () => {
-      port.send({ type: 'pause' });
+      port.postMessage({ type: 'pause' });
       cancelAnimationFrame(raf);
     },
   };

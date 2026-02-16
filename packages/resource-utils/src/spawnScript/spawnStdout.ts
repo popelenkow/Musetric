@@ -1,7 +1,10 @@
 import type { ChildProcessWithoutNullStreams } from 'node:child_process';
 import type { Logger } from '../logger.js';
+import {
+  createMessageHandler,
+  type MessageHandlers,
+} from '../messageHandler.js';
 import { createTextProcessor, tryParseMessage } from './common.js';
-import type { SpawnScriptHandlers } from './spawnScript.js';
 
 export type StdoutBinary = {
   mode: 'binary';
@@ -15,7 +18,7 @@ export type StdoutText = {
 
 export type StdoutJson<Message extends { type: string }> = {
   mode: 'json';
-  handlers: SpawnScriptHandlers<Message>;
+  handlers: MessageHandlers<Message>;
 };
 
 export type StdoutOptions<Message extends { type: string }> =
@@ -63,12 +66,12 @@ export const attachStdout = <Message extends { type: string }>(
   }
 
   if (stdout.mode === 'json') {
-    const handlers = {
+    const handle = createMessageHandler<Message>({
       ...stdout.handlers,
       result: (message: Result) => {
         result = message;
       },
-    };
+    });
     childProcess.stdout.on(
       'data',
       createTextProcessor(logger, processName, (line) => {
@@ -81,20 +84,13 @@ export const attachStdout = <Message extends { type: string }>(
           return;
         }
 
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        const type = message.type as keyof typeof handlers;
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        const handler = handlers[type] as (message: Message) => void;
-        if (!handler) {
-          logger.error(
-            { processName, line },
-            'Child script received unknown message',
-          );
-          return;
-        }
-
         try {
-          handler(message);
+          if (!handle(message)) {
+            logger.error(
+              { processName, line },
+              'Child script received unknown message',
+            );
+          }
         } catch (error) {
           logger.error({ processName, error }, 'Child script handler error');
         }

@@ -1,8 +1,6 @@
 import { type Logger } from '@musetric/resource-utils/logger';
-import {
-  spawnScript,
-  type SpawnScriptHandlers,
-} from '@musetric/resource-utils/spawnScript/index';
+import type { MessageHandlers } from '@musetric/resource-utils/messageHandler';
+import { spawnScript } from '@musetric/resource-utils/spawnScript/index';
 
 export type TranscribeAudioMessage =
   | {
@@ -21,7 +19,7 @@ export type TranscribeAudioMessage =
 export type TranscribeAudioOptions = {
   sourcePath: string;
   resultPath: string;
-  handlers: SpawnScriptHandlers<TranscribeAudioMessage>;
+  handlers: MessageHandlers<TranscribeAudioMessage>;
   logger: Logger;
   modelsPath: string;
 };
