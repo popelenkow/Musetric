@@ -1,6 +1,10 @@
-import { Stack } from '@mui/material';
+import { Skeleton, Stack } from '@mui/material';
 import { type api } from '@musetric/api';
+import { useQuery } from '@tanstack/react-query';
 import { type FC } from 'react';
+import { useTranslation } from 'react-i18next';
+import { endpoints } from '../../../api/index.js';
+import { ErrorView } from '../components/ErrorView.js';
 import { usePlayerStore } from '../store/player.js';
 import { SegmentLCurrent } from './SegmentLCurrent.js';
 import { SegmentNext } from './SegmentNext.js';
@@ -24,7 +28,7 @@ const getSubtitleLines = (
   buffer: { duration: number } | undefined,
   progress: number,
 ): SubtitleLines => {
-  if (!buffer || subtitle.length === 0) {
+  if (subtitle.length === 0) {
     return {
       current: undefined,
       next: undefined,
@@ -32,7 +36,7 @@ const getSubtitleLines = (
     };
   }
 
-  const currentTime = buffer.duration * progress;
+  const currentTime = buffer ? buffer.duration * progress : 0;
   const currentIndex = subtitle.findIndex(
     (segment) => currentTime < getSegmentEnd(segment),
   );
@@ -43,24 +47,55 @@ const getSubtitleLines = (
 };
 
 export type SubtitleProps = {
-  subtitle: api.subtitle.Segment[];
+  projectId: number;
 };
 export const Subtitle: FC<SubtitleProps> = (props) => {
-  const { subtitle } = props;
+  const { projectId } = props;
+  const { t } = useTranslation();
+  const subtitleQuery = useQuery(endpoints.subtitle.get(projectId));
 
   const buffer = usePlayerStore((s) => s.buffer);
   const progress = usePlayerStore((s) => s.progress);
 
   const { current, next, currentTime } = getSubtitleLines(
-    subtitle,
+    subtitleQuery.data ?? [],
     buffer,
     progress,
   );
 
+  const getContent = () => {
+    if (subtitleQuery.status === 'pending') {
+      return (
+        <>
+          <Skeleton variant='text' width='60%' sx={{ fontSize: '1rem' }} />
+          <Skeleton variant='text' width='35%' sx={{ fontSize: '1rem' }} />
+        </>
+      );
+    }
+
+    if (subtitleQuery.status === 'error') {
+      return <ErrorView message={t('pages.project.progress.error.lyrics')} />;
+    }
+
+    return (
+      <>
+        <SegmentLCurrent segment={current} currentTime={currentTime} />
+        <SegmentNext segment={next} />
+      </>
+    );
+  };
+
   return (
-    <Stack alignItems='center' gap={0.5}>
-      <SegmentLCurrent segment={current} currentTime={currentTime} />
-      <SegmentNext segment={next} />
+    <Stack
+      sx={{
+        alignItems: 'center',
+        gap: 0,
+        width: '100%',
+        minHeight: '3em',
+        maxHeight: '3em',
+      }}
+    >
+      {getContent()}
     </Stack>
   );
 };

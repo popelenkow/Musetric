@@ -1,24 +1,40 @@
-import { type FC, useEffect, useRef } from 'react';
+import { type FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ErrorView } from '../components/ErrorView.js';
+import { LoadingView } from '../components/LoadingView.js';
 import { usePlayerStore } from '../store/player.js';
 import { useSettingsStore } from '../store/settings.js';
 import { useSpectrogramStore } from '../store/spectrogram.js';
 
-export const Spectrogram: FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+export type SpectrogramProps = {
+  status: 'pending' | 'error' | 'success';
+};
+export const Spectrogram: FC<SpectrogramProps> = (props) => {
+  const { status } = props;
+  const { t } = useTranslation();
+  const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
   const seek = usePlayerStore((s) => s.seek);
+  const playerStatus = usePlayerStore((s) => s.status);
   const fourierMode = useSettingsStore((s) => s.fourierMode);
   const mount = useSpectrogramStore((s) => s.mount);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
     if (!canvas) return;
     return mount(canvas);
-  }, [mount]);
+  }, [mount, canvas]);
+
+  if (status === 'error') {
+    return <ErrorView message={t('pages.project.progress.error.audioTrack')} />;
+  }
+
+  if (status === 'pending' || playerStatus === 'pending') {
+    return <LoadingView />;
+  }
 
   return (
     <canvas
       key={fourierMode}
-      ref={canvasRef}
+      ref={setCanvas}
       style={{ width: '100%', height: '100%', display: 'block' }}
       onClick={async (event) => {
         const { visibleTimeBefore, visibleTimeAfter } =

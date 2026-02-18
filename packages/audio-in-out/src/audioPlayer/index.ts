@@ -10,6 +10,7 @@ export type AudioPlayer = {
   context: AudioContext;
   play: (buffer: AudioBuffer, offset: number) => Promise<void>;
   pause: () => void;
+  destroy: () => Promise<void>;
 };
 
 export type AudioPlayerOptions = {
@@ -66,6 +67,15 @@ export const createAudioPlayer = async (
     pause: () => {
       port.postMessage({ type: 'pause' });
       cancelAnimationFrame(raf);
+    },
+    destroy: async () => {
+      currentBuffer = undefined;
+      cancelAnimationFrame(raf);
+      port.postMessage({ type: 'pause' });
+      port.onmessage = () => undefined;
+      node.port.close();
+      node.disconnect();
+      await context.close();
     },
   };
 };
