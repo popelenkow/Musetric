@@ -3,7 +3,6 @@ import { type api } from '@musetric/api';
 import { useQuery } from '@tanstack/react-query';
 import { type FC, useEffect } from 'react';
 import { endpoints } from '../../../api/index.js';
-import { QueryPending } from '../../../components/QueryView/QueryPending.js';
 import { ProjectBackButton } from '../components/ProjectBackButton.js';
 import { ProjectLayout } from '../components/ProjectPageLayout.js';
 import { ThemeViewColors } from '../components/ThemeViewColors.js';
@@ -21,22 +20,13 @@ export const ProjectView: FC<ProjectViewProps> = (props) => {
   const { project } = props;
 
   const audio = useQuery(endpoints.audioDelivery.get(project.id, 'lead'));
-  const subtitle = useQuery(endpoints.subtitle.get(project.id));
 
   const mount = usePlayerStore((s) => s.mount);
-  const load = usePlayerStore((s) => s.load);
-  const initialized = usePlayerStore((s) => s.initialized);
-
-  useEffect(() => mount(), [mount]);
 
   useEffect(() => {
-    if (!initialized || !audio.data) return;
-    void load(audio.data);
-  }, [audio.data, load, initialized]);
-
-  if (!initialized || !audio.data || !subtitle.data) {
-    return <QueryPending />;
-  }
+    if (!audio.data) return;
+    return mount(audio.data);
+  }, [audio.data, mount]);
 
   return (
     <ProjectLayout
@@ -50,7 +40,6 @@ export const ProjectView: FC<ProjectViewProps> = (props) => {
     >
       <Stack
         padding={4}
-        gap={4}
         width='100%'
         flexGrow={1}
         sx={{
@@ -58,12 +47,12 @@ export const ProjectView: FC<ProjectViewProps> = (props) => {
         }}
       >
         <Box width='100%' flexGrow={1} flexBasis={0} minHeight={0}>
-          <Spectrogram />
+          <Spectrogram status={audio.status} />
         </Box>
         <Box height='80px' width='100%'>
           <Waveform projectId={project.id} type='lead' />
         </Box>
-        <Subtitle subtitle={subtitle.data} />
+        <Subtitle projectId={project.id} />
         <Player />
       </Stack>
       <ThemeViewColors />
