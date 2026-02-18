@@ -1,2 +1,2 @@
 import { config } from '@musetric/eslint-config';
-export default config('react');
+export default config('browser');

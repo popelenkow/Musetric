@@ -2,8 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "lib": ["ES2024", "DOM"],
-    "outDir": "dist",
-    "tsBuildInfoFile": "tsconfig.tsbuildinfo"
+    "types": ["node", "audioworklet"]
   },
   "include": ["."]
 }
