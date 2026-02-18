@@ -7,12 +7,14 @@ import { routes } from '../../app/router/routes.js';
 import { ErrorView } from './components/ErrorView.js';
 import { LoadingView } from './components/LoadingView.js';
 import { ProjectLayout } from './components/ProjectPageLayout.js';
+import { useThemeViewColors } from './components/ThemeViewColors.js';
 import { ProjectProgressFlow } from './Flow/ProjectProgressFlow.js';
 import { ProjectView } from './View/ProjectView.js';
 
 export const ProjectPage: FC = () => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
+  useThemeViewColors();
 
   const { projectId } = routes.project.useAssertMatch();
   const project = useQuery(endpoints.project.get(projectId));

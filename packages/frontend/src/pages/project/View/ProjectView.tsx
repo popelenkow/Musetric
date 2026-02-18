@@ -5,7 +5,6 @@ import { type FC, useEffect } from 'react';
 import { endpoints } from '../../../api/index.js';
 import { ProjectBackButton } from '../components/ProjectBackButton.js';
 import { ProjectLayout } from '../components/ProjectPageLayout.js';
-import { ThemeViewColors } from '../components/ThemeViewColors.js';
 import { ProjectSettings } from '../Settings/ProjectSettings.js';
 import { usePlayerStore } from '../store/player.js';
 import { Player } from './Player.js';
@@ -55,7 +54,6 @@ export const ProjectView: FC<ProjectViewProps> = (props) => {
         <Subtitle projectId={project.id} />
         <Player />
       </Stack>
-      <ThemeViewColors />
     </ProjectLayout>
   );
 };

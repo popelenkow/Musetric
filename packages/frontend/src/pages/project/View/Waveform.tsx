@@ -1,8 +1,6 @@
 import { type api } from '@musetric/api';
-import { useQuery } from '@tanstack/react-query';
 import { type FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { endpoints } from '../../../api/index.js';
 import { ErrorView } from '../components/ErrorView.js';
 import { LoadingView } from '../components/LoadingView.js';
 import { usePlayerStore } from '../store/player.js';
@@ -20,18 +18,23 @@ export const Waveform: FC<WaveformProps> = (props) => {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
   const seek = usePlayerStore((s) => s.seek);
   const mount = useWaveformStore((s) => s.mount);
-  const wave = useQuery(endpoints.wave.get(projectId, type));
+  const attachCanvas = useWaveformStore((s) => s.attachCanvas);
+  const status = useWaveformStore((s) => s.status);
 
   useEffect(() => {
-    if (!canvas || !wave.data) return;
-    return mount(canvas, wave.data);
-  }, [mount, canvas, wave.data]);
+    return mount(projectId, type);
+  }, [mount, projectId, type]);
 
-  if (wave.status === 'pending') {
+  useEffect(() => {
+    if (status !== 'success' || !canvas) return;
+    attachCanvas(canvas);
+  }, [attachCanvas, canvas, status]);
+
+  if (status === 'pending') {
     return <LoadingView />;
   }
 
-  if (wave.status === 'error') {
+  if (status === 'error') {
     return <ErrorView message={t('pages.project.progress.error.waveform')} />;
   }
 

@@ -1,13 +1,13 @@
 import { useTheme } from '@mui/material';
 import { type ViewColors } from '@musetric/audio-view';
-import { type FC, useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useSettingsStore } from '../store/settings.js';
 
-export const ThemeViewColors: FC = () => {
+export const useThemeViewColors = () => {
   const theme = useTheme();
   const setColors = useSettingsStore((s) => s.setColors);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const colors: ViewColors = {
       played: theme.palette.primary.main,
       unplayed: theme.palette.default.main,
@@ -15,6 +15,4 @@ export const ThemeViewColors: FC = () => {
     };
     setColors(colors);
   }, [theme, setColors]);
-
-  return undefined;
 };
