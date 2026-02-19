@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["ES2024", "DOM", "WebWorker"],
+    "lib": ["ES2024", "DOM"],
     "types": ["node", "@webgpu/types"]
   },
   "include": ["."]

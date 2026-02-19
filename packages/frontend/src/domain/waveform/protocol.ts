@@ -1,7 +1,7 @@
 import { type api } from '@musetric/api';
-import { type ViewColors, type ViewSize } from '../common/index.js';
+import { type ViewColors, type ViewSize } from '@musetric/audio-view';
 
-export type ToWaveformMessage =
+export type ToWaveformWorkerMessage =
   | {
       type: 'init';
       projectId: number;
@@ -26,7 +26,7 @@ export type ToWaveformMessage =
       viewSize: ViewSize;
     };
 
-export type FromWaveformMessage = {
+export type FromWaveformWorkerMessage = {
   type: 'state';
   status: 'pending' | 'error' | 'success';
 };

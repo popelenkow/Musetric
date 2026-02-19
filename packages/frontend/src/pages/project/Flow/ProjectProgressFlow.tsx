@@ -2,7 +2,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import { type api } from '@musetric/api';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ProjectLayout } from '../components/ProjectPageLayout.js';
+import { ProjectLayout } from '../ProjectPageLayout.js';
 import { FlowStep } from './Step/FlowStep.js';
 
 export type ProjectProgressFlowProps = {

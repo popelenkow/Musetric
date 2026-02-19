@@ -2,11 +2,11 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { Stack, Typography } from '@mui/material';
 import { type FC } from 'react';
 
-export type ErrorViewProps = {
+export type ViewErrorProps = {
   message: string;
 };
 
-export const ErrorView: FC<ErrorViewProps> = (props) => {
+export const ViewError: FC<ViewErrorProps> = (props) => {
   const { message } = props;
 
   return (

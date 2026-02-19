@@ -2,15 +2,15 @@ import { Box, Stack } from '@mui/material';
 import { type api } from '@musetric/api';
 import { useQuery } from '@tanstack/react-query';
 import { type FC, useEffect } from 'react';
-import { endpoints } from '../../../api/index.js';
-import { ProjectBackButton } from '../components/ProjectBackButton.js';
-import { ProjectLayout } from '../components/ProjectPageLayout.js';
-import { ProjectSettings } from '../Settings/ProjectSettings.js';
-import { usePlayerStore } from '../store/player.js';
-import { Player } from './Player.js';
-import { Spectrogram } from './Spectrogram.js';
-import { Subtitle } from './Subtitle.js';
-import { Waveform } from './Waveform.js';
+import { endpoints } from '../../api/index.js';
+import { Player } from '../../domain/player/Player.js';
+import { usePlayerStore } from '../../domain/player/store.js';
+import { ProjectSettings } from '../../domain/settings/field/ProjectSettings.js';
+import { SpectrogramCanvas } from '../../domain/spectrogram/canvas.js';
+import { Subtitle } from '../../domain/subtitle/view.js';
+import { WaveformCanvas } from '../../domain/waveform/canvas.js';
+import { ProjectBackButton } from './ProjectBackButton.js';
+import { ProjectLayout } from './ProjectPageLayout.js';
 
 export type ProjectViewProps = {
   project: api.project.Item;
@@ -46,10 +46,10 @@ export const ProjectView: FC<ProjectViewProps> = (props) => {
         }}
       >
         <Box width='100%' flexGrow={1} flexBasis={0} minHeight={0}>
-          <Spectrogram status={audio.status} />
+          <SpectrogramCanvas status={audio.status} />
         </Box>
         <Box height='80px' width='100%'>
-          <Waveform projectId={project.id} type='lead' />
+          <WaveformCanvas projectId={project.id} type='lead' />
         </Box>
         <Subtitle projectId={project.id} />
         <Player />

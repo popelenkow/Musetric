@@ -1,14 +1,13 @@
 import { api } from '@musetric/api';
+import { type ViewColors, waveform } from '@musetric/audio-view';
 import {
   createPortMessageHandler,
   wrapMessagePort,
 } from '@musetric/resource-utils/messagePort';
 import axios from 'axios';
-import { type ViewColors } from '../common/index.js';
-import { createPipeline, type Pipeline } from './pipeline.js';
 import {
-  type FromWaveformMessage,
-  type ToWaveformMessage,
+  type FromWaveformWorkerMessage,
+  type ToWaveformWorkerMessage,
 } from './protocol.js';
 
 declare const self: DedicatedWorkerGlobalScope;
@@ -16,7 +15,7 @@ declare const self: DedicatedWorkerGlobalScope;
 type State = {
   canvas?: OffscreenCanvas;
   wave?: Float32Array<ArrayBuffer>;
-  pipeline?: Pipeline;
+  pipeline?: waveform.Pipeline;
   progress: number;
   colors?: ViewColors;
 };
@@ -26,14 +25,14 @@ const state: State = {
 };
 
 const port = wrapMessagePort(self).typed<
-  ToWaveformMessage,
-  FromWaveformMessage
+  ToWaveformWorkerMessage,
+  FromWaveformWorkerMessage
 >();
 
 const initializePipeline = () => {
   const { canvas, colors } = state;
   if (!canvas || !colors) return;
-  state.pipeline = createPipeline(canvas, colors);
+  state.pipeline = waveform.createPipeline(canvas, colors);
 };
 
 const render = (): boolean => {
@@ -62,7 +61,7 @@ const loadWave = async (projectId: number, waveType: api.wave.Type) => {
   }
 };
 
-port.onmessage = createPortMessageHandler<ToWaveformMessage>({
+port.onmessage = createPortMessageHandler<ToWaveformWorkerMessage>({
   init: (message) => {
     state.colors = message.colors;
     state.progress = message.progress;

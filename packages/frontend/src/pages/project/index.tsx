@@ -4,12 +4,12 @@ import { type FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { endpoints } from '../../api/index.js';
 import { routes } from '../../app/router/routes.js';
-import { ErrorView } from './components/ErrorView.js';
-import { LoadingView } from './components/LoadingView.js';
-import { ProjectLayout } from './components/ProjectPageLayout.js';
-import { useThemeViewColors } from './components/ThemeViewColors.js';
+import { ViewError } from '../../components/ViewError.js';
+import { ViewPending } from '../../components/ViewPending.js';
+import { useThemeViewColors } from '../../domain/settings/theme.js';
 import { ProjectProgressFlow } from './Flow/ProjectProgressFlow.js';
-import { ProjectView } from './View/ProjectView.js';
+import { ProjectLayout } from './ProjectPageLayout.js';
+import { ProjectView } from './ProjectView.js';
 
 export const ProjectPage: FC = () => {
   const queryClient = useQueryClient();
@@ -29,7 +29,7 @@ export const ProjectPage: FC = () => {
 
     return (
       <ProjectLayout>
-        <ErrorView
+        <ViewError
           message={errorMessage ?? t('pages.project.progress.error.project')}
         />
       </ProjectLayout>
@@ -39,7 +39,7 @@ export const ProjectPage: FC = () => {
   if (project.status === 'pending') {
     return (
       <ProjectLayout>
-        <LoadingView message={t('pages.project.progress.loading')} />
+        <ViewPending message={t('pages.project.progress.loading')} />
       </ProjectLayout>
     );
   }

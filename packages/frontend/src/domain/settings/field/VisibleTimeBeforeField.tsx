@@ -1,24 +1,24 @@
 import { TextField } from '@mui/material';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSettingsStore } from '../store/settings.js';
+import { useSettingsStore } from '../store.js';
 
-export const MaxFrequencyField: FC = () => {
+export const VisibleTimeBeforeField: FC = () => {
   const { t } = useTranslation();
-  const maxFrequency = useSettingsStore((s) => s.maxFrequency);
-  const setMaxFrequency = useSettingsStore((s) => s.setMaxFrequency);
+  const visibleTimeBefore = useSettingsStore((s) => s.visibleTimeBefore);
+  const setVisibleTimeBefore = useSettingsStore((s) => s.setVisibleTimeBefore);
 
   return (
     <TextField
-      key={maxFrequency}
+      key={visibleTimeBefore}
       size='small'
       type='number'
-      label={t('pages.project.settings.fields.maxFrequency.label')}
-      defaultValue={maxFrequency}
+      label={t('pages.project.settings.fields.visibleTimeBefore.label')}
+      defaultValue={visibleTimeBefore}
       onBlur={(event) => {
         const value = Number(event.target.value);
         if (Number.isNaN(value)) return;
-        setMaxFrequency(Math.max(value, 0));
+        setVisibleTimeBefore(Math.max(0, Math.min(value, 30)));
       }}
       slotProps={{
         input: {

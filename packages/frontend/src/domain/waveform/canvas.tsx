@@ -1,17 +1,17 @@
 import { type api } from '@musetric/api';
 import { type FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ErrorView } from '../components/ErrorView.js';
-import { LoadingView } from '../components/LoadingView.js';
-import { usePlayerStore } from '../store/player.js';
-import { useWaveformStore } from '../store/waveform.js';
+import { ViewError } from '../../components/ViewError.js';
+import { ViewPending } from '../../components/ViewPending.js';
+import { usePlayerStore } from '../player/store.js';
+import { useWaveformStore } from './store.js';
 
-export type WaveformProps = {
+export type WaveformCanvasProps = {
   projectId: number;
   type: api.wave.Type;
 };
 
-export const Waveform: FC<WaveformProps> = (props) => {
+export const WaveformCanvas: FC<WaveformCanvasProps> = (props) => {
   const { projectId, type } = props;
   const { t } = useTranslation();
 
@@ -31,11 +31,11 @@ export const Waveform: FC<WaveformProps> = (props) => {
   }, [attachCanvas, canvas, status]);
 
   if (status === 'pending') {
-    return <LoadingView />;
+    return <ViewPending />;
   }
 
   if (status === 'error') {
-    return <ErrorView message={t('pages.project.progress.error.waveform')} />;
+    return <ViewError message={t('pages.project.progress.error.waveform')} />;
   }
 
   return (

@@ -3,8 +3,8 @@ import {
   isGpuFourierMode,
   spectrogram,
 } from '@musetric/audio-view';
-import { envs } from '../../../common/envs.js';
-import { getGpuDevice } from '../../../common/gpu.js';
+import { envs } from '../../common/envs.js';
+import { getGpuDevice } from '../../common/gpu.js';
 
 export const createSpectrogramPipeline = async (
   canvas: HTMLCanvasElement,
