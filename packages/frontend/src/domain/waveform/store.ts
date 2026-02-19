@@ -1,23 +1,24 @@
 import { type api } from '@musetric/api';
-import {
-  resizeCanvas,
-  subscribeResizeObserver,
-  waveform,
-} from '@musetric/audio-view';
+import { resizeCanvas, subscribeResizeObserver } from '@musetric/audio-view';
 import {
   createPortMessageHandler,
   type TypedMessagePort,
 } from '@musetric/resource-utils/messagePort';
 import { createSingletonManager } from '@musetric/resource-utils/singletonManager';
 import { create } from 'zustand';
-import { usePlayerStore } from './player.js';
-import { useSettingsStore } from './settings.js';
+import { usePlayerStore } from '../player/store.js';
+import { useSettingsStore } from '../settings/store.js';
+import { createWaveformWorker } from './port.js';
+import {
+  type FromWaveformWorkerMessage,
+  type ToWaveformWorkerMessage,
+} from './protocol.js';
 
 export type WaveformState = {
   worker?: TypedMessagePort<
     Worker,
-    waveform.FromWaveformMessage,
-    waveform.ToWaveformMessage
+    FromWaveformWorkerMessage,
+    ToWaveformWorkerMessage
   >;
   status: 'pending' | 'error' | 'success';
 };
@@ -34,9 +35,9 @@ export const useWaveformStore = create<State>((set, get) => {
 
   const singletonManager = createSingletonManager(
     async (projectId: number, type: api.wave.Type) => {
-      const port = waveform.createWaveformWorker();
+      const port = createWaveformWorker();
 
-      port.onmessage = createPortMessageHandler<waveform.FromWaveformMessage>({
+      port.onmessage = createPortMessageHandler<FromWaveformWorkerMessage>({
         state: (message) => {
           set({ status: message.status });
         },

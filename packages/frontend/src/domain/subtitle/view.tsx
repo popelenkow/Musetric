@@ -3,11 +3,11 @@ import { type api } from '@musetric/api';
 import { useQuery } from '@tanstack/react-query';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { endpoints } from '../../../api/index.js';
-import { ErrorView } from '../components/ErrorView.js';
-import { usePlayerStore } from '../store/player.js';
-import { SegmentLCurrent } from './SegmentLCurrent.js';
-import { SegmentNext } from './SegmentNext.js';
+import { endpoints } from '../../api/index.js';
+import { ViewError } from '../../components/ViewError.js';
+import { usePlayerStore } from '../player/store.js';
+import { SegmentLCurrent } from './current.js';
+import { SegmentNext } from './next.js';
 
 type SubtitleLines = {
   current?: api.subtitle.Segment;
@@ -74,7 +74,7 @@ export const Subtitle: FC<SubtitleProps> = (props) => {
     }
 
     if (subtitleQuery.status === 'error') {
-      return <ErrorView message={t('pages.project.progress.error.lyrics')} />;
+      return <ViewError message={t('pages.project.progress.error.lyrics')} />;
     }
 
     return (

@@ -7,9 +7,9 @@ import {
 } from '@musetric/audio-view';
 import { createSingletonManager } from '@musetric/resource-utils/singletonManager';
 import { create } from 'zustand';
-import { createSpectrogramPipeline } from '../common/spectrogramPipeline.js';
-import { usePlayerStore } from './player.js';
-import { useSettingsStore } from './settings.js';
+import { usePlayerStore } from '../player/store.js';
+import { useSettingsStore } from '../settings/store.js';
+import { createSpectrogramPipeline } from './pipeline.js';
 
 export type SpectrogramState = {
   pipeline?: spectrogram.Pipeline;

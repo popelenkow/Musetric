@@ -1,15 +1,15 @@
 import { type FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ErrorView } from '../components/ErrorView.js';
-import { LoadingView } from '../components/LoadingView.js';
-import { usePlayerStore } from '../store/player.js';
-import { useSettingsStore } from '../store/settings.js';
-import { useSpectrogramStore } from '../store/spectrogram.js';
+import { ViewError } from '../../components/ViewError.js';
+import { ViewPending } from '../../components/ViewPending.js';
+import { usePlayerStore } from '../player/store.js';
+import { useSettingsStore } from '../settings/store.js';
+import { useSpectrogramStore } from './store.js';
 
-export type SpectrogramProps = {
+export type SpectrogramCanvasProps = {
   status: 'pending' | 'error' | 'success';
 };
-export const Spectrogram: FC<SpectrogramProps> = (props) => {
+export const SpectrogramCanvas: FC<SpectrogramCanvasProps> = (props) => {
   const { status } = props;
   const { t } = useTranslation();
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
@@ -24,11 +24,11 @@ export const Spectrogram: FC<SpectrogramProps> = (props) => {
   }, [mount, canvas]);
 
   if (status === 'error') {
-    return <ErrorView message={t('pages.project.progress.error.audioTrack')} />;
+    return <ViewError message={t('pages.project.progress.error.audioTrack')} />;
   }
 
   if (status === 'pending' || playerStatus === 'pending') {
-    return <LoadingView />;
+    return <ViewPending />;
   }
 
   return (

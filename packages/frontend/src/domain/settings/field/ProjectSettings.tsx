@@ -3,7 +3,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Drawer, IconButton, Stack, Typography } from '@mui/material';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSettingsStore } from '../store/settings.js';
+import { useSettingsStore } from '../store.js';
 import { FourierModeField } from './FourierModeField.js';
 import { MaxFrequencyField } from './MaxFrequencyField.js';
 import { MinDecibelField } from './MinDecibelField.js';

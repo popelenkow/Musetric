@@ -1,24 +1,24 @@
 import { TextField } from '@mui/material';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSettingsStore } from '../store/settings.js';
+import { useSettingsStore } from '../store.js';
 
-export const MinFrequencyField: FC = () => {
+export const MinDecibelField: FC = () => {
   const { t } = useTranslation();
-  const minFrequency = useSettingsStore((s) => s.minFrequency);
-  const setMinFrequency = useSettingsStore((s) => s.setMinFrequency);
+  const minDecibel = useSettingsStore((s) => s.minDecibel);
+  const setMinDecibel = useSettingsStore((s) => s.setMinDecibel);
 
   return (
     <TextField
-      key={minFrequency}
+      key={minDecibel}
       size='small'
       type='number'
-      label={t('pages.project.settings.fields.minFrequency.label')}
-      defaultValue={minFrequency}
+      label={t('pages.project.settings.fields.minDecibel.label')}
+      defaultValue={minDecibel}
       onBlur={(event) => {
         const value = Number(event.target.value);
         if (Number.isNaN(value)) return;
-        setMinFrequency(Math.max(value, 0));
+        setMinDecibel(value);
       }}
       slotProps={{
         input: {

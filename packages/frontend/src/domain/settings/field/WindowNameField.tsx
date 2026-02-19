@@ -2,7 +2,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { spectrogram } from '@musetric/audio-view';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSettingsStore } from '../store/settings.js';
+import { useSettingsStore } from '../store.js';
 
 export const WindowNameField: FC = () => {
   const { t } = useTranslation();

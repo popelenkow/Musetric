@@ -1,11 +1,11 @@
 import { CircularProgress, Stack, Typography } from '@mui/material';
 import { type FC } from 'react';
 
-export type LoadingViewProps = {
+export type ViewPendingProps = {
   message?: string;
 };
 
-export const LoadingView: FC<LoadingViewProps> = (props) => {
+export const ViewPending: FC<ViewPendingProps> = (props) => {
   const { message } = props;
 
   return (
