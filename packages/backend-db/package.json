@@ -24,9 +24,16 @@
     "check:lint": "eslint . --cache",
     "check:lint:fix": "eslint . --fix --cache"
   },
+  "peerDependencies": {
+    "@musetric/resource-utils": "workspace:*",
+    "zod": "4.3.6"
+  },
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
+    "@musetric/resource-utils": "workspace:*",
+    "@types/node": "catalog:",
     "eslint": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "zod": "catalog:"
   }
 }

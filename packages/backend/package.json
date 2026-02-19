@@ -31,6 +31,7 @@
     "fastify-sse-v2": "catalog:",
     "fastify-type-provider-zod": "catalog:",
     "openapi-types": "catalog:",
+    "pino": "catalog:",
     "pino-pretty": "catalog:",
     "selfsigned": "catalog:",
     "zod": "catalog:"

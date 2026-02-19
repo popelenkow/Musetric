@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@eslint/js": "catalog:",
+    "eslint-plugin-import-x": "catalog:",
     "eslint-plugin-react": "catalog:",
     "eslint-plugin-react-hooks": "catalog:",
     "eslint-plugin-react-refresh": "catalog:",
@@ -27,6 +28,7 @@
     "typescript-eslint": "catalog:"
   },
   "devDependencies": {
+    "@types/node": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:"
   }
