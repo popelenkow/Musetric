@@ -1,8 +1,9 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "lib": ["ES2024", "DOM"],
-    "types": ["node", "audioworklet"]
-  },
-  "include": ["."]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.shared.json" },
+    { "path": "./tsconfig.worklet.json" },
+    { "path": "./tsconfig.dom.json" },
+    { "path": "./tsconfig.script.json" }
+  ]
 }

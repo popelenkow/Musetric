@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.react.json",
+  "references": [{ "path": "./tsconfig.shared.json" }],
+  "compilerOptions": {
+    "types": ["node", "@webgpu/types", "vite/client"]
+  }
+}

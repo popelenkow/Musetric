@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "lib": ["ES2024", "DOM"],
+    "types": ["node", "@webgpu/types", "vite/client"]
+  }
+}

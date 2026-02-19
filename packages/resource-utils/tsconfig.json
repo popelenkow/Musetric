@@ -1,8 +1,7 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "lib": ["ES2024", "DOM"],
-    "types": ["node"]
-  },
-  "include": ["."]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.dom.json" },
+    { "path": "./tsconfig.script.json" }
+  ]
 }

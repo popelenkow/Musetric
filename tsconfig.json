@@ -1,8 +1,5 @@
 {
-  "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "tsBuildInfoFile": "tsconfig.tsbuildinfo"
-  },
+  "files": [],
   "references": [
     { "path": "packages/api" },
     { "path": "packages/audio-in-out" },

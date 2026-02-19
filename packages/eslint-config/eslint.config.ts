@@ -1,2 +1,4 @@
 import { config } from './src/index.js';
-export default config('node');
+
+// eslint-disable-next-line no-restricted-exports
+export default config();

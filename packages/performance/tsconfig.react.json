@@ -1,0 +1,6 @@
+{
+  "extends": "../../tsconfig.react.json",
+  "compilerOptions": {
+    "types": ["@webgpu/types"]
+  }
+}

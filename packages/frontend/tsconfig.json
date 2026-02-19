@@ -1,9 +1,9 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "lib": ["ES2024", "DOM", "WebWorker"],
-    "types": ["@webgpu/types"],
-    "jsx": "react-jsx"
-  },
-  "include": [".", "src/**/*.json"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.shared.json" },
+    { "path": "./tsconfig.worker.json" },
+    { "path": "./tsconfig.react.json" },
+    { "path": "./tsconfig.script.json" }
+  ]
 }

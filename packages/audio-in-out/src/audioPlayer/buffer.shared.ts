@@ -8,12 +8,3 @@ export const toBuffers = (arrays: ChannelArrays): ChannelBuffers =>
 export const toArrays = (buffers: ChannelBuffers): ChannelArrays =>
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   buffers.map((x) => new Float32Array(x)) as ChannelArrays;
-
-export const fromAudioBuffer = (buffer: AudioBuffer): ChannelBuffers => {
-  const first = new Float32Array(buffer.getChannelData(0)).buffer;
-  if (buffer.numberOfChannels > 1) {
-    const second = new Float32Array(buffer.getChannelData(1)).buffer;
-    return [first, second];
-  }
-  return [first];
-};
