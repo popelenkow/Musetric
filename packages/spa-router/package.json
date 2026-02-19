@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
+    "@types/node": "catalog:",
     "@types/react": "catalog:",
     "eslint": "catalog:",
     "react": "catalog:",

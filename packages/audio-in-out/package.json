@@ -22,6 +22,7 @@
     "@musetric/eslint-config": "workspace:*",
     "@musetric/resource-utils": "workspace:*",
     "@types/audioworklet": "catalog:",
+    "@types/node": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:"
   }

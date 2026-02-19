@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@musetric/eslint-config": "workspace:*",
+    "@types/node": "catalog:",
     "axios": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:",

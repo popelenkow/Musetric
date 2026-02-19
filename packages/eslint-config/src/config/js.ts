@@ -1,4 +1,5 @@
 import eslint from '@eslint/js';
+import importX from 'eslint-plugin-import-x';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import { type ConfigWithExtends } from 'typescript-eslint';
 
@@ -11,9 +12,21 @@ export const jsConfig: ConfigWithExtends = {
     sourceType: 'module',
   },
   plugins: {
+    'import-x': importX,
     'simple-import-sort': simpleImportSort,
   },
   rules: {
+    'import-x/no-extraneous-dependencies': [
+      'error',
+      {
+        bundledDependencies: true,
+        devDependencies: true,
+        includeTypes: true,
+        optionalDependencies: true,
+        packageDir: ['./'],
+        peerDependencies: true,
+      },
+    ],
     'func-names': ['error'],
     'func-style': ['error'],
     'no-restricted-exports': [
