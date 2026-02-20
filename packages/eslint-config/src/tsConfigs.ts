@@ -1,11 +1,10 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Linter } from 'eslint';
-import globals from 'globals';
 import { reactConfig } from './config/react.js';
 import { tsConfig } from './config/ts.js';
 
-export type ConfigType = 'browser' | 'node' | 'react';
+export type ConfigType = 'ts' | 'react';
 
 type TsConfigItem = {
   path: string;
@@ -27,7 +26,7 @@ const tsConfigItems: TsConfigItem[] = [
   },
   {
     path: './tsconfig.dom.json',
-    type: 'browser',
+    type: 'ts',
     files: ['src/**/*.ts'],
     ignores: [
       'src/**/*.worker.ts',
@@ -37,31 +36,31 @@ const tsConfigItems: TsConfigItem[] = [
   },
   {
     path: './tsconfig.node.json',
-    type: 'node',
+    type: 'ts',
     files: ['src/**/*.ts'],
     ignores: [],
   },
   {
     path: './tsconfig.worker.json',
-    type: 'browser',
+    type: 'ts',
     files: ['src/**/*.worker.ts'],
     ignores: [],
   },
   {
     path: './tsconfig.worklet.json',
-    type: 'browser',
+    type: 'ts',
     files: ['src/**/*.worklet.ts'],
     ignores: [],
   },
   {
     path: './tsconfig.shared.json',
-    type: 'browser',
+    type: 'ts',
     files: ['src/**/*.shared.ts'],
     ignores: [],
   },
   {
     path: './tsconfig.script.json',
-    type: 'node',
+    type: 'ts',
     files: ['**/*.ts'],
     ignores: ['src/**/*', 'dist/**/*', 'storage/**/*'],
   },
@@ -76,7 +75,6 @@ const createTsConfig = (item: TsConfigItem, cwd: string): Linter.Config => {
     ignores: item.ignores,
     languageOptions: {
       ...base.languageOptions,
-      globals: item.type === 'node' ? globals.node : globals.browser,
       parserOptions: {
         ...base.languageOptions?.parserOptions,
         project: [item.path],
