@@ -3,7 +3,7 @@
   "references": [{ "path": "./tsconfig.es.json" }],
   "compilerOptions": {
     "lib": ["ES2024", "DOM"],
-    "jsx": "react-jsx",
-    "types": ["node", "@webgpu/types", "vite/client"]
+    "types": ["@webgpu/types", "vite/client"],
+    "jsx": "react-jsx"
   }
 }

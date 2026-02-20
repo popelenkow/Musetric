@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { type AxiosInstance } from 'axios';
 import type z from 'zod';
-import { apiMultipart } from './apiMultipart.js';
+import { apiMultipart } from './apiMultipart.dom.js';
 import { type ApiRoute, type RequestMethod } from './apiRoute.js';
 import { getArrayBufferViewConstructor } from './arrayBufferView.js';
 
