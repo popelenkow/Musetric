@@ -2,6 +2,6 @@
   "extends": "../../tsconfig.es.json",
   "compilerOptions": {
     "lib": ["ES2024", "DOM"],
-    "types": ["node", "@webgpu/types", "vite/client"]
+    "types": ["@webgpu/types", "vite/client"]
   }
 }

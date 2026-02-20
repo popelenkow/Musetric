@@ -1,4 +1,5 @@
-import { api, requestWithAxios } from '@musetric/api';
+import { api } from '@musetric/api';
+import { requestWithAxios } from '@musetric/api/dom';
 import { type ViewColors, waveform } from '@musetric/audio-view';
 import {
   createPortMessageHandler,

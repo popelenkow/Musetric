@@ -1,4 +1,5 @@
-import { api, fastifyRoute } from '@musetric/api';
+import { api } from '@musetric/api';
+import { fastifyRoute } from '@musetric/api/node';
 import { type FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound.js';
 import { handleCachedFile } from '../common/cachedFile.js';
