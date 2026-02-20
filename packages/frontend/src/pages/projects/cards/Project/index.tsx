@@ -1,5 +1,5 @@
 import { Card, CardActions } from '@mui/material';
-import { type api } from '@musetric/api/dom';
+import { type api } from '@musetric/api';
 import { motion } from 'framer-motion';
 import { type FC } from 'react';
 import { ProjectCardMenu } from './Menu.js';

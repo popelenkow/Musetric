@@ -1,4 +1,4 @@
-import { api } from '@musetric/api/dom';
+import { api } from '@musetric/api';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { type FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';

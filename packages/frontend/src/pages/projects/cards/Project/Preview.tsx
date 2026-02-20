@@ -1,5 +1,5 @@
 import { CardActionArea } from '@mui/material';
-import { type api } from '@musetric/api/dom';
+import { type api } from '@musetric/api';
 import { AnimatePresence, motion } from 'framer-motion';
 import { type FC, useEffect } from 'react';
 import { routes } from '../../../../app/router/routes.js';

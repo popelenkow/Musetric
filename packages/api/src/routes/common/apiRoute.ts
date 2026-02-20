@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import type z from 'zod';
 import { endpoint } from './endpoint.js';
-import { multipart } from './internal/index.js';
+import { multipart } from './multipart.js';
 
 export type RequestMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
 

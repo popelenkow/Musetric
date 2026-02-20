@@ -3,7 +3,7 @@ import type { Readable } from 'stream';
 import z from 'zod';
 import { type ApiRoute, type RequestMethod } from './apiRoute.js';
 import { coerceSchema } from './coerceSchema.js';
-import { error } from './internal/index.js';
+import { error } from './error.js';
 
 const stream = {} as {
   202: z.ZodCustom<Readable, Readable>;
