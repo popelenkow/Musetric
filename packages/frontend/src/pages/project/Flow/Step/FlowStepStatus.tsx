@@ -2,7 +2,7 @@ import AutorenewIcon from '@mui/icons-material/Autorenew';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { Chip, type ChipProps } from '@mui/material';
-import { type api } from '@musetric/api';
+import { type api } from '@musetric/api/dom';
 import { type TFunction } from 'i18next';
 import { type FC, type JSX } from 'react';
 import { useTranslation } from 'react-i18next';

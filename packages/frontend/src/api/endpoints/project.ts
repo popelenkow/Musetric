@@ -1,4 +1,4 @@
-import { api } from '@musetric/api';
+import { api } from '@musetric/api/dom';
 import { type QueryClient, queryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 import { mutationOptions } from '../queryClient.js';

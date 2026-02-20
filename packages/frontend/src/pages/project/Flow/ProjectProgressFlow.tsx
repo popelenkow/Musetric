@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material';
-import { type api } from '@musetric/api';
+import { type api } from '@musetric/api/dom';
 import { type FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ProjectLayout } from '../ProjectPageLayout.js';

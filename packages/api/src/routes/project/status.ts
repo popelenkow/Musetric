@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createApiEvent } from '../common/apiEvent.js';
-import { createApiRoute, fastifyRoute } from '../common/index.js';
+import { createApiRoute } from '../common/index.js';
 import { processingSchema } from './common.js';
 
 export const base = createApiRoute({
@@ -15,7 +15,6 @@ export const base = createApiRoute({
     ),
 });
 
-export const route = fastifyRoute(base);
 export type Params = z.infer<typeof base.paramsSchema>;
 export type Request = z.infer<typeof base.requestSchema>;
 export type Response = z.infer<typeof base.responseSchema>;

@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { type api } from '@musetric/api';
+import { type api } from '@musetric/api/dom';
 import { type FC } from 'react';
 
 type SegmentNextProps = {

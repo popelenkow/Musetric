@@ -1,4 +1,4 @@
-import type { api } from '@musetric/api';
+import type { api } from '@musetric/api/node';
 import type { FastifyInstance } from 'fastify';
 
 export type ProcessingStepKind = 'validation' | 'separation' | 'transcription';

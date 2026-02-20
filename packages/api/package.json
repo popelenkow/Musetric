@@ -5,11 +5,17 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    ".": {
-      "monorepo": "./src/index.ts",
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+    "./dom": {
+      "monorepo": "./src/index.dom.ts",
+      "types": "./dist/index.dom.d.ts",
+      "import": "./dist/index.dom.js",
+      "default": "./dist/index.dom.js"
+    },
+    "./node": {
+      "monorepo": "./src/index.node.ts",
+      "types": "./dist/index.node.d.ts",
+      "import": "./dist/index.node.js",
+      "default": "./dist/index.node.js"
     }
   },
   "scripts": {
