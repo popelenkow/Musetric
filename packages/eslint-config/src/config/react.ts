@@ -1,10 +1,10 @@
+import type { ESLint, Linter } from 'eslint';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import reactRefreshPlugin from 'eslint-plugin-react-refresh';
-import { type ConfigWithExtends } from 'typescript-eslint';
 import { tsConfig } from './ts.js';
 
-export const reactConfig: ConfigWithExtends = {
+export const reactConfig: Linter.Config = {
   ...tsConfig,
   files: ['**/*.{ts,tsx}'],
   languageOptions: {
@@ -13,7 +13,8 @@ export const reactConfig: ConfigWithExtends = {
   plugins: {
     ...tsConfig.plugins,
     react: reactPlugin,
-    'react-hooks': reactHooksPlugin,
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    'react-hooks': reactHooksPlugin as ESLint.Plugin,
     'react-refresh': reactRefreshPlugin,
   },
   settings: {

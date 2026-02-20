@@ -1,19 +1,28 @@
-import tsEslint, { type ConfigWithExtends } from 'typescript-eslint';
+import type { Linter } from 'eslint';
+import tsEslint from 'typescript-eslint';
 import { jsConfig } from './js.js';
 
-export const tsConfig: ConfigWithExtends = {
+export const tsConfig: Linter.Config = {
   ...jsConfig,
-  extends: [...(jsConfig.extends ?? []), ...tsEslint.configs.recommended],
   files: ['**/*.ts'],
   languageOptions: {
     ...jsConfig.languageOptions,
+    parser: tsEslint.parser,
     parserOptions: {
       project: ['./tsconfig.json'],
       tsconfigRootDir: process.cwd(),
     },
   },
+  plugins: {
+    ...jsConfig.plugins,
+    '@typescript-eslint': tsEslint.plugin,
+  },
   rules: {
     ...jsConfig.rules,
+    ...tsEslint.configs.recommended.reduce<Linter.RulesRecord>(
+      (acc, config) => ({ ...acc, ...config.rules }),
+      {},
+    ),
     '@typescript-eslint/consistent-type-assertions': [
       'error',
       { assertionStyle: 'never' },

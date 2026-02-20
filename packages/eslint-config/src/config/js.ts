@@ -1,10 +1,9 @@
 import eslint from '@eslint/js';
+import type { ESLint, Linter } from 'eslint';
 import importX from 'eslint-plugin-import-x';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
-import { type ConfigWithExtends } from 'typescript-eslint';
 
-export const jsConfig: ConfigWithExtends = {
-  extends: [eslint.configs.recommended],
+export const jsConfig: Linter.Config = {
   files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
   ignores: ['dist/**/*', 'storage/**/*'],
   languageOptions: {
@@ -12,10 +11,12 @@ export const jsConfig: ConfigWithExtends = {
     sourceType: 'module',
   },
   plugins: {
-    'import-x': importX,
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    'import-x': importX as unknown as ESLint.Plugin,
     'simple-import-sort': simpleImportSort,
   },
   rules: {
+    ...eslint.configs.recommended.rules,
     'import-x/no-extraneous-dependencies': [
       'error',
       {
