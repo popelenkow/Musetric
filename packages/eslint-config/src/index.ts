@@ -13,6 +13,12 @@ export const config = () => {
     },
     jsConfig,
     ...getTsConfigs(cwd),
+    {
+      files: ['**/*.config.ts'],
+      rules: {
+        'no-restricted-exports': 'off',
+      },
+    },
   ];
 
   return configs;

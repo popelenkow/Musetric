@@ -10,5 +10,4 @@ const config: UserConfig = {
   keySeparator: false,
 };
 
-// eslint-disable-next-line no-restricted-exports
 export default config;

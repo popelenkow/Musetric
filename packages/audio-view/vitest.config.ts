@@ -3,7 +3,6 @@ import { defineConfig } from 'vitest/config';
 
 const isSkip = process.platform === 'linux';
 
-// eslint-disable-next-line no-restricted-exports
 export default defineConfig({
   test: {
     exclude: isSkip ? ['**/*'] : [],
