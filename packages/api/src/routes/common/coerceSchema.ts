@@ -39,7 +39,7 @@ const coerceValues = {
   },
 };
 
-const coerceValue = (value: unknown, rawSchema: z.ZodTypeAny) => {
+const coerceValue = (value: unknown, rawSchema: z.ZodType) => {
   const schema = unwrap(rawSchema);
 
   if (schema instanceof z.ZodNumber) {
