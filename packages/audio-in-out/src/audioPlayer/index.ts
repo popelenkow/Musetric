@@ -1,4 +1,4 @@
-import { createPortMessageHandler } from '@musetric/resource-utils/messagePort';
+import { createPortMessageHandler } from '@musetric/resource-utils/cross/messagePort';
 import { fromAudioBuffer } from './audioBuffer.js';
 import { createPlayerNode, getPlayerPort } from './port.js';
 

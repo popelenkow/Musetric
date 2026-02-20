@@ -4,7 +4,7 @@ import {
   createMessageHandler,
   type MessageHandlers,
 } from '../messageHandler.js';
-import { createTextProcessor, tryParseMessage } from './common.js';
+import { createTextProcessor, tryParseMessage } from './common.node.js';
 
 export type StdoutBinary = {
   mode: 'binary';

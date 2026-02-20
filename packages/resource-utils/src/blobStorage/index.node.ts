@@ -6,7 +6,7 @@ import {
   getBlobPath,
   getDirectoriesBlobIds,
   getDirectoryShardPaths,
-} from './common.js';
+} from './common.node.js';
 
 export type BlobFile = {
   blobId: string;

@@ -1,6 +1,5 @@
-import { type Logger } from '@musetric/resource-utils/logger';
-import type { MessageHandlers } from '@musetric/resource-utils/messageHandler';
-import { spawnScript } from '@musetric/resource-utils/spawnScript/index';
+import { type Logger, type MessageHandlers } from '@musetric/resource-utils';
+import { spawnScript } from '@musetric/resource-utils/node';
 
 export type SeparateAudioMessage =
   | {

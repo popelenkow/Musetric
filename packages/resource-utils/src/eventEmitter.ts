@@ -15,7 +15,9 @@ export const createEventEmitter = <TEvent>(): EventEmitter<TEvent> => {
   return {
     emit: (event) => {
       for (const listener of listeners) {
-        setTimeout(() => void listener(event), 0);
+        void Promise.resolve().then(() => {
+          void listener(event);
+        });
       }
     },
     subscribe: (listener) => {

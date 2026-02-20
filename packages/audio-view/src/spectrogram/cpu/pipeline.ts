@@ -1,4 +1,4 @@
-import { createCallLatest } from '@musetric/resource-utils/callLatest';
+import { createCallLatest } from '@musetric/resource-utils';
 import { type CpuFourierMode, cpuFouriers } from '../../fourier/index.js';
 import { type Pipeline } from '../pipeline.js';
 import { createDecibelify } from './decibelify.js';

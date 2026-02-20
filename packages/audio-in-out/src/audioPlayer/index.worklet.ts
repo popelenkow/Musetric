@@ -1,7 +1,7 @@
 import {
   createPortMessageHandler,
   wrapMessagePort,
-} from '@musetric/resource-utils/messagePort';
+} from '@musetric/resource-utils/cross/messagePort';
 import { type ChannelArrays, toArrays } from './buffer.es.js';
 import type { FromWorkletMessage, ToWorkletMessage } from './message.es.js';
 

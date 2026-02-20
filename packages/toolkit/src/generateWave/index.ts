@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
-import { type Logger } from '@musetric/resource-utils/logger';
+import { type Logger } from '@musetric/resource-utils';
 import { getDurationSeconds } from './getDuration.js';
 import { readPcm } from './readPcm.js';
 

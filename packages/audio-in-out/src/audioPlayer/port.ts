@@ -1,4 +1,4 @@
-import { wrapMessagePort } from '@musetric/resource-utils/messagePort';
+import { wrapMessagePort } from '@musetric/resource-utils/cross/messagePort';
 import playerWorkletUrl from './index.worklet.js?worker&url';
 import type { FromWorkletMessage, ToWorkletMessage } from './message.es.js';
 

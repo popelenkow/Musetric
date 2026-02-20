@@ -1,7 +1,7 @@
 import {
   type BlobStorage,
   createBlobStorage,
-} from '@musetric/resource-utils/blobStorage';
+} from '@musetric/resource-utils/node';
 import { type FastifyInstance } from 'fastify';
 import { envs } from '../common/envs.js';
 

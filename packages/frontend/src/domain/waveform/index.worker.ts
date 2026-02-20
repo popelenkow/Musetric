@@ -4,7 +4,7 @@ import { type ViewColors, waveform } from '@musetric/audio-view';
 import {
   createPortMessageHandler,
   wrapMessagePort,
-} from '@musetric/resource-utils/messagePort';
+} from '@musetric/resource-utils/cross/messagePort';
 import axios from 'axios';
 import {
   type FromWaveformWorkerMessage,

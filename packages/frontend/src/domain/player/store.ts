@@ -1,5 +1,5 @@
 import { type AudioPlayer, createAudioPlayer } from '@musetric/audio-in-out';
-import { createSingletonManager } from '@musetric/resource-utils/singletonManager';
+import { createSingletonManager } from '@musetric/resource-utils';
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 

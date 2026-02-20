@@ -1,7 +1,7 @@
-import { type BlobStorage } from '../blobStorage.js';
+import { type BlobStorage } from '../blobStorage/index.node.js';
 import { createCallLatest } from '../callLatest.js';
-import { createScheduler, type Scheduler } from '../scheduler.js';
-import { collectGarbage } from './common.js';
+import { createScheduler, type Scheduler } from '../scheduler.cross.js';
+import { collectGarbage } from './common.node.js';
 
 export type CreateBlobGarbageCollectorOptions = {
   blobStorage: BlobStorage;

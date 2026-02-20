@@ -1,7 +1,7 @@
 import { mkdir } from 'node:fs/promises';
 import { dirname } from 'node:path';
-import { type Logger } from '@musetric/resource-utils/logger';
-import { spawnScript } from '@musetric/resource-utils/spawnScript/index';
+import { type Logger } from '@musetric/resource-utils';
+import { spawnScript } from '@musetric/resource-utils/node';
 
 const fragmentDurationSeconds = 2;
 
