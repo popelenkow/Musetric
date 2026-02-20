@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+import type { Linter } from 'eslint';
 import globals from 'globals';
-import { type ConfigWithExtends } from 'typescript-eslint';
 import { reactConfig } from './config/react.js';
 import { tsConfig } from './config/ts.js';
 
@@ -67,7 +67,7 @@ const tsConfigItems: TsConfigItem[] = [
   },
 ];
 
-const createTsConfig = (item: TsConfigItem, cwd: string): ConfigWithExtends => {
+const createTsConfig = (item: TsConfigItem, cwd: string): Linter.Config => {
   const base = item.type === 'react' ? reactConfig : tsConfig;
 
   return {
@@ -86,7 +86,7 @@ const createTsConfig = (item: TsConfigItem, cwd: string): ConfigWithExtends => {
   };
 };
 
-export const getTsConfigs = (cwd: string): ConfigWithExtends[] =>
+export const getTsConfigs = (cwd: string): Linter.Config[] =>
   tsConfigItems
     .filter((item) => existsSync(resolve(cwd, item.path)))
     .map((item) => createTsConfig(item, cwd));
