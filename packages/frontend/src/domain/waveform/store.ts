@@ -1,4 +1,4 @@
-import { type api } from '@musetric/api/dom';
+import { type api } from '@musetric/api';
 import { resizeCanvas, subscribeResizeObserver } from '@musetric/audio-view';
 import {
   createPortMessageHandler,

@@ -1,4 +1,4 @@
-import { api } from '@musetric/api/dom';
+import { api } from '@musetric/api';
 import { type ViewColors, waveform } from '@musetric/audio-view';
 import {
   createPortMessageHandler,
