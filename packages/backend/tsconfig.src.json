@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.dom.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "types": ["node"]
   }

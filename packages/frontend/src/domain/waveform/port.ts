@@ -3,7 +3,7 @@ import waveformWorkerUrl from './index.worker.ts?worker&url';
 import {
   type FromWaveformWorkerMessage,
   type ToWaveformWorkerMessage,
-} from './protocol.shared.js';
+} from './protocol.es.js';
 
 export const createWaveformWorker = () => {
   const worker = new Worker(waveformWorkerUrl, { type: 'module' });

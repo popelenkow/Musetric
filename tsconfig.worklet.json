@@ -3,5 +3,6 @@
   "compilerOptions": {
     "types": ["audioworklet"]
   },
-  "include": ["${configDir}/src/**/*.worklet.ts"]
+  "include": ["${configDir}/src/**/*.worklet.ts"],
+  "exclude": []
 }

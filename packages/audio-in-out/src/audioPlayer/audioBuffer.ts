@@ -1,4 +1,4 @@
-import { type ChannelBuffers } from './buffer.shared.js';
+import { type ChannelBuffers } from './buffer.es.js';
 
 export const fromAudioBuffer = (buffer: AudioBuffer): ChannelBuffers => {
   const first = new Float32Array(buffer.getChannelData(0)).buffer;

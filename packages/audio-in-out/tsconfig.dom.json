@@ -1,4 +1,0 @@
-{
-  "extends": "../../tsconfig.dom.json",
-  "references": [{ "path": "./tsconfig.shared.json" }]
-}

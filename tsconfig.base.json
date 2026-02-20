@@ -33,5 +33,12 @@
     "incremental": true,
     "customConditions": ["monorepo"]
   },
-  "include": ["${configDir}/src", "${configDir}/src/**/*.json"]
+  "include": ["${configDir}/src", "${configDir}/src/**/*.json"],
+  "exclude": [
+    "${configDir}/src/**/*.es.ts",
+    "${configDir}/src/**/*.dom.ts",
+    "${configDir}/src/**/*.node.ts",
+    "${configDir}/src/**/*.worker.ts",
+    "${configDir}/src/**/*.worklet.ts"
+  ]
 }
