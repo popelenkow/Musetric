@@ -1,4 +1,4 @@
-import { type api } from '@musetric/api';
+import { type api } from '@musetric/api/dom';
 import { type FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ViewError } from '../../components/ViewError.js';
