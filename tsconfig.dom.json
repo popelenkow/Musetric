@@ -3,9 +3,6 @@
   "compilerOptions": {
     "lib": ["ES2024", "DOM"]
   },
-  "exclude": [
-    "${configDir}/src/**/*.shared.ts",
-    "${configDir}/src/**/*.worker.ts",
-    "${configDir}/src/**/*.worklet.ts"
-  ]
+  "include": ["${configDir}/src/**/*.dom.ts"],
+  "exclude": []
 }

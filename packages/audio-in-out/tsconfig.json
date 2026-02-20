@@ -1,9 +1,9 @@
 {
   "files": [],
   "references": [
-    { "path": "./tsconfig.shared.json" },
+    { "path": "./tsconfig.es.json" },
+    { "path": "./tsconfig.src.json" },
     { "path": "./tsconfig.worklet.json" },
-    { "path": "./tsconfig.dom.json" },
     { "path": "./tsconfig.script.json" }
   ]
 }

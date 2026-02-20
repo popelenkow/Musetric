@@ -2,8 +2,8 @@ import {
   createPortMessageHandler,
   wrapMessagePort,
 } from '@musetric/resource-utils/messagePort';
-import { type ChannelArrays, toArrays } from './buffer.shared.js';
-import type { FromWorkletMessage, ToWorkletMessage } from './message.shared.js';
+import { type ChannelArrays, toArrays } from './buffer.es.js';
+import type { FromWorkletMessage, ToWorkletMessage } from './message.es.js';
 
 type Process = (output: Float32Array<ArrayBuffer>[]) => boolean;
 

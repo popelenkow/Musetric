@@ -1,4 +1,4 @@
-import { type ChannelBuffers } from './buffer.shared.js';
+import { type ChannelBuffers } from './buffer.es.js';
 
 export type ToWorkletMessage =
   | { type: 'play'; buffers: ChannelBuffers; offset: number }

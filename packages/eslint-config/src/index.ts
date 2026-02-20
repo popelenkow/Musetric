@@ -2,8 +2,6 @@ import type { Linter } from 'eslint';
 import { jsConfig } from './config/js.js';
 import { getTsConfigs } from './tsConfigs.js';
 
-export type { ConfigType } from './tsConfigs.js';
-
 export const config = () => {
   const cwd = process.cwd();
 

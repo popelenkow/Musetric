@@ -3,5 +3,6 @@
   "compilerOptions": {
     "lib": ["ES2024", "WebWorker"]
   },
-  "include": ["${configDir}/src/**/*.worker.ts"]
+  "include": ["${configDir}/src/**/*.worker.ts"],
+  "exclude": []
 }

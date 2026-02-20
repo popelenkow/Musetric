@@ -1,6 +1,6 @@
 import { wrapMessagePort } from '@musetric/resource-utils/messagePort';
 import playerWorkletUrl from './index.worklet.js?worker&url';
-import type { FromWorkletMessage, ToWorkletMessage } from './message.shared.js';
+import type { FromWorkletMessage, ToWorkletMessage } from './message.es.js';
 
 export const createPlayerNode = async (
   context: AudioContext,

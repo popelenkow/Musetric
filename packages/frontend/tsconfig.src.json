@@ -1,8 +1,9 @@
 {
-  "extends": "../../tsconfig.worker.json",
+  "extends": "../../tsconfig.base.json",
   "references": [{ "path": "./tsconfig.es.json" }],
   "compilerOptions": {
-    "lib": ["ES2024", "DOM", "WebWorker"],
+    "lib": ["ES2024", "DOM"],
+    "jsx": "react-jsx",
     "types": ["node", "@webgpu/types", "vite/client"]
   }
 }
