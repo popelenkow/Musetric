@@ -5,9 +5,6 @@ export type ApiEvent<Path, EventSchema> = {
   path: Path;
   schema: EventSchema;
   stringify: (event: z.infer<EventSchema>) => string;
-  subscribe: (
-    callback: (event: z.infer<EventSchema>) => void,
-  ) => UnsubscribeApiEvent;
 };
 
 export type CreateApiEventOptions<Path, EventSchema> = {
@@ -20,7 +17,7 @@ export const createApiEvent = <
   EventSchema extends z.ZodType,
 >(
   options: CreateApiEventOptions<Path, EventSchema>,
-) => {
+): ApiEvent<Path, EventSchema> => {
   const { path, schema } = options;
 
   return {
@@ -29,20 +26,6 @@ export const createApiEvent = <
     stringify: (event: z.infer<EventSchema>): string => {
       const validatedEvent = schema.parse(event);
       return JSON.stringify(validatedEvent);
-    },
-    subscribe: (callback: (event: z.infer<EventSchema>) => void) => {
-      const source = new EventSource(path);
-      source.onmessage = (event) => {
-        const parsedEvent = JSON.parse(event.data);
-        const validatedEvent = schema.parse(parsedEvent);
-        callback(validatedEvent);
-      };
-      source.onerror = (error) => {
-        console.error('API Event SSE error', error);
-      };
-      return () => {
-        source.close();
-      };
     },
   };
 };

@@ -1,7 +1,6 @@
 import { z } from 'zod';
-import { createApiEvent } from './common/apiEvent.js';
-import { axiosRequest } from './common/axiosRequest.js';
-import { createApiRoute, fastifyRoute } from './common/index.js';
+import { createApiEvent } from '../common/apiEvent.js';
+import { createApiRoute } from '../common/apiRoute.js';
 import { preview } from './index.js';
 
 export const downloadStatusSchema = z.enum(['processing', 'cached', 'done']);
@@ -56,8 +55,6 @@ export namespace list {
     requestSchema: z.void(),
     responseSchema: z.array(itemSchema),
   });
-  export const route = fastifyRoute(base);
-  export const request = axiosRequest(base);
   export type Params = z.infer<typeof base.paramsSchema>;
   export type Request = z.infer<typeof base.requestSchema>;
   export type Response = z.infer<typeof base.responseSchema>;
@@ -71,8 +68,6 @@ export namespace get {
     requestSchema: z.void(),
     responseSchema: itemSchema,
   });
-  export const route = fastifyRoute(base);
-  export const request = axiosRequest(base);
   export type Params = z.infer<typeof base.paramsSchema>;
   export type Request = z.infer<typeof base.requestSchema>;
   export type Response = z.infer<typeof base.responseSchema>;
@@ -90,7 +85,6 @@ export namespace status {
         'Server-Sent Events stream (text/event-stream) with JSON encoded project status updates and heartbeat events.',
       ),
   });
-  export const route = fastifyRoute(base);
   export type Params = z.infer<typeof base.paramsSchema>;
   export type Request = z.infer<typeof base.requestSchema>;
   export type Response = z.infer<typeof base.responseSchema>;
@@ -118,8 +112,6 @@ export namespace create {
     responseSchema: itemSchema,
     isMultipart: true,
   });
-  export const route = fastifyRoute(base);
-  export const request = axiosRequest(base);
   export type Params = z.infer<typeof base.paramsSchema>;
   export type Request = z.infer<typeof base.requestSchema>;
   export type Response = z.infer<typeof base.responseSchema>;
@@ -140,8 +132,6 @@ export namespace edit {
     responseSchema: itemSchema,
     isMultipart: true,
   });
-  export const route = fastifyRoute(base);
-  export const request = axiosRequest(base);
   export type Params = z.infer<typeof base.paramsSchema>;
   export type Request = z.infer<typeof base.requestSchema>;
   export type Response = z.infer<typeof base.responseSchema>;
@@ -155,8 +145,6 @@ export namespace remove {
     requestSchema: z.void(),
     responseSchema: z.void(),
   });
-  export const route = fastifyRoute(base);
-  export const request = axiosRequest(base);
   export type Params = z.infer<typeof base.paramsSchema>;
   export type Request = z.infer<typeof base.requestSchema>;
   export type Response = z.infer<typeof base.responseSchema>;

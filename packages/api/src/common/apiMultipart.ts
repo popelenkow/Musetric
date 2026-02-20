@@ -1,4 +1,4 @@
-export namespace multipart {
+export namespace apiMultipart {
   export const data = <T extends object>(object: T) => {
     const formData = new FormData();
     Object.entries(object).forEach((entry) => {

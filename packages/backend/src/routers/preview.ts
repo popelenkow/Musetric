@@ -1,4 +1,4 @@
-import { api } from '@musetric/api';
+import { api, fastifyRoute } from '@musetric/api';
 import { type FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound.js';
 import { handleCachedFile } from '../common/cachedFile.js';
@@ -9,7 +9,7 @@ export const previewRouter: FastifyPluginAsyncZod = async (app) => {
   });
 
   app.route({
-    ...api.preview.get.route,
+    ...fastifyRoute(api.preview.get.base),
     handler: async (request, reply) => {
       const { previewId } = request.params;
       const preview = await app.db.preview.get(previewId);

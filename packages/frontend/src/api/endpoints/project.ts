@@ -1,4 +1,4 @@
-import { api } from '@musetric/api';
+import { api, requestWithAxios, subscribeEventSource } from '@musetric/api';
 import { type QueryClient, queryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 import { mutationOptions } from '../queryClient.js';
@@ -6,20 +6,20 @@ import { mutationOptions } from '../queryClient.js';
 export const list = () =>
   queryOptions({
     queryKey: ['project', 'list'],
-    queryFn: async () => api.project.list.request(axios, {}),
+    queryFn: async () => requestWithAxios(axios, api.project.list.base, {}),
   });
 
 export const get = (projectId: number) =>
   queryOptions({
     queryKey: ['project', 'get', projectId],
     queryFn: async () =>
-      api.project.get.request(axios, {
+      requestWithAxios(axios, api.project.get.base, {
         params: { projectId },
       }),
   });
 
 export const subscribeToStatus = (queryClient: QueryClient) =>
-  api.project.status.event.subscribe((event) => {
+  subscribeEventSource(api.project.status.event, (event) => {
     const applyEvent = (projectItem: api.project.Item): api.project.Item => ({
       ...projectItem,
       processing: event.processing,
@@ -48,7 +48,7 @@ export const create = (queryClient: QueryClient) =>
   mutationOptions({
     mutationKey: ['project', 'create'],
     mutationFn: async (data: api.project.create.Request) =>
-      api.project.create.request(axios, {
+      requestWithAxios(axios, api.project.create.base, {
         data,
       }),
     onSuccess: (newProject) => {
@@ -63,7 +63,7 @@ export const edit = (queryClient: QueryClient, projectId: number) =>
   mutationOptions({
     mutationKey: ['project', 'edit', projectId],
     mutationFn: async (data: api.project.edit.Request) =>
-      api.project.edit.request(axios, {
+      requestWithAxios(axios, api.project.edit.base, {
         params: { projectId },
         data,
       }),
@@ -78,7 +78,7 @@ export const remove = (queryClient: QueryClient, projectId: number) =>
   mutationOptions({
     mutationKey: ['project', 'remove', projectId],
     mutationFn: async () =>
-      api.project.remove.request(axios, {
+      requestWithAxios(axios, api.project.remove.base, {
         params: { projectId },
       }),
     onSuccess: () => {

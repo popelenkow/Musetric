@@ -1,4 +1,4 @@
-import { api } from '@musetric/api';
+import { api, fastifyRoute } from '@musetric/api';
 import { type FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound.js';
 import { handleCachedFile } from '../common/cachedFile.js';
@@ -10,7 +10,7 @@ export const audioDeliveryRouter: FastifyPluginAsyncZod = async (app) => {
   });
 
   app.route({
-    ...api.audioDelivery.get.route,
+    ...fastifyRoute(api.audioDelivery.get.base),
     handler: async (request, reply) => {
       const { projectId, type } = request.params;
       const audio = await app.db.audioDelivery.get(projectId, type);

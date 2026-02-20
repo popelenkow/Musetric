@@ -1,7 +1,7 @@
 import axios, { type AxiosError } from 'axios';
 import { z } from 'zod';
 
-export namespace error {
+export namespace apiError {
   export const responseSchema = z.object({
     message: z.string(),
   });
