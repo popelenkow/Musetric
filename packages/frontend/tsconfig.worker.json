@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.worker.json",
+  "references": [{ "path": "./tsconfig.shared.json" }],
+  "compilerOptions": {
+    "lib": ["ES2024", "DOM", "WebWorker"],
+    "types": ["node", "@webgpu/types", "vite/client"]
+  }
+}

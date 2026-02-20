@@ -1,10 +1,6 @@
-import {
-  createPortMessageHandler,
-  wrapMessagePort,
-} from '@musetric/resource-utils/messagePort';
-import { fromAudioBuffer } from './buffer.js';
-import { type FromWorkletEvent, type ToWorkletEvent } from './event.js';
-import { createPlayerNode } from './node.js';
+import { createPortMessageHandler } from '@musetric/resource-utils/messagePort';
+import { fromAudioBuffer } from './audioBuffer.js';
+import { createPlayerNode, getPlayerPort } from './port.js';
 
 export type AudioPlayer = {
   context: AudioContext;
@@ -23,10 +19,7 @@ export const createAudioPlayer = async (
 ): Promise<AudioPlayer> => {
   const context = new AudioContext();
   const node = await createPlayerNode(context);
-  const port = wrapMessagePort(node.port).typed<
-    FromWorkletEvent,
-    ToWorkletEvent
-  >();
+  const port = getPlayerPort(node);
 
   port.onmessage = createPortMessageHandler({
     ended: () => options.end?.(),

@@ -8,7 +8,7 @@ import axios from 'axios';
 import {
   type FromWaveformWorkerMessage,
   type ToWaveformWorkerMessage,
-} from './protocol.js';
+} from './protocol.shared.js';
 
 declare const self: DedicatedWorkerGlobalScope;
 

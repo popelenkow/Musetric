@@ -1,7 +1,4 @@
 import { config } from '@musetric/eslint-config';
-export default [
-  ...config('node'),
-  {
-    ignores: ['**/storage/**'],
-  },
-];
+
+// eslint-disable-next-line no-restricted-exports
+export default config();

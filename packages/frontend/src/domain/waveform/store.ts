@@ -12,7 +12,7 @@ import { createWaveformWorker } from './port.js';
 import {
   type FromWaveformWorkerMessage,
   type ToWaveformWorkerMessage,
-} from './protocol.js';
+} from './protocol.shared.js';
 
 export type WaveformState = {
   worker?: TypedMessagePort<

@@ -5,6 +5,7 @@
     "types": [],
     "module": "node20",
     "moduleResolution": "node16",
+    "rootDir": "${configDir}/src",
     "outDir": "${configDir}/dist",
     "declaration": true,
     "declarationMap": true,
@@ -20,7 +21,7 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
+    "baseUrl": "${configDir}",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
@@ -32,5 +33,5 @@
     "incremental": true,
     "customConditions": ["monorepo"]
   },
-  "exclude": ["node_modules", "**/dist", ".venv", "**/backend/storage"]
+  "include": ["${configDir}/src", "${configDir}/src/**/*.json"]
 }

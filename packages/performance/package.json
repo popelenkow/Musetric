@@ -4,10 +4,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "project:build": "tsc --project tsconfig.build.json",
+    "project:build": "tsc --build tsconfig.build.json",
     "dev:start": "vite -- musetric-performance",
     "dev:stop": "kill-process musetric-performance",
-    "check:ts": "tsc --noEmit",
+    "check:ts": "tsc --build",
     "check:lint": "eslint . --cache",
     "check:lint:fix": "eslint . --fix --cache"
   },

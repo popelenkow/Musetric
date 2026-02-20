@@ -7,7 +7,7 @@
     "dev:start": "vite -- musetric-frontend",
     "dev:stop": "kill-process musetric-frontend",
     "project:build": "vite build && cpx \"dist/**/*\" ../backend/storage/public --clean",
-    "check:ts": "tsc --noEmit",
+    "check:ts": "tsc --build",
     "check:lint": "eslint . --cache",
     "check:lint:fix": "eslint . --fix --cache",
     "check:translations": "i18next -c ./i18next.parser.config.ts --fail-on-update",

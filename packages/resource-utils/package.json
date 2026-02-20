@@ -13,8 +13,8 @@
     }
   },
   "scripts": {
-    "project:build": "tsc --project tsconfig.build.json",
-    "check:ts": "tsc --noEmit",
+    "project:build": "tsc --build tsconfig.build.json",
+    "check:ts": "tsc --build",
     "check:lint": "eslint . --cache",
     "check:lint:fix": "eslint . --fix --cache",
     "test": "vitest run"
