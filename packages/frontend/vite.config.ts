@@ -5,7 +5,6 @@ import mkcertRaw from 'vite-plugin-mkcert';
 // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 const mkcert = mkcertRaw as unknown as typeof mkcertRaw.default;
 
-// eslint-disable-next-line no-restricted-exports
 export default defineConfig({
   base: '/',
   mode: 'production',
