@@ -1,4 +1,4 @@
-export const endpoint = (
+export const apiEndpoint = (
   route: string,
   params: Record<string, string | number> = {},
 ) =>

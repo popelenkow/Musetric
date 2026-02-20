@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import type z from 'zod';
-import { endpoint } from './endpoint.js';
-import { multipart } from './multipart.js';
+import { apiEndpoint } from './apiEndpoint.js';
 
 export type RequestMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
@@ -17,7 +15,6 @@ export type ApiRoute<
   paramsSchema: ParamsSchema;
   endpoint: (params: z.infer<ParamsSchema>) => string;
   requestSchema: RequestSchema;
-  request: (data: z.infer<RequestSchema>) => z.infer<RequestSchema> | FormData;
   responseSchema: ResponseSchema;
   isMultipart?: boolean;
 };
@@ -65,10 +62,9 @@ export const createApiRoute = <
     path,
     paramsSchema,
     endpoint: (params: z.infer<ParamsSchema>) =>
-      endpoint(path, params as Record<string, string | number>),
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      apiEndpoint(path, params as Record<string, string | number>),
     requestSchema,
-    request: (data: z.infer<RequestSchema>) =>
-      isMultipart ? multipart.data(data as object) : data,
     responseSchema,
     isMultipart,
   };

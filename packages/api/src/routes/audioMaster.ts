@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { axiosRequest } from './common/axiosRequest.js';
-import { createApiRoute, fastifyRoute } from './common/index.js';
+import { createApiRoute } from '../common/apiRoute.js';
 
 export const typeSchema = z.enum(['source', 'lead', 'backing', 'instrumental']);
 export type Type = z.infer<typeof typeSchema>;
@@ -16,8 +15,6 @@ export namespace get {
     requestSchema: z.void(),
     responseSchema: z.instanceof(Uint8Array<ArrayBuffer>),
   });
-  export const route = fastifyRoute(base);
-  export const request = axiosRequest(base);
   export type Params = z.infer<typeof base.paramsSchema>;
   export type Request = z.infer<typeof base.requestSchema>;
   export type Response = z.infer<typeof base.responseSchema>;

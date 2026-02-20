@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { axiosRequest } from './common/axiosRequest.js';
-import { createApiRoute, fastifyRoute } from './common/index.js';
+import { createApiRoute } from '../common/apiRoute.js';
 
 export const itemSchema = z.file({});
 export type Item = z.infer<typeof itemSchema>;
@@ -15,8 +14,6 @@ export namespace get {
   });
   export const url = (previewId?: number) =>
     previewId !== undefined ? base.endpoint({ previewId }) : undefined;
-  export const route = fastifyRoute(base);
-  export const request = axiosRequest(base);
   export type Params = z.infer<typeof base.paramsSchema>;
   export type Request = z.infer<typeof base.requestSchema>;
   export type Response = z.infer<typeof base.responseSchema>;

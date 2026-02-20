@@ -1,4 +1,4 @@
-import { api } from '@musetric/api';
+import { api, fastifyRoute } from '@musetric/api';
 import { type FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { assertFound } from '../common/assertFound.js';
 import {
@@ -14,7 +14,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   });
 
   app.route({
-    ...api.project.list.route,
+    ...fastifyRoute(api.project.list.base),
     handler: async () => {
       const all = await app.db.project.list();
       return await Promise.all(
@@ -31,7 +31,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   });
 
   app.route({
-    ...api.project.get.route,
+    ...fastifyRoute(api.project.get.base),
     handler: async (request) => {
       const { projectId } = request.params;
       const found = await app.db.project.get(projectId);
@@ -47,7 +47,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   });
 
   app.route({
-    ...api.project.status.route,
+    ...fastifyRoute(api.project.status.base),
     handler: (request, reply) => {
       const unsubscribe = app.processingWorker.emitter.subscribe((event) => {
         reply.sse({
@@ -71,7 +71,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   });
 
   app.route({
-    ...api.project.create.route,
+    ...fastifyRoute(api.project.create.base),
     handler: async (request) => {
       const { song, name, preview } = request.body;
 
@@ -98,7 +98,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   });
 
   app.route({
-    ...api.project.edit.route,
+    ...fastifyRoute(api.project.edit.base),
     handler: async (request) => {
       const { projectId } = request.params;
       const { name, preview, withoutPreview } = request.body;
@@ -128,7 +128,7 @@ export const projectRouter: FastifyPluginAsyncZod = async (app) => {
   });
 
   app.route({
-    ...api.project.remove.route,
+    ...fastifyRoute(api.project.remove.base),
     handler: async (request, reply) => {
       const { projectId } = request.params;
       const isRemoved = await app.db.project.remove(projectId);

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import type { Readable } from 'stream';
 import z from 'zod';
+import { apiError } from './apiError.js';
 import { type ApiRoute, type RequestMethod } from './apiRoute.js';
 import { coerceSchema } from './coerceSchema.js';
-import { error } from './error.js';
 
 const stream = {} as {
   202: z.ZodCustom<Readable, Readable>;
@@ -57,8 +57,8 @@ export const fastifyRoute = <
       response: {
         ...stream,
         200: getResponse(),
-        400: error.responseSchema,
-        404: error.responseSchema,
+        400: apiError.responseSchema,
+        404: apiError.responseSchema,
       },
     },
   };

@@ -1,4 +1,4 @@
-import { api } from '@musetric/api';
+import { apiError } from '@musetric/api';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { type FC, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +25,7 @@ export const ProjectPage: FC = () => {
   );
 
   if (project.status === 'error') {
-    const errorMessage = api.error.getMessage(project.error);
+    const errorMessage = apiError.getMessage(project.error);
 
     return (
       <ProjectLayout>

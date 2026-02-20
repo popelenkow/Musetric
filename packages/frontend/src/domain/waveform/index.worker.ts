@@ -1,4 +1,4 @@
-import { api } from '@musetric/api';
+import { api, requestWithAxios } from '@musetric/api';
 import { type ViewColors, waveform } from '@musetric/audio-view';
 import {
   createPortMessageHandler,
@@ -44,7 +44,7 @@ const render = (): boolean => {
 
 const loadWave = async (projectId: number, waveType: api.wave.Type) => {
   try {
-    const wave = await api.wave.get.request(axios, {
+    const wave = await requestWithAxios(axios, api.wave.get.base, {
       params: { projectId, type: waveType },
     });
     state.wave = wave;
