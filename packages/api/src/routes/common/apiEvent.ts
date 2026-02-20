@@ -17,7 +17,7 @@ export type CreateApiEventOptions<Path, EventSchema> = {
 
 export const createApiEvent = <
   Path extends string,
-  EventSchema extends z.ZodTypeAny,
+  EventSchema extends z.ZodType,
 >(
   options: CreateApiEventOptions<Path, EventSchema>,
 ) => {
