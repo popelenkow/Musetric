@@ -5,7 +5,7 @@ import {
   subscribeResizeObserver,
   type ViewSize,
 } from '@musetric/audio-view';
-import { createSingletonManager } from '@musetric/resource-utils/singletonManager';
+import { createSingletonManager } from '@musetric/resource-utils';
 import { create } from 'zustand';
 import { usePlayerStore } from '../player/store.js';
 import { useSettingsStore } from '../settings/store.js';

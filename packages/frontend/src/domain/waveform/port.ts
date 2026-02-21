@@ -1,4 +1,4 @@
-import { wrapMessagePort } from '@musetric/resource-utils/messagePort';
+import { wrapMessagePort } from '@musetric/resource-utils/cross/messagePort';
 import waveformWorkerUrl from './index.worker.ts?worker&url';
 import {
   type FromWaveformWorkerMessage,

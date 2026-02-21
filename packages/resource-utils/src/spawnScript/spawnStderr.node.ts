@@ -1,7 +1,7 @@
 import type { ChildProcessWithoutNullStreams } from 'node:child_process';
 import type { Logger } from '../logger.js';
-import { createTextProcessor, tryParseMessage } from './common.js';
-import type { LogInfo } from './spawnScript.js';
+import { createTextProcessor, tryParseMessage } from './common.node.js';
+import type { LogInfo } from './spawnScript.node.js';
 
 export type StderrBinary = {
   mode: 'binary';

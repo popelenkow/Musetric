@@ -1,10 +1,10 @@
 import { type api } from '@musetric/api';
 import { resizeCanvas, subscribeResizeObserver } from '@musetric/audio-view';
+import { createSingletonManager } from '@musetric/resource-utils';
 import {
   createPortMessageHandler,
   type TypedMessagePort,
-} from '@musetric/resource-utils/messagePort';
-import { createSingletonManager } from '@musetric/resource-utils/singletonManager';
+} from '@musetric/resource-utils/cross/messagePort';
 import { create } from 'zustand';
 import { usePlayerStore } from '../player/store.js';
 import { useSettingsStore } from '../settings/store.js';

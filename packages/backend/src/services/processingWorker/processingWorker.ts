@@ -1,12 +1,10 @@
 import {
+  bindLogger,
   createEventEmitter,
   type EventEmitter,
-} from '@musetric/resource-utils/eventEmitter';
-import { bindLogger } from '@musetric/resource-utils/logger';
-import {
-  createSingleWorker,
-  type SingleWorker,
-} from '@musetric/resource-utils/singleWorker';
+} from '@musetric/resource-utils';
+import { type Scheduler } from '@musetric/resource-utils/cross/scheduler';
+import { createSingleWorker } from '@musetric/resource-utils/cross/singleWorker';
 import { type FastifyInstance } from 'fastify';
 import { envs } from '../../common/envs.js';
 import { createSeparationWorker } from './processingSeparation.js';
@@ -17,7 +15,7 @@ import {
 import { createTranscriptionWorker } from './processingTranscription.js';
 import { createValidationWorker } from './processingValidation.js';
 
-export type ProcessingWorker = SingleWorker & {
+export type ProcessingWorker = Scheduler & {
   emitter: EventEmitter<ProcessingWorkerEvent>;
   getProcessingState: (
     projectId: number,

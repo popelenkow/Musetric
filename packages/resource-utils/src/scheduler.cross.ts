@@ -7,7 +7,7 @@ export const createScheduler = (
   run: () => Promise<void>,
   timeout: number,
 ): Scheduler => {
-  let intervalId: NodeJS.Timeout | undefined = undefined;
+  let intervalId: ReturnType<typeof setInterval> | undefined = undefined;
 
   const ref: Scheduler = {
     start: () => {

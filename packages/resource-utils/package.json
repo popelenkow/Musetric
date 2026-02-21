@@ -5,11 +5,23 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    "./*": {
-      "monorepo": "./src/*.ts",
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.js",
-      "default": "./dist/*.js"
+    ".": {
+      "monorepo": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./cross/*": {
+      "monorepo": "./src/*.cross.ts",
+      "types": "./dist/*.cross.d.ts",
+      "import": "./dist/*.cross.js",
+      "default": "./dist/*.cross.js"
+    },
+    "./node": {
+      "monorepo": "./src/index.node.ts",
+      "types": "./dist/index.node.d.ts",
+      "import": "./dist/index.node.js",
+      "default": "./dist/index.node.js"
     }
   },
   "scripts": {

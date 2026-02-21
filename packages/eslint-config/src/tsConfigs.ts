@@ -21,11 +21,17 @@ const tsConfigItems: TsConfigItem[] = [
     files: ['src/**/*.{ts,tsx}'],
     ignores: [
       'src/**/*.es.ts',
+      'src/**/*.cross.ts',
       'src/**/*.dom.ts',
       'src/**/*.node.ts',
       'src/**/*.worker.ts',
       'src/**/*.worklet.ts',
     ],
+  },
+  {
+    path: './tsconfig.cross.json',
+    files: ['src/**/*.cross.ts'],
+    ignores: [],
   },
   {
     path: './tsconfig.dom.json',

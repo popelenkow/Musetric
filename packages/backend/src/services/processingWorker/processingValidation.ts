@@ -1,5 +1,4 @@
-import { type EventEmitter } from '@musetric/resource-utils/eventEmitter';
-import { type Logger } from '@musetric/resource-utils/logger';
+import { type EventEmitter, type Logger } from '@musetric/resource-utils';
 import { convertToFlac } from '@musetric/toolkit';
 import { type FastifyInstance } from 'fastify';
 import { envs } from '../../common/envs.js';

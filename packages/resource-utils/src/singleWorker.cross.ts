@@ -1,16 +1,14 @@
 import { createCallLatest } from './callLatest.js';
-import { createScheduler, type Scheduler } from './scheduler.js';
+import { createScheduler, type Scheduler } from './scheduler.cross.js';
 
 export type CreateSingleWorkerOptions = {
   intervalMs: number;
   runNext: () => Promise<void>;
 };
 
-export type SingleWorker = Scheduler;
-
 export const createSingleWorker = (
   options: CreateSingleWorkerOptions,
-): SingleWorker => {
+): Scheduler => {
   const { intervalMs, runNext } = options;
 
   const run = async () => {

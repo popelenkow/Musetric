@@ -1,8 +1,8 @@
 import { spawn } from 'node:child_process';
 import type { Logger, LogLevel } from '../logger.js';
-import { SpawnScriptError } from './error.js';
-import { attachStderr, type StderrOptions } from './spawnStderr.js';
-import { attachStdout, type StdoutOptions } from './spawnStdout.js';
+import { SpawnScriptError } from './error.node.js';
+import { attachStderr, type StderrOptions } from './spawnStderr.node.js';
+import { attachStdout, type StdoutOptions } from './spawnStdout.node.js';
 
 export type LogInfo = {
   level: LogLevel;
