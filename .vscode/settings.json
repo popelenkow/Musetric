@@ -21,7 +21,9 @@
   },
   "files.eol": "\n",
   "files.exclude": {
-    "**/.yarn": true
+    "**/.yarn": true,
+    "**/*.tsbuildinfo": true,
+    "**/.eslintcache": true
   },
   "files.watcherExclude": {
     "**/node_modules/**": true,
