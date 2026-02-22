@@ -1,4 +1,4 @@
-import { type ViewSize } from '../../../common/index.js';
+import { type ViewSize } from '../../../common/viewSize.js';
 
 export type StateTexture = {
   instance: GPUTexture;

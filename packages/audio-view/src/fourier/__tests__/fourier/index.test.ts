@@ -2,9 +2,9 @@ import { afterAll, describe, it } from 'vitest';
 import {
   type ComplexArray,
   complexArrayFrom,
-  createComplexGpuBufferReader,
-  createGpuContext,
-} from '../../../common/index.js';
+} from '../../../common/complexArray.js';
+import { createComplexGpuBufferReader } from '../../../common/gpuBufferReader/index.js';
+import { createGpuContext } from '../../../common/gpuContext.js';
 import {
   allCpuFourierModes,
   allGpuFourierModes,

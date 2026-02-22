@@ -1,8 +1,8 @@
 import {
   type ComplexArray,
-  type CpuMarker,
   createComplexArray,
-} from '../../common/index.js';
+} from '../../common/complexArray.js';
+import { type CpuMarker } from '../../common/timer/index.js';
 import { type ExtPipelineConfig } from '../pipeline.js';
 
 export type PipelineArrays = {

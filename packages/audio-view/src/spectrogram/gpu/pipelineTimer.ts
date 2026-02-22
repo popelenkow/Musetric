@@ -1,8 +1,6 @@
-import {
-  createCpuTimer,
-  createGpuTimer,
-  roundDuration,
-} from '../../common/index.js';
+import { createGpuTimer } from '../../common/timer/gpu.js';
+import { createCpuTimer } from '../../common/timer/index.js';
+import { roundDuration } from '../../common/timer/roundDuration.js';
 
 export const timerLabels = [
   'configure',

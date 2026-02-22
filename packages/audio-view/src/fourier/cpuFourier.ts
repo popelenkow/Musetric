@@ -1,4 +1,5 @@
-import { type ComplexArray, type CpuMarker } from '../common/index.js';
+import { type ComplexArray } from '../common/complexArray.js';
+import { type CpuMarker } from '../common/timer/index.js';
 import { type FourierConfig } from './config.js';
 
 export type CpuFourier = {

@@ -1,4 +1,11 @@
-export * from './common/index.js';
+export * from './common/canvas.js';
+export * from './common/colors.js';
+export * from './common/complexArray.js';
+export * from './common/gpuBufferReader/index.js';
+export * from './common/gpuContext.js';
+export * from './common/resizeObserver.js';
+export * from './common/timer/index.js';
+export * from './common/viewSize.js';
 export * from './fourier/index.js';
 export * as spectrogram from './spectrogram/index.js';
 export * as waveform from './waveform/index.js';
