@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "license": "MIT",
   "type": "module",
+  "sideEffects": false,
   "bin": "./src/index.ts",
   "scripts": {
     "project:build": "tsc --build tsconfig.build.json",
