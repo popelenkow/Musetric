@@ -1,10 +1,10 @@
 import {
-  type CpuMarker,
   createGradient,
   parseHexColor,
   type ViewColors,
   type ViewGradients,
-} from '../../common/index.js';
+} from '../../common/colors.js';
+import { type CpuMarker } from '../../common/timer/index.js';
 import { type ExtPipelineConfig } from '../pipeline.js';
 
 type Config = Pick<

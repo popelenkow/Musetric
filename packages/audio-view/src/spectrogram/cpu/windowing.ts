@@ -1,4 +1,4 @@
-import { type CpuMarker } from '../../common/index.js';
+import { type CpuMarker } from '../../common/timer/index.js';
 import { type ExtPipelineConfig } from '../pipeline.js';
 import { windowFunctions } from '../windowFunction.js';
 

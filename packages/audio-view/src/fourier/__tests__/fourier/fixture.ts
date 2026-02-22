@@ -1,4 +1,4 @@
-import { type ComplexArray } from '../../../common/index.js';
+import { type ComplexArray } from '../../../common/complexArray.js';
 
 export type FourierFixture = {
   name: string;

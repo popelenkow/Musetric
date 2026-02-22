@@ -1,4 +1,4 @@
-import { type ViewColors } from '../common/index.js';
+import { type ViewColors } from '../common/colors.js';
 import { type WaveSegment } from './generateSegments.js';
 
 export type Draw = {

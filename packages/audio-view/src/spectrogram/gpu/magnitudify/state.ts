@@ -1,4 +1,4 @@
-import { type ComplexGpuBuffer } from '../../../common/index.js';
+import { type ComplexGpuBuffer } from '../../../common/complexArray.js';
 import { type ExtPipelineConfig } from '../../pipeline.js';
 import { createParams, type StateParams } from './params.js';
 import { createPipelines, type Pipelines } from './pipeline.js';
